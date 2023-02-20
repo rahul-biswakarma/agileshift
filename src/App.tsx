@@ -1,7 +1,13 @@
 import React from "react";
 
+import { SignUp } from "./components/OnBoarding/Signup";
+
 const App = () => {
-	return <div>App</div>;
+	return (
+		<div>
+			<SignUp />
+		</div>
+	);
 };
 
 export default App;
