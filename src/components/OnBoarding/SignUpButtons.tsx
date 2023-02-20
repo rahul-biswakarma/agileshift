@@ -1,7 +1,7 @@
 import React from "react";
 
 import InfoIcon from "../../assets/icons/info-icon.svg";
-import EmailIcon from "../../assets/icons/email-icon.svg";
+import GithubIcon from "../../assets/icons/github-icon.svg";
 import GoogleIcon from "../../assets/icons/google-icon.svg";
 import { GithubAuthProvider, GoogleAuthProvider, signInWithPopup } from "@firebase/auth";
 import { auth, db } from "../../firebaseConfig";
@@ -108,15 +108,15 @@ function SignUpButtons() {
 				onClick={()=>authWithGithub()}
 			>
 				<img
-					src={EmailIcon}
-					alt="Github Icon"
+					src={GithubIcon}
+					alt="Google Icon"
 					className="w-6 h-6"
 				/>
 				<span className="absolute text-center w-full text-white text-sm font-[500] ml-2">
 					Continue with Github
 				</span>
 			</button>
-
+			
 			<div className="flex items-center gap-[10px]">
 				<img
 					src={InfoIcon}
@@ -129,6 +129,6 @@ function SignUpButtons() {
 			</div>
 		</div>
 	);
-}
+};
 
-export {SignUpButtons};
+export { SignUpButtons };
