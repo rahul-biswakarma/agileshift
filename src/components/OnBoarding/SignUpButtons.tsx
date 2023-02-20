@@ -1,7 +1,7 @@
 import React from "react";
 
 import InfoIcon from "../../assets/icons/info-icon.svg";
-import EmailIcon from "../../assets/icons/email-icon.svg";
+import GithubIcon from "../../assets/icons/github-icon.svg";
 import GoogleIcon from "../../assets/icons/google-icon.svg";
 
 const SignUpButtons = () => {
@@ -29,7 +29,7 @@ const SignUpButtons = () => {
 					className="relative w-full bg-dark_gray p-[0.5rem_1rem] rounded flex items-center flex-wrap"
 				>
 					<img
-						src={EmailIcon}
+						src={GithubIcon}
 						alt="Google Icon"
 						className="w-6 h-6"
 					/>

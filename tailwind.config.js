@@ -16,6 +16,9 @@ module.exports = {
 				inter: ["Inter", "sans-serif"],
 				dm_sans: ["DM Sans", "sans-serif"],
 			},
+			backgroundImage: {
+				login_hero_image: "url('./assets/images/login.webp')",
+			},
 		},
 	},
 	plugins: [],

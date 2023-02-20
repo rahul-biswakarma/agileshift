@@ -1,8 +1,8 @@
 import React, { useRef, SyntheticEvent } from "react";
 
-import LockIcon from "../assets/icons/lock.svg";
-import EmailIcon from "../assets/icons/email.svg";
-import ArrowIcon from "../assets/icons/arrow.svg";
+import LockIcon from "../../assets/icons/lock-icon.svg";
+import EmailIcon from "../../assets/icons/email-icon.svg";
+import ArrowIcon from "../../assets/icons/arrow-icon.svg";
 
 const LoginForm = () => {
 	const emailInputRef = useRef<HTMLInputElement>(null);
@@ -30,17 +30,17 @@ const LoginForm = () => {
 	}
 
 	return (
-		<form className="py-[3rem] flex flex-col gap-[2rem]">
+		<form className="py-[3rem] flex flex-col gap-[2rem] font-dm_sans">
 			<div>
 				<label
 					ref={emailLabelRef}
-					className=" text-black/60 text-sm"
+					className=" text-black/60 text-sm font-dm_sans"
 					htmlFor="email"
 				>
 					Email
 				</label>
 				<div className="flex mt-[0.3rem]">
-					<span className="w-[3rem] h-[2.5rem] flex justify-center items-center bg-input_bg rounded-l">
+					<span className="w-[3rem] h-[2.5rem] flex justify-center items-center bg-input_bg rounded-l font-dm_sans">
 						<img
 							src={EmailIcon}
 							alt="id card icon"
@@ -50,7 +50,7 @@ const LoginForm = () => {
 					<input
 						data-testid="email-input"
 						ref={emailInputRef}
-						className="w-full h-[2.5rem] border border-input_bg rounded-r px-4 code-font focus:border-input_bg"
+						className="w-full h-[2.5rem] border border-input_bg rounded-r px-4 code-font focus:border-input_bg font-dm_sans"
 						type="email"
 						placeholder="name@work.com"
 						required
@@ -59,10 +59,10 @@ const LoginForm = () => {
 			</div>
 			<div>
 				<label
-					className=" text-black/60 text-sm"
+					className=" text-black/60 text-sm font-dm_sans"
 					htmlFor="email"
 				>
-					Password
+					OTP
 				</label>
 				<div className="flex mt-[0.3rem]">
 					<span className="w-[3rem] h-[2.5rem] flex justify-center items-center bg-input_bg rounded-l">
@@ -75,7 +75,7 @@ const LoginForm = () => {
 					<input
 						data-testid="password-input"
 						ref={passwordInputRef}
-						className="w-full h-[2.5rem] border border-input_bg rounded-r px-4 code-font"
+						className="w-full h-[2.5rem] border border-input_bg rounded-r px-4 code-font font-dm_sans"
 						type="password"
 						required
 					/>
@@ -83,9 +83,9 @@ const LoginForm = () => {
 			</div>
 			<button
 				onClick={(e) => handleLoginFormSubmit(e)}
-				className="bg-blue_1 hover:bg-blue_2 p-[0rem_2rem] h-[2.5rem] rounded flex  items-center justify-center"
+				className="bg-blue_1 hover:bg-blue_2 p-[0rem_2rem] h-[2.5rem] rounded flex  items-center justify-center font-dm_sans"
 			>
-				<span className="code-font text-sm text-white">Login</span>
+				<span className="code-font text-sm text-white font-dm_sans">Login</span>
 				<img
 					className="w-5 h-auto ml-[1rem]"
 					src={ArrowIcon}
