@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
-import Header from "./Header";
-import SignUpButtons from "./SignUpButtons";
+import { OnBoardingHeader } from "./Header";
+import { SignUpButtons } from "./SignUpButtons";
 
 import ProductImage from "../../assets/images/product-image.png";
 
@@ -17,7 +17,7 @@ const SignUp = () => {
 		>
 			<section className="flex flex-col items-center justify-center bg-bg_1 border-r-[1px] border-border_color w-full h-full p-24 max-[600px]:p-12">
 				<main className="max-w-[500px]">
-					<Header />
+					<OnBoardingHeader />
 					<SignUpButtons />
 					<p className="text-sm text-black/40 max-[400px]:my-[2rem] my-[4rem]">
 						By continuing, you acknowledge that you have read and understood,

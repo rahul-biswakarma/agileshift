@@ -4,7 +4,7 @@ import InfoIcon from "../../assets/icons/info-icon.svg";
 import EmailIcon from "../../assets/icons/email-icon.svg";
 import GoogleIcon from "../../assets/icons/google-icon.svg";
 
-export default function SignUpButtons() {
+const SignUpButtons = () => {
 	return (
 		<div className="flex flex-col gap-[1rem] w-full max-[400px]:mt-[2rem] mt-[4rem]">
 			<button
@@ -50,4 +50,6 @@ export default function SignUpButtons() {
 			</div>
 		</div>
 	);
-}
+};
+
+export { SignUpButtons };

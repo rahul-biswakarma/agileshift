@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Header() {
+const OnBoardingHeader = () => {
 	return (
 		<div className="font-dm_sans">
 			<a href="/">
@@ -25,4 +25,6 @@ export default function Header() {
 			</p>
 		</div>
 	);
-}
+};
+
+export { OnBoardingHeader };
