@@ -16,7 +16,7 @@ export default function Header() {
 					/>
 				</svg>
 			</a>
-			<h1 className="font-[500] text-md text-black mt-[0.5rem] font-semibold font-dm_sans">
+			<h1 className="text-md text-black mt-[0.5rem] font-semibold font-dm_sans">
 				Sign for AgileShift
 			</h1>
 			<p className="text-black/40 text-md mt-[1rem]">

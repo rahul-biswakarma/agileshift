@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 import Header from "./Header";
-import SignUpButtons from "./SignUpButtons";
+import {SignUpButtons} from "./SignUpButtons";
 
 import ProductImage from "../../assets/images/product-image.png";
 
@@ -44,7 +44,7 @@ const SignUp = () => {
 				</h2>
 				<img
 					src={ProductImage}
-					alt="Product Image"
+					alt="Product"
 					className="absolute top-[20rem] max-[1300px]:left-[4rem] left-[8rem] w-[700px] h-auto"
 				/>
 			</section>
