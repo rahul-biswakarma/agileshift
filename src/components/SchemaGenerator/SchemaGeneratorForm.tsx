@@ -17,7 +17,7 @@ export const SchemaGeneratorForm = ({
   const addColumn = (e: any) => {
     e.preventDefault();
     let tempColumns = [...list];
-    tempColumns.push({ "": "" });
+    tempColumns.push({ columnName: "", columnType: "" });
     setList(tempColumns);
   };
   const changeColumn = (id: number, columnName: string, columnType: string) => {

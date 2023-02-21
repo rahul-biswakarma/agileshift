@@ -7,17 +7,17 @@ export const GeneratorFormsContainer = () => {
   >([
     { columnName: "Ticket Name", columnType: "string" },
     { columnName: "Created By", columnType: "user" },
-    { columnName: "Tag", columnType: "tag" },
+    { columnName: "Tag", columnType: "tags" },
   ]);
   const [issueColumnList, setIssueColumnList] = useState<TYPE_ISSUES_SCHEMA[]>([
     { columnName: "Ticket Name", columnType: "string" },
     { columnName: "Created By", columnType: "user" },
-    { columnName: "Tag", columnType: "tag" },
+    { columnName: "Tag", columnType: "tags" },
   ]);
   const [partColumnList, setPartColumnList] = useState<TYPE_PARTS_SCHEMA[]>([
     { columnName: "Ticket Name", columnType: "string" },
     { columnName: "Created By", columnType: "user" },
-    { columnName: "Tag", columnType: "tag" },
+    { columnName: "Tag", columnType: "tags" },
   ]);
   return (
     <div className="w-screen h-screen flex divide-x divide-dark_gray">
