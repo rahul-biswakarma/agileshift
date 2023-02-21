@@ -40,9 +40,9 @@ declare global{
         users:string[];
         profileImageUrl:string;
         vista:TYPE_VISTA;
-        issues_schema:TYPE_ISSUES_SCHEMA[];
-        ticket_schema:TYPE_TICKETS_SCHEMA[];
-        parts_schema:TYPE_PARTS_SCHEMA[];
+        issues_schema:TYPE_ISSUES_SCHEMA;
+        ticket_schema:TYPE_TICKETS_SCHEMA;
+        parts_schema:TYPE_PARTS_SCHEMA;
         tags:TYPE_TAGS[];
         notifications:TYPE_NOTIFICATION[];
         tasks:TYPE_TASKS;
