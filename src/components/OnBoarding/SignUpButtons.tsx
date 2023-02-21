@@ -3,85 +3,10 @@ import React from "react";
 import InfoIcon from "../../assets/icons/info-icon.svg";
 import GithubIcon from "../../assets/icons/github-icon.svg";
 import GoogleIcon from "../../assets/icons/google-icon.svg";
-import { GithubAuthProvider, GoogleAuthProvider, signInWithPopup } from "@firebase/auth";
-import { auth, db } from "../../firebaseConfig";
-// import { doc, getDoc } from "@firebase/firestore";
+
+import { authWithGithub, authWithGoogle } from "../../Utils/Auth";
 
 function SignUpButtons() {
-
-	//Function to handle authentication from google
-	const authWithGoogle = () =>{
-        const provider = new GoogleAuthProvider();
-        
-        signInWithPopup(auth, provider)
-            .then(async (result:any) => {
-
-                const user = result.user;
-				console.log(user);
-
-                // const docRef = doc(db, "users", user.uid);
-                // const docSnap = await getDoc(docRef);
-                
-                // if (docSnap.exists()) {
-                // }else{
-                //     let userDetails:User = {
-                //         id: user.uid,
-                //         name: user.displayName,
-                //         avatar: user.photoURL,
-                //         email: user.email,
-                //         status: "Active",
-                //         timezone: "",
-                //         phoneNumber: user.phoneNumber,
-                //         workspace: [],
-                //         directMessages:[]
-                //     };
-                //     props.setUser(userDetails);
-                    
-                //     handleSignUp();
-                // }
-
-            }).catch((error) => {
-                const errorMessage = error.message;
-        });
-    }
-
-	//Function to handle authentication from google
-    const authWithGithub = () =>{
-		const provider = new GithubAuthProvider();
-
-		signInWithPopup(auth, provider)
-		.then(async (result) => {
-
-			const user = result.user;
-			console.log(user);
-
-			// const docRef = doc(db, "users", user.uid);
-			// const docSnap = await getDoc(docRef);
-			
-			// if (docSnap.exists()) {
-			// 	props.setUser(docSnap.data());
-			// 	handleSignUpNavigation();
-			// }else{
-			// 	let userDetails:any = {
-			// 		id: user.uid,
-			// 		name: user.displayName,
-			// 		avatar: user.photoURL,
-			// 		email: user.email,
-			// 		status: "Active",
-			// 		timezone: "",
-			// 		phoneNumber: user.phoneNumber,
-			// 		workspace: [],
-			// 		directMessages:[]
-			// 	};
-			// 	props.setUser(userDetails);
-				
-			// 	handleSignUp();
-			// }
-		}).catch((error) => {
-			const errorMessage = error.message;
-		});
-    }
-
 	return (
 		<div className="flex flex-col gap-[1rem] w-full max-[400px]:mt-[2rem] mt-[4rem]">
 
@@ -116,7 +41,7 @@ function SignUpButtons() {
 					Continue with Github
 				</span>
 			</button>
-			
+
 			<div className="flex items-center gap-[10px]">
 				<img
 					src={InfoIcon}

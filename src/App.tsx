@@ -1,19 +1,18 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Dashboard from "./components/Dashboard/Index";
 
 import { Login } from "./components/OnBoarding/Login";
 import { SignUp } from "./components/OnBoarding/Signup";
-import { sendEmail } from "./Utils/Backend";
 
 const App = () => {
   return (
     <BrowserRouter>
-      <div onClick={() => sendEmail("7satyamjha@gmail.com", "test")}>
-        asdfsd
-      </div>
       <Routes>
+        <Route path="" element={<Navigate to="/signup" />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </BrowserRouter>
   );

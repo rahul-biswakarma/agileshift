@@ -72,31 +72,31 @@ export const create_user = async (userDetails: TYPE_USER) => {
   return docRef.id;
 };
 // 4
-export const create_organization = async (
-  userId: string,
-  name: string,
-  profileImageUrl: string
-) => {
-  const organizationsRef = collection(db, "organizations");
+// export const create_organization = async (
+//   userId: string,
+//   name: string,
+//   profileImageUrl: string
+// ) => {
+//   const organizationsRef = collection(db, "organizations");
 
-  const initializeOrganization: TYPE_ORGANISATION = {
-    id: "string",
-    name: name,
-    dateOfCreation: get_current_time(),
-    users: [userId],
-    profileImageUrl: profileImageUrl,
-    vista: {},
-    issues: [],
-    ticket: [],
-    tags: [],
-    parts: [],
-    notifications: [],
-    tasks: {},
-  };
-  //  initialling channel in channel Table
-  const res = await addDoc(organizationsRef, initializeOrganization);
-  return res.id;
-};
+//   const initializeOrganization: TYPE_ORGANISATION = {
+//     id: "string",
+//     name: name,
+//     dateOfCreation: get_current_time(),
+//     users: [userId],
+//     profileImageUrl: profileImageUrl,
+//     vista: {},
+//     issues: [],
+//     ticket: [],
+//     tags: [],
+//     parts: [],
+//     notifications: [],
+//     tasks: {},
+//   };
+//   //  initialling channel in channel Table
+//   const res = await addDoc(organizationsRef, initializeOrganization);
+//   return res.id;
+// };
 // 5
 export const update_organization = () => {};
 // 6
