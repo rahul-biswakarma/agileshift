@@ -43,6 +43,7 @@ declare global{
         parts:TYPE_PARTS[];//to be changed
         notifications:TYPE_NOTIFICATION[];
         tasks:TYPE_TASKS;
+        
     }
 
     type TYPE_USER={
