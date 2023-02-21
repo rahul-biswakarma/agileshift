@@ -4,12 +4,12 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "@firebase/firestore";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDq0tPMQUEykk1Q-bwI4T2IW28-IvM5qsk",
-    authDomain: "agile-shift-c28f2.firebaseapp.com",
-    projectId: "agile-shift-c28f2",
-    storageBucket: "agile-shift-c28f2.appspot.com",
-    messagingSenderId: "870889150710",
-    appId: "1:870889150710:web:272d542dd633552b9db4d7"
+    apiKey: "AIzaSyAKDHbkTh6EPvoQadQhQTSYaOkHGPN4Zj8",
+    authDomain: "crm-data-base.firebaseapp.com",
+    projectId: "crm-data-base",
+    storageBucket: "crm-data-base.appspot.com",
+    messagingSenderId: "1089918448061",
+    appId: "1:1089918448061:web:dedbf04725d98beff562d4"
 };
 
 const app = initializeApp(firebaseConfig);
