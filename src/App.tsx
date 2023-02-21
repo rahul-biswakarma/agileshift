@@ -1,6 +1,5 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Filter from "./components/Dashboard/Filter";
 import Dashboard from "./components/Dashboard/Index";
 
 import { Login } from "./components/OnBoarding/Login";
