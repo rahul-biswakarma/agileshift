@@ -1,5 +1,5 @@
 import React from "react";
-import notificationIcon from "../../assets/icons/notification.svg";
+// import notificationIcon from "../../assets/icons/notification.svg";
 
 export default function SearchCompont() {
   return (
