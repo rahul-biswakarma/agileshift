@@ -1,10 +1,21 @@
-import React, { useRef, SyntheticEvent } from "react";
+import React, { useRef, SyntheticEvent, useState } from "react";
 
 import LockIcon from "../../assets/icons/lock-icon.svg";
 import EmailIcon from "../../assets/icons/email-icon.svg";
 import ArrowIcon from "../../assets/icons/arrow-icon.svg";
+import { sendEmail } from "../../Utils/Backend";
+
+type Type_Login_State = {
+	onOtp:boolean,
+	otp:number
+}
 
 const LoginForm = () => {
+	const [state, setState] = useState<Type_Login_State>({
+		onOtp:false,
+		otp:0
+	})
+
 	const emailInputRef = useRef<HTMLInputElement>(null);
 	const emailLabelRef = useRef<HTMLLabelElement>(null);
 	const passwordInputRef = useRef<HTMLInputElement>(null);
@@ -13,20 +24,44 @@ const LoginForm = () => {
 		e: SyntheticEvent<HTMLButtonElement, MouseEvent>
 	) {
 		e.preventDefault();
-		let emailInput = emailInputRef.current?.value;
-		let passwordInput = passwordInputRef.current?.value;
+		if(passwordInputRef.current){
+			const passwordInput:number = parseInt(passwordInputRef.current.value);
 
-		let emailPattern = new RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$");
-
-		if (emailPattern.test(emailInput!))
-			alert(`Hacking successful: ${emailInput}, ${passwordInput}`);
-		else {
-			emailInputRef.current!.style.borderColor = "red";
-			emailLabelRef.current!.innerText = "Please enter valid email address";
+			if (passwordInput){
+				if(passwordInput===state.otp){
+					console.log("Authenticated");
+					//pass to next component
+				}
+			}else {
+				emailInputRef.current!.style.borderColor = "red";
+				emailLabelRef.current!.innerText = "Please enter valid otp";
+			}
 		}
 
 		emailInputRef.current!.value = "";
 		passwordInputRef.current!.value = "";
+	}
+
+	const handleNext = async (
+		e: SyntheticEvent<HTMLButtonElement, MouseEvent>
+	) =>{
+		e.preventDefault();
+		let emailInput = emailInputRef.current?.value;
+		
+		let emailPattern = new RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$");
+
+		if (emailInput && emailPattern.test(emailInput!)){
+			const sentOtp = await sendEmail(emailInput)
+			if(sentOtp)
+				setState({...state, onOtp:true, otp:sentOtp});
+			else{
+				emailInputRef.current!.style.borderColor = "red";
+				emailLabelRef.current!.innerText = "Unable to send OTP";
+			}
+		}else {
+			emailInputRef.current!.style.borderColor = "red";
+			emailLabelRef.current!.innerText = "Please enter valid email address";
+		}
 	}
 
 	return (
@@ -53,46 +88,63 @@ const LoginForm = () => {
 						className="w-full h-[2.5rem] border border-input_bg rounded-r px-4 code-font focus:border-input_bg font-dm_sans"
 						type="email"
 						placeholder="name@work.com"
+						readOnly={state.onOtp}
 						required
 					/>
 				</div>
 			</div>
-			<div>
-				<label
-					className=" text-black/60 text-sm font-dm_sans"
-					htmlFor="email"
-				>
-					OTP
-				</label>
-				<div className="flex mt-[0.3rem]">
-					<span className="w-[3rem] h-[2.5rem] flex justify-center items-center bg-input_bg rounded-l">
+			{state.onOtp?
+				<React.Fragment>
+					<div>
+						<label
+							className=" text-black/60 text-sm font-dm_sans"
+							htmlFor="email"
+						>
+							OTP
+						</label>
+						<div className="flex mt-[0.3rem]">
+							<span className="w-[3rem] h-[2.5rem] flex justify-center items-center bg-input_bg rounded-l">
+								<img
+									src={LockIcon}
+									alt="id card icon"
+									className="w-5 h-auto"
+								/>
+							</span>
+							<input
+								data-testid="password-input"
+								ref={passwordInputRef}
+								className="w-full h-[2.5rem] border border-input_bg rounded-r px-4 code-font font-dm_sans"
+								type="number"
+								placeholder="otp"
+								required
+							/>
+						</div>
+					</div>
+					<button
+						onClick={(e) => handleLoginFormSubmit(e)}
+						className="bg-blue_1 hover:bg-blue_2 p-[0rem_2rem] h-[2.5rem] rounded flex  items-center justify-center font-dm_sans"
+					>
+						<span className="code-font text-sm text-white font-dm_sans">Login</span>
 						<img
-							src={LockIcon}
-							alt="id card icon"
-							className="w-5 h-auto"
+							className="w-5 h-auto ml-[1rem]"
+							src={ArrowIcon}
+							alt="arrow icon"
 						/>
-					</span>
-					<input
-						data-testid="password-input"
-						ref={passwordInputRef}
-						className="w-full h-[2.5rem] border border-input_bg rounded-r px-4 code-font font-dm_sans"
-						type="password"
-						placeholder="otp"
-						required
+					</button>
+				</React.Fragment>:
+				<button
+					onClick={(e) => handleNext(e)}
+					className="bg-blue_1 hover:bg-blue_2 p-[0rem_2rem] h-[2.5rem] rounded flex  items-center justify-center font-dm_sans"
+				>
+					<span className="code-font text-sm text-white font-dm_sans">Next</span>
+					<img
+						className="w-5 h-auto ml-[1rem]"
+						src={ArrowIcon}
+						alt="arrow icon"
 					/>
-				</div>
-			</div>
-			<button
-				onClick={(e) => handleLoginFormSubmit(e)}
-				className="bg-blue_1 hover:bg-blue_2 p-[0rem_2rem] h-[2.5rem] rounded flex  items-center justify-center font-dm_sans"
-			>
-				<span className="code-font text-sm text-white font-dm_sans">Login</span>
-				<img
-					className="w-5 h-auto ml-[1rem]"
-					src={ArrowIcon}
-					alt="arrow icon"
-				/>
-			</button>
+				</button>
+			}
+				
 		</form>
 	);
 };
