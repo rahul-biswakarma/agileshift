@@ -34,7 +34,7 @@ export const create_organization = async (organizationDetails: TYPE_ORGANISATION
 
 export const update_organization = () => {};
 
-export const create_ticket = (ticketDetails: TYPE_TICKET) => {
+export const create_ticket = () => {
 
 };
 

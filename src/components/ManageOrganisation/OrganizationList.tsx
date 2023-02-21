@@ -1,8 +1,11 @@
 import React, { ChangeEvent, useState } from 'react';
 
-
 const OrganizationList: React.FunctionComponent = () => {
-    const [jsonFileContent, setFileContent] = useState<any>(null);
+    function createTypes (content: TYPE_TICKETS_SCHEMA[] | TYPE_ISSUES_SCHEMA[] | TYPE_PARTS_SCHEMA[]) {
+        content.forEach(data => {
+            
+        })
+    }   
 
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files ? event.target.files[0] : null;
@@ -10,14 +13,11 @@ const OrganizationList: React.FunctionComponent = () => {
           const reader = new FileReader();
           reader.onload = (event) => {
             const contents = event.target?.result as string;
-            setFileContent(contents);
+            createTypes(JSON.parse(contents));
           };
           reader.readAsText(file);
         }
     };
-
-
-    console.log(jsonFileContent);
 
     return (
         <div>
