@@ -32,6 +32,7 @@ const signInWithPopupCall = (provider:GoogleAuthProvider | GithubAuthProvider) =
             }else{
                     let userDetails: TYPE_USER = {
                         id: user.uid,
+                        name:user.name,
                         avatar: user.photoURL,
                         email: user.email,
                         organisation:[]
