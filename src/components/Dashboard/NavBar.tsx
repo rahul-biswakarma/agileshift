@@ -3,11 +3,11 @@ export default function NavBar() {
     <nav className="flex flex-row bg-Secondary_background_color p-1  rounded-[10px] flex-1 flex-grow gap-10 stroke-primary_font_color ">
       <section className=" p-1">
         <img
-          alt="org"
           className="flex flex-1 mr-10 flex-grow rounded-[5px] "
           src={
             "https://lh3.googleusercontent.com/ogw/AAEL6sgCSglITl9CIP0MSPH2o2ZxRsfNLsLjR34h4_s=s32-c-mo"
           }
+          alt="user avatar"
         />
       </section>
 

@@ -1,3 +1,6 @@
+import React from "react";
+// import notificationIcon from "../../assets/icons/notification.svg";
+
 export default function SearchCompont() {
   return (
     <form className="flex flex-row items-center flex-grow gap-6  ">

@@ -1,4 +1,5 @@
 import React from "react";
+import DataTable from "../DataTable";
 import NavBar from "./NavBar";
 import SearchCompont from "./SearchCompont";
 
@@ -9,6 +10,7 @@ export default function Dashboard() {
         <NavBar />
         <SearchCompont />
       </header>
+      <DataTable />
     </div>
   );
 }
