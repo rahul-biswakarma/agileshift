@@ -11,6 +11,7 @@ import {
   getDoc,
   setDoc,
   onSnapshot,
+  setDoc,
 } from "firebase/firestore";
 import emailjs from "@emailjs/browser";
 import { isValidEmail } from "email-js";
@@ -66,8 +67,7 @@ export const get_users_organization = async (userId: string) => {
 };
 // 3
 export const create_user = async (userDetails: TYPE_USER) => {
-  const docRef = await setDoc(doc(db, "users", userDetails.id), userDetails);
-  return userDetails.id;
+  await setDoc(doc(db, "users", userDetails.id), userDetails);
 };
 // 4
 // export const create_organization = async (

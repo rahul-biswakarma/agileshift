@@ -77,6 +77,7 @@ const LoginForm = () => {
 						ref={passwordInputRef}
 						className="w-full h-[2.5rem] border border-input_bg rounded-r px-4 code-font font-dm_sans"
 						type="password"
+						placeholder="otp"
 						required
 					/>
 				</div>

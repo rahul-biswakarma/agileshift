@@ -1,6 +1,8 @@
 import { GithubAuthProvider, GoogleAuthProvider, signInWithPopup } from "@firebase/auth";
-import { doc, getDoc } from "@firebase/firestore";
-import { auth, db } from "../firebaseConfig";
+import { auth } from "../firebaseConfig";
+import { check_users_database, create_user, get_users_organization } from "./Backend";
+import { setUserId } from "../redux/reducers/AuthSlice";
+import {store} from "../redux/store"
 
 //Function to handle authentication from google
 export const authWithGithub = () =>{
@@ -17,30 +19,35 @@ export const authWithGoogle = () =>{
 
 //Function for popup auth 
 const signInWithPopupCall = (provider:GoogleAuthProvider | GithubAuthProvider) =>{
+
     signInWithPopup(auth, provider)
         .then(async (result:any) => {
+            // const dispatch = useAppDispatch();
 
             const user = result.user;
-            console.log(user);
-
-            const userRef = doc(db, "users", user.uid);
-            const userSnap = await getDoc(userRef);
+            const isUser = await check_users_database(user.uid) 
             
-            if (userSnap.exists()) {
+            if (isUser) {
                 //Action if user exists
                 //list all the organizations for user
+                const organisationList = await get_users_organization(user.uid)
+
             }else{
                     let userDetails: TYPE_USER = {
                         id: user.uid,
-                        name:user.name,
+                        name:user.displayName,
                         avatar: user.photoURL,
                         email: user.email,
                         organisation:[]
                     };
+
                     //Create user and redirect to create organization
+                    await create_user(userDetails)
+                    store.dispatch(setUserId(user.uid))
             }
 
         }).catch((error) => {
             const errorMessage = error.message;
+            console.log(errorMessage);
         });
 }
