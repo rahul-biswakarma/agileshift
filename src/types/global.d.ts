@@ -1,14 +1,14 @@
 export {};
 
 declare global{
-    type TYPE_ISSUE={
-
+    type TYPE_TICKETS_SCHEMA={
+        [key:string]:string;
     }
-    type TYPE_TICKET={
-
+    type TYPE_ISSUES_SCHEMA={
+        [key:string]:string;
     }
-    type TYPE_PARTS={
-
+    type TYPE_PARTS_SCHEMA={
+        [key:string]:string;
     }
     type TYPE_TAGS={
         color:string;//hash code of color
@@ -21,7 +21,10 @@ declare global{
         isRead:boolean;
     }
     type TYPE_VISTA={
-        [key:string]:[{}];//to be changed
+        [key:string]:string;
+    }
+    type TYPE_VISTAS={
+        [key:string]:TYPE_VISTA[];//to be changed
     }
     type TYPE_TASK={
         id:string;
@@ -37,10 +40,10 @@ declare global{
         users:string[];
         profileImageUrl:string;
         vista:TYPE_VISTA;
-        issues:TYPE_ISSUE[];//to be changed
-        ticket:TYPE_TICKET[];//to be changed
+        issues_schema:TYPE_ISSUES_SCHEMA;
+        ticket_schema:TYPE_TICKETS_SCHEMA;
+        parts_schema:TYPE_PARTS_SCHEMA;
         tags:TYPE_TAGS[];
-        parts:TYPE_PARTS[];//to be changed
         notifications:TYPE_NOTIFICATION[];
         tasks:TYPE_TASKS;
         
@@ -48,6 +51,7 @@ declare global{
 
     type TYPE_USER={
         id:string;
+        name:string;
         email:string;
         avatar:string;//url of the avatar
         organisation:string[];//array of organisation ids
