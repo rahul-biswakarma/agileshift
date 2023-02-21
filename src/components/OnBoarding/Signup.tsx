@@ -44,7 +44,7 @@ const SignUp = () => {
 				</h2>
 				<img
 					src={ProductImage}
-					alt="Product Image"
+					alt="Product Screenshot"
 					className="absolute top-[20rem] max-[1300px]:left-[4rem] left-[8rem] w-[700px] h-auto"
 				/>
 			</section>
