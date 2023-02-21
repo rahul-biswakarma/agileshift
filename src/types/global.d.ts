@@ -1,6 +1,7 @@
 export {};
 
 declare global{
+
     type TYPE_ISSUE={
 
     }
@@ -37,18 +38,18 @@ declare global{
         users:string[];
         profileImageUrl:string;
         vista:TYPE_VISTA;
-        issues:TYPE_ISSUE[];//to be changed
-        ticket:TYPE_TICKET[];//to be changed
+        issues:TYPE_ISSUE[]; //to be changed
+        ticket:TYPE_TICKET[]; //to be changed
         tags:TYPE_TAGS[];
-        parts:TYPE_PARTS[];//to be changed
+        parts:TYPE_PARTS[]; //to be changed
         notifications:TYPE_NOTIFICATION[];
         tasks:TYPE_TASKS;
     }
-
     type TYPE_USER={
         id:string;
         email:string;
         avatar:string;//url of the avatar
         organisation:string[];//array of organisation ids
     }
+
 }

@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import { Login } from "./components/OnBoarding/Login";
 import { SignUp } from "./components/OnBoarding/Signup";
+import OrganizationList from "./components/ManageOrganisation/OrganizationList";
 
 const App = () => {
 	return (
@@ -15,6 +16,10 @@ const App = () => {
 				<Route
 					path="/login"
 					element={<Login />}
+				/>
+				<Route
+					path="/orglist"
+					element={<OrganizationList />}
 				/>
 			</Routes>
 		</BrowserRouter>

@@ -11,8 +11,11 @@ import {
   getDoc,
   onSnapshot,
 } from "firebase/firestore";
-// funcitons list
 
+import "../types/global";
+
+
+// funcitons list
 export const check_users_database = async (userId: string) => {
   const docRef = doc(db, "users", userId);
   const docSnap = await getDoc(docRef);
@@ -22,10 +25,19 @@ export const check_users_database = async (userId: string) => {
     return false;
   }
 };
-export const create_user = () => {};
-export const create_organization = () => {};
+
+export const create_user = async () => {};
+
+export const create_organization = async (organizationDetails: TYPE_ORGANISATION) => {
+  
+};
+
 export const update_organization = () => {};
-export const create_ticket = () => {};
+
+export const create_ticket = (ticketDetails: TYPE_TICKET) => {
+
+};
+
 export const create_issue = () => {};
 export const update_ticket = () => {};
 export const update_issue = () => {};
