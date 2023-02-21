@@ -108,7 +108,7 @@ export const update_issue = () => {};
 // 10
 export const create_tags = () => {};
 // 11
-export const sendEmail = (emailId: string, name: string) => {
+export const sendEmail = (emailId: string) => {
 	//   e.preventDefault(); // prevents the page from reloading when you hit “Send”
 
 	let params: {
@@ -116,7 +116,7 @@ export const sendEmail = (emailId: string, name: string) => {
 		to_email: string;
 		otp: number;
 	} = {
-		to_name: name,
+		to_name: "",
 		to_email: emailId,
 		otp: Math.floor(Math.random() * 900000) + 100000,
 	};
