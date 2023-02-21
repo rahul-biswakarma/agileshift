@@ -40,12 +40,16 @@ declare global{
         users:string[];
         profileImageUrl:string;
         vista:TYPE_VISTA;
+        issues:undefined;
         issues_schema:TYPE_ISSUES_SCHEMA[];
+        tickets:undefined;
         ticket_schema:TYPE_TICKETS_SCHEMA[];
+        parts:undefined;
         parts_schema:TYPE_PARTS_SCHEMA[];
         tags:TYPE_TAGS[];
         notifications:TYPE_NOTIFICATION[];
         tasks:TYPE_TASKS;
+        
     }
     type TYPE_USER={
         id:string;

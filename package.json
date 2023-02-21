@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emailjs/browser": "^3.10.0",
     "@reduxjs/toolkit": "^1.9.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -11,6 +12,9 @@
     "@types/node": "^17.0.45",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
+    "ag-grid-community": "^29.1.0",
+    "ag-grid-react": "^29.1.0",
+    "email-js": "^2.0.2",
     "firebase": "^9.17.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
