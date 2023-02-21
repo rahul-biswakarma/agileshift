@@ -54,6 +54,7 @@ export const check_users_database = async (userId: string) => {
 		return false;
 	}
 };
+
 // 2
 export const get_users_organization = async (userId: string) => {
 	const userRef = doc(db, "users", userId);
@@ -65,10 +66,24 @@ export const get_users_organization = async (userId: string) => {
 		console.log("No such userFound document!");
 	}
 };
+
 // 3
 export const create_user = async (userDetails: TYPE_USER) => {
 	await setDoc(doc(db, "users", userDetails.id), userDetails);
 };
+
+export const get_organizations = async (organizationIds: string[]) => {
+	const orgList:any = [];
+	organizationIds.map( async (orgId) => {
+		const docRef = doc(db, "organizations", orgId);
+		const docSnap = await getDoc(docRef);
+		orgList.push(docSnap.data());
+	})
+
+	return orgList;
+};
+
+
 // 4
 // export const create_organization = async (
 //   userId: string,

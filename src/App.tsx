@@ -4,7 +4,8 @@ import Dashboard from "./components/Dashboard/Index";
 
 import { Login } from "./components/OnBoarding/Login";
 import { SignUp } from "./components/OnBoarding/Signup";
-import OrganizationList from "./components/ManageOrganisation/OrganizationList";
+import OrganizationList from "./components/ManageOrganization/OrganizationList";
+import OrganisationForm from "./components/ManageOrganization/OrganisationForm";
 
 const App = () => {
   return (
@@ -14,9 +15,13 @@ const App = () => {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
-		<Route
+		    <Route
 					path="/orglist"
 					element={<OrganizationList />}
+				/>
+        <Route
+					path="/createOrg"
+					element={<OrganisationForm />}
 				/>
       </Routes>
     </BrowserRouter>
