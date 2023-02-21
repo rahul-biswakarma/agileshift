@@ -3,6 +3,11 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        // font colors
+        primary_font_color: "#808080",
+        highlight_font_color: "#FFFFFF",
+        highlight_icon_color: "#CE43FF",
+
         // SignUp Components
         bg_1: "#ffffff",
         bg_2: "#f2f2f2",
@@ -14,6 +19,7 @@ module.exports = {
 
         // Dashboard Components
         background_color: "#161616",
+        Secondary_background_color: "#1F1F1F", //color use in navBar and serch
       },
       fontFamily: {
         inter: ["Inter", "sans-serif"],

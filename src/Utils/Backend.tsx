@@ -9,6 +9,7 @@ import {
   where,
   getDocs,
   getDoc,
+  setDoc,
   onSnapshot,
 } from "firebase/firestore";
 import emailjs from "@emailjs/browser";
@@ -65,11 +66,8 @@ export const get_users_organization = async (userId: string) => {
 };
 // 3
 export const create_user = async (userDetails: TYPE_USER) => {
-  const docRef = await addDoc(
-    collection(db, "users", userDetails.id),
-    userDetails
-  );
-  return docRef.id;
+  const docRef = await setDoc(doc(db, "users", userDetails.id), userDetails);
+  return userDetails.id;
 };
 // 4
 // export const create_organization = async (
