@@ -43,6 +43,7 @@ import { isValidEmail } from "email-js";
  10.create_tags
  11.sendEmail
  12 get all types list
+ 13 create ticket schema
 */
 
 // 1
@@ -61,7 +62,7 @@ export const get_users_organization = async (userId: string) => {
   const userRef = doc(db, "users", userId);
   const userSnap = await getDoc(userRef);
   if (userSnap.exists()) {
-    return userSnap.data()["organization"];
+    return userSnap.data()["organisation"];
   } else {
     // doc.data() will be undefined in this case
     console.log("No such userFound document!");
@@ -111,17 +112,7 @@ export const get_organizations = async (organizationIds: string[]) => {
 //   return res.id;
 // };
 
-export const create_ticket_schema = async(ticketSchema: TYPE_TICKETS_SCHEMA[]) => {
-  await setDoc(doc(db, "schema", "ticket"), {ticketSchema});
-}
 
-export const create_parts_schema = async(partSchema: TYPE_PARTS_SCHEMA[]) => {
-  await setDoc(doc(db, "schema", "parts"), {partSchema});
-}
-
-export const create_issues_schema = async(issueSchema: TYPE_ISSUES_SCHEMA[]) => {
-  await setDoc(doc(db, "schema", "issues"), {issueSchema});
-}
 
 
 // 5
@@ -175,7 +166,7 @@ export const sendEmail = (emailId: string) => {
   return params["otp"];
 };
 
-// 12 fetch all supported types.
+// 12 fetch all supported types. returns array of stings
 export const get_all_Supported_types = async () => {
   const typesRef = doc(db, "types", "mBJyeNn4YjJgItin5AOj");
   const typeSnap = await getDoc(typesRef);
@@ -186,3 +177,18 @@ export const get_all_Supported_types = async () => {
     console.log("No such userFound document!");
   }
 };
+
+// 13 create a new ticket schema
+export const create_ticket_schema = async (ticketSchema: any) => {
+  const res: any = await setDoc(doc(db, "ticket-schema"), ticketSchema);
+  return res.id;
+};
+
+
+export const create_parts_schema = async(partSchema: TYPE_PARTS_SCHEMA[]) => {
+  await setDoc(doc(db, "schema", "parts"), {partSchema});
+}
+
+export const create_issues_schema = async(issueSchema: TYPE_ISSUES_SCHEMA[]) => {
+  await setDoc(doc(db, "schema", "issues"), {issueSchema});
+}

@@ -4,11 +4,22 @@ import { OnBoardingHeader } from "./Header";
 import { SignUpButtons } from "./SignUpButtons";
 
 import ProductImage from "../../assets/images/product-image.png";
+import { useAppSelector } from "../../redux/hooks";
+import { Outlet, useNavigate } from "react-router-dom";
 
 const SignUp = () => {
+
+	const userId = useAppSelector((state) => state.auth.userId);
+	let navigate = useNavigate(); 
+
 	useEffect(() => {
 		document.title = "Sign into AgileShift";
 	}, []);
+
+	useEffect(()=>{
+		if(userId.length>0)
+			navigate("/orglist");
+	}, [userId, navigate])
 
 	return (
 		<div
@@ -48,6 +59,7 @@ const SignUp = () => {
 					className="absolute top-[20rem] max-[1300px]:left-[4rem] left-[8rem] w-[700px] h-auto"
 				/>
 			</section>
+			<Outlet />
 		</div>
 	);
 };
