@@ -75,9 +75,6 @@ export const SchemaGeneratorForm = ({
 
   return (
     <div className="flex justify-center gap-6 w-full">
-    <div className='w-96 h-96 bg-slate-400'>
-
-    </div>
     <section className="flex flex-col h-full overflow-auto py-0 px-4">
         <div className="sticky mb-4 top-0 flex items-center justify-between bg-background_color py-4 z-10">
           <button
