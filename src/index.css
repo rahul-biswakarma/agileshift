@@ -49,3 +49,7 @@ code {
 .ag-row-hover {
 	background: #1f1f1f;
 }
+
+::-webkit-scrollbar{
+  display: none;
+}

@@ -11,7 +11,6 @@ type Type_DataTableProps = {
 	datas: any;
 	feildColor: string;
 };
-
 type Type_AgGridColsDefs = Array<{
 	field: string;
 	maxWidth?: number;
