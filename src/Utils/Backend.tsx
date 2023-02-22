@@ -235,9 +235,11 @@ export const get_tabs_name = async (organisationId: string) => {
 
 // 17 get background color from name
 export const get_background_color_from_name = (name: string) => {
+	if (name === "purple") return "#6b21a8	";
 	return "#161616";
 };
 // 18 get text color from name
 export const get_text_color_from_name = (name: string) => {
+	if (name === "purple") return "#d8b4fe";
 	return "#668cff";
 };
