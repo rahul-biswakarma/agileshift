@@ -1,22 +1,26 @@
 import React, { useState } from "react";
 
-type ColumnType = "string" | "user" | "tags";
+// type ColumnType = "string" | "user" | "tags";
 
-interface Column {
-  columnName: string;
-  columnType: ColumnType;
+// interface Column {
+//   columnName: string;
+//   columnType: ColumnType;
+// }
+
+// const initialData: Column[] = [
+//   { columnName: "Ticket Name", columnType: "string" },
+//   { columnName: "Created By", columnType: "user" },
+//   { columnName: "Tag", columnType: "tags" },
+// ];
+
+interface Type_FilterProps {
+    schema: Array<TYPE_SCHEMA>;
 }
 
-const initialData: Column[] = [
-  { columnName: "Ticket Name", columnType: "string" },
-  { columnName: "Created By", columnType: "user" },
-  { columnName: "Tag", columnType: "tags" },
-];
-
-const Filter: React.FC = () => {
-  const [columns, setColumns] = useState(initialData);
-
-  const handleColumnClick = (columnType: ColumnType) => {
+const Filter = (props:Type_FilterProps) => {
+  
+    const {schema} = props;
+  const handleColumnClick = (columnType: string) => {
     console.log(`Clicked column with type ${columnType}`);
   };
 
@@ -50,7 +54,7 @@ const Filter: React.FC = () => {
                     </div>
                 </div>
                 <div className="flex items-center gap-4">
-                    {columns.map((column, index) => (
+                    {schema.map((column, index) => (
                         <button
                         key={index}
                         className=" rounded-md border border-1 border-[#808080] text-[#808080] text-sm px-4 py-2 "
