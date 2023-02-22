@@ -1,8 +1,18 @@
 import {useRef, useState, ChangeEvent} from 'react';
 import ArrowIcon from "../../assets/icons/arrow-icon.svg";
+require("tailwindcss-writing-mode")({
+  variants: ["responsive", "hover"],
+});
 
+type OrganisationFormPropTypes = {
+  activeTab: string;
+  setActiveTab: React.Dispatch<React.SetStateAction<string>>;
+};
 
-const OrganisationForm = () => {
+export const OrganisationForm = ({
+  activeTab,
+  setActiveTab,
+}: OrganisationFormPropTypes) => {
   const [toolTip, setToolTip] = useState<boolean>(false);
   const [orgNameErrorMessage, setOrgNameErrorMessage] = useState<string>('');
   const [orgUrlErrorMessage, setOrgUrlErrorMessage] = useState<string>('');
@@ -34,7 +44,7 @@ const OrganisationForm = () => {
           break;
       }
   }
-
+  if(activeTab==="Organisation")
   return (
     <div className="bg-background_color h-screen w-screen flex items-center justify-center font-dm_sans">
 			<div className="h-3/5 w-[350px] flex flex-col gap-5">
@@ -70,23 +80,24 @@ const OrganisationForm = () => {
                       <li>Cannot have two consecutive hyphens</li>
                     </ul>
                 </div>
-              )
-            }
-            
+              )}
+            </div>
           </div>
-
-				</div>
-				<button className="flex gap-4 items-center justify-center border border-dark_gray py-4 rounded-lg text-highlight_font_color">
-					<img
-						src={ArrowIcon}
-						alt="Plus Icon"
-						className="w-4 h-4"
-					/>
-					Create new AgileOrg
-				</button>
-			</div>
-		</div>
-  )
-}
-
-export default OrganisationForm
+          <button className="flex gap-4 items-center justify-center border border-dark_gray py-4 rounded-lg text-highlight_font_color">
+            <img src={ArrowIcon} alt="Plus Icon" className="w-4 h-4" />
+            Create new AgileOrg
+          </button>
+        </div>
+      </div>
+    );
+  else
+    return (
+      <div className="h-screen w-28 flex flex-wrap text-primary_font_color  bg-Secondary_background_color">
+        <button
+          className="h-full w-full"
+          onClick={() => setActiveTab("Organisation")}>
+          <span className="[writing-mode:vertical-rl]">Organisation Form</span>
+        </button>
+      </div>
+    );
+};

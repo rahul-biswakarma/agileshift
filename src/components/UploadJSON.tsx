@@ -1,38 +1,34 @@
-import React, { ChangeEvent } from 'react';
-
+import React, { ChangeEvent } from "react";
 
 type UploadJSONPropTypes = {
-  type: string,
-  setList:
-    | React.Dispatch<React.SetStateAction<TYPE_TICKETS_SCHEMA[]>>
-    | React.Dispatch<React.SetStateAction<TYPE_ISSUES_SCHEMA[]>>
-    | React.Dispatch<React.SetStateAction<TYPE_PARTS_SCHEMA[]>>;
-}
+  type: string;
+  setList: React.Dispatch<React.SetStateAction<TYPE_SCHEMA[]>>;
+};
 
-const UploadJSON = ({type, setList}: UploadJSONPropTypes) => {
-    function createTypes(
-		  content: TYPE_TICKETS_SCHEMA[] | TYPE_ISSUES_SCHEMA[] | TYPE_PARTS_SCHEMA[]
-    ){
-		    setList(content);
-	  }
+const UploadJSON = ({ type, setList }: UploadJSONPropTypes) => {
+  function createTypes(content: TYPE_SCHEMA[]) {
+    setList(content);
+  }
 
-	const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-		const file = event.target.files ? event.target.files[0] : null;
-		if (file) {
-			const reader = new FileReader();
-			reader.onload = (event) => {
-				const contents = event.target?.result as string;
-				createTypes(JSON.parse(contents));
-			};
-			reader.readAsText(file);
-		}
-	};
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files ? event.target.files[0] : null;
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const contents = event.target?.result as string;
+        createTypes(JSON.parse(contents));
+      };
+      reader.readAsText(file);
+    }
+  };
 
   return (
     <div>
-        <div className="flex items-center justify-center 
+      <div
+        className="flex items-center justify-center 
                         bg-grey-lighter">
-            <label className="flex items-center px-4 py-2 bg-Secondary_background_color justify-center
+        <label
+          className="flex items-center px-4 py-2 bg-Secondary_background_color justify-center
                             text-highlight_font_color rounded-lg shadow-lg tracking-wide uppercase gap-3
                             border border-dark_gray cursor-pointer">
 
@@ -45,7 +41,7 @@ const UploadJSON = ({type, setList}: UploadJSONPropTypes) => {
             </label>
         </div>
     </div>
-  )
-}
+  );
+};
 
-export default UploadJSON
+export default UploadJSON;

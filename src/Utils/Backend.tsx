@@ -12,7 +12,7 @@ import { db } from "../firebaseConfig";
 // 	setDoc,
 // 	onSnapshot,
 // } from "firebase/firestore";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import emailjs from "@emailjs/browser";
 import { isValidEmail } from "email-js";
 
@@ -43,7 +43,12 @@ import { isValidEmail } from "email-js";
  10.create_tags
  11.sendEmail
  12 get all types list
- 13 create ticket schema
+ 13 get organization details
+ 14 create  schema
+ 15 get  schema
+ 16 get tabs name
+ 17 get color from name
+
 */
 
 // 1
@@ -75,14 +80,14 @@ export const create_user = async (userDetails: TYPE_USER) => {
 };
 
 export const get_organizations = async (organizationIds: string[]) => {
-	const orgList:any = [];
-	organizationIds.map( async (orgId) => {
-		const docRef = doc(db, "organizations", orgId);
-		const docSnap = await getDoc(docRef);
-		orgList.push(docSnap.data());
-	})
+  const orgList: any = [];
+  organizationIds.map(async (orgId) => {
+    const docRef = doc(db, "organizations", orgId);
+    const docSnap = await getDoc(docRef);
+    orgList.push(docSnap.data());
+  });
 
-	return orgList;
+  return orgList;
 };
 
 // 4
@@ -111,9 +116,6 @@ export const get_organizations = async (organizationIds: string[]) => {
 //   const res = await addDoc(organizationsRef, initializeOrganization);
 //   return res.id;
 // };
-
-
-
 
 // 5
 export const update_organization = () => {};
@@ -178,17 +180,64 @@ export const get_all_Supported_types = async () => {
   }
 };
 
-// 13 create a new ticket schema
-export const create_ticket_schema = async (ticketSchema: any) => {
-  const res: any = await setDoc(doc(db, "ticket-schema"), ticketSchema);
-  return res.id;
+export const get_organizations_details = async (organisationId: string) => {
+  const docRef = doc(db, "organizations", organisationId);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    return docSnap.data();
+  } else {
+    console.log("No such document!");
+  }
 };
 
+// 14 create a new  schema
+export const create_schema = async (
+  organisationId: string,
+  schemas: TYPE_SCHEMA[]
+) => {
+  const organisationRef = doc(db, "organizations", organisationId);
+  schemas.forEach(async (schema) => {
+    await updateDoc(organisationRef, {
+      fields: arrayUnion({ ...schema, data: [] }),
+    });
+  });
+};
 
-export const create_parts_schema = async(partSchema: TYPE_PARTS_SCHEMA[]) => {
-  await setDoc(doc(db, "schema", "parts"), {partSchema});
-}
+// 15 get schema
+export const get_schema_data = async (
+  organisationId: string,
+  schema: string
+) => {
+  let organizationDetails: any = await get_organizations_details(
+    organisationId
+  );
+  organizationDetails["fields"].forEach((item: any) => {
+    if (item.title === schema) {
+      return {
+        schema: item["schema"],
+        data: item["data"],
+      };
+    }
+  });
+};
+//16 get tabs name
+export const get_tabs_name = async (organisationId: string) => {
+  let organizationDetails: any = await get_organizations_details(
+    organisationId
+  );
+  let titles: { color: string; icon: string; title: string }[] = [];
+  organizationDetails["fields"].forEach((item: any) => {
+    titles.push({ title: item.title, icon: item.icon, color: item.color });
+  });
+  return titles;
+};
 
-export const create_issues_schema = async(issueSchema: TYPE_ISSUES_SCHEMA[]) => {
-  await setDoc(doc(db, "schema", "issues"), {issueSchema});
-}
+// 17 get background color from name
+export const get_background_color_from_name = async (name: string) => {
+  return "#161616";
+};
+// 18 get text color from name
+export const get_text_color_from_name = async (name: string) => {
+  return "#668cff";
+};

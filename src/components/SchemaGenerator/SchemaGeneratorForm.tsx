@@ -1,27 +1,37 @@
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import PlusIcon from "../../assets/icons/plus-icon.svg";
-// import { create_ticket_schema, create_parts_schema, create_issues_schema } from "../../Utils/Backend";
 import UploadJSON from "../UploadJSON";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import {
+  setIssueSchema,
+  setTicketSchema,
+} from "../../redux/reducers/SchemaSlice";
+import { create_schema } from "../../Utils/Backend";
 import { FieldGroup } from "./FieldGroup";
 
 type GeneratorFormPropTypes = {
   type: string;
-  list: TYPE_TICKETS_SCHEMA[] | TYPE_ISSUES_SCHEMA[] | TYPE_PARTS_SCHEMA[];
-  setList:
-    | React.Dispatch<React.SetStateAction<TYPE_TICKETS_SCHEMA[]>>
-    | React.Dispatch<React.SetStateAction<TYPE_ISSUES_SCHEMA[]>>
-    | React.Dispatch<React.SetStateAction<TYPE_PARTS_SCHEMA[]>>;
+  list: TYPE_SCHEMA[];
+  setList: React.Dispatch<React.SetStateAction<TYPE_SCHEMA[]>>;
+  activeTab: string;
+  setActiveTab: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export const SchemaGeneratorForm = ({
   type,
   list,
   setList,
+  activeTab,
+  setActiveTab,
 }: GeneratorFormPropTypes) => {
-  
+  const dispatch = useAppDispatch();
+  const organizationId = useAppSelector((state) => state.auth.organisationId);
+
   const addColumn = (e: any) => {
     e.preventDefault();
-    setList([{"": ""}, ...list]);
+    let tempColumns = [...list];
+    tempColumns.push({ columnName: "", columnType: "" });
+    setList(tempColumns);
   };
 
   const changeColumn = (id: number, columnName: string, columnType: string) => {
@@ -37,22 +47,6 @@ export const SchemaGeneratorForm = ({
     setList(newObjects);
   }
 
-  // const submitSchema = (e: any) => {
-  //   e.preventDefault();
-  //   console.log(list);
-  //   switch (type) {
-  //     case "Tickets":
-  //       create_ticket_schema(list);
-  //       break;
-  //     case "Issues":
-  //       create_issues_schema(list);
-  //       break;
-  //     case "Parts":
-  //       create_parts_schema(list);
-  //       break; 
-  //   }
-  // };
-
   function handleOnDragEnd(result: any) {
     if (!result.destination) return;
     const items = Array.from(list);
@@ -60,9 +54,30 @@ export const SchemaGeneratorForm = ({
     items.splice(result.destination.index, 0, reorderedItem);
     setList(items);
   }
+  
+  const submitSchema = (e: any) => {
+    e.preventDefault();
+    console.log(list);
+    switch (type) {
+      case "Tickets":
+        create_schema(organizationId, list);
+        dispatch(setTicketSchema(list));
 
+        break;
+      case "Issues":
+        create_schema(organizationId, list);
+        dispatch(setIssueSchema(list));
+        break;
+      case "Parts":
+        break;
+    }
+  };
 
   return (
+    <div className="flex justify-center gap-6 w-full">
+    <div className='w-96 h-96 bg-slate-400'>
+
+    </div>
     <section className="flex flex-col h-full overflow-auto py-0 px-4">
         <div className="sticky mb-4 top-0 flex items-center justify-between bg-background_color py-4 z-10">
           <button
@@ -71,8 +86,18 @@ export const SchemaGeneratorForm = ({
             onClick={addColumn}>
             <img src={PlusIcon} className="w-4 h-4" alt="" />
           </button>
+          <button
+            className="flex justify-center items-center w-32 h-8 bg-background_color rounded-md shadow-md shadow-black
+          text-sm text-highlight_font_color active:shadow-inner
+          "
+            onClick={submitSchema}
+          >
+            Submit Schema
+          </button>
           <UploadJSON type={type} setList={setList}/> 
         </div>
+
+        
 
         <DragDropContext onDragEnd={handleOnDragEnd}>
           <Droppable droppableId='dragableList'>
@@ -103,5 +128,6 @@ export const SchemaGeneratorForm = ({
           </Droppable>
         </DragDropContext>
     </section>
+    </div>
   );
 };
