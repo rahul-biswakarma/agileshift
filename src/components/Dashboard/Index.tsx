@@ -42,6 +42,7 @@ export default function Dashboard() {
         <NavBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
         <SearchCompont />
       </header>
+      
       <DataTable
         datas={dummyData}
         dataSchema={[
