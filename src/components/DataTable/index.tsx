@@ -7,7 +7,7 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 
 type Type_DataTableProps = {
-	dataSchema: { color: string; schema: Array<TYPE_SCHEMA> };
+	dataSchema: {color: string; schema: Array<TYPE_SCHEMA> };
 	datas: any;
 	feildColor: string;
 };
@@ -43,7 +43,7 @@ const DataTable = (props: Type_DataTableProps) => {
 		// Setting AgGridColumnsDefitions
 		let tempColumnDefs: Type_AgGridColsDefs = [];
 		props.dataSchema.schema.map((schema: TYPE_SCHEMA) => {
-			function idComponentWrapper(params: any) {
+			function idComponentWrapper(params: any){
 				return (
 					<IdComponent
 						color={props.dataSchema.color}
