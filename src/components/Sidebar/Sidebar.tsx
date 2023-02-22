@@ -20,7 +20,7 @@ const Sidebar = (props:Type_SidebarState) => {
         <div className='w-1/3 h-screen rounded-tl-xl rounded-bl-xl bg-sidebar_bg backdrop-filter backdrop-blur-lg bg-opacity-60 border border-primary_font_color p-3'>
             {/* bg-gradient-to-b from-[#badde8] to-[#bdddcc] */}
             <Header state={state} setState={setState}/>
-            <Details />
+            <Details state={state} setState={setState}/>
             Sidebar
         </div>
     )
