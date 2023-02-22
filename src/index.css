@@ -12,6 +12,8 @@ body {
   height: 100vh;
   display: flex;
   flex-direction: column;
+  background-color: #161616;
+  overflow: hidden;
 }
 
 code {
