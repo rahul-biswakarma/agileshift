@@ -27,6 +27,9 @@ module.exports = {
 				// Dashboard Components
 				background_color: "#161616",
 				Secondary_background_color: "#1F1F1F", //color use in navBar and serch
+
+				//Sidebar
+				sidebar_bg:"#262626",
 			},
 			fontFamily: {
 				inter: ["Inter", "sans-serif"],

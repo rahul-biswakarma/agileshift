@@ -60,7 +60,7 @@ export const get_users_organization = async (userId: string) => {
   const userRef = doc(db, "users", userId);
   const userSnap = await getDoc(userRef);
   if (userSnap.exists()) {
-    return userSnap.data()["organization"];
+    return userSnap.data()["organisation"];
   } else {
     // doc.data() will be undefined in this case
     console.log("No such userFound document!");
