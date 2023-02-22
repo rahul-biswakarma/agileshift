@@ -1,4 +1,10 @@
-export default function NavBar() {
+import React from "react";
+
+type props_type = {
+  selectedTab: string;
+  setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
+};
+export default function NavBar(props: props_type) {
   return (
     <nav className="flex flex-row bg-Secondary_background_color p-1  rounded-[10px] flex-1 flex-grow gap-10 stroke-primary_font_color ">
       <section className=" p-1">
@@ -11,7 +17,14 @@ export default function NavBar() {
         />
       </section>
 
-      <section className=" hover:stroke-highlight_icon_color  flex flex-row flex-1 items-center flex-grow gap-2 hover:bg-background_color hover:text-white p-1 rounded-[5px] cursor-pointer min-w-fit ml-2 mr-2 px-4">
+      <button
+        onClick={() => props.setSelectedTab("Dashboard")}
+        className={`hover:stroke-highlight_icon_color hover:bg-background_color ${
+          props.selectedTab === "Dashboard"
+            ? "bg-background_color stroke-highlight_icon_color text-white"
+            : ""
+        }   flex flex-row flex-1 items-center flex-grow gap-2  hover:text-white p-1 rounded-[5px] cursor-pointer min-w-fit ml-2 mr-2 px-4`}
+      >
         <svg
           width="24"
           height="24"
@@ -48,8 +61,15 @@ export default function NavBar() {
         </svg>
 
         <p className="text-[16px] font-medium">Dashboard</p>
-      </section>
-      <section className=" hover:stroke-[#ffe600] items-center  flex flex-row items-center flex-1 flex-grow gap-2 hover:bg-background_color hover:text-white p-1 rounded-[5px] cursor-pointer min-w-fit ml-2 mr-2 px-4">
+      </button>
+      <button
+        onClick={() => props.setSelectedTab("Tickets")}
+        className={` hover:stroke-[#ffe600]  ${
+          props.selectedTab === "Tickets"
+            ? "bg-background_color stroke-[#ffe600]  text-white"
+            : ""
+        }  items-center  flex flex-row  flex-1 flex-grow gap-2 hover:bg-background_color hover:text-white p-1 rounded-[5px] cursor-pointer min-w-fit ml-2 mr-2 px-4`}
+      >
         <svg
           width="20"
           height="15"
@@ -85,8 +105,15 @@ export default function NavBar() {
         </svg>
 
         <p className="text-[16px] font-medium">Tickets</p>
-      </section>
-      <section className=" hover:stroke-red-400 items-center flex flex-row flex-1 flex-grow gap-2 hover:bg-background_color hover:text-white p-1 rounded-[5px] cursor-pointer min-w-fit ml-2 mr-2 px-4">
+      </button>
+      <button
+        onClick={() => props.setSelectedTab("Issues")}
+        className={` hover:stroke-red-400 items-center ${
+          props.selectedTab === "Issues"
+            ? "bg-background_color stroke-red-400 text-white"
+            : ""
+        }   flex flex-row flex-1 flex-grow gap-2 hover:bg-background_color hover:text-white p-1 rounded-[5px] cursor-pointer min-w-fit ml-2 mr-2 px-4`}
+      >
         <svg
           width="24"
           height="24"
@@ -159,8 +186,15 @@ export default function NavBar() {
         </svg>
 
         <p className="text-[16px] font-medium">Issues</p>
-      </section>
-      <section className=" hover:stroke-[#668cff]  items-center flex flex-row flex-1 flex-grow gap-1 hover:bg-background_color hover:text-white p-1 rounded-[5px] cursor-pointer min-w-fit ml-2 mr-2 px-4">
+      </button>
+      <button
+        onClick={() => props.setSelectedTab("Vistas")}
+        className={` hover:stroke-[#668cff]  ${
+          props.selectedTab === "Vistas"
+            ? "bg-background_color stroke-[#668cff]  text-white"
+            : ""
+        }   items-center flex flex-row flex-1 flex-grow gap-1 hover:bg-background_color hover:text-white p-1 rounded-[5px] cursor-pointer min-w-fit ml-2 mr-2 px-4`}
+      >
         <svg
           width="24"
           height="24"
@@ -185,9 +219,16 @@ export default function NavBar() {
         </svg>
 
         <p className="text-[16px] font-medium">Vistas</p>
-      </section>
+      </button>
 
-      <section className=" hover:stroke-[#37a45b] items-center flex flex-row flex-1 flex-grow gap-2 hover:bg-background_color hover:text-white p-1 rounded-[5px] cursor-pointer min-w-fit ml-2 mr-2 px-4">
+      <button
+        onClick={() => props.setSelectedTab("Parts")}
+        className={` hover:stroke-[#37a45b] ${
+          props.selectedTab === "Parts"
+            ? "bg-background_color stroke-[#37a45b] text-white"
+            : ""
+        }   items-center flex flex-row flex-1 flex-grow gap-2 hover:bg-background_color hover:text-white p-1 rounded-[5px] cursor-pointer min-w-fit ml-2 mr-10 px-4 `}
+      >
         <svg
           width="24"
           height="24"
@@ -212,7 +253,7 @@ export default function NavBar() {
         </svg>
 
         <p className="text-[16px] font-medium">Parts</p>
-      </section>
+      </button>
     </nav>
   );
 }

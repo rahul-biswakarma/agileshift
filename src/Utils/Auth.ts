@@ -9,7 +9,7 @@ import {
 	create_user,
 	get_users_organization,
 } from "./Backend";
-import { setUserId } from "../redux/reducers/AuthSlice";
+import { setOrganisationList, setUserId } from "../redux/reducers/AuthSlice";
 import { store } from "../redux/store";
 
 //Function to handle authentication from google
@@ -21,7 +21,8 @@ export const authWithGithub = () => {
 //Function to handle authentication from google
 export const authWithGoogle = () => {
 	const provider = new GoogleAuthProvider();
-	signInWithPopupCall(provider);
+	const navigate = signInWithPopupCall(provider)
+    console.log(navigate);
 };
 
 //Function for popup auth
@@ -30,16 +31,17 @@ const signInWithPopupCall = (
 ) => {
 	signInWithPopup(auth, provider)
 		.then(async (result: any) => {
-			// const dispatch = useAppDispatch();
 
 			const user = result.user;
 			const isUser = await check_users_database(user.uid);
+            
 
 			if (isUser) {
-				//Action if user exists
-				//list all the organizations for user
 				const organisationList = await get_users_organization(user.uid);
 				console.log(organisationList);
+                store.dispatch(setUserId(user.uid));
+                if(organisationList)
+                    store.dispatch(setOrganisationList(organisationList));
 			} else {
 				let userDetails: TYPE_USER = {
 					id: user.uid,
