@@ -92,7 +92,7 @@ export const OrganisationForm = ({
 								name="org-name"
 								type="text"
 								placeholder="Enter Org. Name"
-								className="font-lg rounded-lg px-4 bg-Secondary_background_color h-10 outline-none border-dark_gray placeholder:text-white/20"
+								className="font-lg font-fira_code rounded-lg px-4 bg-Secondary_background_color h-10 outline-none border-dark_gray placeholder:text-white/20"
 							/>
 							{orgNameErrorMessage.length > 0 && (
 								<p className="text-red-400 text-sm ml-1 mt-1">
@@ -121,7 +121,7 @@ export const OrganisationForm = ({
 									onFocus={() => setToolTip(!toolTip)}
 									onBlur={() => setToolTip(!toolTip)}
 									type="text"
-									className="flex-1 font-lg rounded-r-lg px-4 bg-Secondary_background_color h-10 outline-none"
+									className="flex-1 font-fira_code font-lg rounded-r-lg px-4 bg-Secondary_background_color h-10 outline-none"
 								/>
 							</div>
 							{orgUrlErrorMessage.length > 0 && (
