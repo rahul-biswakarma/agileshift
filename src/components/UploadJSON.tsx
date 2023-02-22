@@ -1,5 +1,4 @@
 import React, { ChangeEvent } from 'react';
-import { store } from "../redux/store";
 
 
 type UploadJSONPropTypes = {

@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react";
+import React from "react";
 import PlusIcon from "../../assets/icons/plus-icon.svg";
 import { useAppSelector } from "../../redux/hooks";
 import {OrganizationCard} from "./OrganizationCard";

@@ -1,5 +1,3 @@
-import React from 'react'
-
 export const OrganizationCard = () => {
   return (
     <div className='w-full flex justify-between items-center p-2 text-highlight_font_color border border-background_color hover:border-dark_gray rounded-lg'>
