@@ -3,19 +3,17 @@ import OrganisationForm from "../ManageOrganization/OrganisationForm";
 import { SchemaGenerator } from "./SchemaGenerator";
 
 export const GeneratorFormsContainer = () => {
-  const [ticketColumnList, setTicketColumnList] = useState<
-    TYPE_TICKETS_SCHEMA[]
-  >([
+  const [ticketColumnList, setTicketColumnList] = useState<TYPE_SCHEMA[]>([
     { columnName: "Ticket Name", columnType: "string" },
     { columnName: "Created By", columnType: "user" },
     { columnName: "Tag", columnType: "tags" },
   ]);
-  const [issueColumnList, setIssueColumnList] = useState<TYPE_ISSUES_SCHEMA[]>([
+  const [issueColumnList, setIssueColumnList] = useState<TYPE_SCHEMA[]>([
     { columnName: "Ticket Name", columnType: "string" },
     { columnName: "Created By", columnType: "user" },
     { columnName: "Tag", columnType: "tags" },
   ]);
-  const [partColumnList, setPartColumnList] = useState<TYPE_PARTS_SCHEMA[]>([
+  const [partColumnList, setPartColumnList] = useState<TYPE_SCHEMA[]>([
     { columnName: "Ticket Name", columnType: "string" },
     { columnName: "Created By", columnType: "user" },
     { columnName: "Tag", columnType: "tags" },

@@ -8,11 +8,8 @@ import { FieldGroup } from "./FieldGroup";
 
 type GeneratorFormPropTypes = {
   type: string;
-  list: TYPE_TICKETS_SCHEMA[] | TYPE_ISSUES_SCHEMA[] | TYPE_PARTS_SCHEMA[];
-  setList:
-    | React.Dispatch<React.SetStateAction<TYPE_TICKETS_SCHEMA[]>>
-    | React.Dispatch<React.SetStateAction<TYPE_ISSUES_SCHEMA[]>>
-    | React.Dispatch<React.SetStateAction<TYPE_PARTS_SCHEMA[]>>;
+  list: TYPE_SCHEMA[];
+  setList: React.Dispatch<React.SetStateAction<TYPE_SCHEMA[]>>;
   activeTab: string;
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
 };

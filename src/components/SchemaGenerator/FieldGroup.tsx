@@ -2,7 +2,7 @@ import { useState } from "react";
 import { get_all_Supported_types } from "../../Utils/Backend";
 
 type FieldGroupPropTypes = {
-  column: TYPE_TICKETS_SCHEMA | TYPE_ISSUES_SCHEMA | TYPE_PARTS_SCHEMA;
+  column: TYPE_SCHEMA;
   id: number;
   changeColumn: (id: number, columnName: string, columnType: string) => void;
 };
