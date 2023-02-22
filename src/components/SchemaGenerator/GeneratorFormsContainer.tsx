@@ -12,7 +12,7 @@ export const GeneratorFormsContainer = () => {
   const defaultColumnList: TYPE_SCHEMA[] = [
     { columnName: "Ticket Name", columnType: "string" },
     { columnName: "Created By", columnType: "user" },
-    { columnName: "Tag", columnType: "tags" },
+    { columnName: "Tag", columnType: "tag" },
   ];
 
   const makeActualCopy = (columnList: TYPE_SCHEMA[]): TYPE_SCHEMA[] => {
@@ -48,9 +48,15 @@ export const GeneratorFormsContainer = () => {
   ]);
 
   function changeList(this: any, list: TYPE_SCHEMA[]) {
-    console.log("called", this.id);
     let tempFields = [...fields];
     tempFields[this.id].list = list;
+    setFields(tempFields);
+  }
+
+  function changeName(this: any, name: string) {
+    let tempFields = [...fields];
+    tempFields[this.id].name = name;
+    setActiveTab(name);
     setFields(tempFields);
   }
 
@@ -77,7 +83,8 @@ export const GeneratorFormsContainer = () => {
       <OrganisationForm activeTab={activeTab} setActiveTab={setActiveTab} />
       {fields.map((field, id) => (
         <SchemaGenerator
-          type={field.name}
+          name={field.name}
+          setName={changeName.bind({ id: id })}
           list={field.list}
           setList={changeList.bind({ id: id })}
           activeTab={activeTab}
