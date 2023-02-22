@@ -17,13 +17,6 @@ module.exports = {
 				dark_gray: "#575757",
 				input_bg: "#f1f1f1",
 
-				yellow: "#fed15f",
-				blue: "#4c87fa",
-				purple: "#ce43ff",
-				green: "#34784d",
-				pink: "#d07792",
-				orange: "#cf6643",
-
 				// Dashboard Components
 				background_color: "#161616",
 				Secondary_background_color: "#1F1F1F", //color use in navBar and serch
@@ -31,6 +24,7 @@ module.exports = {
 			fontFamily: {
 				inter: ["Inter", "sans-serif"],
 				dm_sans: ["DM Sans", "sans-serif"],
+				fira_code: ["Fira Code", "monospace"],
 			},
 			backgroundImage: {
 				login_hero_image: "url('./assets/images/login.webp')",
