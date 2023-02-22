@@ -1,5 +1,4 @@
 import { useRef, useState, ChangeEvent } from "react";
-import ArrowIcon from "../../assets/icons/arrow-icon.svg";
 require("tailwindcss-writing-mode")({
 	variants: ["responsive", "hover"],
 });
@@ -107,7 +106,7 @@ export const OrganisationForm = ({
 							>
 								URL
 							</label>
-							<div className="flex rounded-lg border-[2px] border-white/5   items-center">
+							<div className="flex rounded-lg border-[2px] border-white/5 items-center">
 								<label
 									htmlFor=""
 									className="px-4 text-white/30"

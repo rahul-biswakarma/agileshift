@@ -11,31 +11,57 @@ export default function Dashboard() {
 			id: "TKT-1",
 			title: "Add Responsiveness",
 			stage: "Work In Progress",
-			owner: "Rahul",
-			tag: {
-				color: "#FFFFFF",
-				tagName: "Now",
+			owner: {
+				name: "Rahul",
+				avatar:
+					"https://i.pinimg.com/236x/52/fe/87/52fe873be054e7f8345c65281b02c63b.jpg",
 			},
+			tag: [
+				{
+					color: "#FFFFFF",
+					tagName: "Now",
+				},
+			],
 		},
 		{
 			id: "TKT-2",
 			title: "Add Custom Theme",
 			stage: "Queued",
-			owner: "Nikhil",
-			tag: {
-				color: "#000000",
-				tagName: "Now",
+			owner: {
+				name: "Nikhil",
+				avatar:
+					"https://i.pinimg.com/236x/52/fe/87/52fe873be054e7f8345c65281b02c63b.jpg",
 			},
+			tag: [
+				{
+					color: "#000000",
+					tagName: "Now",
+				},
+				{
+					color: "#123456",
+					tagName: "Now",
+				},
+				{
+					color: "#943f43",
+					tagName: "Now",
+				},
+			],
 		},
 		{
 			id: "TKT-3",
 			title: "Add Responsiveness",
 			stage: "Work In Progress",
-			owner: "Rahul",
-			tag: {
-				color: "#FFFFFF",
-				tagName: "Next",
+			owner: {
+				name: "Rahul",
+				avatar:
+					"https://i.pinimg.com/236x/52/fe/87/52fe873be054e7f8345c65281b02c63b.jpg",
 			},
+			tag: [
+				{
+					color: "#FFFFFF",
+					tagName: "Next",
+				},
+			],
 		},
 	];
 
@@ -53,10 +79,10 @@ export default function Dashboard() {
 				dataSchema={{
 					color: "purple",
 					schema: [
-						{ columnTitle: "id", columnType: "string" },
-						{ columnTitle: "title", columnType: "string" },
+						{ columnTitle: "id", columnType: "id" },
+						{ columnTitle: "title", columnType: "title" },
 						{ columnTitle: "stage", columnType: "string" },
-						{ columnTitle: "owner", columnType: "string" },
+						{ columnTitle: "owner", columnType: "user" },
 						{ columnTitle: "tag", columnType: "tag" },
 					],
 				}}
