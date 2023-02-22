@@ -84,7 +84,6 @@ export const get_organizations = async (organizationIds: string[]) => {
 	return orgList;
 };
 
-
 // 4
 // export const create_organization = async (
 //   userId: string,
@@ -111,18 +110,38 @@ export const get_organizations = async (organizationIds: string[]) => {
 //   const res = await addDoc(organizationsRef, initializeOrganization);
 //   return res.id;
 // };
+
+export const create_ticket_schema = async(ticketSchema: TYPE_TICKETS_SCHEMA[]) => {
+  await setDoc(doc(db, "schema", "ticket"), {ticketSchema});
+}
+
+export const create_parts_schema = async(partSchema: TYPE_PARTS_SCHEMA[]) => {
+  await setDoc(doc(db, "schema", "parts"), {partSchema});
+}
+
+export const create_issues_schema = async(issueSchema: TYPE_ISSUES_SCHEMA[]) => {
+  await setDoc(doc(db, "schema", "issues"), {issueSchema});
+}
+
+
 // 5
 export const update_organization = () => {};
+
 // 6
 export const create_ticket = () => {};
+
 // 7
 export const create_issue = () => {};
+
 // 8
 export const update_ticket = () => {};
+
 // 9
 export const update_issue = () => {};
+
 // 10
 export const create_tags = () => {};
+
 // 11
 export const sendEmail = (emailId: string) => {
   //   e.preventDefault(); // prevents the page from reloading when you hit “Send”
