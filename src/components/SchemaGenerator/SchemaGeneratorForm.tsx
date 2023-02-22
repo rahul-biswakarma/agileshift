@@ -1,5 +1,13 @@
 // import { useState } from "react";
-import { create_ticket_schema, create_parts_schema, create_issues_schema } from "../../Utils/Backend";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import {
+  setIssueSchema,
+  setTicketSchema,
+} from "../../redux/reducers/SchemaSlice";
+import {
+  create_ticket_schema,
+  create_issues_schema,
+} from "../../Utils/Backend";
 import { FieldGroup } from "./FieldGroup";
 
 type GeneratorFormPropTypes = {
@@ -16,6 +24,9 @@ export const SchemaGeneratorForm = ({
   list,
   setList,
 }: GeneratorFormPropTypes) => {
+  const dispatch = useAppDispatch();
+  const organizationId = useAppSelector((state) => state.auth.organisationId);
+
   const addColumn = (e: any) => {
     e.preventDefault();
     let tempColumns = [...list];
@@ -34,23 +45,25 @@ export const SchemaGeneratorForm = ({
     console.log(list);
     switch (type) {
       case "Tickets":
-        create_ticket_schema(list);
+        create_ticket_schema(organizationId, list);
+        dispatch(setTicketSchema(list));
+
         break;
       case "Issues":
-        create_issues_schema(list);
+        create_issues_schema(organizationId, list);
+        dispatch(setIssueSchema(list));
         break;
       case "Parts":
-        create_parts_schema(list);
-        break; 
+        break;
     }
   };
-
 
   return (
     <section
       className="h-max max-h-96 w-max bg-Secondary_background_color mt-4 rounded-md border border-border_color
     overflow-auto px-6
-    ">
+    "
+    >
       <form>
         {list.map((column, id) => (
           <FieldGroup
@@ -65,7 +78,8 @@ export const SchemaGeneratorForm = ({
             className="flex justify-center items-center w-32 h-8 bg-background_color rounded-md shadow-md shadow-black
           text-sm text-highlight_font_color active:shadow-inner
           "
-            onClick={addColumn}>
+            onClick={addColumn}
+          >
             Add Column
           </button>
 
@@ -73,7 +87,8 @@ export const SchemaGeneratorForm = ({
             className="flex justify-center items-center w-32 h-8 bg-background_color rounded-md shadow-md shadow-black
           text-sm text-highlight_font_color active:shadow-inner
           "
-            onClick={submitSchema}>
+            onClick={submitSchema}
+          >
             Submit Schema
           </button>
         </div>

@@ -2,6 +2,7 @@ import React from "react";
 import DataTable from "../DataTable";
 import NavBar from "./NavBar";
 import SearchCompont from "./SearchCompont";
+import { create_issues_schema } from "../../Utils/Backend";
 
 export default function Dashboard() {
   const [selectedTab, setSelectedTab] = React.useState<string>("Dashboard");

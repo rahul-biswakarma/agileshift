@@ -7,9 +7,7 @@ import OrganizationList from "./components/ManageOrganization/OrganizationList";
 import OrganisationForm from "./components/ManageOrganization/OrganisationForm";
 import { GeneratorFormsContainer } from "./components/SchemaGenerator/GeneratorFormsContainer";
 
-
 const App = () => {
-
   return (
     <BrowserRouter>
       <Routes>
@@ -18,14 +16,8 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/schema-generator" element={<GeneratorFormsContainer />} />
         <Route path="/dashboard" element={<Dashboard />} />
-		    <Route
-					path="/orglist"
-					element={<OrganizationList />}
-				/>
-        <Route
-					path="/createOrg"
-					element={<OrganisationForm />}
-				/>
+        <Route path="/orglist" element={<OrganizationList />} />
+        <Route path="/createOrg" element={<OrganisationForm />} />
       </Routes>
     </BrowserRouter>
   );
