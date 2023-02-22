@@ -2,7 +2,7 @@ import React, { ChangeEvent } from "react";
 
 type UploadJSONPropTypes = {
   type: string;
-  setList: React.Dispatch<React.SetStateAction<TYPE_SCHEMA[]>>;
+  setList: (this: any, list: TYPE_SCHEMA[]) => void;
 };
 
 const UploadJSON = ({ type, setList }: UploadJSONPropTypes) => {

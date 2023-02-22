@@ -84,11 +84,13 @@ const OrganisationForm = ({
     );
   else
     return (
-      <div className="h-screen w-28 flex flex-wrap text-primary_font_color  bg-Secondary_background_color">
+      <div className="h-screen w-12 flex flex-wrap text-primary_font_color  bg-Secondary_background_color">
         <button
           className="h-full w-full"
           onClick={() => setActiveTab("Organisation")}>
-          <span className="[writing-mode:vertical-rl]">Organisation Form</span>
+          <span className="[writing-mode:vertical-rl] text-sm font-bold uppercase">
+            Organisation Form
+          </span>
         </button>
       </div>
     );

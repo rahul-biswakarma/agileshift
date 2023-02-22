@@ -9,7 +9,7 @@ import { FieldGroup } from "./FieldGroup";
 type GeneratorFormPropTypes = {
   type: string;
   list: TYPE_SCHEMA[];
-  setList: React.Dispatch<React.SetStateAction<TYPE_SCHEMA[]>>;
+  setList: (this: any, list: TYPE_SCHEMA[]) => void;
   activeTab: string;
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
 };
