@@ -75,14 +75,14 @@ export const create_user = async (userDetails: TYPE_USER) => {
 };
 
 export const get_organizations = async (organizationIds: string[]) => {
-	const orgList:any = [];
-	organizationIds.map( async (orgId) => {
-		const docRef = doc(db, "organizations", orgId);
-		const docSnap = await getDoc(docRef);
-		orgList.push(docSnap.data());
-	})
+  const orgList: any = [];
+  organizationIds.map(async (orgId) => {
+    const docRef = doc(db, "organizations", orgId);
+    const docSnap = await getDoc(docRef);
+    orgList.push(docSnap.data());
+  });
 
-	return orgList;
+  return orgList;
 };
 
 // 4
@@ -111,9 +111,6 @@ export const get_organizations = async (organizationIds: string[]) => {
 //   const res = await addDoc(organizationsRef, initializeOrganization);
 //   return res.id;
 // };
-
-
-
 
 // 5
 export const update_organization = () => {};
@@ -184,11 +181,10 @@ export const create_ticket_schema = async (ticketSchema: any) => {
   return res.id;
 };
 
+export const create_parts_schema = async (partSchema: TYPE_SCHEMA[]) => {
+  await setDoc(doc(db, "schema", "parts"), { partSchema });
+};
 
-export const create_parts_schema = async(partSchema: TYPE_PARTS_SCHEMA[]) => {
-  await setDoc(doc(db, "schema", "parts"), {partSchema});
-}
-
-export const create_issues_schema = async(issueSchema: TYPE_ISSUES_SCHEMA[]) => {
-  await setDoc(doc(db, "schema", "issues"), {issueSchema});
-}
+export const create_issues_schema = async (issueSchema: TYPE_SCHEMA[]) => {
+  await setDoc(doc(db, "schema", "issues"), { issueSchema });
+};
