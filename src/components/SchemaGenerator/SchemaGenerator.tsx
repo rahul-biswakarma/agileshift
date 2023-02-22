@@ -1,4 +1,3 @@
-import UploadJSON from "../UploadJSON";
 import { SchemaGeneratorForm } from "./SchemaGeneratorForm";
 
 type GeneratorPropTypes = {
@@ -17,12 +16,13 @@ export const SchemaGenerator = ({
 }: GeneratorPropTypes) => {
   return (
     <section
-      className="h-screen w-screen bg-background_color text-primary_font_color font-inter pt-4
-    flex flex-col items-center
+      className="h-screen w-screen bg-background_color text-primary_font_color
+flex flex-col items-center gap-4 font-dm_sans
     ">
-      <p className="text-xl">Schema for {type}</p>
-      <UploadJSON type={type} setList={setList}/> 
+      <p className="w-full py-4 bg-background_color text-xl text-highlight_font_color text-center border-b border-border_color">{type} Schema</p>
+      <div className="flex flex-col h-full">
       <SchemaGeneratorForm type={type} list={list} setList={setList} />
+      </div>
     </section>
   );
 };

@@ -4,7 +4,6 @@ import Dashboard from "./components/Dashboard/Index";
 import { Login } from "./components/OnBoarding/Login";
 import { SignUp } from "./components/OnBoarding/Signup";
 import OrganizationList from "./components/ManageOrganization/OrganizationList";
-import OrganisationForm from "./components/ManageOrganization/OrganisationForm";
 import { GeneratorFormsContainer } from "./components/SchemaGenerator/GeneratorFormsContainer";
 
 
@@ -24,7 +23,7 @@ const App = () => {
 				/>
         <Route
 					path="/createOrg"
-					element={<OrganisationForm />}
+					element={<GeneratorFormsContainer/>}
 				/>
       </Routes>
     </BrowserRouter>

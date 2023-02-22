@@ -1,23 +1,31 @@
+import { useState } from "react";
+import CloseIcon from "../../assets/icons/close_icon.svg";
+
 type FieldGroupPropTypes = {
   column: TYPE_TICKETS_SCHEMA | TYPE_ISSUES_SCHEMA | TYPE_PARTS_SCHEMA;
   id: number;
   changeColumn: (id: number, columnName: string, columnType: string) => void;
+  deleteColumn: (id: number) => void;
 };
 
 export const FieldGroup = ({
   column,
   id,
   changeColumn,
+  deleteColumn,
 }: FieldGroupPropTypes) => {
+
+  const [displayFields, setDisplayFields] = useState<boolean>(false);
+  
   return (
-    <div className="flex items-center h-12 my-4 hover:bg-dark_gray p-4 rounded-md">
-      <div className="flex flex-col mr-4">
-        <label htmlFor="columtitle-1" className="text-xs">
+    <div onMouseOver={() => setDisplayFields(true)} onMouseLeave={() => setDisplayFields(false)} className="relative flex items-center justify-between gap-4 p-4 w-96 hover:bg-Secondary_background_color rounded-md">
+      <div className="flex flex-col gap-1 flex-1">
+        <label htmlFor="columtitle-1" className="text-sm">
           Column Title
         </label>
         <input
           type="text"
-          className="h-6 w-40 bg-background_color text-highlight_font_color px-2 placeholder:text-primary_font_color
+          className="p-2 bg-background_color text-highlight_font_color px-2 placeholder:text-primary_font_color
                  rounded-md border border-primary_font_color"
           placeholder="Column Title"
           id="columntitle-1"
@@ -26,18 +34,17 @@ export const FieldGroup = ({
         />
       </div>
 
-      <div className="flex flex-col">
-        <label htmlFor="columntype-1" className="text-xs">
+      <div className="flex flex-col gap-1">
+        <label htmlFor="columntype-1" className="text-sm">
           Column Type
         </label>
         <select
           name="columntype-1"
           id="columntype-1"
-          className="h-6 w-40
+          className="p-2
               bg-background_color 
-              px-2
               text-highlight_font_color
-              rounded-md border border-primary_font_color
+              rounded-lg border border-primary_font_color
               "
           value={column.columnType}
           onChange={(e) => changeColumn(id, column.columnName, e.target.value)}>
@@ -47,6 +54,14 @@ export const FieldGroup = ({
           <option value="user">User</option>
         </select>
       </div>
+      
+      {
+        displayFields && (
+          <button className="absolute -top-2 -right-2 text-highlight_font_color bg-background_color border border-dark_gray p-2 rounded-full text-center" onClick={(e) => deleteColumn(id)}>
+            <img src={CloseIcon} className="w-3 h-3" alt=""/>
+          </button>
+        )
+      }
     </div>
   );
 };
