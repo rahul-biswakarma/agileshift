@@ -7,7 +7,7 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 
 type Type_DataTableProps = {
-	dataSchema: Array<TYPE_SCHEMA>;
+	dataSchema: {color: string; schema: Array<TYPE_SCHEMA> };
 	datas: any;
 	feildColor: string;
 };
@@ -18,6 +18,7 @@ type Type_AgGridColsDefs = Array<{
 	cellRenderer?: React.ComponentType<any>;
 	cellRendererParams?: any;
 	cellClass?: Array<string>;
+	headerClass?: Array<string>;
 }>;
 
 const DataTable = (props: Type_DataTableProps) => {
@@ -41,22 +42,35 @@ const DataTable = (props: Type_DataTableProps) => {
 	useEffect(() => {
 		// Setting AgGridColumnsDefitions
 		let tempColumnDefs: Type_AgGridColsDefs = [];
-		props.dataSchema.map((schema: TYPE_SCHEMA) => {
+		props.dataSchema.schema.map((schema: TYPE_SCHEMA) => {
+			function idComponentWrapper(params: any){
+				return (
+					<IdComponent
+						color={props.dataSchema.color}
+						issuesId={params.value}
+					/>
+				);
+			}
 			if (schema.columnTitle === "id")
 				tempColumnDefs.push({
 					field: schema.columnTitle,
 					maxWidth: 100,
 					minWidth: 100,
-					cellRenderer: IdComponent,
-					cellRendererParams: {
-						color: schema.color,
-					},
-					cellClass: ["flex", "justify-center", "items-center"],
+					cellRenderer: idComponentWrapper,
+					cellClass: ["flex", "items-center", "cell-style-class"],
+					headerClass: ["header-style-class"],
 				});
 			else {
 				tempColumnDefs.push({
 					field: schema.columnTitle,
 					minWidth: 100,
+					cellClass: [
+						"flex",
+						"items-center",
+						"font-dm_sans",
+						"cell-style-class",
+					],
+					headerClass: ["header-style-class"],
 				});
 			}
 			return "";
@@ -64,7 +78,7 @@ const DataTable = (props: Type_DataTableProps) => {
 		setColumnDefs(tempColumnDefs);
 
 		let allColDefsFromSchema: any = [];
-		props.dataSchema.map((schema: TYPE_SCHEMA) => {
+		props.dataSchema.schema.map((schema: TYPE_SCHEMA) => {
 			allColDefsFromSchema.push(schema.columnTitle.toLowerCase());
 			return "";
 		});
