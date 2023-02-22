@@ -8,6 +8,7 @@ export default function Dashboard() {
 
 	let dummyData = [
 		{
+			id: "TKT-1",
 			title: "Add Responsiveness",
 			stage: "Work In Progress",
 			owner: "Rahul",
@@ -17,6 +18,7 @@ export default function Dashboard() {
 			},
 		},
 		{
+			id: "TKT-2",
 			title: "Add Custom Theme",
 			stage: "Queued",
 			owner: "Nikhil",
@@ -26,6 +28,7 @@ export default function Dashboard() {
 			},
 		},
 		{
+			id: "TKT-3",
 			title: "Add Responsiveness",
 			stage: "Work In Progress",
 			owner: "Rahul",
@@ -48,12 +51,13 @@ export default function Dashboard() {
 			<DataTable
 				datas={dummyData}
 				dataSchema={[
-					{ columnTitle: "Title", columnType: "string" },
-					{ columnTitle: "Stage", columnType: "string" },
-					{ columnTitle: "User", columnType: "string" },
-					{ columnTitle: "Tags", columnType: "tag" },
+					{ columnTitle: "id", columnType: "string" },
+					{ columnTitle: "title", columnType: "string" },
+					{ columnTitle: "stage", columnType: "string" },
+					{ columnTitle: "owner", columnType: "string" },
+					{ columnTitle: "tag", columnType: "tag" },
 				]}
-				feildColor="pruple"
+				feildColor="purple"
 			/>
 		</div>
 	);

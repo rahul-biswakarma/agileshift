@@ -1,6 +1,8 @@
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import { AgGridReact } from "ag-grid-react/lib/agGridReact";
 
+import { IdComponent } from "./idComponent";
+
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 
@@ -14,6 +16,9 @@ type Type_AgGridColsDefs = Array<{
 	field: string;
 	maxWidth?: number;
 	minWidth?: number;
+	cellRenderer?: React.ComponentType<any>;
+	cellRendererParams?: any;
+	cellClass?: Array<string>;
 }>;
 
 const DataTable = (props: Type_DataTableProps) => {
@@ -43,6 +48,11 @@ const DataTable = (props: Type_DataTableProps) => {
 					field: schema.columnTitle,
 					maxWidth: 100,
 					minWidth: 100,
+					cellRenderer: IdComponent,
+					cellRendererParams: {
+						color: schema.color,
+					},
+					cellClass: ["flex", "justify-center", "items-center"],
 				});
 			else {
 				tempColumnDefs.push({
@@ -50,16 +60,29 @@ const DataTable = (props: Type_DataTableProps) => {
 					minWidth: 100,
 				});
 			}
+			return "";
 		});
 		setColumnDefs(tempColumnDefs);
+
+		let allColDefsFromSchema: any = [];
+		props.dataSchema.map((schema: TYPE_SCHEMA) => {
+			allColDefsFromSchema.push(schema.columnTitle.toLowerCase());
+			return "";
+		});
 
 		// Setting AgGridRowsData
 		let tempRowData: any = [];
 		props.datas.map((row: any) => {
-			tempRowData.push({});
+			let tempRow: { [key: string]: any } = {};
+			allColDefsFromSchema.map((colTitle: string) => {
+				tempRow[colTitle] = row[colTitle.toLowerCase()];
+				return "";
+			});
+			tempRowData.push(tempRow);
+			return "";
 		});
 		setRowData(tempRowData);
-	}, []);
+	}, [props.datas, props.dataSchema]);
 
 	return (
 		<div
