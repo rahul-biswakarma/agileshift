@@ -53,6 +53,7 @@ export default function Dashboard() {
 					{ columnTitle: "User", columnType: "string" },
 					{ columnTitle: "Tags", columnType: "tag" },
 				]}
+				feildColor="pruple"
 			/>
 		</div>
 	);

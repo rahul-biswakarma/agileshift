@@ -7,6 +7,7 @@ import "ag-grid-community/styles/ag-theme-alpine.css";
 type Type_DataTableProps = {
 	dataSchema: Array<TYPE_SCHEMA>;
 	datas: any;
+	feildColor: string;
 };
 
 type Type_AgGridColsDefs = Array<{
@@ -29,16 +30,7 @@ const DataTable = (props: Type_DataTableProps) => {
 		params.api.sizeColumnsToFit();
 	};
 
-	const [rowData, setRowData] = useState([
-		{ make: "Toyota", model: "Celica", price: 35000 },
-		{ make: "Ford", model: "Mondeo", price: 32000 },
-		{ make: "Porsche", model: "Boxster", price: 72000 },
-		{ make: "Porsche", model: "Boxster", price: 72000 },
-		{ make: "Porsche", model: "Boxster", price: 72000 },
-		{ make: "Porsche", model: "Boxster", price: 72000 },
-		{ make: "Porsche", model: "Boxster", price: 72000 },
-		{ make: "Porsche", model: "Boxster", price: 72000 },
-	]);
+	const [rowData, setRowData] = useState();
 
 	const [columnDefs, setColumnDefs] = useState<Type_AgGridColsDefs>([]);
 
@@ -63,19 +55,8 @@ const DataTable = (props: Type_DataTableProps) => {
 
 		// Setting AgGridRowsData
 		let tempRowData: any = [];
-		props.datas.map((schema: TYPE_SCHEMA) => {
-			if (schema.columnTitle === "id")
-				tempColumnDefs.push({
-					field: schema.columnTitle,
-					maxWidth: 100,
-					minWidth: 100,
-				});
-			else {
-				tempColumnDefs.push({
-					field: schema.columnTitle,
-					minWidth: 100,
-				});
-			}
+		props.datas.map((row: any) => {
+			tempRowData.push({});
 		});
 		setRowData(tempRowData);
 	}, []);
