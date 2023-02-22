@@ -1,5 +1,9 @@
 // import { useState } from "react";
-import { create_ticket_schema, create_parts_schema, create_issues_schema } from "../../Utils/Backend";
+import {
+  create_ticket_schema,
+  create_parts_schema,
+  create_issues_schema,
+} from "../../Utils/Backend";
 import { FieldGroup } from "./FieldGroup";
 
 type GeneratorFormPropTypes = {
@@ -9,12 +13,16 @@ type GeneratorFormPropTypes = {
     | React.Dispatch<React.SetStateAction<TYPE_TICKETS_SCHEMA[]>>
     | React.Dispatch<React.SetStateAction<TYPE_ISSUES_SCHEMA[]>>
     | React.Dispatch<React.SetStateAction<TYPE_PARTS_SCHEMA[]>>;
+  activeTab: string;
+  setActiveTab: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export const SchemaGeneratorForm = ({
   type,
   list,
   setList,
+  activeTab,
+  setActiveTab,
 }: GeneratorFormPropTypes) => {
   const addColumn = (e: any) => {
     e.preventDefault();
@@ -35,16 +43,18 @@ export const SchemaGeneratorForm = ({
     switch (type) {
       case "Tickets":
         create_ticket_schema(list);
+        setActiveTab("Issues");
         break;
       case "Issues":
         create_issues_schema(list);
+        setActiveTab("Parts");
         break;
       case "Parts":
         create_parts_schema(list);
-        break; 
+        window.location.href = "dashboard";
+        break;
     }
   };
-
 
   return (
     <section
