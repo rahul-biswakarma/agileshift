@@ -4,25 +4,23 @@ import {
   setIssueSchema,
   setTicketSchema,
 } from "../../redux/reducers/SchemaSlice";
-import {
-  create_ticket_schema,
-  create_issues_schema,
-} from "../../Utils/Backend";
+import { create_schema } from "../../Utils/Backend";
 import { FieldGroup } from "./FieldGroup";
 
 type GeneratorFormPropTypes = {
   type: string;
-  list: TYPE_TICKETS_SCHEMA[] | TYPE_ISSUES_SCHEMA[] | TYPE_PARTS_SCHEMA[];
-  setList:
-    | React.Dispatch<React.SetStateAction<TYPE_TICKETS_SCHEMA[]>>
-    | React.Dispatch<React.SetStateAction<TYPE_ISSUES_SCHEMA[]>>
-    | React.Dispatch<React.SetStateAction<TYPE_PARTS_SCHEMA[]>>;
+  list: TYPE_SCHEMA[];
+  setList: React.Dispatch<React.SetStateAction<TYPE_SCHEMA[]>>;
+  activeTab: string;
+  setActiveTab: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export const SchemaGeneratorForm = ({
   type,
   list,
   setList,
+  activeTab,
+  setActiveTab,
 }: GeneratorFormPropTypes) => {
   const dispatch = useAppDispatch();
   const organizationId = useAppSelector((state) => state.auth.organisationId);
@@ -30,7 +28,7 @@ export const SchemaGeneratorForm = ({
   const addColumn = (e: any) => {
     e.preventDefault();
     let tempColumns = [...list];
-    tempColumns.push({ "": "" });
+    tempColumns.push({ columnName: "", columnType: "" });
     setList(tempColumns);
   };
   const changeColumn = (id: number, columnName: string, columnType: string) => {
@@ -45,12 +43,12 @@ export const SchemaGeneratorForm = ({
     console.log(list);
     switch (type) {
       case "Tickets":
-        create_ticket_schema(organizationId, list);
+        create_schema(organizationId, list);
         dispatch(setTicketSchema(list));
 
         break;
       case "Issues":
-        create_issues_schema(organizationId, list);
+        create_schema(organizationId, list);
         dispatch(setIssueSchema(list));
         break;
       case "Parts":

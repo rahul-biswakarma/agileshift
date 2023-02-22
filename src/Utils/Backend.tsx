@@ -12,7 +12,7 @@ import { db } from "../firebaseConfig";
 // 	setDoc,
 // 	onSnapshot,
 // } from "firebase/firestore";
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import emailjs from "@emailjs/browser";
 import { isValidEmail } from "email-js";
 
@@ -44,9 +44,10 @@ import { isValidEmail } from "email-js";
  11.sendEmail
  12 get all types list
  13 get organization details
- 14 create ticket schema
- 15 create issue schema
- 16 get  schema
+ 14 create  schema
+ 15 get  schema
+ 16 get tabs name
+ 17 get color from name
 
 */
 
@@ -190,36 +191,53 @@ export const get_organizations_details = async (organisationId: string) => {
   }
 };
 
-// 14 create a new ticket schema
-export const create_ticket_schema = async (
+// 14 create a new  schema
+export const create_schema = async (
   organisationId: string,
-  ticketSchema: any
-  ) => {
-  let organizationDetails: any = await get_organizations_details(
-    organisationId
-  );
-  organizationDetails["ticketSchema"] = ticketSchema;
-  await setDoc(doc(db, "organizations", organisationId), organizationDetails);
-  
+  schemas: TYPE_SCHEMA[]
+) => {
+  const organisationRef = doc(db, "organizations", organisationId);
+  schemas.forEach(async (schema) => {
+    await updateDoc(organisationRef, {
+      fields: arrayUnion({ ...schema, data: [] }),
+    });
+  });
 };
-// 15 create_issues_schema
-export const create_issues_schema = async (
+
+// 15 get schema
+export const get_schema_data = async (
   organisationId: string,
-  issueSchema: any
+  schema: string
 ) => {
   let organizationDetails: any = await get_organizations_details(
     organisationId
   );
-  organizationDetails["issueSchema"] = issueSchema;
-  await updateDoc(
-    doc(db, "organizations", organisationId),
-    organizationDetails
-  );
+  organizationDetails["fields"].forEach((item: any) => {
+    if (item.title === schema) {
+      return {
+        schema: item["schema"],
+        data: item["data"],
+      };
+    }
+  });
 };
-// 16 get schema
-export const get_schema = async (organisationId: string, schema: string) => {
+//16 get tabs name
+export const get_tabs_name = async (organisationId: string) => {
   let organizationDetails: any = await get_organizations_details(
     organisationId
   );
-  return organizationDetails[schema];
+  let titles: { color: string; icon: string; title: string }[] = [];
+  organizationDetails["fields"].forEach((item: any) => {
+    titles.push({ title: item.title, icon: item.icon, color: item.color });
+  });
+  return titles;
+};
+
+// 17 get background color from name
+export const get_background_color_from_name = async (name: string) => {
+  return "#161616";
+};
+// 18 get text color from name
+export const get_text_color_from_name = async (name: string) => {
+  return "#668cff";
 };

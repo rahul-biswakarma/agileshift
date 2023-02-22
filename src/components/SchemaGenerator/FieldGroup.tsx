@@ -1,5 +1,8 @@
+import { useState } from "react";
+import { get_all_Supported_types } from "../../Utils/Backend";
+
 type FieldGroupPropTypes = {
-  column: TYPE_TICKETS_SCHEMA | TYPE_ISSUES_SCHEMA | TYPE_PARTS_SCHEMA;
+  column: TYPE_SCHEMA;
   id: number;
   changeColumn: (id: number, columnName: string, columnType: string) => void;
 };
@@ -9,6 +12,12 @@ export const FieldGroup = ({
   id,
   changeColumn,
 }: FieldGroupPropTypes) => {
+  const [types, setTypes] = useState(["string", "number", "tag", "user"]);
+  const getTypes = async () => {
+    let data = await get_all_Supported_types();
+    setTypes(data);
+  };
+  getTypes();
   return (
     <div className="flex items-center h-12 my-4 hover:bg-dark_gray p-4 rounded-md">
       <div className="flex flex-col mr-4">
@@ -41,10 +50,11 @@ export const FieldGroup = ({
               "
           value={column.columnType}
           onChange={(e) => changeColumn(id, column.columnName, e.target.value)}>
-          <option value="string">String</option>
-          <option value="number">Number</option>
-          <option value="tag">Tag</option>
-          <option value="user">User</option>
+          {types.map((type, id) => (
+            <option value={type} key={id}>
+              {type}
+            </option>
+          ))}
         </select>
       </div>
     </div>
