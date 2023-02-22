@@ -43,6 +43,7 @@ import { isValidEmail } from "email-js";
  10.create_tags
  11.sendEmail
  12 get all types list
+ 13 create ticket schema
 */
 
 // 1
@@ -141,7 +142,7 @@ export const sendEmail = (emailId: string) => {
   return params["otp"];
 };
 
-// 12 fetch all supported types.
+// 12 fetch all supported types. returns array of stings
 export const get_all_Supported_types = async () => {
   const typesRef = doc(db, "types", "mBJyeNn4YjJgItin5AOj");
   const typeSnap = await getDoc(typesRef);
@@ -151,4 +152,9 @@ export const get_all_Supported_types = async () => {
     // doc.data() will be undefined in this case
     console.log("No such userFound document!");
   }
+};
+// 13 create a new ticket schema
+export const create_ticket_schema = async (ticketSchema: any) => {
+  const res: any = await setDoc(doc(db, "ticket-schema"), ticketSchema);
+  return res.id;
 };
