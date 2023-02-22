@@ -1,3 +1,4 @@
+import UploadJSON from "../UploadJSON";
 import { SchemaGeneratorForm } from "./SchemaGeneratorForm";
 
 type GeneratorPropTypes = {
@@ -20,11 +21,7 @@ export const SchemaGenerator = ({
     flex flex-col items-center
     ">
       <p className="text-xl">Schema for {type}</p>
-      <button
-        className="flex justify-center items-center w-28 h-8 bg-background_color rounded-md shadow-md shadow-black
-          text-sm text-highlight_font_color active:shadow-inner mt-2 mr-2 border border-Secondary_background_color self-end">
-        Import JSON
-      </button>
+      <UploadJSON type={type} setList={setList}/> 
       <SchemaGeneratorForm type={type} list={list} setList={setList} />
     </section>
   );

@@ -1,11 +1,10 @@
 import { useState } from "react";
+import OrganisationForm from "../ManageOrganization/OrganisationForm";
 import { SchemaGenerator } from "./SchemaGenerator";
 
 export const GeneratorFormsContainer = () => {
-  const [ticketColumnList, setTicketColumnList] = useState<
-    TYPE_TICKETS_SCHEMA[]
-  >([
-    { columnName: "Ticket Name", columnType: "string" },
+  const [ticketColumnList, setTicketColumnList] = useState<TYPE_TICKETS_SCHEMA[]>([
+    { columnName: "Ticket Name", columnType: "string"},
     { columnName: "Created By", columnType: "user" },
     { columnName: "Tag", columnType: "tag" },
   ]);
@@ -19,8 +18,10 @@ export const GeneratorFormsContainer = () => {
     { columnName: "Created By", columnType: "user" },
     { columnName: "Tag", columnType: "tag" },
   ]);
+
   return (
     <div className="w-screen h-screen flex divide-x divide-dark_gray">
+      <OrganisationForm />
       <SchemaGenerator
         type="Tickets"
         list={ticketColumnList}

@@ -56,6 +56,7 @@ export const check_users_database = async (userId: string) => {
     return false;
   }
 };
+
 // 2
 export const get_users_organization = async (userId: string) => {
   const userRef = doc(db, "users", userId);
@@ -67,10 +68,23 @@ export const get_users_organization = async (userId: string) => {
     console.log("No such userFound document!");
   }
 };
+
 // 3
 export const create_user = async (userDetails: TYPE_USER) => {
   await setDoc(doc(db, "users", userDetails.id), userDetails);
 };
+
+export const get_organizations = async (organizationIds: string[]) => {
+	const orgList:any = [];
+	organizationIds.map( async (orgId) => {
+		const docRef = doc(db, "organizations", orgId);
+		const docSnap = await getDoc(docRef);
+		orgList.push(docSnap.data());
+	})
+
+	return orgList;
+};
+
 // 4
 // export const create_organization = async (
 //   userId: string,
@@ -97,18 +111,28 @@ export const create_user = async (userDetails: TYPE_USER) => {
 //   const res = await addDoc(organizationsRef, initializeOrganization);
 //   return res.id;
 // };
+
+
+
+
 // 5
 export const update_organization = () => {};
+
 // 6
 export const create_ticket = () => {};
+
 // 7
 export const create_issue = () => {};
+
 // 8
 export const update_ticket = () => {};
+
 // 9
 export const update_issue = () => {};
+
 // 10
 export const create_tags = () => {};
+
 // 11
 export const sendEmail = (emailId: string) => {
   //   e.preventDefault(); // prevents the page from reloading when you hit “Send”
@@ -153,8 +177,18 @@ export const get_all_Supported_types = async () => {
     console.log("No such userFound document!");
   }
 };
+
 // 13 create a new ticket schema
 export const create_ticket_schema = async (ticketSchema: any) => {
   const res: any = await setDoc(doc(db, "ticket-schema"), ticketSchema);
   return res.id;
 };
+
+
+export const create_parts_schema = async(partSchema: TYPE_PARTS_SCHEMA[]) => {
+  await setDoc(doc(db, "schema", "parts"), {partSchema});
+}
+
+export const create_issues_schema = async(issueSchema: TYPE_ISSUES_SCHEMA[]) => {
+  await setDoc(doc(db, "schema", "issues"), {issueSchema});
+}

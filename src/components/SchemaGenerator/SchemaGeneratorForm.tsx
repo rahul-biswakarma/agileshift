@@ -1,4 +1,5 @@
 // import { useState } from "react";
+import { create_ticket_schema, create_parts_schema, create_issues_schema } from "../../Utils/Backend";
 import { FieldGroup } from "./FieldGroup";
 
 type GeneratorFormPropTypes = {
@@ -11,6 +12,7 @@ type GeneratorFormPropTypes = {
 };
 
 export const SchemaGeneratorForm = ({
+  type,
   list,
   setList,
 }: GeneratorFormPropTypes) => {
@@ -26,10 +28,24 @@ export const SchemaGeneratorForm = ({
     tempColumns[id].columnType = columnType;
     setList(tempColumns);
   };
+
   const submitSchema = (e: any) => {
     e.preventDefault();
     console.log(list);
+    switch (type) {
+      case "Tickets":
+        create_ticket_schema(list);
+        break;
+      case "Issues":
+        create_issues_schema(list);
+        break;
+      case "Parts":
+        create_parts_schema(list);
+        break; 
+    }
   };
+
+
   return (
     <section
       className="h-max max-h-96 w-max bg-Secondary_background_color mt-4 rounded-md border border-border_color
@@ -52,6 +68,7 @@ export const SchemaGeneratorForm = ({
             onClick={addColumn}>
             Add Column
           </button>
+
           <button
             className="flex justify-center items-center w-32 h-8 bg-background_color rounded-md shadow-md shadow-black
           text-sm text-highlight_font_color active:shadow-inner

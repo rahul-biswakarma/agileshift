@@ -16,13 +16,13 @@ export const AuthSlice = createSlice({
     name:"auth",
     initialState,
     reducers:{
-        setUserId: (state,action: PayloadAction<string>) => {
+        setUserId: (state, action: PayloadAction<string>) => {
             state.userId = action.payload
         },
-        setOrganisationList: (state,action: PayloadAction<string[]>) => {
+        setOrganisationList: (state, action: PayloadAction<string[]>) => {
             state.organisationList = action.payload
         },
-        setOrganisationId: (state,action: PayloadAction<string>) => {
+        setOrganisationId: (state, action: PayloadAction<string>) => {
             state.organisationId = action.payload
         }
     }
