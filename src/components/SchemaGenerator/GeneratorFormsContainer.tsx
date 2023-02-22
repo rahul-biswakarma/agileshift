@@ -1,5 +1,5 @@
 import { useState } from "react";
-import OrganisationForm from "../ManageOrganization/OrganisationForm";
+import { OrganisationForm } from "../ManageOrganization/OrganisationForm";
 import { NewSchema } from "./NewSchema";
 import { SchemaGenerator } from "./SchemaGenerator";
 

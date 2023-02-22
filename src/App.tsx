@@ -13,9 +13,15 @@ const App = () => {
         <Route path="" element={<Navigate to="/signup" />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/schema-generator" element={<GeneratorFormsContainer />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/orglist" element={<OrganizationList />} />
+		    <Route
+					path="/orglist"
+					element={<OrganizationList />}
+				/>
+        <Route
+					path="/createOrg"
+					element={<GeneratorFormsContainer/>}
+				/>
       </Routes>
     </BrowserRouter>
   );
