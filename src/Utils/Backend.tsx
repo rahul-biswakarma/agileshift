@@ -61,6 +61,9 @@ const get_current_time = () => {
  17 get color from name
 19 get_title
 20 get schema using field id
+21
+22
+23 add organization to user
 */
 
 // 1
@@ -206,14 +209,12 @@ export const get_organizations_details = async (organisationId: string) => {
 // 14 create a new schema
 export const create_schema = async (
   organisationId: string,
-  schemas: TYPE_SCHEMA[]
+  schemas: TYPE_FIELD[]
 ) => {
-  const organisationRef = doc(db, "organizations", organisationId);
-  schemas.forEach(async (schema) => {
-    await updateDoc(organisationRef, {
-      fields: arrayUnion({ ...schema, data: [] }),
-    });
-  });
+  const schemaDetails = {
+    schemaData: schemas,
+  };
+  await setDoc(doc(db, "schemas", organisationId), schemaDetails);
 };
 
 // 15 get schema
@@ -260,6 +261,7 @@ export const get_background_color_from_name = (name: string) => {
   else if (name === "pink") return "#a21caf";
   else return "#1d4ed8";
 };
+
 // 18 get text color from name
 export const get_text_color_from_name = (name: string) => {
   if (name === "purple") return "#d8b4fe";
@@ -367,3 +369,4 @@ export const get_user_by_email = async (email: string) => {
     return doc.data();
   });
 };
+// 26 create schema
