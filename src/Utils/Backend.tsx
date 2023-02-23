@@ -192,7 +192,7 @@ export const get_organizations_details = async (organisationId: string) => {
 	}
 };
 
-// 14 create a new  schema
+// 14 create a new schema
 export const create_schema = async (
 	organisationId: string,
 	schemas: TYPE_SCHEMA[]
@@ -229,7 +229,7 @@ export const get_tabs_name = async (organisationId: string) => {
 
   if (docSnap.exists()) {
     return docSnap.data()["schemaData"].map((item: any) => {
-      item.title;
+      return item.title;
     });
   } else {
     console.log("No such document!");

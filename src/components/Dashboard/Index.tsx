@@ -39,26 +39,6 @@ export default function Dashboard() {
 		},
 	];
 
-<<<<<<< HEAD
-  return (
-    <div className="bg-background_color h-[100vh]">
-      <header className="p-2 flex flex-wrap text-primary_font_color justify-between gap-x-4 gap-y-2">
-        <NavBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
-        <SearchCompont />
-      </header>
-      
-      <DataTable
-        datas={dummyData}
-        dataSchema={[
-          { columnTitle: "Title", columnType: "string" },
-          { columnTitle: "Stage", columnType: "string" },
-          { columnTitle: "User", columnType: "string" },
-          { columnTitle: "Tags", columnType: "tag" },
-        ]}
-      />
-    </div>
-  );
-=======
 	return (
 		<div className="bg-background_color h-[100vh] font-dm_sans">
 			<header className="p-2 flex flex-wrap text-primary_font_color justify-between gap-x-4 gap-y-2">
@@ -84,5 +64,4 @@ export default function Dashboard() {
 			/>
 		</div>
 	);
->>>>>>> e6088dee053b01cb65c4e2fb009032f55c50a2bc
 }
