@@ -6,7 +6,7 @@ import { SignUp } from "./components/OnBoarding/Signup";
 import OrganizationList from "./components/ManageOrganization/OrganizationList";
 import { GeneratorFormsContainer } from "./components/SchemaGenerator/GeneratorFormsContainer";
 // import { SidebarWrapper } from "./components/Sidebar/SidebarWrapper";
-import Filter from "./components/Dashboard/Filter";
+import Filter from "./components/Filters/Filter";
 
 const App = () => {
 	return (
