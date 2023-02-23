@@ -201,7 +201,7 @@ export const get_organizations_details = async (organisationId: string) => {
   }
 };
 
-// 14 create a new  schema
+// 14 create a new schema
 export const create_schema = async (
   organisationId: string,
   schemas: TYPE_SCHEMA[]

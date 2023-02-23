@@ -1,6 +1,6 @@
 export const OrganizationCard = () => {
   return (
-    <div className='w-full flex justify-between items-center p-2 text-highlight_font_color border border-background_color hover:border-dark_gray rounded-lg'>
+    <div className='w-full flex justify-between items-center p-2 text-highlight_font_color border border-background_color hover:border-white/10 rounded-lg'>
         <div className='flex gap-2'>
             <img src="https://app.devrev.ai/static/profile-circle-black.png" className='w-14 rounded-full' alt="" />
             <div>
