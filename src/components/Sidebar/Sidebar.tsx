@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Details } from "./Details";
 import { Header } from "./Header";
+import SideBarInputs from "./SideBarInputs";
 
 type Type_SidebarState = {
   field: string;
@@ -21,7 +22,7 @@ const Sidebar = (props: Type_SidebarState) => {
     index: props.index,
   });
 
-  const [formData, setFormData] = useState<TYPE_SCHEMA[]>([])
+  const [formData, setFormData] = useState<TYPE_SCHEMA[]>([]);
 
   return (
     <div
@@ -41,8 +42,19 @@ const Sidebar = (props: Type_SidebarState) => {
         </div>
       ) : (
         <>
-          <Header state={state} setState={setState} formData={formData} setFormData={setFormData}/>
-          <Details state={state} setState={setState} formData={formData} setFormData={setFormData} />
+          <Header
+            state={state}
+            setState={setState}
+            formData={formData}
+            setFormData={setFormData}
+          />
+          <Details
+            state={state}
+            setState={setState}
+            formData={formData}
+            setFormData={setFormData}
+          />
+          <SideBarInputs />
         </>
       )}
     </div>

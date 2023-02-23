@@ -149,7 +149,7 @@ export const update_issue = () => {};
 export const create_tags = () => {};
 
 // 11
-export const sendEmail = (emailId: string) => {
+export const sendEmail = async(emailId: string) => {
   //   e.preventDefault(); // prevents the page from reloading when you hit “Send”
 
   let params: {
@@ -166,6 +166,16 @@ export const sendEmail = (emailId: string) => {
     console.log("invalid mail");
     return;
   }
+  const userDetails: TYPE_USER | string = await get_user_by_email(emailId).then(
+    (user) => {
+      return user;
+    }
+  );
+  if (userDetails === "") {
+    console.log("user not found");
+    return;
+  }
+
   emailjs
     .send("service_0dpd4z6", "template_weagkql", params, "sb5MCkizR-ZuN4LVw")
     .then(
@@ -209,10 +219,10 @@ export const create_schema = async (
   organisationId: string,
   schemas: TYPE_SCHEMA[]
 ) => {
-  const docRef = doc(db, "schema", organisationId);
-  await setDoc(docRef, {
+  const schemaDetails = {
     schemaData: schemas,
-  });
+  };
+  await setDoc(doc(db, "schemas", organisationId), schemaDetails);
 };
 
 // 15 get schema
@@ -322,7 +332,6 @@ export const get_data_byID = async (organisationId: string, dataId: string) => {
       if (item.id === dataId) {
         return item;
       }
-      return {};
     });
   } else {
     console.log("No such document!");
@@ -365,5 +374,6 @@ export const get_user_by_email = async (email: string) => {
   querySnapshot.forEach((doc) => {
     return doc.data();
   });
+  return "";
 };
 // 26 create schema
