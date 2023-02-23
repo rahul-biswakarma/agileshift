@@ -13,7 +13,7 @@ export const GeneratorFormsContainer = () => {
   //     { columnName: "Tag", columnType: "tags" },
   //   ]);
   const defaultColumnList: TYPE_SCHEMA[] = [
-    { columnName: "Ticket Name", columnType: "string" },
+    { columnName: "Title", columnType: "string" },
     { columnName: "Created By", columnType: "user" },
     { columnName: "Tag", columnType: "tag" },
   ];
