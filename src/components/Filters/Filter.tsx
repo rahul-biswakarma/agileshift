@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 
 interface Type_FilterProps {
@@ -6,10 +6,8 @@ interface Type_FilterProps {
 }
 
 
-
 const Filter = (props:Type_FilterProps) => { 
-    const {schema} = props;
-    // console.log(schema)    
+    const {schema} = props; 
 
     const [modifiedSchema, setModifiedSchema] = useState<TYPE_SCHEMA[]>([]);
     const [showAllFilters, setShowAllFilters] = useState<boolean>(false);
@@ -26,13 +24,14 @@ const Filter = (props:Type_FilterProps) => {
                     "active": "0"
                 }
                 newSchema.push(newData);
+                return "";
             })
             newSchema[0].active = "1";
             newSchema[1].active = "1";
             setModifiedSchema(newSchema);
         }
         updateSchema(schema);
-    },[])
+    },[schema])
     
 
     // console.log(modifiedschema);

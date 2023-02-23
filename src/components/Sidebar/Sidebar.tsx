@@ -21,6 +21,8 @@ const Sidebar = (props: Type_SidebarState) => {
     index: props.index,
   });
 
+  const [formData, setFormData] = useState<TYPE_SCHEMA[]>([])
+
   return (
     <div
       className={`${
@@ -39,8 +41,8 @@ const Sidebar = (props: Type_SidebarState) => {
         </div>
       ) : (
         <>
-          <Header state={state} setState={setState} />
-          <Details />
+          <Header state={state} setState={setState} formData={formData} setFormData={setFormData}/>
+          <Details state={state} setState={setState} formData={formData} setFormData={setFormData} />
         </>
       )}
     </div>
