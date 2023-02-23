@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 
 
@@ -9,6 +8,7 @@ interface Type_FilterProps {
 
 const Filter = (props:Type_FilterProps) => { 
     const {schema} = props;
+    console.log(schema)    
     const handleColumnClick = (columnType: string) => {
         console.log(`Clicked column with type ${columnType}`);
   };
