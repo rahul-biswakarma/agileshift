@@ -1,6 +1,5 @@
 import { useState } from "react";
 import CloseIcon from "../../assets/icons/close_icon.svg";
-import { get_all_Supported_types } from "../../Utils/Backend";
 
 type FieldGroupPropTypes = {
   column: TYPE_SCHEMA;
@@ -18,12 +17,12 @@ export const FieldGroup = ({
 
   const [displayFields, setDisplayFields] = useState<boolean>(false);
   
-  const [types, setTypes] = useState(["string", "number", "tag", "user"]);
-  const getTypes = async () => {
-    let data = await get_all_Supported_types();
-    setTypes(data);
-  };
-  getTypes();
+  const [types,] = useState(["string", "number", "tag", "user"]);
+  // const getTypes = async () => {
+  //   let data = await get_all_Supported_types();
+  //   setTypes(data);
+  // };
+  // getTypes();
   return (
     <div onMouseOver={() => setDisplayFields(true)} onMouseLeave={() => setDisplayFields(false)} className="relative flex items-center justify-between gap-4 p-4 w-96 hover:bg-Secondary_background_color rounded-md">
       <div className="flex flex-col gap-1 flex-1">
