@@ -1,9 +1,13 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import AuthSlice from './reducers/AuthSlice';
+import  SchemaSlice  from './reducers/SchemaSlice';
+import SideBarSlice from './reducers/SideBarSlice';
 
 export const store = configureStore({
   reducer: {
     auth: AuthSlice,
+    schema:SchemaSlice,
+    sidebar:SideBarSlice,
   },
 });
 

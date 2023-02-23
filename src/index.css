@@ -3,20 +3,119 @@
 @tailwind utilities;
 
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background-color: #161616;
-  overflow: hidden;
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+		"Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+		sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	background-color: #161616;
+	overflow: hidden;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+		monospace;
+}
+
+/* .cell-style-class {
+	background: #161616;
+	color: white;
+	border-color: none;
+} */
+
+/* .ag-body,
+.ag-body-viewport {
+	background: #161616;
+	border-color: #1f1f1f;
+	border: none;
+	border-bottom: 1px;
+}
+
+.ag-center-cols-container div {
+	border-color: #1f1f1f;
+}
+
+.header-style-class {
+	background: #161616;
+	border-color: #1f1f1f;
+	color: white;
+	font-family: "DM Sans", sans-serif;
+}
+
+.ag-row-hover {
+	background: #1f1f1f;
+} */
+
+* {
+	--ag-alpine-active-color: #3b82f6;
+	--ag-foreground-color: #fff;
+	--ag-background-color: #161616;
+	--ag-secondary-foreground-color: #e7e7e7;
+	--ag-data-color: #fff;
+	--ag-header-foreground-color: #fff;
+	--ag-header-background-color: #161616;
+	--ag-header-background-gradient-top-color: #161616;
+	--ag-header-background-gradient-bottom-color: #161616;
+	--ag-header-cell-moving-background-color: #272727;
+	--ag-row-hover-color: #272727;
+	--ag-row-selected-color: #3b82f6;
+	--ag-row-even-background-color: #161616;
+	--ag-odd-row-background-color: #161616;
+	--ag-cell-border-color: #262626;
+	--ag-selection-highlight-color: #3b82f6;
+	--ag-tooltip-background-color: #1f1f1f;
+	--ag-filter-panel-background-color: #161616;
+	--ag-filter-tool-panel-background-color: #161616;
+	--ag-filter-tool-panel-border-color: #272727;
+	--ag-filter-tool-panel-header-background-color: #161616;
+	--ag-filter-tool-panel-list-background-color: #161616;
+	--ag-filter-tool-panel-list-active-color: #3b82f6;
+	--ag-pivot-panel-background-color: #161616;
+	--ag-pivot-mode-indicator-color: #f1f1f1;
+	--ag-pivot-dropzone-background-color: #1c1c1c;
+	--ag-column-drop-cell-background-color: #1c1c1c;
+	--ag-scroll-bar-color: #202020;
+	--ag-scroll-bar-background-color: #161616;
+	--ag-border-color: #272727;
+	--ag-range-handle-background-color: #1d1d1d;
+	--ag-icon-color: #b9b9b9;
+	--ag-panel-background-color: #161616;
+	--ag-group-contracted-background-color: #3b82f6;
+	--ag-group-expanded-background-color: #3b82f6;
+	--ag-side-bar-background-color: #161616;
+	--ag-tab-selected-background-color: #3b82f6;
+	--ag-side-bar-tab-color: #f1f1f1;
+	--ag-status-bar-background-color: #161616;
+
+	/* Header Resizer */
+	--ag-header-column-resize-handle-color: #2f2f2f;
+	--ag-header-column-resize-handle-width: 1px;
+	--ag-header-column-resize-handle-height: 40%;
+
+	/* Border */
+	--ag-borders: none;
+	--ag-row-border-color: #272727;
+	--ag-header-cell-moving-border-color: #858585;
+	--ag-panel-border-color: #272727;
+	--ag-secondary-border-color: #272727;
+	--ag-column-drop-cell-border-color: #272727;
+	--ag-pivot-dropzone-border-color: #272727;
+	--ag-filter-tool-panel-header-border-color: #272727;
+	--ag-filter-panel-border-color: #272727;
+	--ag-tooltip-border-color: #929292;
+	--ag-selection-border-color: #3b82f6;
+	--ag-row-group-row-border-color: #272727;
+	--ag-row-dragging-border-color: #949494;
+	--ag-cell-horizontal-border: #262626;
+	--ag-cell-vertical-border: #262626;
+	--ag-range-selection-border-color: #272727;
+	--ag-header-cell-border-color: #272727;
+}
+
+::-webkit-scrollbar {
+	display: none;
 }
