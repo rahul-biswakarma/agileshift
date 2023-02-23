@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import PlusIcon from "../../assets/icons/plus-icon.svg";
 import { useAppSelector } from "../../redux/hooks";
 import {OrganizationCard} from "./OrganizationCard";
@@ -7,7 +8,7 @@ import {OrganizationCard} from "./OrganizationCard";
 const OrganizationList: React.FunctionComponent = () => {
 	
 	const organizationList  = useAppSelector((state) => state.auth.organisationList);
-
+	const navigate = useNavigate();
 
 	console.log(organizationList);
 
@@ -26,7 +27,7 @@ const OrganizationList: React.FunctionComponent = () => {
 					<OrganizationCard/>
 					<OrganizationCard/>
 				</div>
-				<button className="flex gap-4 items-center justify-center border border-dark_gray py-4 rounded-lg text-highlight_font_color">
+				<button onClick={() => navigate("/createOrg")} className="flex gap-4 items-center justify-center border border-dark_gray py-4 rounded-lg text-highlight_font_color">
 					<img
 						src={PlusIcon}
 						alt="Plus Icon"
