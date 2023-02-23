@@ -20,6 +20,9 @@ import {
   arrayUnion,
   collection,
   addDoc,
+  query,
+  where,
+  getDocs,
 } from "firebase/firestore";
 import emailjs from "@emailjs/browser";
 import { isValidEmail } from "email-js";
@@ -207,14 +210,12 @@ export const get_organizations_details = async (organisationId: string) => {
 // 14 create a new schema
 export const create_schema = async (
   organisationId: string,
-  schemas: TYPE_SCHEMA[]
+  schemas: TYPE_FIELD[]
 ) => {
-  const organisationRef = doc(db, "organizations", organisationId);
-  schemas.forEach(async (schema) => {
-    await updateDoc(organisationRef, {
-      fields: arrayUnion({ ...schema, data: [] }),
-    });
-  });
+  const schemaDetails = {
+    schemaData: schemas,
+  };
+  await setDoc(doc(db, "schemas", organisationId), schemaDetails);
 };
 
 // 15 get schema
@@ -339,7 +340,6 @@ export const get_list_by_column_type = async (
 ) => {
   return [];
 };
-
 // 23 add organization to user
 export const add_organisation_to_user = async (
   userId: string,
@@ -350,3 +350,24 @@ export const add_organisation_to_user = async (
     organisation: arrayUnion(organisationId),
   });
 };
+// // 24 get user by id
+
+export const get_user_by_id = async (userId: string) => {
+  const docRef = doc(db, "users", userId);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    return docSnap.data();
+  } else {
+    return false;
+  }
+};
+// // 25 get user by email
+
+export const get_user_by_email = async (email: string) => {
+  const q = query(collection(db, "users"), where("email", "==", email));
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    return doc.data();
+  });
+};
+// 26 create schema

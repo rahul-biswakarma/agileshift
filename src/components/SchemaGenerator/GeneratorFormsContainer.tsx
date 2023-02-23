@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { useAppSelector } from "../../redux/hooks";
+import { RootState } from "../../redux/store";
+import { create_schema } from "../../Utils/Backend";
 import { OrganisationForm } from "../ManageOrganization/OrganisationForm";
 import { NewSchema } from "./NewSchema";
 import { SchemaGenerator } from "./SchemaGenerator";
@@ -25,15 +28,7 @@ export const GeneratorFormsContainer = () => {
 
   const [activeTab, setActiveTab] = useState("Organisation");
 
-  type field = {
-    name: string;
-    list: TYPE_SCHEMA[];
-    color: string;
-    icon: string;
-    linkage: string[];
-  };
-
-  const [fields, setFields] = useState<field[]>([
+  const [fields, setFields] = useState<TYPE_FIELD[]>([
     {
       list: makeActualCopy(defaultColumnList),
       name: "Tickets",
@@ -49,6 +44,10 @@ export const GeneratorFormsContainer = () => {
       linkage: [],
     },
   ]);
+
+  const organisationId = useAppSelector(
+    (state: RootState) => state.auth.organisationId
+  );
 
   const getAllFieldsName = () => {
     let names = [];
@@ -89,7 +88,8 @@ export const GeneratorFormsContainer = () => {
   }
 
   const submitSchema = () => {
-    console.log(fields);
+    create_schema(organisationId, fields);
+    console.log(organisationId, fields);
   };
 
   const addSchema = () => {
@@ -99,7 +99,7 @@ export const GeneratorFormsContainer = () => {
       alert("First fill the name idiot");
       return;
     }
-    let newSchema: field = {
+    let newSchema: TYPE_FIELD = {
       list: makeActualCopy(defaultColumnList),
       name: "",
       color: "",

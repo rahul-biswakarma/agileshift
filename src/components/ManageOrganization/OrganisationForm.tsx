@@ -1,5 +1,6 @@
 import { useRef, useState, ChangeEvent } from "react";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { setOrganisationId } from "../../redux/reducers/AuthSlice";
 import { RootState } from "../../redux/store";
 import {
   add_organisation_to_user,
@@ -24,6 +25,7 @@ export const OrganisationForm = ({
   const orgName = useRef<HTMLInputElement>(null);
   const orgURL = useRef<HTMLInputElement>(null);
   const userId = useAppSelector((state: RootState) => state.auth.userId);
+  const dispatch = useAppDispatch();
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const name = event.target.name;
@@ -65,7 +67,10 @@ export const OrganisationForm = ({
       userId,
       orgName.current!.value,
       orgURL.current!.value
-    ).then((id) => add_organisation_to_user(userId, id));
+    ).then((id) => {
+      add_organisation_to_user(userId, id);
+      dispatch(setOrganisationId(id));
+    });
   };
 
   if (activeTab === "Organisation")
