@@ -18,6 +18,8 @@ type GeneratorPropTypes = {
   getAllFieldsName: () => string[];
   submitSchema: () => void;
   duplicateSchema: (this: any) => void;
+  color: string;
+  changeColor: (this: any, color: string) => void;
 };
 
 export const SchemaGenerator = ({
@@ -33,6 +35,8 @@ export const SchemaGenerator = ({
   getAllFieldsName,
   submitSchema,
   duplicateSchema,
+  color,
+  changeColor,
 }: GeneratorPropTypes) => {
   const colorList = [
     "purple",
@@ -70,7 +74,9 @@ export const SchemaGenerator = ({
           bg-background_color 
           text-highlight_font_color
           rounded-lg border border-primary_font_color
-          ">
+          "
+            value={color}
+            onChange={(e) => changeColor(e.target.value)}>
             {colorList.map((color, id) => (
               <option
                 value={color}

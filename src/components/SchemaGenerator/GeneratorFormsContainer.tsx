@@ -1,4 +1,3 @@
-import { file } from "@babel/types";
 import { useState } from "react";
 import { useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
@@ -8,11 +7,6 @@ import { NewSchema } from "./NewSchema";
 import { SchemaGenerator } from "./SchemaGenerator";
 
 export const GeneratorFormsContainer = () => {
-  //   const [defaultColumnList, setDefaultColumnList] = useState<TYPE_SCHEMA[]>([
-  //     { columnName: "Ticket Name", columnType: "string" },
-  //     { columnName: "Created By", columnType: "user" },
-  //     { columnName: "Tag", columnType: "tags" },
-  //   ]);
   const defaultColumnList: TYPE_SCHEMA[] = [
     { columnName: "Title", columnType: "string" },
     { columnName: "Created By", columnType: "user" },
@@ -33,15 +27,15 @@ export const GeneratorFormsContainer = () => {
     {
       list: makeActualCopy(defaultColumnList),
       name: "Tickets",
-      color: "",
-      icon: "",
+      color: "purple",
+      icon: "home",
       linkage: [],
     },
     {
       list: makeActualCopy(defaultColumnList),
       name: "Issues",
-      color: "",
-      icon: "",
+      color: "cyan",
+      icon: "home",
       linkage: [],
     },
   ]);
@@ -68,6 +62,12 @@ export const GeneratorFormsContainer = () => {
     let tempFields = [...fields];
     tempFields[this.id].name = name;
     setActiveTab(name);
+    setFields(tempFields);
+  }
+
+  function changeColor(this: any, color: string) {
+    let tempFields = [...fields];
+    tempFields[this.id].color = color;
     setFields(tempFields);
   }
 
@@ -104,8 +104,8 @@ export const GeneratorFormsContainer = () => {
     let newSchema: TYPE_FIELD = {
       list: makeActualCopy(defaultColumnList),
       name: "",
-      color: "",
-      icon: "",
+      color: "purple",
+      icon: "home",
       linkage: [],
     };
     tempFields.push(newSchema);
@@ -148,6 +148,8 @@ export const GeneratorFormsContainer = () => {
           key={id}
           submitSchema={submitSchema}
           duplicateSchema={duplicateSchema.bind({ id: id })}
+          color={field.color}
+          changeColor={changeColor.bind({ id: id })}
         />
       ))}
       <NewSchema addSchema={addSchema} />
