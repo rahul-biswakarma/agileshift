@@ -1,4 +1,4 @@
-// import React, { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 interface Type_FilterProps {
@@ -7,11 +7,36 @@ interface Type_FilterProps {
 
 
 const Filter = (props:Type_FilterProps) => { 
-    const {schema} = props;
-    console.log(schema)    
+    const {schema} = props; 
+
+    const [modifiedSchema, setModifiedSchema] = useState<TYPE_SCHEMA[]>([]);
+    const [showAllFilters, setShowAllFilters] = useState<boolean>(false);
     const handleColumnClick = (columnType: string) => {
         console.log(`Clicked column with type ${columnType}`);
-  };
+    };
+
+    useEffect(()=>{
+        const updateSchema = (schema: TYPE_SCHEMA[]) => {
+            const newSchema:TYPE_SCHEMA[] = [];
+            schema.map(data => {
+                const newData:TYPE_SCHEMA = {
+                    ...data,
+                    "active": "0"
+                }
+                newSchema.push(newData);
+                return "";
+            })
+            newSchema[0].active = "1";
+            newSchema[1].active = "1";
+            setModifiedSchema(newSchema);
+        }
+        updateSchema(schema);
+    },[schema])
+    
+
+    // console.log(modifiedschema);
+
+    // const activeColumns = modifiedschema.filter((column) => column.active );
 
   return (
     <div className="w-screen h-screen bg-[#161616]">
@@ -43,24 +68,47 @@ const Filter = (props:Type_FilterProps) => {
                     </div>
                 </div>
                 
-                {schema.map((column, index) => (
+                {modifiedSchema.filter((column) => column.active === "1").map((column, index) => (
                     <button
-                    key={index}
-                    className="font-fira_code rounded-md border border-[1px] border-[#808080] text-[#808080] text-sm px-[10px] py-[2px] "
-                    onClick={() => handleColumnClick(column.columnType)}
+                        key={index}
+                        className="font-fira_code rounded-md border border-[#808080] text-[#808080] text-sm px-[10px] py-[2px] "
+                        onClick={() => handleColumnClick(column.columnType)}
                     >
                     {column.columnTitle}
                     </button>
                 ))}
                 
-                <div className='flex items-center justify-center ml-4 gap-4'>
-                    <button className='flex items-center justify-center rounded-md w-7 h-7 border border-1 border-[#808080] text-[#808080] text-sm mr-4 '>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#808080" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" className=" w-4 h-4 text-center" viewBox="0 0 24 24">
-                        <path stroke="none" d="M0 0h24v24H0z"/>
-                        <path d="M12 5v14m-7-7h14"/>
-                    </svg>
+
+                {/* Plus Button */}
+                <div className='relative flex items-center justify-center ml-4 gap-4'>
+                    <button onClick={() => setShowAllFilters(!showAllFilters)} className='flex items-center justify-center rounded-md w-7 h-7 border border-1 border-[#808080] text-[#808080] text-sm mr-4 '>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#808080" stroke-linecap="round" strokeLinejoin="round" stroke-width="1.5" className=" w-4 h-4 text-center" viewBox="0 0 24 24">
+                            <path stroke="none" d="M0 0h24v24H0z"/>
+                            <path d="M12 5v14m-7-7h14"/>
+                        </svg>
                     </button>
+                    {
+                        showAllFilters && (
+                            <div className="absolute top-[110%] left-0 bg-slate-500 h-96 w-96">
+                                {
+                                    modifiedSchema.map((data, index) => {
+                                        if(data.active === "1"){
+                                            return (
+                                                <></>
+                                            )
+                                        }else{
+                                            return (
+                                                <></>
+                                            )
+                                        }
+                                    })
+                                }
+                            </div>
+                        )
+                    }
                 </div>
+               
+
                 <div className='flex items-center gap-4'>
                     <button className='text-[#808080] text-sm '>Clear</button>
                 </div>  

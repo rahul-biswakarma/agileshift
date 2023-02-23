@@ -1,13 +1,14 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { Sidebar } from "./Sidebar";
 
 type Type_SidebarState = {
   field: string;
-  dataId: string;
+  data: any;
   color: string;
 };
+
 const SidebarWrapper = () => {
   const sideBarList: Type_SidebarState[] = useSelector(
     (state: RootState) => state.sidebar.sideBarData
@@ -32,7 +33,7 @@ const SidebarWrapper = () => {
           setColapsTabBar={setColapsTabBar}
           field={sidebar.field}
           color={sidebar.color}
-          dataId={sidebar.dataId}
+          data={sidebar.data}
         />
       ))}
     </div>

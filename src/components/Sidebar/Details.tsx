@@ -3,8 +3,7 @@ import React from 'react';
 type Type_SidebarState = {
     field: string;
     color: string;
-    data:TYPE_SCHEMA[]
-    dataId: string;
+    data:any
 }
 
 type Type_DetailsProps = {
@@ -24,7 +23,7 @@ const Details = (props:Type_DetailsProps) => {
     return (
         <div className="p-2">
             {/* Title */}
-            <input type="text" value="test" className="w-full bg-transparent text-white p-1 focus:outline-none focus:border-b focus:border-b-white" onChange={()=>handleTitle()}/>
+            <input type="text" placeholder="Title" value="test" className="w-full bg-transparent text-white p-1 focus:outline-none focus:border-b focus:border-b-white" onChange={()=>handleTitle()}/>
         </div>
     )
 }

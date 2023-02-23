@@ -4,9 +4,8 @@ import { HeaderIdComponent } from "./HeaderIdComponent";
 
 type Type_SidebarState = {
   field: string;
-  data: TYPE_SCHEMA[];
+  data: any;
   color: string;
-  dataId:string
 };
 
 type Type_HeaderProps = {

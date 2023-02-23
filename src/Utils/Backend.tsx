@@ -12,22 +12,33 @@ import { db } from "../firebaseConfig";
 // 	setDoc,
 // 	onSnapshot,
 // } from "firebase/firestore";
-import { doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  arrayUnion,
+  collection,
+  addDoc,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 import emailjs from "@emailjs/browser";
 import { isValidEmail } from "email-js";
 
-// const get_current_time = () => {
-// 	let date = new Date();
-// 	return `${date.getFullYear()}-${(date.getMonth() + 1)
-// 		.toString()
-// 		.padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")} ${date
-// 		.getHours()
-// 		.toString()
-// 		.padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}:${date
-// 		.getSeconds()
-// 		.toString()
-// 		.padStart(2, "0")}.${date.getMilliseconds().toString().padStart(3, "0")}`;
-// };
+const get_current_time = () => {
+  let date = new Date();
+  return `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")} ${date
+    .getHours()
+    .toString()
+    .padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}:${date
+    .getSeconds()
+    .toString()
+    .padStart(2, "0")}.${date.getMilliseconds().toString().padStart(3, "0")}`;
+};
 
 // funcitons list
 /*
@@ -50,73 +61,77 @@ import { isValidEmail } from "email-js";
  17 get color from name
 19 get_title
 20 get schema using field id
+21
+22
+23 add organization to user
 */
 
 // 1
 export const check_users_database = async (userId: string) => {
-	const docRef = doc(db, "users", userId);
-	const docSnap = await getDoc(docRef);
-	if (docSnap.exists()) {
-		return true;
-	} else {
-		return false;
-	}
+  const docRef = doc(db, "users", userId);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    return true;
+  } else {
+    return false;
+  }
 };
 
 // 2
 export const get_users_organization = async (userId: string) => {
-	const userRef = doc(db, "users", userId);
-	const userSnap = await getDoc(userRef);
-	if (userSnap.exists()) {
-		return userSnap.data()["organisation"];
-	} else {
-		// doc.data() will be undefined in this case
-		console.log("No such userFound document!");
-	}
+  const userRef = doc(db, "users", userId);
+  const userSnap = await getDoc(userRef);
+  if (userSnap.exists()) {
+    return userSnap.data()["organisation"];
+  } else {
+    // doc.data() will be undefined in this case
+    console.log("No such userFound document!");
+  }
 };
 
 // 3
 export const create_user = async (userDetails: TYPE_USER) => {
-	await setDoc(doc(db, "users", userDetails.id), userDetails);
+  await setDoc(doc(db, "users", userDetails.id), userDetails);
 };
 
 export const get_organizations = async (organizationIds: string[]) => {
-	const orgList: any = [];
-	organizationIds.map(async (orgId) => {
-		const docRef = doc(db, "organizations", orgId);
-		const docSnap = await getDoc(docRef);
-		orgList.push(docSnap.data());
-	});
+  const orgList: any = [];
+  organizationIds.map(async (orgId) => {
+    const docRef = doc(db, "organizations", orgId);
+    const docSnap = await getDoc(docRef);
+    orgList.push(docSnap.data());
+  });
 
-	return orgList;
+  return orgList;
 };
 
 // 4
-// export const create_organization = async (
-//   userId: string,
-//   name: string,
-//   profileImageUrl: string
-// ) => {
-//   const organizationsRef = collection(db, "organizations");
+export const create_organization = async (
+  userId: string,
+  name: string,
+  imgUrl: string
+) => {
+  const organizationsRef = collection(db, "organizations");
 
-//   const initializeOrganization: TYPE_ORGANISATION = {
-//     id: "string",
-//     name: name,
-//     dateOfCreation: get_current_time(),
-//     users: [userId],
-//     profileImageUrl: profileImageUrl,
-//     vista: {},
-//     issues: [],
-//     ticket: [],
-//     tags: [],
-//     parts: [],
-//     notifications: [],
-//     tasks: {},
-//   };
-//   //  initialling channel in channel Table
-//   const res = await addDoc(organizationsRef, initializeOrganization);
-//   return res.id;
-// };
+  const initializeOrganization: any = {
+    id: "string",
+    name: name,
+    dateOfCreation: get_current_time(),
+    users: [userId],
+    imageUrl: imgUrl,
+    tags: [],
+    notifications: [],
+    tasks: {},
+    data: {},
+  };
+  //  initialling channel in channel Table
+  const res = await addDoc(organizationsRef, initializeOrganization);
+  const orgRef = doc(db, "organizations", res.id);
+  await updateDoc(orgRef, {
+    id: res.id,
+  });
+  return res.id;
+};
 
 // 5
 export const update_organization = () => {};
@@ -138,192 +153,225 @@ export const create_tags = () => {};
 
 // 11
 export const sendEmail = (emailId: string) => {
-	//   e.preventDefault(); // prevents the page from reloading when you hit “Send”
+  //   e.preventDefault(); // prevents the page from reloading when you hit “Send”
 
-	let params: {
-		to_name: string;
-		to_email: string;
-		otp: number;
-	} = {
-		to_name: "",
-		to_email: emailId,
-		otp: Math.floor(Math.random() * 900000) + 100000,
-	};
+  let params: {
+    to_name: string;
+    to_email: string;
+    otp: number;
+  } = {
+    to_name: "",
+    to_email: emailId,
+    otp: Math.floor(Math.random() * 900000) + 100000,
+  };
 
-	if (!isValidEmail(emailId)) {
-		console.log("invalid mail");
-		return;
-	}
-	emailjs
-		.send("service_0dpd4z6", "template_weagkql", params, "sb5MCkizR-ZuN4LVw")
-		.then(
-			(res) => {
-				// show the user a success message
-				console.log("sent");
-			},
-			(error: string) => {
-				// show the user an error
-				console.error("error in sending otp");
-			}
-		);
-	return params["otp"];
+  if (!isValidEmail(emailId)) {
+    console.log("invalid mail");
+    return;
+  }
+  emailjs
+    .send("service_0dpd4z6", "template_weagkql", params, "sb5MCkizR-ZuN4LVw")
+    .then(
+      (res) => {
+        // show the user a success message
+        console.log("sent");
+      },
+      (error: string) => {
+        // show the user an error
+        console.error("error in sending otp");
+      }
+    );
+  return params["otp"];
 };
 
 // 12 fetch all supported types. returns array of stings
 export const get_all_Supported_types = async () => {
-	const typesRef = doc(db, "types", "mBJyeNn4YjJgItin5AOj");
-	const typeSnap = await getDoc(typesRef);
-	if (typeSnap.exists()) {
-		return typeSnap.data()["types"];
-	} else {
-		// doc.data() will be undefined in this case
-		console.log("No such userFound document!");
-	}
+  const typesRef = doc(db, "types", "mBJyeNn4YjJgItin5AOj");
+  const typeSnap = await getDoc(typesRef);
+  if (typeSnap.exists()) {
+    return typeSnap.data()["types"];
+  } else {
+    // doc.data() will be undefined in this case
+    console.log("No such userFound document!");
+  }
 };
 
 export const get_organizations_details = async (organisationId: string) => {
-	const docRef = doc(db, "organizations", organisationId);
-	const docSnap = await getDoc(docRef);
-
-	if (docSnap.exists()) {
-		return docSnap.data();
-	} else {
-		console.log("No such document!");
-	}
+  const docRef = doc(db, "organizations", organisationId);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    return docSnap.data();
+  } else {
+    console.log("No such document!");
+  }
 };
 
-// 14 create a new  schema
+// 14 create a new schema
 export const create_schema = async (
-	organisationId: string,
-	schemas: TYPE_SCHEMA[]
+  organisationId: string,
+  schemas: TYPE_FIELD[]
 ) => {
-	const organisationRef = doc(db, "organizations", organisationId);
-	schemas.forEach(async (schema) => {
-		await updateDoc(organisationRef, {
-			fields: arrayUnion({ ...schema, data: [] }),
-		});
-	});
+  const schemaDetails = {
+    schemaData: schemas,
+  };
+  await setDoc(doc(db, "schemas", organisationId), schemaDetails);
 };
 
 // 15 get schema
 export const get_schema_data = async (
-	organisationId: string,
-	schema: string
+  organisationId: string,
+  schema: string
 ) => {
-	let organizationDetails: any = await get_organizations_details(
-		organisationId
-	);
-	organizationDetails["fields"].forEach((item: any) => {
-		if (item.title === schema) {
-			return {
-				schema: item["schema"],
-				data: item["data"],
-			};
-		}
-	});
+  let organizationDetails: any = await get_organizations_details(
+    organisationId
+  );
+  organizationDetails["fields"].forEach((item: any) => {
+    if (item.title === schema) {
+      return {
+        schema: item["schema"],
+        data: item["data"],
+      };
+    }
+  });
 };
 //16 get tabs name
 export const get_tabs_name = async (organisationId: string) => {
-	const docRef = doc(db, "schema", organisationId);
-	const docSnap = await getDoc(docRef);
+  const docRef = doc(db, "schema", organisationId);
+  const docSnap = await getDoc(docRef);
 
-	if (docSnap.exists()) {
-		return docSnap.data()["schemaData"].map((item: any) => {
-			return item.title;
-		});
-	} else {
-		console.log("No such document!");
-	}
-	return;
+  if (docSnap.exists()) {
+    return docSnap.data()["schemaData"].map((item: any) => {
+      return item.title;
+    });
+  } else {
+    console.log("No such document!");
+  }
+  return;
 };
 
 // 17 get background color from name
 export const get_background_color_from_name = (name: string) => {
-	if (name === "purple") return "#6b21a8";
-	else if (name === "slate") return "#1e293b";
-	else if (name === "red") return "#dc2626";
-	else if (name === "amber") return "#b45309";
-	else if (name === "lime") return "#65a30d";
-	else if (name === "cyan") return "#0891b2";
-	else if (name === "indigo") return "#4f46e5";
-	else if (name === "pink") return "#a21caf";
-	else return "#1d4ed8";
+  if (name === "purple") return "#6b21a8";
+  else if (name === "slate") return "#1e293b";
+  else if (name === "red") return "#dc2626";
+  else if (name === "amber") return "#b45309";
+  else if (name === "lime") return "#65a30d";
+  else if (name === "cyan") return "#0891b2";
+  else if (name === "indigo") return "#4f46e5";
+  else if (name === "pink") return "#a21caf";
+  else return "#1d4ed8";
 };
+
 // 18 get text color from name
 export const get_text_color_from_name = (name: string) => {
-	if (name === "purple") return "#d8b4fe";
-	else if (name === "slate") return "#d1d5db";
-	else if (name === "red") return "#fca5a5";
-	else if (name === "amber") return "#fde68a";
-	else if (name === "lime") return "#bef264";
-	else if (name === "cyan") return "#a5f3fc";
-	else if (name === "indigo") return "#fde68a";
-	else if (name === "pink") return "#f0abfc";
-	else return "#93c5fd";
+  if (name === "purple") return "#d8b4fe";
+  else if (name === "slate") return "#d1d5db";
+  else if (name === "red") return "#fca5a5";
+  else if (name === "amber") return "#fde68a";
+  else if (name === "lime") return "#bef264";
+  else if (name === "cyan") return "#a5f3fc";
+  else if (name === "indigo") return "#fde68a";
+  else if (name === "pink") return "#f0abfc";
+  else return "#93c5fd";
 };
 // 19
 export const get_title = async (organisationId: string, field: string) => {
-	const docRef = doc(db, "schema", organisationId);
-	const docSnap = await getDoc(docRef);
+  const docRef = doc(db, "schema", organisationId);
+  const docSnap = await getDoc(docRef);
 
-	if (docSnap.exists()) {
-		docSnap.data()["schemaData"].map((item: any) => {
-			if (item.name === field) {
-				return item.list.map((listData: any) => {
-					if (listData.type === "title") return listData.colummn;
-					return {};
-				});
-			}
-			return {};
-		});
-	} else {
-		console.log("No such document!");
-	}
-	return "";
+  if (docSnap.exists()) {
+    docSnap.data()["schemaData"].map((item: any) => {
+      if (item.name === field) {
+        return item.list.map((listData: any) => {
+          if (listData.type === "title") return listData.colummn;
+          return {};
+        });
+      }
+      return {};
+    });
+  } else {
+    console.log("No such document!");
+  }
+  return "";
 };
 
 // 20 get schema using field name
 export const get_schema_data_field = async (
-	organisationId: string,
-	field: string
+  organisationId: string,
+  field: string
 ) => {
-	const docRef = doc(db, "schema", organisationId);
-	const docSnap = await getDoc(docRef);
+  const docRef = doc(db, "schema", organisationId);
+  const docSnap = await getDoc(docRef);
 
-	if (docSnap.exists()) {
-		docSnap.data()["schemaData"].map((item: any) => {
-			if (item.name === field) {
-				return item.list;
-			}
-			return {};
-		});
-	} else {
-		console.log("No such document!");
-	}
-	return [];
+  if (docSnap.exists()) {
+    docSnap.data()["schemaData"].map((item: any) => {
+      if (item.name === field) {
+        return item.list;
+      }
+      return {};
+    });
+  } else {
+    console.log("No such document!");
+  }
+  return [];
 };
 // 21
 export const get_data_byID = async (organisationId: string, dataId: string) => {
 	const docRef = doc(db, "organizations", organisationId);
 	const docSnap = await getDoc(docRef);
 
+	let organisationDetails:any ={}
 	if (docSnap.exists()) {
+
 		if(docSnap.data()["data"].length > 0) {
-			docSnap.data()["data"].map((item: any) => {
+			docSnap.data()["data"].forEach((item:any) => {
 				if (item.id === dataId) {
-					return item
+					organisationDetails= item
 				}
 			});
 		}
 	} else {
 		console.log("No such document!");
 	}
-	return [];
+	return organisationDetails;
 };
 // 22 get list by columun typee
 export const get_list_by_column_type = async (
-	organisationId: string,
-	typeName: string
+  organisationId: string,
+  typeName: string
 ) => {
-	return [];
+  return [];
 };
+// 23 add organization to user
+export const add_organisation_to_user = async (
+  userId: string,
+  organisationId: string
+) => {
+  const userRef = doc(db, "users", userId);
+  await updateDoc(userRef, {
+    organisation: arrayUnion(organisationId),
+  });
+};
+// // 24 get user by id
+
+export const get_user_by_id = async (userId: string) => {
+  const docRef = doc(db, "users", userId);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    return docSnap.data();
+  } else {
+    return false;
+  }
+};
+// // 25 get user by email
+
+export const get_user_by_email = async (email: string) => {
+	const q = query(collection(db, "users"), where("email", "==", email));
+	const querySnapshot = await getDocs(q);
+	let userDetails={};
+	querySnapshot.forEach((doc) => {
+		userDetails =  doc.data();
+	});
+	return userDetails;
+};
+// 26 create schema

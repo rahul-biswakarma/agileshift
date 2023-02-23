@@ -2,9 +2,8 @@ import React from "react";
 
 type Type_SidebarState = {
   field: string;
-  data: TYPE_SCHEMA[];
+  data: any;
   color: string;
-  dataId:string
 };
 
 type Type_HeaderIdComponentProps = {
@@ -22,7 +21,7 @@ const HeaderIdComponent = (props: Type_HeaderIdComponentProps) => {
       }}
       className={`border-2 px-1 rounded-md text-sm flex items-center`}
     >
-      {props.state.dataId}
+      {props.state.data.id}
     </span>
   ) : (
     <span
