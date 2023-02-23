@@ -196,7 +196,6 @@ export const get_all_Supported_types = async () => {
 export const get_organizations_details = async (organisationId: string) => {
   const docRef = doc(db, "organizations", organisationId);
   const docSnap = await getDoc(docRef);
-
   if (docSnap.exists()) {
     return docSnap.data();
   } else {
