@@ -4,7 +4,7 @@ declare global {
 	type TYPE_SCHEMA = {
 		[key: string]: string;
 	};
-	type TYPE_TAGS = {
+	type TYPE_TAG = {
 		color: string; //hash code of color
 		tagName: string;
 	};
@@ -40,7 +40,7 @@ declare global {
 		ticket_schema: TYPE_TICKETS_SCHEMA[];
 		parts: undefined;
 		parts_schema: TYPE_PARTS_SCHEMA[];
-		tags: TYPE_TAGS[];
+		tags: TYPE_TAG[];
 		notifications: TYPE_NOTIFICATION[];
 		tasks: TYPE_TASKS;
 	};

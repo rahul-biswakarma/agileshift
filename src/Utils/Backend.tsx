@@ -12,22 +12,30 @@ import { db } from "../firebaseConfig";
 // 	setDoc,
 // 	onSnapshot,
 // } from "firebase/firestore";
-import { doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  arrayUnion,
+  collection,
+  addDoc,
+} from "firebase/firestore";
 import emailjs from "@emailjs/browser";
 import { isValidEmail } from "email-js";
 
-// const get_current_time = () => {
-// 	let date = new Date();
-// 	return `${date.getFullYear()}-${(date.getMonth() + 1)
-// 		.toString()
-// 		.padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")} ${date
-// 		.getHours()
-// 		.toString()
-// 		.padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}:${date
-// 		.getSeconds()
-// 		.toString()
-// 		.padStart(2, "0")}.${date.getMilliseconds().toString().padStart(3, "0")}`;
-// };
+const get_current_time = () => {
+  let date = new Date();
+  return `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")} ${date
+    .getHours()
+    .toString()
+    .padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}:${date
+    .getSeconds()
+    .toString()
+    .padStart(2, "0")}.${date.getMilliseconds().toString().padStart(3, "0")}`;
+};
 
 // funcitons list
 /*
@@ -92,31 +100,32 @@ export const get_organizations = async (organizationIds: string[]) => {
 };
 
 // 4
-// export const create_organization = async (
-//   userId: string,
-//   name: string,
-//   profileImageUrl: string
-// ) => {
-//   const organizationsRef = collection(db, "organizations");
+export const create_organization = async (
+  userId: string,
+  name: string,
+  imgUrl: string
+) => {
+  const organizationsRef = collection(db, "organizations");
 
-//   const initializeOrganization: TYPE_ORGANISATION = {
-//     id: "string",
-//     name: name,
-//     dateOfCreation: get_current_time(),
-//     users: [userId],
-//     profileImageUrl: profileImageUrl,
-//     vista: {},
-//     issues: [],
-//     ticket: [],
-//     tags: [],
-//     parts: [],
-//     notifications: [],
-//     tasks: {},
-//   };
-//   //  initialling channel in channel Table
-//   const res = await addDoc(organizationsRef, initializeOrganization);
-//   return res.id;
-// };
+  const initializeOrganization: any = {
+    id: "string",
+    name: name,
+    dateOfCreation: get_current_time(),
+    users: [userId],
+    imageUrl: imgUrl,
+    tags: [],
+    notifications: [],
+    tasks: {},
+    data: {},
+  };
+  //  initialling channel in channel Table
+  const res = await addDoc(organizationsRef, initializeOrganization);
+  const orgRef = doc(db, "organizations", res.id);
+  await updateDoc(orgRef, {
+    id: res.id,
+  });
+  return res.id;
+};
 
 // 5
 export const update_organization = () => {};
@@ -234,6 +243,7 @@ export const get_tabs_name = async (organisationId: string) => {
   } else {
     console.log("No such document!");
   }
+  return;
 };
 
 // 17 get background color from name
@@ -269,10 +279,12 @@ export const get_title = async (organisationId: string, field: string) => {
   if (docSnap.exists()) {
     docSnap.data()["schemaData"].map((item: any) => {
       if (item.name === field) {
-        item.list.map((listData: any) => {
+        return item.list.map((listData: any) => {
           if (listData.type === "title") return listData.colummn;
+          return {};
         });
       }
+      return {};
     });
   } else {
     console.log("No such document!");
@@ -293,6 +305,7 @@ export const get_schema_data_field = async (
       if (item.name === field) {
         return item.list;
       }
+      return {};
     });
   } else {
     console.log("No such document!");
@@ -309,6 +322,7 @@ export const get_data_byID = async (organisationId: string, dataId: string) => {
       if (item.id === dataId) {
         return item;
       }
+      return {};
     });
   } else {
     console.log("No such document!");

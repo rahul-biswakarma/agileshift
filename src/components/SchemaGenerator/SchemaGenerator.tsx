@@ -82,12 +82,21 @@ export const SchemaGenerator = ({
           <div className="relative h-max flex items-center">
             <button
               className="px-2
-            w-40
+              w-max
+            min-w-full
             h-8
         bg-background_color 
         text-highlight_font_color
         rounded-lg border border-primary_font_color ml-2"
-              onClick={() => setLinkageVisible(!linkageVisible)}></button>
+              onClick={() => setLinkageVisible(!linkageVisible)}>
+              {linkage.map((link, id) => (
+                <span
+                  className="bg-Secondary_background_color px-1 mx-1"
+                  key={id}>
+                  {link}
+                </span>
+              ))}
+            </button>
             {linkageVisible && (
               <div className="absolute w-40 top-8 left-2 h-max border border-dark_gray z-[50] bg-background_color rounded-md">
                 {getAllFieldsName().map((field, id) => (
