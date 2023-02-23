@@ -14,6 +14,8 @@ type Type_SidebarState = {
 type Type_HeaderProps = {
   state: Type_SidebarState;
   setState: React.Dispatch<React.SetStateAction<Type_SidebarState>>;
+  formData:TYPE_SCHEMA[],
+  setFormData: React.Dispatch<React.SetStateAction<TYPE_SCHEMA[]>>
 };
 
 const Header = (props: Type_HeaderProps) => {

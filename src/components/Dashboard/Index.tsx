@@ -1,10 +1,10 @@
 import React from "react";
 import DataTable from "../DataTable";
 import NavBar from "./NavBar";
-import SearchCompont from "./SearchCompont";
+import SearchComponent from "./SearchComponent";
 
 export default function Dashboard() {
-	const [selectedTab, setSelectedTab] = React.useState<string>("Dashboard");
+  const [selectedTab, setSelectedTab] = React.useState<string>("Dashboard");
 
 	let dummyData = [
 		{
@@ -64,29 +64,26 @@ export default function Dashboard() {
 		},
 	];
 
-	return (
-		<div className="bg-background_color h-[100vh] font-dm_sans">
-			<header className="p-2 flex flex-wrap text-primary_font_color justify-between gap-x-4 gap-y-2">
-				<NavBar
-					selectedTab={selectedTab}
-					setSelectedTab={setSelectedTab}
-				/>
-				<SearchCompont />
-			</header>
-			<DataTable
-				datas={dummyData}
-				dataSchema={{
-					color: "purple",
-					schema: [
-						{ columnTitle: "id", columnType: "id" },
-						{ columnTitle: "title", columnType: "title" },
-						{ columnTitle: "stage", columnType: "string" },
-						{ columnTitle: "owner", columnType: "user" },
-						{ columnTitle: "tag", columnType: "tag" },
-					],
-				}}
-				feildColor="purple"
-			/>
-		</div>
-	);
+  return (
+    <div className="bg-background_color h-[100vh] font-dm_sans">
+      <header className="p-2 flex flex-row text-primary_font_color justify-between gap-x-4 gap-y-2 h-50">
+        <NavBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+        <SearchComponent />
+      </header>
+      <DataTable
+        datas={dummyData}
+        dataSchema={{
+          color: "purple",
+          schema: [
+            { columnTitle: "id", columnType: "id" },
+            { columnTitle: "title", columnType: "title" },
+            { columnTitle: "stage", columnType: "string" },
+            { columnTitle: "owner", columnType: "user" },
+            { columnTitle: "tag", columnType: "tag" },
+          ],
+        }}
+        feildColor="purple"
+      />
+    </div>
+  );
 }
