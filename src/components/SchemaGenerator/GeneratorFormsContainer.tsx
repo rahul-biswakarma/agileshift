@@ -1,3 +1,4 @@
+import { file } from "@babel/types";
 import { useState } from "react";
 import { useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
@@ -94,10 +95,11 @@ export const GeneratorFormsContainer = () => {
 
   const addSchema = () => {
     let tempFields = [...fields];
-    let lastField = tempFields[tempFields.length - 1];
-    if (lastField.name === "") {
-      alert("First fill the name idiot");
-      return;
+    for (let field of tempFields) {
+      if (field.name === "") {
+        alert("First fill the name of all the work items");
+        return;
+      }
     }
     let newSchema: TYPE_FIELD = {
       list: makeActualCopy(defaultColumnList),
@@ -110,6 +112,23 @@ export const GeneratorFormsContainer = () => {
     setFields(tempFields);
     setActiveTab("");
   };
+
+  function duplicateSchema(this: any) {
+    let currentField = fields[this.id];
+    if (currentField.name === "") return;
+    let newField: TYPE_FIELD = {
+      name: "",
+      list: makeActualCopy(currentField.list),
+      color: currentField.color,
+      icon: currentField.icon,
+      linkage: currentField.linkage,
+    };
+    const duplicatedArray = fields
+      .slice(0, this.id + 1)
+      .concat(newField, fields.slice(this.id + 1));
+    setFields(duplicatedArray);
+    setActiveTab("");
+  }
 
   return (
     <div className="w-screen h-screen flex divide-x divide-dark_gray">
@@ -128,6 +147,7 @@ export const GeneratorFormsContainer = () => {
           getAllFieldsName={getAllFieldsName}
           key={id}
           submitSchema={submitSchema}
+          duplicateSchema={duplicateSchema.bind({ id: id })}
         />
       ))}
       <NewSchema addSchema={addSchema} />
