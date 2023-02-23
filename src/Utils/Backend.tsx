@@ -209,11 +209,9 @@ export const create_schema = async (
   organisationId: string,
   schemas: TYPE_SCHEMA[]
 ) => {
-  const organisationRef = doc(db, "organizations", organisationId);
-  schemas.forEach(async (schema) => {
-    await updateDoc(organisationRef, {
-      fields: arrayUnion({ ...schema, data: [] }),
-    });
+  const docRef = doc(db, "schema", organisationId);
+  await setDoc(docRef, {
+    schemaData: schemas,
   });
 };
 
@@ -368,3 +366,4 @@ export const get_user_by_email = async (email: string) => {
     return doc.data();
   });
 };
+// 26 create schema
