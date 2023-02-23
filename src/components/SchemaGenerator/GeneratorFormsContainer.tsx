@@ -30,6 +30,7 @@ export const GeneratorFormsContainer = () => {
     list: TYPE_SCHEMA[];
     color: string;
     icon: string;
+    linkage: string[];
   };
 
   const [fields, setFields] = useState<field[]>([
@@ -38,14 +39,24 @@ export const GeneratorFormsContainer = () => {
       name: "Tickets",
       color: "",
       icon: "",
+      linkage: [],
     },
     {
       list: makeActualCopy(defaultColumnList),
       name: "Issues",
       color: "",
       icon: "",
+      linkage: [],
     },
   ]);
+
+  const getAllFieldsName = () => {
+    let names = [];
+    for (let field of fields) {
+      names.push(field.name);
+    }
+    return names;
+  };
 
   function changeList(this: any, list: TYPE_SCHEMA[]) {
     let tempFields = [...fields];
@@ -57,6 +68,23 @@ export const GeneratorFormsContainer = () => {
     let tempFields = [...fields];
     tempFields[this.id].name = name;
     setActiveTab(name);
+    setFields(tempFields);
+  }
+
+  function addLinkage(this: any, link: string) {
+    let tempFields = [...fields];
+    tempFields[this.id].linkage.push(link);
+    setFields(tempFields);
+  }
+
+  function removeLinkage(this: any, link: string) {
+    let tempFields = [...fields];
+    let tempLinkage = tempFields[this.id].linkage;
+    const index = tempLinkage.indexOf(link);
+    if (index > -1) {
+      tempLinkage.splice(index, 1);
+    }
+    tempFields[this.id].linkage = tempLinkage;
     setFields(tempFields);
   }
 
@@ -72,6 +100,7 @@ export const GeneratorFormsContainer = () => {
       name: "",
       color: "",
       icon: "",
+      linkage: [],
     };
     tempFields.push(newSchema);
     setFields(tempFields);
@@ -87,8 +116,12 @@ export const GeneratorFormsContainer = () => {
           setName={changeName.bind({ id: id })}
           list={field.list}
           setList={changeList.bind({ id: id })}
+          linkage={field.linkage}
+          addLinkage={addLinkage.bind({ id: id })}
+          removeLinkage={removeLinkage.bind({ id: id })}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
+          getAllFieldsName={getAllFieldsName}
           key={id}
         />
       ))}
