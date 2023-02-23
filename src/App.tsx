@@ -6,6 +6,7 @@ import { SignUp } from "./components/OnBoarding/Signup";
 import OrganizationList from "./components/ManageOrganization/OrganizationList";
 import { GeneratorFormsContainer } from "./components/SchemaGenerator/GeneratorFormsContainer";
 // import { SidebarWrapper } from "./components/Sidebar/SidebarWrapper";
+import Filter from "./components/Dashboard/Filter";
 
 const App = () => {
 	return (
@@ -34,6 +35,19 @@ const App = () => {
 				<Route
 					path="/createOrg"
 					element={<GeneratorFormsContainer />}
+				/>
+        <Route
+					path="/filters"
+					element={<Filter schema={[
+            { columnTitle: "Title", columnType: "string" },
+            { columnTitle: "Stage", columnType: "string" },
+            { columnTitle: "User", columnType: "string" },
+            { columnTitle: "Tags", columnType: "tag" },
+            { columnTitle: "Severity", columnType: "string" },
+            { columnTitle: "Type", columnType: "string" },
+            { columnTitle: "Rev Org", columnType: "string" },
+            { columnTitle: "Part", columnType: "string" },
+          ]} />}
 				/>
 			</Routes>
 		</BrowserRouter>
