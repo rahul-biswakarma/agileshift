@@ -16,22 +16,21 @@ const OrganizationList: React.FunctionComponent = () => {
 	useEffect(() => {
 		const getUserObj = async () => {
 			await get_user_by_id(userId).then((data) => {
-				// console.log(data);
 				setUser(data);
 			})
 		}
 		const getOrganizationsDetails = async () => {
 			organizationList.map(async (orgId) => {
 				const orgObject = await get_organizations_details(orgId);
-
 				setOrganizations([
 					...organization,
 					orgObject
 				])
 			})
 		}
+		getOrganizationsDetails();
 		getUserObj();
-	}, [userId]);
+	});
 	
 	const navigate = useNavigate();
 	// console.log(organizationList);
@@ -50,7 +49,7 @@ const OrganizationList: React.FunctionComponent = () => {
 					<h4 className="text-md">You AgileOrgs <span className="p-2 rounded-md bg-Secondary_background_color">{organization?.length}</span></h4>
 					{
 						organization.map((orgData:any) => {
-							<OrganizationCard name={orgData?.data.name} orgId={orgData?.data.id} url={orgData?.data.id} />
+							return <OrganizationCard name={orgData?.data.name} orgId={orgData?.data.id} url={orgData?.data.id} />
 						})
 					}
 				</div>
