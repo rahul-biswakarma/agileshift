@@ -13,13 +13,13 @@ const OrganizationList: React.FunctionComponent = () => {
 
 	return (
 		<div className="bg-background_color h-screen w-screen flex items-center justify-center font-dm_sans">
-			<div className="h-3/5 w-[350px] flex flex-col gap-5">
-				<div className="text-highlight_font_color mb-5">
-					<h3 className="text-2xl mb-2">Create or Join a AgileShift Org</h3>
+			<div className="w-[350px] flex flex-col gap-5">
+				<div className="text-highlight_font_color">
+					<h3 className="text-xl mb-2">Create or Join a AgileShift Org</h3>
 					{/* Change this to dynamic username */}
-					<p className="text-primary_font_color text-lg">We found following organizations that matches your email address - i-nikhil.tidke@devrev.ai</p>  
+					<p className="text-primary_font_color text-sm">We found following organizations that matches your email address - i-nikhil.tidke@devrev.ai</p>  
 				</div>
-				<div className="text-highlight_font_color flex flex-col gap-5 mb-8">
+				<div className="text-highlight_font_color flex flex-col gap-5 my-5">
 					<h4 className="text-md">You AgileOrgs <span className="p-2 rounded-md bg-Secondary_background_color">2</span></h4>
 					<OrganizationCard/>
 					<OrganizationCard/>

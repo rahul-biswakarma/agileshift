@@ -1,7 +1,7 @@
 import React from "react";
 // import notificationIcon from "../../assets/icons/notification.svg";
 
-export default function SearchCompont() {
+export default function SearchComponent() {
   return (
     <form className="flex flex-row items-center flex-grow gap-6  ">
       <div className="relative flex-grow  h-[100%]">
