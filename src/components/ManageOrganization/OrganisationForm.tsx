@@ -1,4 +1,11 @@
 import { useRef, useState, ChangeEvent } from "react";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { setOrganisationId } from "../../redux/reducers/AuthSlice";
+import { RootState } from "../../redux/store";
+import {
+	add_organisation_to_user,
+	create_organization,
+} from "../../Utils/Backend";
 require("tailwindcss-writing-mode")({
 	variants: ["responsive", "hover"],
 });
@@ -17,6 +24,8 @@ export const OrganisationForm = ({
 	const [orgUrlErrorMessage, setOrgUrlErrorMessage] = useState<string>("");
 	const orgName = useRef<HTMLInputElement>(null);
 	const orgURL = useRef<HTMLInputElement>(null);
+	const userId = useAppSelector((state: RootState) => state.auth.userId);
+	const dispatch = useAppDispatch();
 
 	const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
 		const name = event.target.name;
@@ -48,6 +57,22 @@ export const OrganisationForm = ({
 				break;
 		}
 	};
+
+	const addOrganisation = () => {
+		console.log(orgName.current!.value);
+		console.log(orgURL.current!.value);
+		console.log(userId);
+
+		create_organization(
+			userId,
+			orgName.current!.value,
+			orgURL.current!.value
+		).then((id) => {
+			add_organisation_to_user(userId, id);
+			dispatch(setOrganisationId(id));
+		});
+	};
+
 	if (activeTab === "Organisation")
 		return (
 			<div className="bg-background_color h-screen w-screen flex items-center justify-center font-dm_sans">
@@ -141,7 +166,10 @@ export const OrganisationForm = ({
 							)}
 						</div>
 					</div>
-					<button className="flex gap-4 items-center justify-center py-4 rounded-lg border-[2px] border-Secondary_background_color text-white/40 stroke-white/40 hover:bg-amber-400 hover:text-amber-800 hover:border-amber-400 hover:stroke-amber-800 transition-all">
+					<button
+						className="flex gap-4 items-center justify-center py-4 rounded-lg border-[2px] border-Secondary_background_color text-white/40 stroke-white/40 hover:bg-amber-400 hover:text-amber-800 hover:border-amber-400 hover:stroke-amber-800 transition-all"
+						onClick={addOrganisation}
+					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
@@ -170,7 +198,7 @@ export const OrganisationForm = ({
 					className="h-full w-full"
 					onClick={() => setActiveTab("Organisation")}
 				>
-					<span className="[writing-mode:vertical-rl] text-sm font-bold uppercase">
+					<span className="[writing-mode:vertical-rl] text-sm font-bold uppercase font-fira_code">
 						Organisation Form
 					</span>
 				</button>

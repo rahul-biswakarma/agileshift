@@ -25,6 +25,19 @@ export const authWithGoogle = () => {
     console.log(navigate);
 };
 
+export const storeInSession = (itemName:string,itemData:string) =>{
+	if(itemData){
+		sessionStorage.setItem(itemName, itemData);
+	}
+}
+
+export const getFromSession = (itemName:string) =>{
+	if(itemName){
+		return sessionStorage.getItem(itemName)
+	}
+	return "";
+}
+
 //Function for popup auth
 const signInWithPopupCall = (
 	provider: GoogleAuthProvider | GithubAuthProvider
@@ -42,6 +55,7 @@ const signInWithPopupCall = (
                 store.dispatch(setUserId(user.uid));
                 if(organisationList)
                     store.dispatch(setOrganisationList(organisationList));
+				
 			} else {
 				let userDetails: TYPE_USER = {
 					id: user.uid,
@@ -55,6 +69,7 @@ const signInWithPopupCall = (
 				await create_user(userDetails);
 				store.dispatch(setUserId(user.uid));
 			}
+			storeInSession("userId",user.uid)
 		})
 		.catch((error) => {
 			const errorMessage = error.message;

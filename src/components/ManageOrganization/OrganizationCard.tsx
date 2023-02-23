@@ -1,17 +1,29 @@
-export const OrganizationCard = () => {
-  return (
-    <div className='w-full flex justify-between items-center p-2 text-highlight_font_color border border-background_color hover:border-dark_gray rounded-lg'>
-        <div className='flex gap-2'>
-            <img src="https://app.devrev.ai/static/profile-circle-black.png" className='w-14 rounded-full' alt="" />
-            <div>
-                <h3 className='text-lg'>N-P-R</h3>
-                <p className='text-md text-dark_gray'>https://app.devrev.ai/npr</p>
-            </div>
-        </div>
-        <button className="w-16 h-10 bg-dark_gray text-center text-lg rounded-lg">
-            {/* Plus Icon */}
-            Enter
-        </button>
-    </div>
-  )
-}
+import { useNavigate } from "react-router-dom";
+
+type organizationCardProps = {
+	name: string;
+	orgId: string;
+};
+
+export const OrganizationCard = ({ name, orgId }: organizationCardProps) => {
+	const navigate = useNavigate();
+
+	return (
+		<div className="w-full flex justify-between items-center text-highlight_font_color border border-background_color hover:border-white/5 hover:bg-white/5 rounded-lg p-[5px]">
+			<div className="flex gap-[1rem] items-center">
+				<img
+					src="https://app.devrev.ai/static/profile-circle-black.png"
+					className="w-10 h-10 rounded-full"
+					alt=""
+				/>
+				<h3 className="text-[1.2rem] font-dm_sans">{name}</h3>
+			</div>
+			<button
+				onClick={() => navigate(`/organization/${orgId}`)}
+				className="p-[0.5rem_1rem] flex items-center bg-Secondary_background_color border border-inherit text-center text-lg rounded-lg"
+			>
+				<span className="material-symbols-outlined">arrow_forward</span>
+			</button>
+		</div>
+	);
+};
