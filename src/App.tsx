@@ -7,6 +7,7 @@ import OrganizationList from "./components/ManageOrganization/OrganizationList";
 import { GeneratorFormsContainer } from "./components/SchemaGenerator/GeneratorFormsContainer";
 // import { SidebarWrapper } from "./components/Sidebar/SidebarWrapper";
 import Filter from "./components/Dashboard/Filter";
+import { SidebarWrapper } from "./components/Sidebar/SidebarWrapper";
 
 const App = () => {
 	return (
@@ -24,10 +25,11 @@ const App = () => {
 					path="/login"
 					element={<Login />}
 				/>
-				<Route
+				{/* <Route
 					path="/dashboard"
 					element={<Dashboard />}
-				/>
+				/> */}
+        <Route path="/dashboard" element={<SidebarWrapper />} />
 				<Route
 					path="/orglist"
 					element={<OrganizationList />}

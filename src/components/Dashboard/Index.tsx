@@ -1,4 +1,5 @@
 import React from "react";
+import { get_data_byID } from "../../Utils/Backend";
 import DataTable from "../DataTable";
 import NavBar from "./NavBar";
 import SearchComponent from "./SearchComponent";

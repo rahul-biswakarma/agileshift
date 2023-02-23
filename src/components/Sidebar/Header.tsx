@@ -4,11 +4,9 @@ import { HeaderIdComponent } from "./HeaderIdComponent";
 
 type Type_SidebarState = {
   field: string;
-  data?: TYPE_SCHEMA;
+  data: TYPE_SCHEMA[];
   color: string;
-  tabColaps: boolean;
-  setColapsTabBar: React.Dispatch<React.SetStateAction<number>>;
-  index: number;
+  dataId:string
 };
 
 type Type_HeaderProps = {

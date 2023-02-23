@@ -308,16 +308,17 @@ export const get_data_byID = async (organisationId: string, dataId: string) => {
 	const docSnap = await getDoc(docRef);
 
 	if (docSnap.exists()) {
-		docSnap.data()["data"].map((item: any) => {
-			if (item.id === dataId) {
-				return item;
-			}
-			return {};
-		});
+		if(docSnap.data()["data"].length > 0) {
+			docSnap.data()["data"].map((item: any) => {
+				if (item.id === dataId) {
+					return item
+				}
+			});
+		}
 	} else {
 		console.log("No such document!");
 	}
-	return {};
+	return [];
 };
 // 22 get list by columun typee
 export const get_list_by_column_type = async (
