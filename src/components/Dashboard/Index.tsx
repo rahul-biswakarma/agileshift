@@ -10,7 +10,6 @@ export default function Dashboard() {
 		{
 			id: "TKT-1",
 			title: "Add Responsiveness",
-			stage: "Work In Progress",
 			owner: {
 				name: "Rahul",
 				avatar:

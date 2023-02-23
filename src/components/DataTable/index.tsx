@@ -4,12 +4,13 @@ import { AgGridReact } from "ag-grid-react/lib/agGridReact";
 import { IdComponent } from "./idComponent";
 import tagComponent from "./tagComponent";
 import userComponent from "./userComponent";
+import stringComponent from "./stringComponent";
 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 
 type Type_DataTableProps = {
-	dataSchema: {color: string; schema: Array<TYPE_SCHEMA> };
+	dataSchema: { color: string; schema: Array<TYPE_SCHEMA> };
 	datas: any;
 	feildColor: string;
 };
@@ -34,9 +35,9 @@ const DataTable = (props: Type_DataTableProps) => {
 	}, []);
 	const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
 
-	const onGridReady = (params: any) => {
-		params.api.sizeColumnsToFit();
-	};
+	// const onGridReady = (params: any) => {
+	// 	params.api.sizeColumnsToFit();
+	// };
 
 	const [rowData, setRowData] = useState();
 
@@ -46,7 +47,7 @@ const DataTable = (props: Type_DataTableProps) => {
 		// Setting AgGridColumnsDefitions
 		let tempColumnDefs: Type_AgGridColsDefs = [];
 		props.dataSchema.schema.map((schema: TYPE_SCHEMA) => {
-			function idComponentWrapper(params: any){
+			function idComponentWrapper(params: any) {
 				return (
 					<IdComponent
 						color={props.dataSchema.color}
@@ -57,8 +58,8 @@ const DataTable = (props: Type_DataTableProps) => {
 			if (schema.columnType === "id")
 				tempColumnDefs.push({
 					field: schema.columnTitle,
-					maxWidth: 100,
-					minWidth: 100,
+					maxWidth: 200,
+					minWidth: 200,
 					cellRenderer: idComponentWrapper,
 					cellClass: ["flex", "items-center", "cell-style-class"],
 					headerClass: ["header-style-class"],
@@ -84,6 +85,7 @@ const DataTable = (props: Type_DataTableProps) => {
 				tempColumnDefs.push({
 					field: schema.columnTitle,
 					minWidth: 100,
+					cellRenderer: stringComponent,
 					cellClass: [
 						"flex",
 						"items-center",
@@ -129,7 +131,11 @@ const DataTable = (props: Type_DataTableProps) => {
 				rowHeight={50}
 				columnDefs={columnDefs}
 				defaultColDef={defaultColDef}
-				onGridReady={onGridReady}
+				onGridSizeChanged={() => {
+					gridRef.current.api.sizeColumnsToFit();
+				}}
+				domLayout={"autoHeight"}
+				suppressHorizontalScroll={false}
 			></AgGridReact>
 		</div>
 	);
