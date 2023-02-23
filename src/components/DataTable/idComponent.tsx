@@ -17,7 +17,7 @@ const IdComponent = (props: Type_IssuesIdComponentProps) => {
 				color: textColor,
 				backgroundColor: bgColor,
 			}}
-			className="w-max h-[25px] rounded-[5px] font-fira_code rounded-[8px] text-blue-600 text-center px-[10px] flex justify-center items-center text-[12px] font-[500]"
+			className="w-max h-[20px] rounded-[4px] font-fira_code rounded-[8px] text-blue-600 text-center px-[8px] flex justify-center items-center text-[12px] font-[500]"
 		>
 			{props.issuesId}
 		</div>

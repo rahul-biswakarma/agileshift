@@ -2,12 +2,14 @@ import React, { useState, useMemo, useRef, useEffect } from "react";
 import { AgGridReact } from "ag-grid-react/lib/agGridReact";
 
 import { IdComponent } from "./idComponent";
+import tagComponent from "./tagComponent";
+import userComponent from "./userComponent";
 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 
 type Type_DataTableProps = {
-	dataSchema: { color: string; schema: Array<TYPE_SCHEMA> };
+	dataSchema: {color: string; schema: Array<TYPE_SCHEMA> };
 	datas: any;
 	feildColor: string;
 };
@@ -19,16 +21,17 @@ type Type_AgGridColsDefs = Array<{
 	cellRendererParams?: any;
 	cellClass?: Array<string>;
 	headerClass?: Array<string>;
+	wrapText?: boolean;
 }>;
 
 const DataTable = (props: Type_DataTableProps) => {
 	const gridRef = useRef<any>();
-	const defaultColDef = useMemo(() => {
+	const defaultColDef = useMemo<any>(() => {
 		return {
+			sortable: true,
 			resizable: true,
 		};
 	}, []);
-
 	const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
 
 	const onGridReady = (params: any) => {
@@ -43,7 +46,7 @@ const DataTable = (props: Type_DataTableProps) => {
 		// Setting AgGridColumnsDefitions
 		let tempColumnDefs: Type_AgGridColsDefs = [];
 		props.dataSchema.schema.map((schema: TYPE_SCHEMA) => {
-			function idComponentWrapper(params: any) {
+			function idComponentWrapper(params: any){
 				return (
 					<IdComponent
 						color={props.dataSchema.color}
@@ -51,7 +54,7 @@ const DataTable = (props: Type_DataTableProps) => {
 					/>
 				);
 			}
-			if (schema.columnTitle === "id")
+			if (schema.columnType === "id")
 				tempColumnDefs.push({
 					field: schema.columnTitle,
 					maxWidth: 100,
@@ -59,8 +62,25 @@ const DataTable = (props: Type_DataTableProps) => {
 					cellRenderer: idComponentWrapper,
 					cellClass: ["flex", "items-center", "cell-style-class"],
 					headerClass: ["header-style-class"],
+					wrapText: true,
 				});
-			else {
+			else if (schema.columnType === "tag") {
+				tempColumnDefs.push({
+					field: schema.columnTitle,
+					cellRenderer: tagComponent,
+					cellClass: ["flex", "items-center", "cell-style-class", "gap-[5px]"],
+					headerClass: ["header-style-class"],
+					wrapText: true,
+				});
+			} else if (schema.columnType === "user") {
+				tempColumnDefs.push({
+					field: schema.columnTitle,
+					cellRenderer: userComponent,
+					cellClass: ["flex", "items-center", "cell-style-class", "gap-[5px]"],
+					headerClass: ["header-style-class"],
+					wrapText: true,
+				});
+			} else {
 				tempColumnDefs.push({
 					field: schema.columnTitle,
 					minWidth: 100,
@@ -71,6 +91,7 @@ const DataTable = (props: Type_DataTableProps) => {
 						"cell-style-class",
 					],
 					headerClass: ["header-style-class"],
+					wrapText: true,
 				});
 			}
 			return "";
@@ -105,6 +126,7 @@ const DataTable = (props: Type_DataTableProps) => {
 			<AgGridReact
 				ref={gridRef}
 				rowData={rowData}
+				rowHeight={50}
 				columnDefs={columnDefs}
 				defaultColDef={defaultColDef}
 				onGridReady={onGridReady}

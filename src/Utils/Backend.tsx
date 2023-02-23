@@ -224,84 +224,105 @@ export const get_schema_data = async (
 };
 //16 get tabs name
 export const get_tabs_name = async (organisationId: string) => {
-  const docRef = doc(db, "schema", organisationId);
-  const docSnap = await getDoc(docRef);
+	const docRef = doc(db, "schema", organisationId);
+	const docSnap = await getDoc(docRef);
 
-  if (docSnap.exists()) {
-    return docSnap.data()["schemaData"].map((item: any) => {
-      item.title;
-    });
-  } else {
-    console.log("No such document!");
-  }
+	if (docSnap.exists()) {
+		return docSnap.data()["schemaData"].map((item: any) => {
+			return item.title;
+		});
+	} else {
+		console.log("No such document!");
+	}
+	return;
 };
 
 // 17 get background color from name
 export const get_background_color_from_name = (name: string) => {
-	if (name === "purple") return "#6b21a8	";
-	return "#161616";
+	if (name === "purple") return "#6b21a8";
+	else if (name === "slate") return "#1e293b";
+	else if (name === "red") return "#dc2626";
+	else if (name === "amber") return "#b45309";
+	else if (name === "lime") return "#65a30d";
+	else if (name === "cyan") return "#0891b2";
+	else if (name === "indigo") return "#4f46e5";
+	else if (name === "pink") return "#a21caf";
+	else return "#1d4ed8";
 };
 // 18 get text color from name
 export const get_text_color_from_name = (name: string) => {
 	if (name === "purple") return "#d8b4fe";
-	return "#668cff";
+	else if (name === "slate") return "#d1d5db";
+	else if (name === "red") return "#fca5a5";
+	else if (name === "amber") return "#fde68a";
+	else if (name === "lime") return "#bef264";
+	else if (name === "cyan") return "#a5f3fc";
+	else if (name === "indigo") return "#fde68a";
+	else if (name === "pink") return "#f0abfc";
+	else return "#93c5fd";
 };
 // 19
 export const get_title = async (organisationId: string, field: string) => {
-  const docRef = doc(db, "schema", organisationId);
-  const docSnap = await getDoc(docRef);
+	const docRef = doc(db, "schema", organisationId);
+	const docSnap = await getDoc(docRef);
 
-  if (docSnap.exists()) {
-    docSnap.data()["schemaData"].map((item: any) => {
-      if (item.name === field) {
-        item.list.map((listData: any) => {
-          if (listData.type === "title") return listData.colummn;
-        });
-      }
-    });
-  } else {
-    console.log("No such document!");
-  }
-  return "";
+	if (docSnap.exists()) {
+		docSnap.data()["schemaData"].map((item: any) => {
+			if (item.name === field) {
+				return item.list.map((listData: any) => {
+					if (listData.type === "title") return listData.colummn;
+					return {};
+				});
+			}
+			return {};
+		});
+	} else {
+		console.log("No such document!");
+	}
+	return "";
 };
 
 // 20 get schema using field name
 export const get_schema_data_field = async (
-  organisationId: string,
-  field: string
+	organisationId: string,
+	field: string
 ) => {
-  const docRef = doc(db, "schema", organisationId);
-  const docSnap = await getDoc(docRef);
+	const docRef = doc(db, "schema", organisationId);
+	const docSnap = await getDoc(docRef);
 
-  if (docSnap.exists()) {
-    docSnap.data()["schemaData"].map((item: any) => {
-      if (item.name === field) {
-        return item.list;
-      }
-    });
-  } else {
-    console.log("No such document!");
-  }
-  return [];
+	if (docSnap.exists()) {
+		docSnap.data()["schemaData"].map((item: any) => {
+			if (item.name === field) {
+				return item.list;
+			}
+			return {};
+		});
+	} else {
+		console.log("No such document!");
+	}
+	return [];
 };
 // 21
 export const get_data_byID = async (organisationId: string, dataId: string) => {
-  const docRef = doc(db, "organizations", organisationId);
-  const docSnap = await getDoc(docRef);
+	const docRef = doc(db, "organizations", organisationId);
+	const docSnap = await getDoc(docRef);
 
-  if (docSnap.exists()) {
-    docSnap.data()["data"].map((item: any) => {
-      if (item.id === dataId) {
-        return item;
-      }
-    });
-  } else {
-    console.log("No such document!");
-  }
-  return {};
+	if (docSnap.exists()) {
+		docSnap.data()["data"].map((item: any) => {
+			if (item.id === dataId) {
+				return item;
+			}
+			return {};
+		});
+	} else {
+		console.log("No such document!");
+	}
+	return {};
 };
 // 22 get list by columun typee
-export const get_list_by_column_type = async (organisationId:string,typeName:string) => {
-
-  return []
+export const get_list_by_column_type = async (
+	organisationId: string,
+	typeName: string
+) => {
+	return [];
 };
