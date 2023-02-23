@@ -13,24 +13,24 @@ const OrganizationList: React.FunctionComponent = () => {
 	const organizationList  = useAppSelector((state) => state.auth.organisationList);
 	const userId  = useAppSelector((state) => state.auth.userId);
 
-	useEffect(() => {
-		const getUserObj = async () => {
-			await get_user_by_id(userId).then((data) => {
-				setUser(data);
-			})
-		}
-		const getOrganizationsDetails = async () => {
-			organizationList.map(async (orgId) => {
-				const orgObject = await get_organizations_details(orgId);
-				setOrganizations([
-					...organization,
-					orgObject
-				])
-			})
-		}
-		getOrganizationsDetails();
-		getUserObj();
-	});
+	// useEffect(() => {
+	// 	const getUserObj = async () => {
+	// 		await get_user_by_id(userId).then((data) => {
+	// 			setUser(data);
+	// 		})
+	// 	}
+	// 	const getOrganizationsDetails = async () => {
+	// 		organizationList.map(async (orgId) => {
+	// 			const orgObject = await get_organizations_details(orgId);
+	// 			setOrganizations([
+	// 				...organization,
+	// 				orgObject
+	// 			])
+	// 		})
+	// 	}
+	// 	getOrganizationsDetails();
+	// 	getUserObj();
+	// });
 	
 	const navigate = useNavigate();
 	// console.log(organizationList);
