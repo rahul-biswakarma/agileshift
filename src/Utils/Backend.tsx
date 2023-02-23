@@ -58,6 +58,9 @@ const get_current_time = () => {
  17 get color from name
 19 get_title
 20 get schema using field id
+21
+22
+23 add organization to user
 */
 
 // 1
@@ -335,4 +338,15 @@ export const get_list_by_column_type = async (
   typeName: string
 ) => {
   return [];
+};
+
+// 23 add organization to user
+export const add_organisation_to_user = async (
+  userId: string,
+  organisationId: string
+) => {
+  const userRef = doc(db, "users", userId);
+  await updateDoc(userRef, {
+    organisation: arrayUnion(organisationId),
+  });
 };

@@ -16,6 +16,7 @@ type GeneratorPropTypes = {
   activeTab: string;
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
   getAllFieldsName: () => string[];
+  submitSchema: () => void;
 };
 
 export const SchemaGenerator = ({
@@ -29,6 +30,7 @@ export const SchemaGenerator = ({
   activeTab,
   setActiveTab,
   getAllFieldsName,
+  submitSchema,
 }: GeneratorPropTypes) => {
   const colorList = [
     "purple",
@@ -128,6 +130,8 @@ export const SchemaGenerator = ({
           setList={setList}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
+          isLast={getAllFieldsName()[getAllFieldsName().length - 1] === name}
+          submitSchema={submitSchema}
         />
       </section>
     );

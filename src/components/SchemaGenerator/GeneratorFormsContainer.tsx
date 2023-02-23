@@ -88,6 +88,10 @@ export const GeneratorFormsContainer = () => {
     setFields(tempFields);
   }
 
+  const submitSchema = () => {
+    console.log(fields);
+  };
+
   const addSchema = () => {
     let tempFields = [...fields];
     let lastField = tempFields[tempFields.length - 1];
@@ -123,6 +127,7 @@ export const GeneratorFormsContainer = () => {
           setActiveTab={setActiveTab}
           getAllFieldsName={getAllFieldsName}
           key={id}
+          submitSchema={submitSchema}
         />
       ))}
       <NewSchema addSchema={addSchema} />

@@ -1,7 +1,10 @@
 import { useRef, useState, ChangeEvent } from "react";
 import { useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
-import { create_organization } from "../../Utils/Backend";
+import {
+  add_organisation_to_user,
+  create_organization,
+} from "../../Utils/Backend";
 require("tailwindcss-writing-mode")({
   variants: ["responsive", "hover"],
 });
@@ -57,14 +60,12 @@ export const OrganisationForm = ({
     console.log(orgName.current!.value);
     console.log(orgURL.current!.value);
     console.log(userId);
-    console.log(
-      "organisation created: " +
-        create_organization(
-          userId,
-          orgName.current!.value,
-          orgURL.current!.value
-        )
-    );
+
+    create_organization(
+      userId,
+      orgName.current!.value,
+      orgURL.current!.value
+    ).then((id) => add_organisation_to_user(userId, id));
   };
 
   if (activeTab === "Organisation")
