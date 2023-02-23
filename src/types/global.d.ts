@@ -51,4 +51,11 @@ declare global {
 		avatar: string; //url of the avatar
 		organisation: string[]; //array of organisation ids
 	};
+	type TYPE_FIELD = {
+		name: string;
+		list: TYPE_SCHEMA[];
+		color: string;
+		icon: string;
+		linkage: string[];
+	};
 }

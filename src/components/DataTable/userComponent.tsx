@@ -1,7 +1,6 @@
 import React from "react";
 
 const UsersType = (props: any) => {
-	console.log(props);
 	return (
 		<div className="flex items-center">
 			{props.value.avatar !== undefined &&

@@ -1,10 +1,12 @@
 import React from "react";
+import BuildQuadarnt from "../BuildQuadrant";
 import DataTable from "../DataTable";
-import NavBar from "./NavBar";
-import SearchComponent from "./SearchComponent";
+
+import Header from "./Header";
+import TabHeader from "./TabHeader";
 
 export default function Dashboard() {
-  const [selectedTab, setSelectedTab] = React.useState<string>("Dashboard");
+	const [selectedTab, setSelectedTab] = React.useState<string>("Dashboard");
 
 	let dummyData = [
 		{
@@ -64,26 +66,56 @@ export default function Dashboard() {
 		},
 	];
 
-  return (
-    <div className="bg-background_color h-[100vh] font-dm_sans">
-      <header className="p-2 flex flex-row text-primary_font_color justify-between gap-x-4 gap-y-2 h-50">
-        <NavBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
-        <SearchComponent />
-      </header>
-      <DataTable
-        datas={dummyData}
-        dataSchema={{
-          color: "purple",
-          schema: [
-            { columnTitle: "id", columnType: "id" },
-            { columnTitle: "title", columnType: "title" },
-            { columnTitle: "stage", columnType: "string" },
-            { columnTitle: "owner", columnType: "user" },
-            { columnTitle: "tag", columnType: "tag" },
-          ],
-        }}
-        feildColor="purple"
-      />
-    </div>
-  );
+	let dummyFieldData = [
+		{
+			name: "Tickets",
+			list: [
+				{ columnTitle: "id", columnType: "id" },
+				{ columnTitle: "title", columnType: "title" },
+				{ columnTitle: "stage", columnType: "string" },
+				{ columnTitle: "owner", columnType: "user" },
+				{ columnTitle: "tag", columnType: "tag" },
+			],
+			color: "pink",
+			icon: "confirmation_number",
+			linkage: [],
+		},
+		{
+			name: "Issues",
+			list: [
+				{ columnTitle: "id", columnType: "id" },
+				{ columnTitle: "title", columnType: "title" },
+				{ columnTitle: "stage", columnType: "string" },
+				{ columnTitle: "owner", columnType: "user" },
+				{ columnTitle: "tag", columnType: "tag" },
+			],
+			color: "amber",
+			icon: "warning",
+			linkage: [],
+		},
+		{
+			name: "Bugs",
+			list: [
+				{ columnTitle: "id", columnType: "id" },
+				{ columnTitle: "title", columnType: "title" },
+				{ columnTitle: "stage", columnType: "string" },
+				{ columnTitle: "owner", columnType: "user" },
+				{ columnTitle: "tag", columnType: "tag" },
+			],
+			color: "lime",
+			icon: "bug_report",
+			linkage: [],
+		},
+	];
+
+	return (
+		<div className="bg-background_color h-[100vh] font-dm_sans">
+			<Header />
+			<TabHeader fieldsData={dummyFieldData} />
+			<BuildQuadarnt
+				fieldData={dummyFieldData[0]}
+				datas={dummyData}
+			/>
+		</div>
+	);
 }
