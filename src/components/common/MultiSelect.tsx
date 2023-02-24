@@ -1,12 +1,10 @@
 import React from "react";
 import Select from "react-select";
-
 const options = [
   { value: "chocolate", label: "Chocolate" },
   { value: "strawberry", label: "Strawberry" },
   { value: "vanilla", label: "Vanilla" },
 ];
-
 const customStyles = {
   control: (provided: any) => ({
     ...provided,
@@ -39,7 +37,6 @@ const customStyles = {
     color: "#FFFFFF", // Set the input text color here
   }),
 };
-
 const formatOptions = (value: Array<string>) => {
   let data: {
     value: string;
@@ -57,19 +54,15 @@ type type_props = {
   defaultValue: any;
   setFunction: any;
   label: string;
-  fieldData:any
-
+  fieldData: any;
 };
-
 const MultiSelect = (props: type_props) => {
   // const [options, setOption] = React.useState<any>(
   //   formatOptions(props.defaultValue)
   // );
-  const formatOutputVlue = (value:any)=>{
-
-    return value.map((item:any)=>item['value'])
-
-  }
+  const formatOutputVlue = (value: any) => {
+    return value.map((item: any) => item["value"]);
+  };
   return (
     <div>
       <div className="flex mt-[0.3rem] bg-background_color">
@@ -82,14 +75,18 @@ const MultiSelect = (props: type_props) => {
             defaultValue={[options[0], options[1]]}
             isMulti
             placeholder={"hii"}
-            options={ formatOptions(props.defaultValue)}
+            options={formatOptions(props.defaultValue)}
             styles={customStyles}
-            onChange={(value) => props.setFunction({...props.fieldData,[props.label]:formatOutputVlue(value)})}
+            onChange={(value) =>
+              props.setFunction({
+                ...props.fieldData,
+                [props.label]: formatOutputVlue(value),
+              })
+            }
           />
         </span>
       </div>
     </div>
   );
 };
-
 export default MultiSelect;

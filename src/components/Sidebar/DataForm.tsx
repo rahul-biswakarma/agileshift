@@ -23,14 +23,14 @@ const DataForm = (props: Type_DetailsProps) => {
 
   React.useEffect(() => {
     let tempTabData: any = {};
-    Object.keys(props.state.schema).map((key) => {
+    Object.keys(props.state.schema).forEach((key) => {
       tempTabData[props.state.schema[key]] = [];
     });
-    Object.keys(props.state.schema).map((key) => {
+    Object.keys(props.state.schema).forEach((key) => {
       tempTabData[props.state.schema[key]].push(key);
     });
     setTabs(tempTabData);
-  }, []);
+  }, [props.state.schema]);
 
   console.log(tabs, "**tabs");
 

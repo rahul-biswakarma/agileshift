@@ -1,6 +1,5 @@
 import React from "react";
 import Select from "react-select";
-
 const customStyles = {
   control: (provided: any) => ({
     ...provided,
@@ -37,7 +36,6 @@ type type_props = {
   label: string;
   fieldData:any
 };
-
 const formatOptions = (value: Array<string>) => {
   let data: {
     value: string;
@@ -51,16 +49,11 @@ const formatOptions = (value: Array<string>) => {
   });
   return data;
 };
-
 const formatOutputVlue = (value:any)=>{
-
   return value.map((item:any)=>item['value'])
-
 }
-
 const AutoComplete = (props: type_props) => {
   // const [options, setOption] = React.useState<any>(
-   
   // );
   return (
     <div>
@@ -79,5 +72,4 @@ const AutoComplete = (props: type_props) => {
     </div>
   );
 };
-
 export default AutoComplete;
