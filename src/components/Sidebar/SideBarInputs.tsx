@@ -12,7 +12,7 @@ type type_props = {
 };
 export default function SideBarInputs(props: type_props) {
   
-  if (["progress"].includes(props.type)) {
+  if (["dropdown"].includes(props.type)) {
     return (
       <div>
         <AutoComplete
