@@ -6,6 +6,7 @@ type Type_SidebarState = {
   field: string;
   data: any;
   color: string;
+  schema?:any;
 };
 
 type Type_HeaderProps = {

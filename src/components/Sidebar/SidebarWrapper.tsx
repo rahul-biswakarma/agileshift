@@ -7,6 +7,7 @@ type Type_SidebarState = {
   field: string;
   data: any;
   color: string;
+  schema?:any;
 };
 
 const SidebarWrapper = () => {
@@ -34,6 +35,7 @@ const SidebarWrapper = () => {
           field={sidebar.field}
           color={sidebar.color}
           data={sidebar.data}
+          schema={sidebar.schema}
         />
       ))}
     </div>

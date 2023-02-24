@@ -276,7 +276,7 @@ export const get_text_color_from_name = (name: string) => {
 };
 // 19
 export const get_title = async (organisationId: string, field: string) => {
-  const docRef = doc(db, "schema", organisationId);
+  const docRef = doc(db, "schemas", organisationId);
   const docSnap = await getDoc(docRef);
 
   if (docSnap.exists()) {
