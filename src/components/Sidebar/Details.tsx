@@ -2,10 +2,8 @@ import React from 'react';
 
 type Type_SidebarState = {
     field: string;
-    data?: TYPE_SCHEMA;
     color: string;
-    tabColaps: boolean;
-    setColapsTabBar: React.Dispatch<React.SetStateAction<number>>;
+    data:any;
     index: number;
 }
 
@@ -17,10 +15,16 @@ type Type_DetailsProps = {
 }
 
 const Details = (props:Type_DetailsProps) => {
+
+    const handleTitle = () =>{
+        console.log("Changed title");
+        
+    }
+
     return (
         <div className="p-2">
             {/* Title */}
-            <input type="text" value="test" className="w-full bg-transparent text-white p-1 focus:outline-none focus:border-b focus:border-b-white"/>
+            <input type="text" placeholder="Title" value="test" className="w-full bg-transparent text-white p-1 focus:outline-none focus:border-b focus:border-b-white" onChange={()=>handleTitle()}/>
         </div>
     )
 }

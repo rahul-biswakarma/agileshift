@@ -61,6 +61,9 @@ const get_current_time = () => {
  17 get color from name
 19 get_title
 20 get schema using field id
+21
+22
+23 add organization to user
 */
 
 // 1
@@ -149,7 +152,7 @@ export const update_issue = () => {};
 export const create_tags = () => {};
 
 // 11
-export const sendEmail = async(emailId: string) => {
+export const sendEmail = async (emailId: string) => {
   //   e.preventDefault(); // prevents the page from reloading when you hit “Send”
 
   let params: {
@@ -206,7 +209,6 @@ export const get_all_Supported_types = async () => {
 export const get_organizations_details = async (organisationId: string) => {
   const docRef = doc(db, "organizations", organisationId);
   const docSnap = await getDoc(docRef);
-
   if (docSnap.exists()) {
     return docSnap.data();
   } else {
@@ -217,7 +219,7 @@ export const get_organizations_details = async (organisationId: string) => {
 // 14 create a new schema
 export const create_schema = async (
   organisationId: string,
-  schemas: TYPE_SCHEMA[]
+  schemas: TYPE_FIELD[]
 ) => {
   const schemaDetails = {
     schemaData: schemas,
@@ -269,6 +271,7 @@ export const get_background_color_from_name = (name: string) => {
   else if (name === "pink") return "#a21caf";
   else return "#1d4ed8";
 };
+
 // 18 get text color from name
 export const get_text_color_from_name = (name: string) => {
   if (name === "purple") return "#d8b4fe";
