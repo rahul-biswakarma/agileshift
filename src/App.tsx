@@ -5,16 +5,23 @@ import { Login } from "./components/OnBoarding/Login";
 import { SignUp } from "./components/OnBoarding/Signup";
 import OrganizationList from "./components/ManageOrganization/OrganizationList";
 import { GeneratorFormsContainer } from "./components/SchemaGenerator/GeneratorFormsContainer";
-// import { SidebarWrapper } from "./components/Sidebar/SidebarWrapper";
 import Filter from "./components/Filters/Filter";
+import { getFromSession } from "./Utils/Auth";
+import { useAppDispatch } from "./redux/hooks";
+import { setUserId } from "./redux/reducers/AuthSlice";
 
 const App = () => {
+	const userId = getFromSession("userId");
+	const dispatch = useAppDispatch();
+	if(userId){
+		dispatch(setUserId(userId));
+	}
 	return (
 		<BrowserRouter>
 			<Routes>
 				<Route
 					path=""
-					element={<Navigate to="/signup" />}
+					element={userId?<Navigate to="/dashboard" />:<Navigate to="/signup" />}
 				/>
 				<Route
 					path="/signup"

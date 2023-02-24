@@ -1,12 +1,12 @@
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import PlusIcon from "../../assets/icons/plus-icon.svg";
 import UploadJSON from "../UploadJSON";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import {
-  setIssueSchema,
-  setTicketSchema,
-} from "../../redux/reducers/SchemaSlice";
-import { create_schema } from "../../Utils/Backend";
+// import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+// import {
+//   setIssueSchema,
+//   setTicketSchema,
+// } from "../../redux/reducers/SchemaSlice";
+// import { create_schema } from "../../Utils/Backend";
 import { FieldGroup } from "./FieldGroup";
 
 type GeneratorFormPropTypes = {
@@ -28,8 +28,8 @@ export const SchemaGeneratorForm = ({
   isLast,
   submitSchema,
 }: GeneratorFormPropTypes) => {
-  const dispatch = useAppDispatch();
-  const organizationId = useAppSelector((state) => state.auth.organisationId);
+  // const dispatch = useAppDispatch();
+  // const organizationId = useAppSelector((state) => state.auth.organisationId);
 
   const addColumn = (e: any) => {
     e.preventDefault();
