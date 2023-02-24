@@ -27,6 +27,15 @@ import {
 import emailjs from "@emailjs/browser";
 import { isValidEmail } from "email-js";
 
+function generateRandomId() {
+  let result = "";
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const charactersLength = characters.length;
+  for (let i = 0; i < 12; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
 const get_current_time = () => {
   let date = new Date();
   return `${date.getFullYear()}-${(date.getMonth() + 1)
@@ -64,6 +73,10 @@ const get_current_time = () => {
 21
 22
 23 add organization to user
+24 get user by id
+
+25 get user by email
+26 add && edit data (from sidebar)
 */
 
 // 1
@@ -379,4 +392,28 @@ export const get_user_by_email = async (email: string) => {
   });
   return "";
 };
-// 26 create schema
+// 26 addd && edit table data
+export const update_data_to_database = async (
+  organisationId: string,
+  tab: string,
+  data: any
+) => {
+  // condition for create data
+  const organizationRef = doc(db, "organizations", organisationId);
+  if (data.id === undefined || data.id === "") {
+    data["id"] = generateRandomId();
+    await updateDoc(organizationRef, {
+      data: arrayUnion(data),
+    });
+  } else {
+    //  condition for update data
+    let docSnap: any = await getDoc(organizationRef);
+    let updatedData: any = docSnap
+      .data()
+      ["data"].filter((item: any) => item.id !== data.id);
+    updatedData.push(data);
+    await updateDoc(organizationRef, {
+      data: updatedData,
+    });
+  }
+};

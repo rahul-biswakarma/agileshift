@@ -17,7 +17,7 @@ export default function Input(props: type_props) {
           data-testid="email-input"
           // ref={emailInputRef}
           className="w-full h-[2.5rem] bg-Secondary_background_color focus:outline-none   rounded-r px-4 code-font font-dm_sans"
-          type="email"
+          type="text"
           placeholder={props.label}
           // readOnly={state.onOtp}
           required
