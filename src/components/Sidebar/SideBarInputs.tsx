@@ -7,36 +7,41 @@ type type_props = {
   type: string;
   defaultValue: string | Array<string>;
   setFunction: any;
+  fieldData:any;
   label: string;
 };
 export default function SideBarInputs(props: type_props) {
-  if (["progress"].includes(props.type)) {
+  
+  if (["dropdown"].includes(props.type)) {
     return (
       <div>
         <AutoComplete
           defaultValue={props.defaultValue}
           label={props.label}
-          setFunction={() => {}}
+          setFunction={props.setFunction}
+          fieldData = {props.fieldData}
         />
       </div>
     );
   }
-  if (["tab"].includes(props.type)) {
+  if (["tag", "user"].includes(props.type)) {
     return (
       <MultiSelect
         defaultValue={props.defaultValue}
         label={props.label}
-        setFunction={() => {}}
+        setFunction={props.setFunction}
+        fieldData = {props.fieldData}
       />
     );
   }
-  if (["string"].includes(props.type)) {
+  if (["string", "title"].includes(props.type)) {
     return (
       <Input
         type={"string"}
-        defaultValue={"test"}
-        label={"test"}
-        setFunction={() => {}}
+        defaultValue={props.defaultValue}
+        label={props.label}
+        setFunction={props.setFunction}
+        fieldData = {props.fieldData}
       />
     );
   }

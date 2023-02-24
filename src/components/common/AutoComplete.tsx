@@ -35,6 +35,7 @@ type type_props = {
   defaultValue: any;
   setFunction: any;
   label: string;
+  fieldData:any
 };
 
 const formatOptions = (value: Array<string>) => {
@@ -51,10 +52,16 @@ const formatOptions = (value: Array<string>) => {
   return data;
 };
 
+const formatOutputVlue = (value:any)=>{
+
+  return value.map((item:any)=>item['value'])
+
+}
+
 const AutoComplete = (props: type_props) => {
-  const [options, setOption] = React.useState<any>(
-    formatOptions(props.defaultValue)
-  );
+  // const [options, setOption] = React.useState<any>(
+   
+  // );
   return (
     <div>
       <div className="flex mt-[0.3rem] bg-background_color">
@@ -64,8 +71,8 @@ const AutoComplete = (props: type_props) => {
         <span className=" w-[100%]">
           <Select
             styles={customStyles}
-            options={options}
-            onChange={(value) => setOption(value)}
+            options={ formatOptions(props.defaultValue)}
+            onChange={(value) => props.setFunction({...props.fieldData,[props.label]:formatOutputVlue(value)})}
           />
         </span>
       </div>

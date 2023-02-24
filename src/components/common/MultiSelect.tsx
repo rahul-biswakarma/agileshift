@@ -57,12 +57,19 @@ type type_props = {
   defaultValue: any;
   setFunction: any;
   label: string;
+  fieldData:any
+
 };
 
 const MultiSelect = (props: type_props) => {
-  const [options, setOption] = React.useState<any>(
-    formatOptions(props.defaultValue)
-  );
+  // const [options, setOption] = React.useState<any>(
+  //   formatOptions(props.defaultValue)
+  // );
+  const formatOutputVlue = (value:any)=>{
+
+    return value.map((item:any)=>item['value'])
+
+  }
   return (
     <div>
       <div className="flex mt-[0.3rem] bg-background_color">
@@ -75,9 +82,9 @@ const MultiSelect = (props: type_props) => {
             defaultValue={[options[0], options[1]]}
             isMulti
             placeholder={"hii"}
-            options={options}
+            options={ formatOptions(props.defaultValue)}
             styles={customStyles}
-            onChange={(value) => setOption(value)}
+            onChange={(value) => props.setFunction({...props.fieldData,[props.label]:formatOutputVlue(value)})}
           />
         </span>
       </div>

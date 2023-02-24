@@ -299,7 +299,7 @@ export const get_text_color_from_name = (name: string) => {
 };
 // 19
 export const get_title = async (organisationId: string, field: string) => {
-  const docRef = doc(db, "schema", organisationId);
+  const docRef = doc(db, "schemas", organisationId);
   const docSnap = await getDoc(docRef);
 
   if (docSnap.exists()) {
@@ -343,16 +343,18 @@ export const get_data_byID = async (organisationId: string, dataId: string) => {
   const docRef = doc(db, "organizations", organisationId);
   const docSnap = await getDoc(docRef);
 
+  let dataDetails: any = {};
+
   if (docSnap.exists()) {
-    docSnap.data()["data"].map((item: any) => {
+    docSnap.data()["data"].forEach((item: any) => {
       if (item.id === dataId) {
-        return item;
+        dataDetails = item;
       }
     });
   } else {
     console.log("No such document!");
   }
-  return {};
+  return dataDetails;
 };
 // 22 get list by columun typee
 export const get_list_by_column_type = async (
@@ -395,7 +397,6 @@ export const get_user_by_email = async (email: string) => {
 // 26 addd && edit table data
 export const update_data_to_database = async (
   organisationId: string,
-  tab: string,
   data: any
 ) => {
   // condition for create data
