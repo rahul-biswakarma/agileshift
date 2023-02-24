@@ -65,9 +65,7 @@ const AutoComplete = (props: type_props) => {
           <Select
             styles={customStyles}
             options={options}
-            onChange={(value) => {
-              console.log(value), setOption(value);
-            }}
+            onChange={(value) => setOption(value)}
           />
         </span>
       </div>
