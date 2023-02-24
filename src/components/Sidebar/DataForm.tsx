@@ -1,10 +1,12 @@
 import React from 'react'
+import SideBarInputs from './SideBarInputs';
 
 type Type_SidebarState = {
     field: string;
     color: string;
     data:any;
-    schema?:any;
+    schema:any;
+    index: number;
 }
 
 type Type_DetailsProps = {
@@ -17,9 +19,17 @@ type Type_DetailsProps = {
 const DataForm = (props:Type_DetailsProps) => {
 
     return (
-        <div className="h-[70%] border-y border-primary_font_color text-white p-2">
+        <div className="h-[70%] border-y border-primary_font_color text-white p-2 grow">
             {Object.keys(props.formData).map((field:any)=>(
-                <div>{field}</div>
+                field!=="id"&&props.state.schema[field]!=="title"?
+                <SideBarInputs 
+                    key={field}
+                    type={props.state.schema[field]}
+                    defaultValue={props.formData[field]}
+                    label={field}
+                    fieldData = {props.formData}
+                    setFunction= {props.setFormData}
+                />:""
             ))}
         </div>
     )

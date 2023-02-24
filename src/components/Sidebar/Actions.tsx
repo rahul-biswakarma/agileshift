@@ -1,10 +1,12 @@
 import React from 'react'
+import { update_data_to_database } from '../../Utils/Backend';
 
 type Type_SidebarState = {
     field: string;
     color: string;
     data:any;
-    schema?:any;
+    schema:any;
+    index: number;
 }
 
 type Type_DetailsProps = {
@@ -16,8 +18,10 @@ type Type_DetailsProps = {
 
 const Actions = (props:Type_DetailsProps) => {
 
-    const saveData = () =>{
-        console.log(props.formData);
+    const saveData = async () =>{
+        let formDataFromProps = {...props.formData, field:props.state.field} 
+        let organizationId = "mqCSUQt0TvSpskHLduZn";
+        await update_data_to_database(organizationId, formDataFromProps);
     }
 
     return (

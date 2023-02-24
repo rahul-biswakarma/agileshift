@@ -1,5 +1,6 @@
 import React from "react";
 import DataTable from "../DataTable";
+
 import NavBar from "./NavBar";
 import SearchComponent from "./SearchComponent";
 
@@ -70,6 +71,7 @@ export default function Dashboard() {
         <NavBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
         <SearchComponent />
       </header>
+
       <DataTable
         datas={dummyData}
         dataSchema={{

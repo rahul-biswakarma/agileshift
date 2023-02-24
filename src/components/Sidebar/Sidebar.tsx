@@ -18,15 +18,17 @@ type Type_SidebarDataProps = {
   field: string;
   color: string;
   data:any;
-  schema?:any;
-}
+  schema:any;
+  index: number;
+};
 
 const Sidebar = (props: Type_SidebarProps) => {
   const [state, setState] = useState<Type_SidebarDataProps>({
     field: props.field,
     color: props.color,
     data:props.data,
-    schema:props.schema
+    schema:props.schema,
+    index: props.index,
   });
   
   const [formData, setFormData] = useState<any>([])
@@ -48,7 +50,6 @@ const Sidebar = (props: Type_SidebarProps) => {
     setUpdateFormData(false)
     console.log(tempFormData);
   }
-  
 
   return (
     <div
@@ -56,7 +57,6 @@ const Sidebar = (props: Type_SidebarProps) => {
         props.tabColaps ? "w-[50px] flex items-center" : "w-1/3"
       } h-screen  bg-sidebar_bg backdrop-filter backdrop-blur-lg bg-opacity-60 border border-primary_font_color`}
     >
-      {/* bg-gradient-to-b from-[#badde8] to-[#bdddcc] */}
       {props.tabColaps ? (
         <div
           className="[writing-mode:vertical-rl] h-full w-full flex justify-center items-center text-xl cursor-pointer hover:bg-background_color rounded-lg py-4"
@@ -67,7 +67,7 @@ const Sidebar = (props: Type_SidebarProps) => {
           {state.field}
         </div>
       ) : (
-        <div className="h-full w-full p-3">
+        <div className="h-full w-full p-3 flex flex-col">
           <Header state={state} setState={setState} formData={formData} setFormData={setFormData}/>
           <Details state={state} setState={setState} formData={formData} setFormData={setFormData} />
           <DataForm state={state} setState={setState} formData={formData} setFormData={setFormData} />

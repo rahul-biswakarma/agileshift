@@ -1,46 +1,52 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
+import SideBarInputs from './SideBarInputs';
 
 type Type_SidebarState = {
     field: string;
     color: string;
     data:any;
-    schema?:any;
+    schema:any;
+    index: number;
 }
 
 type Type_DetailsProps = {
     state:Type_SidebarState,
     setState: React.Dispatch<React.SetStateAction<Type_SidebarState>>,
-    formData:TYPE_SCHEMA[],
-    setFormData: React.Dispatch<React.SetStateAction<TYPE_SCHEMA[]>>
+    formData:any,
+    setFormData: React.Dispatch<React.SetStateAction<any>>
 }
 
 const Details = (props:Type_DetailsProps) => {
-    let titleFieldRef = useRef<string>("title")
+    const [titleField, setTitleField] = useState<string>("")
 
     useEffect(()=>{
-        // get_title(organizationId, props.state.field)
-        // .then((result:string)=>{
-        //     titleFieldRef.current = result
-        // })
-        const schemaFromProps = props.state.schema;
-        Object.keys(schemaFromProps).forEach((key:any)=>{
-            if(schemaFromProps[key]==="title"){
-                return titleFieldRef.current = key
-            }
-        })
-
-    },[props.state.schema])
-
-    const handleTitle = () =>{
-        console.log("Changed title");
-        
-    }
+        if(titleField===""){
+            const schemaFromProps = props.state.schema;
+            
+            Object.keys(schemaFromProps).forEach((key:any)=>{
+                if(schemaFromProps[key]==="title"){
+                    console.log(key, "**");
+                    return setTitleField(key);
+                }
+            })
+            console.log(titleField, "**");
+        }
+    },[props.state.schema,titleField])
 
     return (
         <div className="p-2">
             {/* Title */}
-            {titleFieldRef.current.length>0?
-                <input type="text" placeholder={titleFieldRef.current} defaultValue={props.state.data[titleFieldRef.current]?props.state.data[titleFieldRef.current]:""} className="w-full bg-transparent text-white p-1 focus:outline-none focus:border-b focus:border-b-white" onChange={()=>handleTitle()}/>:""
+            {titleField.length>0?
+                (
+                    <SideBarInputs 
+                        key={titleField}
+                        type={props.state.schema[titleField]}
+                        defaultValue={props.formData[titleField]}
+                        label={titleField}
+                        fieldData={props.formData}
+                        setFunction= {props.setFormData}
+                    />
+                ):""
             }
         </div>
     )

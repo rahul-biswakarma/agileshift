@@ -70,8 +70,19 @@ const initialState: SidebarState = {
       schema:{
         owner:"string",
         id:"string"
-      }
+      },
     },
+    {
+      field:"Issue",
+      color:"red",
+      data:{},
+      schema:{
+        owner:"string",
+        title:"title",
+        stage:"string",
+        id:"string"
+      }
+    }
   ],
 };
 

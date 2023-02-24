@@ -4,7 +4,8 @@ type Type_SidebarState = {
   field: string;
   data: any;
   color: string;
-  schema?:any;
+  schema:any;
+  index: number;
 };
 
 type Type_HeaderIdComponentProps = {
