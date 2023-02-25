@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type Type_SidebarState = {
-	field: string;
-	data: any;
-	color: string;
+  field: string;
+  data: any;
+  color: string;
+  schema?: any;
 };
 interface SidebarState {
 	visible: boolean;
@@ -11,8 +12,14 @@ interface SidebarState {
 }
 
 const initialState: SidebarState = {
-	visible: false,
-	sideBarData: [],
+  visible: false,
+  sideBarData: [
+    // { field: "Issue", color: "red", data: {} },
+    // { field: "Ticket", color: "green", data: {} },
+    // { field: "Linkage", color: "cyan", data: {} },
+    // { field: "Issue", color: "green", data: {} },
+    // { field: "Ticket", color: "green", data: {} },
+  ],
 };
 
 export const SideBarSlice = createSlice({

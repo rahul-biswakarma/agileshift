@@ -4,7 +4,6 @@ import { useAppSelector } from "../../redux/hooks";
 import { get_user_by_id } from "../../Utils/Backend";
 import { OrganizationCard } from "./OrganizationCard";
 import { get_organizations_details } from "../../Utils/Backend";
-// import UploadJSON from "./UploadJSON";
 
 const OrganizationList: React.FunctionComponent = () => {
 	const [user, setUser] = useState<any>();

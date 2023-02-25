@@ -22,10 +22,14 @@ const App = () => {
 		}
 	}, []);
 
-	const isSideBarHasData = useAppSelector((state) => state.sidebar.sideBarData);
+	const sideBarList = useAppSelector((state) => state.sidebar.sideBarData);
 	return (
 		<BrowserRouter>
-			{isSideBarHasData.length > 0 && <SidebarWrapper />}
+			{sideBarList.length !== 0 && (
+				<section className="fixed z-50">
+					<SidebarWrapper />
+				</section>
+			)}
 			<Routes>
 				<Route
 					path=""
