@@ -259,17 +259,18 @@ export const get_schema_data = async (
 };
 //16 get tabs name
 export const get_tabs_name = async (organisationId: string) => {
-  const docRef = doc(db, "schema", organisationId);
+  const docRef = doc(db, "schemas", organisationId);
   const docSnap = await getDoc(docRef);
-
+  let fieldList = [];
   if (docSnap.exists()) {
-    return docSnap.data()["schemaData"].map((item: any) => {
-      return item.title;
-    });
+    fieldList=docSnap.data()["schemaData"].map((item: any) => {
+      return item.name;
+    })
+    console.log(fieldList);
   } else {
     console.log("No such document!");
   }
-  return;
+  return fieldList;
 };
 
 // 17 get background color from name
@@ -323,20 +324,25 @@ export const get_schema_data_field = async (
   organisationId: string,
   field: string
 ) => {
-  const docRef = doc(db, "schema", organisationId);
+  console.log(organisationId);
+  
+  const docRef = doc(db, "schemas", organisationId);
   const docSnap = await getDoc(docRef);
-
+  let schemaFromField = {};
   if (docSnap.exists()) {
-    docSnap.data()["schemaData"].map((item: any) => {
+    
+    docSnap.data()["schemaData"].forEach((item: any) => {
       if (item.name === field) {
-        return item.list;
+        schemaFromField = item;
       }
-      return {};
     });
+
+    console.log(schemaFromField, "**");
+    
   } else {
     console.log("No such document!");
   }
-  return [];
+  return schemaFromField;
 };
 // 21
 export const get_data_byID = async (organisationId: string, dataId: string) => {

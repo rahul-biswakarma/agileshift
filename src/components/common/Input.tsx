@@ -8,6 +8,7 @@ type type_props = {
   fieldData:any
 };
 export default function Input(props: type_props) {
+
   return (
     <div>
       <div className="flex mt-[0.3rem] bg-Secondary_background_color">
@@ -17,10 +18,10 @@ export default function Input(props: type_props) {
         <input
           data-testid="email-input"
           value={props.defaultValue}
-          className="w-full h-[2.5rem] bg-Secondary_background_color focus:outline-none   rounded-r px-4 code-font font-dm_sans"
+          className="w-full h-[2.5rem] bg-Secondary_background_color focus:outline-none rounded-r px-4 code-font font-dm_sans"
           type="text"
           placeholder={props.label}
-          required
+          onChange = {(e)=>props.setFunction({...props.fieldData, [props.label]:e.target.value})}
         />
       </div>
     </div>
