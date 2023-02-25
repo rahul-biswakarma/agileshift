@@ -20,24 +20,25 @@ const Details = (props:Type_DetailsProps) => {
     const [titleField, setTitleField] = useState<string>("")
 
     useEffect(()=>{
-        if(titleField===""){
-            const schemaFromProps = props.state.schema;
+        const schemaFromProps = props.state.schema;
+        if(titleField===""||!(titleField in schemaFromProps)){
+            let newTitle =""
+            console.log("Change Title", "**");
             
             Object.keys(schemaFromProps).forEach((key:any)=>{
                 if(schemaFromProps[key]==="title"){
                     console.log(key, "**");
-                    return setTitleField(key);
+                    newTitle=key;
                 }
             })
-            console.log(titleField, "**");
+            setTitleField(newTitle)
         }
     },[props.state.schema,titleField])
 
     return (
         <div className="p-2">
             {/* Title */}
-            {titleField.length>0?
-                (
+            {titleField.length>0 &&
                     <SideBarInputs 
                         key={titleField}
                         type={props.state.schema[titleField]}
@@ -46,7 +47,6 @@ const Details = (props:Type_DetailsProps) => {
                         fieldData={props.formData}
                         setFunction= {props.setFormData}
                     />
-                ):""
             }
         </div>
     )

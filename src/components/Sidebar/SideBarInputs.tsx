@@ -11,6 +11,8 @@ type type_props = {
   label: string;
 };
 export default function SideBarInputs(props: type_props) {
+  console.log(props, "**");
+  
   
   if (["dropdown"].includes(props.type)) {
     return (

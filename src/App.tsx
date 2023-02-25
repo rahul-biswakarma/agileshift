@@ -17,10 +17,10 @@ const App = () => {
   if (userId) {
     dispatch(setUserId(userId));
   }
-  const sideBarLists = useAppSelector((state) => state.sidebar.sideBarData);
+  const sideBarList = useAppSelector((state) => state.sidebar.sideBarData);
   return (
     <BrowserRouter>
-      {sideBarLists.length !== 0 && (
+      {sideBarList.length !== 0 && (
         <section className="fixed z-50">
           <SidebarWrapper />
         </section>
@@ -29,7 +29,7 @@ const App = () => {
         <Route
           path=""
           element={
-            userId ? <Navigate to="/dashboard" /> : <Navigate to="/signup" />
+            userId ? <Navigate to="/orglist" /> : <Navigate to="/signup" />
           }
         />
         <Route path="/signup" element={<SignUp />} />
@@ -37,7 +37,6 @@ const App = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/orglist" element={<OrganizationList />} />
         <Route path="/createOrg" element={<GeneratorFormsContainer />} />
-        <Route path="/sidebar" element={<SidebarWrapper />} />
         <Route
           path="/filters"
           element={
@@ -49,7 +48,6 @@ const App = () => {
                 { columnTitle: "Tags", columnType: "tag" },
                 { columnTitle: "Severity", columnType: "string" },
                 { columnTitle: "Type", columnType: "string" },
-                { columnTitle: "Rev Org", columnType: "string" },
                 { columnTitle: "Part", columnType: "string" },
               ]}
             />

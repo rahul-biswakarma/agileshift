@@ -72,12 +72,24 @@ export default function SearchComponent() {
                   field: "Issue",
                   color: "red",
                   data: {},
-                  schema: {
-                    owner: "string",
-                    title: "title",
-                    stage: "string",
-                    id: "string",
-                  },
+                  schema: [
+                    {
+                      columnName:"owner",
+                      columnType:"string"
+                    },
+                    {
+                      columnName:"title",
+                      columnType:"title"
+                    },
+                    {
+                      columnName:"stage",
+                      columnType:"string"
+                    },
+                    {
+                      columnName:"id",
+                      columnType:"string"
+                    }
+                  ]
                 },
               ])
             )
