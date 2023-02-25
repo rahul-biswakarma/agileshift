@@ -27,6 +27,13 @@ declare global {
 	type TYPE_TASKS = {
 		[key: string]: TYPE_TASK[];
 	};
+    type TYPE_FIELD = {
+        name: string;
+        list: TYPE_SCHEMA[];
+        color: string;
+        icon: string;
+        linkage: string[];
+      };
 	type TYPE_ORGANISATION = {
 		id: string;
 		name: string;

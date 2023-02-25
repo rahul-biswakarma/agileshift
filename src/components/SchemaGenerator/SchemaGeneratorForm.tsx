@@ -1,12 +1,12 @@
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import PlusIcon from "../../assets/icons/plus-icon.svg";
 import UploadJSON from "../UploadJSON";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import {
-  setIssueSchema,
-  setTicketSchema,
-} from "../../redux/reducers/SchemaSlice";
-import { create_schema } from "../../Utils/Backend";
+// import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+// import {
+//   setIssueSchema,
+//   setTicketSchema,
+// } from "../../redux/reducers/SchemaSlice";
+// import { create_schema } from "../../Utils/Backend";
 import { FieldGroup } from "./FieldGroup";
 
 type GeneratorFormPropTypes = {
@@ -15,6 +15,8 @@ type GeneratorFormPropTypes = {
   setList: (this: any, list: TYPE_SCHEMA[]) => void;
   activeTab: string;
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
+  isLast: boolean;
+  submitSchema: () => void;
 };
 
 export const SchemaGeneratorForm = ({
@@ -23,9 +25,11 @@ export const SchemaGeneratorForm = ({
   setList,
   activeTab,
   setActiveTab,
+  isLast,
+  submitSchema,
 }: GeneratorFormPropTypes) => {
-  const dispatch = useAppDispatch();
-  const organizationId = useAppSelector((state) => state.auth.organisationId);
+  // const dispatch = useAppDispatch();
+  // const organizationId = useAppSelector((state) => state.auth.organisationId);
 
   const addColumn = (e: any) => {
     e.preventDefault();
@@ -55,24 +59,6 @@ export const SchemaGeneratorForm = ({
     setList(items);
   }
 
-  const submitSchema = (e: any) => {
-    e.preventDefault();
-    console.log(list);
-    switch (type) {
-      case "Tickets":
-        create_schema(organizationId, list);
-        dispatch(setTicketSchema(list));
-
-        break;
-      case "Issues":
-        create_schema(organizationId, list);
-        dispatch(setIssueSchema(list));
-        break;
-      case "Parts":
-        break;
-    }
-  };
-
   return (
     <div className="flex justify-center gap-6 w-full">
       <section className="flex flex-col h-full overflow-auto py-0 px-4">
@@ -83,13 +69,15 @@ export const SchemaGeneratorForm = ({
             onClick={addColumn}>
             <img src={PlusIcon} className="w-4 h-4" alt="" />
           </button>
-          <button
-            className="flex justify-center items-center w-32 h-8 bg-background_color rounded-md shadow-md shadow-black
+          {isLast && (
+            <button
+              className="flex justify-center items-center w-32 h-8 bg-background_color rounded-md shadow-md shadow-black
           text-sm text-highlight_font_color active:shadow-inner
           "
-            onClick={submitSchema}>
-            Submit Schema
-          </button>
+              onClick={submitSchema}>
+              Submit Schema
+            </button>
+          )}
           <UploadJSON type={type} setList={setList} />
         </div>
 
