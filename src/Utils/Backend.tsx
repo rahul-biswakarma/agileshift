@@ -317,20 +317,23 @@ export const get_schema_data_field = async (
 };
 // 21
 export const get_data_byID = async (organisationId: string, dataId: string) => {
-  const docRef = doc(db, "organizations", organisationId);
-  const docSnap = await getDoc(docRef);
+	const docRef = doc(db, "organizations", organisationId);
+	const docSnap = await getDoc(docRef);
 
-  if (docSnap.exists()) {
-    docSnap.data()["data"].map((item: any) => {
-      if (item.id === dataId) {
-        return item;
-      }
-      return {};
-    });
-  } else {
-    console.log("No such document!");
-  }
-  return {};
+	let organisationDetails:any ={}
+	if (docSnap.exists()) {
+
+		if(docSnap.data()["data"].length > 0) {
+			docSnap.data()["data"].forEach((item:any) => {
+				if (item.id === dataId) {
+					organisationDetails= item
+				}
+			});
+		}
+	} else {
+		console.log("No such document!");
+	}
+	return organisationDetails;
 };
 // 22 get list by columun typee
 export const get_list_by_column_type = async (
@@ -363,10 +366,12 @@ export const get_user_by_id = async (userId: string) => {
 // // 25 get user by email
 
 export const get_user_by_email = async (email: string) => {
-  const q = query(collection(db, "users"), where("email", "==", email));
-  const querySnapshot = await getDocs(q);
-  querySnapshot.forEach((doc) => {
-    return doc.data();
-  });
+	const q = query(collection(db, "users"), where("email", "==", email));
+	const querySnapshot = await getDocs(q);
+	let userDetails={};
+	querySnapshot.forEach((doc) => {
+		userDetails =  doc.data();
+	});
+	return userDetails;
 };
 // 26 create schema

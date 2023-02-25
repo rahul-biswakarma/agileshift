@@ -3,7 +3,11 @@ import React, { useRef, SyntheticEvent, useState } from "react";
 import LockIcon from "../../assets/icons/lock-icon.svg";
 import EmailIcon from "../../assets/icons/email-icon.svg";
 import ArrowIcon from "../../assets/icons/arrow-icon.svg";
-import { sendEmail } from "../../Utils/Backend";
+import { get_users_organization, get_user_by_email, sendEmail } from "../../Utils/Backend";
+import { useAppDispatch } from "../../redux/hooks";
+import { setOrganisationList, setUserId } from "../../redux/reducers/AuthSlice";
+import { useNavigate } from "react-router-dom";
+import { storeInSession } from "../../Utils/Auth";
 
 type Type_Login_State = {
 	onOtp:boolean,
@@ -16,11 +20,14 @@ const LoginForm = () => {
 		otp:0
 	})
 
+	const dispatch = useAppDispatch();
+	const navigate = useNavigate();
+
 	const emailInputRef = useRef<HTMLInputElement>(null);
 	const emailLabelRef = useRef<HTMLLabelElement>(null);
 	const passwordInputRef = useRef<HTMLInputElement>(null);
 
-	function handleLoginFormSubmit(
+	async function handleLoginFormSubmit(
 		e: SyntheticEvent<HTMLButtonElement, MouseEvent>
 	) {
 		e.preventDefault();
@@ -28,9 +35,16 @@ const LoginForm = () => {
 			const passwordInput:number = parseInt(passwordInputRef.current.value);
 
 			if (passwordInput){
-				if(passwordInput===state.otp){
-					console.log("Authenticated");
-					//pass to next component
+				if(passwordInput===state.otp && emailInputRef.current){
+					const userData:any = await get_user_by_email(emailInputRef.current.value)
+					const userId = userData.id
+					const organizationList = await get_users_organization(userId);
+					console.log(organizationList);
+					dispatch(setUserId(userId));
+					if(organizationList)
+						dispatch(setOrganisationList(organizationList));
+					storeInSession("userId",userId)
+					navigate("/orglist");
 				}
 			}else {
 				emailInputRef.current!.style.borderColor = "red";

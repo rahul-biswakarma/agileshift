@@ -29,13 +29,12 @@ const OrganizationList: React.FunctionComponent = () => {
     };
     getOrganizationsDetails();
     getUserObj();
-  }, []);
+  }, [userId, organizationList, organization]);
 
   const navigate = useNavigate();
   // console.log(organizationList);
   console.log(user);
   console.log(organization);
-
   return (
     <div className="bg-background_color h-screen w-screen flex items-center justify-center font-dm_sans">
       <div className="w-[350px] flex flex-col gap-5">
