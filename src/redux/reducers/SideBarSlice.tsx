@@ -14,11 +14,11 @@ interface SidebarState {
 const initialState: SidebarState = {
   visible: false,
   sideBarData: [
-    { field: "Issue", color: "red", data: {} },
-    { field: "Ticket", color: "green", data: {} },
-    { field: "Linkage", color: "cyan", data: {} },
-    { field: "Issue", color: "green", data: {} },
-    { field: "Ticket", color: "green", data: {} },
+    // { field: "Issue", color: "red", data: {} },
+    // { field: "Ticket", color: "green", data: {} },
+    // { field: "Linkage", color: "cyan", data: {} },
+    // { field: "Issue", color: "green", data: {} },
+    // { field: "Ticket", color: "green", data: {} },
   ],
 };
 

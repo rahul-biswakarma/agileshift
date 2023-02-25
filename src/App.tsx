@@ -20,11 +20,11 @@ const App = () => {
   const sideBarLists = useAppSelector((state) => state.sidebar.sideBarData);
   return (
     <BrowserRouter>
-      {/* {sideBarLists.length !== 0 && (
+      {sideBarLists.length !== 0 && (
         <section className="fixed z-50">
           <SidebarWrapper />
         </section>
-      )} */}
+      )}
       <Routes>
         <Route
           path=""
