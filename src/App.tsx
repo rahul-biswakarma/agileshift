@@ -54,15 +54,14 @@ const App = () => {
         <Route
 					path="/filters"
 					element={<Filter schema={[
-            { columnTitle: "Title", columnType: "string" },
-            { columnTitle: "Stage", columnType: "string" },
-            { columnTitle: "User", columnType: "string" },
-            { columnTitle: "Tags", columnType: "tag" },
-            { columnTitle: "Severity", columnType: "string" },
-            { columnTitle: "Type", columnType: "string" },
-            { columnTitle: "Rev Org", columnType: "string" },
-            { columnTitle: "Part", columnType: "string" },
-          ]} />}
+						{ columnTitle: "Title", columnType: "string" },
+						{ columnTitle: "Stage", columnType: "string" },
+						{ columnTitle: "User", columnType: "string" },
+						{ columnTitle: "Tags", columnType: "tag" },
+						{ columnTitle: "Severity", columnType: "string" },
+						{ columnTitle: "Type", columnType: "string" },
+						{ columnTitle: "Part", columnType: "string" }
+					]} />}
 				/>
         <Route
 					path="/filterDropdown"
