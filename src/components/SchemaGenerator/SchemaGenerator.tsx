@@ -1,36 +1,49 @@
 import { useState } from "react";
-import { get_text_color_from_name } from "../../Utils/Backend";
+import {
+	FormControl,
+	InputLabel,
+	Select,
+	SelectChangeEvent,
+	MenuItem,
+} from "@mui/material";
+
 import { SchemaGeneratorForm } from "./SchemaGeneratorForm";
+import UploadJSON from "../UploadJSON";
+
 require("tailwindcss-writing-mode")({
 	variants: ["responsive", "hover"],
 });
 
 type GeneratorPropTypes = {
+	id: number;
 	name: string;
 	setName: (this: any, name: string) => void;
 	list: TYPE_SCHEMA[];
 	setList: (this: any, list: TYPE_SCHEMA[]) => void;
-	linkage: string[];
-	addLinkage: (this: any, link: string) => void;
-	removeLinkage: (this: any, link: string) => void;
-	activeTab: string;
-	setActiveTab: React.Dispatch<React.SetStateAction<string>>;
+	activeTab: number;
+	setActiveTab: React.Dispatch<React.SetStateAction<number>>;
 	getAllFieldsName: () => string[];
 	submitSchema: () => void;
+	duplicateSchema: (this: any) => void;
+	deleteSchema: (this: any) => void;
+	color: string;
+	changeColor: (this: any, color: string) => void;
 };
 
 export const SchemaGenerator = ({
+	id,
 	name,
 	setName,
 	list,
 	setList,
-	linkage,
-	addLinkage,
-	removeLinkage,
 	activeTab,
 	setActiveTab,
 	getAllFieldsName,
 	submitSchema,
+	duplicateSchema,
+	deleteSchema,
+	color,
+	changeColor,
 }: GeneratorPropTypes) => {
 	const colorList = [
 		"purple",
@@ -42,24 +55,25 @@ export const SchemaGenerator = ({
 		"indigo",
 		"pink",
 	];
-	const [linkageVisible, setLinkageVisible] = useState(false);
-	if (activeTab === name)
+	const [selectedOptions, setSelectedOptions] = useState([]);
+
+	// Handle change function to update selected options
+	const handleChange = (event: SelectChangeEvent<any>) => {
+		const {
+			target: { value },
+		} = event;
+		setSelectedOptions(typeof value === "string" ? value.split(",") : value);
+	};
+
+	if (activeTab === id)
 		return (
 			<section
-				className="h-screen w-screen bg-background_color text-primary_font_color
-        flex flex-col items-center gap-4 font-dm_sans        
-    "
+				className="relative h-screen w-screen bg-background_color text-primary_font_color
+        flex flex-col items-center gap-4 font-dm_sans "
 			>
-				<p
-					className="w-full py-4 bg-Secondary_background_color text-xl text-highlight_font_color text-center border-b border-dark_gray
-        flex justify-center
-        "
-				>
-					<div className="flex rounded-lg border-[2px] border-white/5 items-center font-dm_sans">
-						<label
-							htmlFor=""
-							className="text-white/30 bg-background_color h-full flex items-center rounded-md font-dm_sans text-[16px] px-4 rounded-r-none"
-						>
+				<div className="relative w-full py-4 bg-Secondary_background_color text-xl text-highlight_font_color text-center border-b border-dark_gray flex justify-center items-center">
+					<div className="flex rounded-lg border-[2px] border-white/5 items-center font-dm_sans overflow-hidden max-h-[45px]">
+						<label className="text-white/30 bg-background_color h-[50px] flex items-center rounded-md font-dm_sans text-[16px] px-4 rounded-r-none">
 							Case Name
 						</label>
 						<input
@@ -69,87 +83,134 @@ export const SchemaGenerator = ({
 							placeholder="Ticket"
 							className="flex-1 font-fira_code text-[1rem] rounded-r-lg px-4 bg-Secondary_background_color h-10 outline-none placeholder:text-white/30 text-white/70"
 						/>
-					</div>{" "}
-				</p>
-				<div>
-					Schema
-					<select
-						name="color"
-						id={`${name}-color`}
-						className="px-2
-          bg-background_color 
-          text-highlight_font_color
-          rounded-lg border border-primary_font_color
-          "
-					>
-						{colorList.map((color, id) => (
-							<option
-								value={color}
-								key={id}
-								style={{ color: `${get_text_color_from_name(color)}` }}
-							>
-								{color}
-							</option>
-						))}
-					</select>
-				</div>
-				<p className="relative flex items-center">
-					Can be linked to :{" "}
-					<div className="relative h-max flex items-center">
-						<button
-							className="px-2
-              w-max
-            min-w-full
-            h-8
-        bg-background_color 
-        text-highlight_font_color
-        rounded-lg border border-primary_font_color ml-2"
-							onClick={() => setLinkageVisible(!linkageVisible)}
-						>
-							{linkage.map((link, id) => (
-								<span
-									className="bg-Secondary_background_color px-1 mx-1"
-									key={id}
-								>
-									{link}
-								</span>
-							))}
-						</button>
-						{linkageVisible && (
-							<div className="absolute w-40 top-8 left-2 h-max border border-dark_gray z-[50] bg-background_color rounded-md">
-								{getAllFieldsName().map((field, id) => (
-									<div
-										key={id}
-										className="w-full flex justify-start h-max p-2 px-4"
-									>
-										<input
-											type="checkbox"
-											name={`linkage-${name}`}
-											id={`linkage-${name}`}
-											className="mr-2"
-											checked={linkage.includes(field)}
-											onChange={() => {
-												linkage.includes(field)
-													? removeLinkage(field)
-													: addLinkage(field);
-											}}
-										/>
-										<label htmlFor={`linkage-${name}`}>{field}</label>
-									</div>
-								))}
-							</div>
-						)}
 					</div>
-				</p>
+					<div className="absolute right-[1rem] flex gap-[1rem]">
+						<button
+							className="material-symbols-outlined text-white/30 hover:text-yellow-400 cursor-pointer"
+							onClick={duplicateSchema}
+						>
+							content_copy
+						</button>
+						<button
+							className="material-symbols-outlined text-white/30 hover:text-rose-400 cursor-pointer"
+							onClick={deleteSchema}
+						>
+							delete
+						</button>
+					</div>
+				</div>
+
+				<div className="flex w-full justify-center gap-[3rem] items-center py-[1.5rem]">
+					<div className="flex gap-[0.5rem] min-w-[100px] font-dm-sans">
+						<FormControl
+							sx={{
+								m: 1,
+								minWidth: 120,
+								"& label": {
+									color: "#fff",
+									fontFamily: "DM Sans",
+								},
+								"& .MuiFormControl-root": {
+									borderColor: "white",
+								},
+							}}
+							size="small"
+							fullWidth
+						>
+							<InputLabel
+								sx={{ color: "#f00" }}
+								id="color-input-id"
+							>
+								Color
+							</InputLabel>
+							<Select
+								name="color"
+								id={`${name}-color`}
+								labelId="color-label-id"
+								label="Color"
+								value={color}
+								onChange={(e) => changeColor(e.target.value)}
+							>
+								{colorList.map((color, id) => {
+									return (
+										<MenuItem
+											key={id}
+											value={color}
+										>
+											{color}
+										</MenuItem>
+									);
+								})}
+							</Select>
+						</FormControl>
+					</div>
+
+					<div className="relative flex items-center font-dm_sans gap-[10px]">
+						<FormControl
+							sx={{
+								m: 1,
+								minWidth: 120,
+								"& label": {
+									color: "#fff",
+									fontFamily: "DM Sans",
+								},
+								"& .MuiFormControl-root": {
+									borderColor: "white",
+								},
+							}}
+							size="small"
+							fullWidth
+						>
+							<InputLabel
+								sx={{ color: "#f00" }}
+								id="assosiate-label-id"
+							>
+								Associates
+							</InputLabel>
+							<Select
+								multiple
+								name="associates"
+								id={`${name}-associates`}
+								labelId="associate-label-id"
+								label="Associates"
+								value={selectedOptions}
+								onChange={handleChange}
+								renderValue={(selected) => {
+									console.log("selected", selected);
+									return selected.join(", ");
+								}}
+							>
+								{getAllFieldsName().map((name) => (
+									<MenuItem
+										key={name}
+										value={name}
+									>
+										{name}
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
+					</div>
+					<UploadJSON setList={setList} />
+				</div>
+
+				<hr className="w-full h-[1px] border-t-[2px] border-t-white/10" />
+
 				<SchemaGeneratorForm
-					type={name}
 					list={list}
 					setList={setList}
-					activeTab={activeTab}
-					setActiveTab={setActiveTab}
-					isLast={getAllFieldsName()[getAllFieldsName().length - 1] === name}
-					submitSchema={submitSchema}
 				/>
+				<div className="absolute bottom-[1rem] right-[1rem] flex items-center justify-end bg-background_color z-10">
+					{getAllFieldsName()[getAllFieldsName().length - 1] === name && (
+						<button
+							className="flex justify-center items-center p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm text-highlight_font_color border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 hover:text-purple-800 transition-all duration-200 ease-in-out
+          "
+							onClick={submitSchema}
+						>
+							Submit Schema
+						</button>
+					)}
+				</div>
 			</section>
 		);
 	else
@@ -157,9 +218,9 @@ export const SchemaGenerator = ({
 			<div className="h-screen w-12 flex flex-wrap text-primary_font_color bg-Secondary_background_color">
 				<button
 					className="h-full w-full"
-					onClick={() => setActiveTab(name)}
+					onClick={() => setActiveTab(id)}
 				>
-					<span className="[writing-mode:vertical-rl] text-sm font-bold uppercase font-fira_code">
+					<span className="[writing-mode:vertical-rl] text-sm font-[600] uppercase font-fira_code">
 						{name} Schema Form
 					</span>
 				</button>

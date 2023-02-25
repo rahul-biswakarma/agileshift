@@ -6,6 +6,8 @@ import {
 
 interface Type_TabHeaderProps {
 	fieldsData: Array<TYPE_FIELD>;
+	selectedTab: string;
+	setSelectedTab: (tab: string) => void;
 }
 
 const TabHeader = (props: Type_TabHeaderProps) => {

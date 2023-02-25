@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useEffect } from "react";
 
 import Dashboard from "./components/Dashboard/Index";
 import { Login } from "./components/OnBoarding/Login";
@@ -7,17 +8,24 @@ import OrganizationList from "./components/ManageOrganization/OrganizationList";
 import { GeneratorFormsContainer } from "./components/SchemaGenerator/GeneratorFormsContainer";
 import Filter from "./components/Filters/Filter";
 import { getFromSession } from "./Utils/Auth";
-import { useAppDispatch } from "./redux/hooks";
+import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import { setUserId } from "./redux/reducers/AuthSlice";
+import { SidebarWrapper } from "./components/Sidebar/SidebarWrapper";
 
 const App = () => {
 	const userIdFromSession = getFromSession("userId");
 	const dispatch = useAppDispatch();
-	if (userIdFromSession) {
-		dispatch(setUserId(userIdFromSession));
-	}
+
+	useEffect(() => {
+		if (userIdFromSession) {
+			dispatch(setUserId(userIdFromSession));
+		}
+	}, []);
+
+	const isSideBarHasData = useAppSelector((state) => state.sidebar.sideBarData);
 	return (
 		<BrowserRouter>
+			{isSideBarHasData.length > 0 && <SidebarWrapper />}
 			<Routes>
 				<Route
 					path=""

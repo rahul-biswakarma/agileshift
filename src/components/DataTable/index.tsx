@@ -50,7 +50,14 @@ const DataTable = (props: Type_DataTableProps) => {
 		rowSelection: "single",
 		onRowClicked: function (event) {
 			let rowData = event.data;
-			dispatch(setSideBar(rowData));
+			dispatch(
+				setSideBar({
+					field: rowData.field,
+					color: rowData.color,
+					data: rowData,
+					schema: props.dataSchema,
+				})
+			);
 		},
 	};
 
@@ -71,13 +78,13 @@ const DataTable = (props: Type_DataTableProps) => {
 				return (
 					<IdComponent
 						color={props.fieldColor}
-						issuesId={params.value}
+						itemId={params.value}
 					/>
 				);
 			}
 			if (schema.columnType === "id")
 				tempColumnDefs.push({
-					field: schema.columnTitle,
+					field: schema.columnName,
 					maxWidth: 200,
 					minWidth: 200,
 					cellRenderer: idComponentWrapper,
@@ -87,7 +94,7 @@ const DataTable = (props: Type_DataTableProps) => {
 				});
 			else if (schema.columnType === "tag") {
 				tempColumnDefs.push({
-					field: schema.columnTitle,
+					field: schema.columnName,
 					minWidth: 250,
 					cellRenderer: tagComponent,
 					cellClass: ["flex", "items-center", "cell-style-class", "gap-[5px]"],
@@ -96,7 +103,7 @@ const DataTable = (props: Type_DataTableProps) => {
 				});
 			} else if (schema.columnType === "user") {
 				tempColumnDefs.push({
-					field: schema.columnTitle,
+					field: schema.columnName,
 					minWidth: 200,
 					cellRenderer: userComponent,
 					cellClass: ["flex", "items-center", "cell-style-class", "gap-[5px]"],
@@ -105,7 +112,7 @@ const DataTable = (props: Type_DataTableProps) => {
 				});
 			} else {
 				tempColumnDefs.push({
-					field: schema.columnTitle,
+					field: schema.columnName,
 					minWidth: 200,
 					cellRenderer: stringComponent,
 					cellClass: [
@@ -124,22 +131,23 @@ const DataTable = (props: Type_DataTableProps) => {
 
 		let allColDefsFromSchema: any = [];
 		props.dataSchema.map((schema: TYPE_SCHEMA) => {
-			allColDefsFromSchema.push(schema.columnTitle.toLowerCase());
+			allColDefsFromSchema.push(schema.columnName.toLowerCase());
 			return "";
 		});
 
-		// Setting AgGridRowsData
-		let tempRowData: any = [];
-		props.datas.map((row: any) => {
-			let tempRow: { [key: string]: any } = {};
-			allColDefsFromSchema.map((colTitle: string) => {
-				tempRow[colTitle] = row[colTitle.toLowerCase()];
-				return "";
-			});
-			tempRowData.push(tempRow);
-			return "";
-		});
-		setRowData(tempRowData);
+		// // Setting AgGridRowsData
+		// let tempRowData: any = [];
+		// props.datas.map((row: any) => {
+		// 	console.log("DataTable: useEffect: row", row);
+		// 	let tempRow: { [key: string]: any } = {};
+		// 	allColDefsFromSchema.map((columnName: string) => {
+		// 		tempRow = row[columnName.toLowerCase()];
+		// 		return "";
+		// 	});
+		// 	tempRowData.push(tempRow);
+		// 	return "";
+		// });
+		setRowData(props.datas);
 	}, [props.datas, props.dataSchema]);
 
 	return (

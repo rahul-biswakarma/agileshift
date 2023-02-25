@@ -11,17 +11,23 @@ require("tailwindcss-writing-mode")({
 });
 
 type OrganisationFormPropTypes = {
-	activeTab: string;
-	setActiveTab: React.Dispatch<React.SetStateAction<string>>;
+	activeTab: number;
+	setActiveTab: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export const OrganisationForm = ({
 	activeTab,
 	setActiveTab,
 }: OrganisationFormPropTypes) => {
+	// States
+	const [isOrgCreated, setIsOrgCreated] = useState<boolean>(false);
 	const [toolTip, setToolTip] = useState<boolean>(false);
 	const [orgNameErrorMessage, setOrgNameErrorMessage] = useState<string>("");
 	const [orgUrlErrorMessage, setOrgUrlErrorMessage] = useState<string>("");
+	const [orgNameState, setOrgNameState] = useState<string>("");
+	const [orgUrlState, setOrgUrlState] = useState<string>("");
+
+	// Refs
 	const orgName = useRef<HTMLInputElement>(null);
 	const orgURL = useRef<HTMLInputElement>(null);
 	const userId = useAppSelector((state: RootState) => state.auth.userId);
@@ -59,42 +65,25 @@ export const OrganisationForm = ({
 	};
 
 	const addOrganisation = () => {
-		console.log(orgName.current!.value);
-		console.log(orgURL.current!.value);
-		console.log(userId);
-
-		create_organization(
-			userId,
-			orgName.current!.value,
-			orgURL.current!.value
-		).then((id) => {
-			add_organisation_to_user(userId, id);
-			dispatch(setOrganisationId(id));
-		});
+		if (!isOrgCreated) {
+			create_organization(userId, orgNameState, orgUrlState).then((id) => {
+				add_organisation_to_user(userId, id);
+				dispatch(setOrganisationId(id));
+			});
+			setIsOrgCreated(true);
+			setActiveTab(activeTab + 1);
+		}
 	};
 
-	if (activeTab === "Organisation")
+	if (activeTab === -1)
 		return (
 			<div className="bg-background_color h-screen w-screen flex items-center justify-center font-dm_sans">
 				<div className="h-3/5 max-w-[550px] w-full flex flex-col gap-5 p-[0_2rem]">
 					<div className="text-highlight_font_color mb-5">
 						<h3 className="flex gap-4 text-[20px] mb-4 items-center">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								fill="none"
-								stroke="#2c3e50"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="1.5"
-								className="w-6 h-6 stroke-white"
-								viewBox="0 0 24 24"
-							>
-								<path
-									stroke="none"
-									d="M0 0h24v24H0z"
-								/>
-								<path d="M5 12h14M5 12l6 6m-6-6 6-6" />
-							</svg>
+							<span className="material-symbols-outlined text-white text-[15px]">
+								arrow_back
+							</span>
 							Create a new AgileShift Organisation
 						</h3>
 						{/* Change this to dynamic username */}
@@ -112,9 +101,10 @@ export const OrganisationForm = ({
 							</label>
 							<input
 								ref={orgName}
-								onChange={(e) => handleChange(e)}
+								onChange={(e) => setOrgNameState(e.target.value)}
 								name="org-name"
 								type="text"
+								value={orgNameState}
 								placeholder="Enter Org. Name"
 								className="font-lg font-fira_code rounded-lg px-4 bg-Secondary_background_color h-10 outline-none border-dark_gray placeholder:text-white/20"
 							/>
@@ -134,14 +124,15 @@ export const OrganisationForm = ({
 							<div className="flex rounded-lg border-[2px] border-white/5 items-center">
 								<label
 									htmlFor=""
-									className="px-4 text-white/30"
+									className="px-4 text-white/50"
 								>
 									app.agileshift.ai/
 								</label>
 								<input
 									ref={orgURL}
-									onChange={(e) => handleChange(e)}
+									onChange={(e) => setOrgUrlState(e.target.value)}
 									name="org-url"
+									value={orgUrlState}
 									onFocus={() => setToolTip(!toolTip)}
 									onBlur={() => setToolTip(!toolTip)}
 									type="text"
@@ -167,25 +158,14 @@ export const OrganisationForm = ({
 						</div>
 					</div>
 					<button
-						className="flex gap-4 items-center justify-center py-4 rounded-lg border-[2px] border-Secondary_background_color text-white/40 stroke-white/40 hover:bg-amber-400 hover:text-amber-800 hover:border-amber-400 hover:stroke-amber-800 transition-all"
+						className={`flex gap-4 items-center justify-center py-2 rounded-lg border-[2px] border-Secondary_background_color text-white/40 stroke-white/40 ${
+							isOrgCreated === false
+								? "hover:bg-amber-400 hover:text-amber-800 hover:border-amber-400 hover:stroke-amber-800"
+								: "cursor-not-allowed"
+						} transition-all`}
 						onClick={addOrganisation}
 					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							stroke="#2c3e50"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="1.5"
-							className="w-4 h-4 stroke-inherit"
-							viewBox="0 0 24 24"
-						>
-							<path
-								stroke="none"
-								d="M0 0h24v24H0z"
-							/>
-							<path d="M12 5v14m-7-7h14" />
-						</svg>
+						<span className="material-symbols-outlined">add</span>
 						Create new AgileOrg
 					</button>
 				</div>
@@ -196,9 +176,9 @@ export const OrganisationForm = ({
 			<div className="h-screen w-12 flex flex-wrap text-primary_font_color  bg-Secondary_background_color">
 				<button
 					className="h-full w-full"
-					onClick={() => setActiveTab("Organisation")}
+					onClick={() => setActiveTab(-1)}
 				>
-					<span className="[writing-mode:vertical-rl] text-sm font-bold uppercase font-fira_code">
+					<span className="[writing-mode:vertical-rl] text-sm font-[600] uppercase font-fira_code">
 						Organisation Form
 					</span>
 				</button>

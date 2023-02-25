@@ -172,10 +172,7 @@ export const sendEmail = (emailId: string) => {
 	emailjs
 		.send("service_0dpd4z6", "template_weagkql", params, "sb5MCkizR-ZuN4LVw")
 		.then(
-			(res) => {
-				// show the user a success message
-				console.log("sent");
-			},
+			(res) => {},
 			(error: string) => {
 				// show the user an error
 				console.error("error in sending otp");
@@ -373,12 +370,13 @@ export const get_organisations_data = async (
 ) => {
 	const docRef = doc(db, "organizations", organisationId);
 	const docSnap = await getDoc(docRef);
-	if (docSnap.exists()) {
+	if (docSnap.exists() && docSnap.data()["data"].length > 0) {
 		return docSnap.data()["data"].filter((item: any) => {
 			return item.field === title; // add a return statement here
 		});
 	} else {
 		console.log("no data found");
+		return [];
 	}
 	return [];
 };

@@ -16,7 +16,7 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 				<DataTable
 					datas={props.datas}
 					dataSchema={props.fieldData.list}
-					fieldColor="purple"
+					fieldColor={props.fieldData.color}
 				/>
 			</main>
 		</div>

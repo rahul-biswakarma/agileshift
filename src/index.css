@@ -21,34 +21,45 @@ code {
 		monospace;
 }
 
-/* .cell-style-class {
-	background: #161616;
-	color: white;
-	border-color: none;
-} */
-
-/* .ag-body,
-.ag-body-viewport {
-	background: #161616;
-	border-color: #1f1f1f;
-	border: none;
-	border-bottom: 1px;
+*:focus {
+	outline: none;
 }
 
-.ag-center-cols-container div {
-	border-color: #1f1f1f;
+.MuiOutlinedInput-notchedOutline {
+	border: 2px solid #575757 !important;
 }
 
-.header-style-class {
-	background: #161616;
-	border-color: #1f1f1f;
-	color: white;
-	font-family: "DM Sans", sans-serif;
+.MuiSvgIcon-root {
+	fill: #575757 !important;
 }
 
-.ag-row-hover {
-	background: #1f1f1f;
-} */
+.MuiList-root {
+	background-color: #272727;
+	border: none !important;
+}
+
+.MuiMenuItem-root {
+	color: #eee !important;
+}
+
+.MuiFormControl-root {
+	margin: 0 !important;
+}
+
+.MuiSelect-select {
+	color: #eee !important;
+	font-family: "DM Sans", sans-serif !important;
+}
+
+.MuiFormLabel-root {
+	color: #808080 !important;
+	font-family: "DM Sans", sans-serif !important;
+}
+
+.MuiInputBase-input {
+	color: #eee !important;
+	font-family: "DM Sans", sans-serif !important;
+}
 
 .ag-header-cell-label {
 	font-family: "DM Sans", sans-serif;
@@ -125,6 +136,17 @@ code {
 	--ag-selected-row-background-color: #272727;
 }
 
-::-webkit-scrollbar {
-	display: none;
+*::-webkit-scrollbar {
+	width: 4px;
+	height: 5px;
+}
+
+*::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+	background-color: #282828;
+	outline: none;
+	border-radius: 999px;
 }

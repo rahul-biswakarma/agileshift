@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import PlusIcon from "../../assets/icons/plus-icon.svg";
 import { useAppSelector } from "../../redux/hooks";
 import { get_user_by_id } from "../../Utils/Backend";
 import { OrganizationCard } from "./OrganizationCard";
@@ -59,7 +58,7 @@ const OrganizationList: React.FunctionComponent = () => {
 							{organization?.length}
 						</p>
 					</div>
-					<div className="flex flex-col gap-[1rem]">
+					<div className="flex flex-col gap-[1rem] max-h-[40vh] overflow-auto px-[0.3rem]">
 						{organization.map((orgData: any, index: number) => {
 							return (
 								<OrganizationCard

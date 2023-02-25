@@ -44,10 +44,9 @@ const LoginForm = () => {
 						emailInputRef.current.value
 					);
 					const userId = userData.id;
-					// const organizationList = await get_users_organization(userId);
-					// console.log(organizationList);
-					// dispatch(setUserId(userId));
-					// if (organizationList) dispatch(setOrganisationList(organizationList));
+					const organizationList = await get_users_organization(userId);
+					dispatch(setUserId(userId));
+					if (organizationList) dispatch(setOrganisationList(organizationList));
 					storeInSession("userId", userId);
 					navigate("/organization-lists");
 				}
