@@ -101,7 +101,10 @@ export const OrganisationForm = ({
 							</label>
 							<input
 								ref={orgName}
-								onChange={(e) => setOrgNameState(e.target.value)}
+								onChange={(e) => {
+									handleChange(e);
+									setOrgNameState(e.target.value);
+								}}
 								name="org-name"
 								type="text"
 								value={orgNameState}
@@ -130,7 +133,10 @@ export const OrganisationForm = ({
 								</label>
 								<input
 									ref={orgURL}
-									onChange={(e) => setOrgUrlState(e.target.value)}
+									onChange={(e) => {
+										handleChange(e);
+										setOrgUrlState(e.target.value);
+									}}
 									name="org-url"
 									value={orgUrlState}
 									onFocus={() => setToolTip(!toolTip)}

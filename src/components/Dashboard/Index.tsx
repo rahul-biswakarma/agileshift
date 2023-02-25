@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import BuildQuadarnt from "../BuildQuadrant";
 import { DocumentData } from "@firebase/firestore-types";
 
-import { get_schema_data, get_organisations_data } from "../../Utils/Backend";
+import { get_schema_data, get_data_by_column_name } from "../../Utils/Backend";
 
 import Header from "./Header";
 import TabHeader from "./TabHeader";
@@ -22,8 +22,9 @@ export default function Dashboard() {
 
 	useEffect(() => {
 		if (dataSchema)
-			get_organisations_data(organizationId, dataSchema[0].name).then(
+			get_data_by_column_name(organizationId, dataSchema[0].name).then(
 				(data) => {
+					console.log("Dashboard: ", data, organizationId);
 					setData(data);
 				}
 			);

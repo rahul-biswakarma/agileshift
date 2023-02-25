@@ -28,13 +28,13 @@ import emailjs from "@emailjs/browser";
 import { isValidEmail } from "email-js";
 
 function generateRandomId() {
-  let result = "";
-  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  const charactersLength = characters.length;
-  for (let i = 0; i < 12; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
+	let result = "";
+	const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	const charactersLength = characters.length;
+	for (let i = 0; i < 12; i++) {
+		result += characters.charAt(Math.floor(Math.random() * charactersLength));
+	}
+	return result;
 }
 const get_current_time = () => {
 	let date = new Date();
@@ -77,6 +77,7 @@ const get_current_time = () => {
 
 25 get user by email
 26 add && edit data (from sidebar)
+// 27 get data by coloumn name
 */
 
 // 1
@@ -136,6 +137,7 @@ export const create_organization = async (
 		notifications: [],
 		tasks: {},
 		data: {},
+		dropdownsOptions: {},
 	};
 	//  initialling channel in channel Table
 	const res = await addDoc(organizationsRef, initializeOrganization);
@@ -166,7 +168,7 @@ export const create_tags = () => {};
 
 // 11
 export const sendEmail = async (emailId: string) => {
-  //   e.preventDefault(); // prevents the page from reloading when you hit “Send”
+	//   e.preventDefault(); // prevents the page from reloading when you hit “Send”
 
 	let params: {
 		to_name: string;
@@ -178,33 +180,32 @@ export const sendEmail = async (emailId: string) => {
 		otp: Math.floor(Math.random() * 900000) + 100000,
 	};
 
-  if (!isValidEmail(emailId)) {
-    console.log("invalid mail");
-    return;
-  }
-  const userDetails: TYPE_USER | string = await get_user_by_email(emailId).then(
-    (user) => {
-      return user;
-    }
-  );
-  if (userDetails === "") {
-    console.log("user not found");
-    return;
-  }
+	if (!isValidEmail(emailId)) {
+		console.log("invalid mail");
+		return;
+	}
+	const userDetails: TYPE_USER | string | undefined = await get_user_by_email(
+		emailId
+	).then((user) => {
+		return user;
+	});
+	if (userDetails === "") {
+		console.log("user not found");
+		return;
+	}
 
-  emailjs
-    .send("service_0dpd4z6", "template_weagkql", params, "sb5MCkizR-ZuN4LVw")
-    .then(
-      (res) => {
-        // show the user a success message
-        console.log("sent");
-      },
-      (error: string) => {
-        // show the user an error
-        console.error("error in sending otp");
-      }
-    );
-  return params["otp"];
+	emailjs
+		.send("service_0dpd4z6", "template_weagkql", params, "sb5MCkizR-ZuN4LVw")
+		.then(
+			(res) => {
+				// show the user a success message
+			},
+			(error: string) => {
+				// show the user an error
+				console.error("error in sending otp");
+			}
+		);
+	return params["otp"];
 };
 
 // 12 fetch all supported types. returns array of stings
@@ -218,7 +219,7 @@ export const get_all_Supported_types = async () => {
 		console.log("No such userFound document!");
 	}
 };
-
+// 13
 export const get_organizations_details = async (organisationId: string) => {
 	const docRef = doc(db, "organizations", organisationId);
 	const docSnap = await getDoc(docRef);
@@ -252,18 +253,17 @@ export const get_schema_data = async (organisationId: string) => {
 };
 //16 get tabs name
 export const get_tabs_name = async (organisationId: string) => {
-  const docRef = doc(db, "schemas", organisationId);
-  const docSnap = await getDoc(docRef);
-  let fieldList = [];
-  if (docSnap.exists()) {
-    fieldList=docSnap.data()["schemaData"].map((item: any) => {
-      return item.name;
-    })
-    console.log(fieldList);
-  } else {
-    console.log("No such document!");
-  }
-  return fieldList;
+	const docRef = doc(db, "schemas", organisationId);
+	const docSnap = await getDoc(docRef);
+	let fieldList = [];
+	if (docSnap.exists()) {
+		fieldList = docSnap.data()["schemaData"].map((item: any) => {
+			return item.name;
+		});
+	} else {
+		console.log("No such document!");
+	}
+	return fieldList;
 };
 
 // 17 get background color from name
@@ -293,8 +293,8 @@ export const get_text_color_from_name = (name: string) => {
 };
 // 19
 export const get_title = async (organisationId: string, field: string) => {
-  const docRef = doc(db, "schemas", organisationId);
-  const docSnap = await getDoc(docRef);
+	const docRef = doc(db, "schemas", organisationId);
+	const docSnap = await getDoc(docRef);
 
 	if (docSnap.exists()) {
 		docSnap.data()["schemaData"].map((item: any) => {
@@ -317,43 +317,39 @@ export const get_schema_data_field = async (
 	organisationId: string,
 	field: string
 ) => {
-  console.log(organisationId);
-  
-  const docRef = doc(db, "schemas", organisationId);
-  const docSnap = await getDoc(docRef);
-  let schemaFromField = {};
-  if (docSnap.exists()) {
-    
-    docSnap.data()["schemaData"].forEach((item: any) => {
-      if (item.name === field) {
-        schemaFromField = item;
-      }
-    });
+	const docRef = doc(db, "schemas", organisationId);
+	const docSnap = await getDoc(docRef);
+	let schemaFromField = {};
+	if (docSnap.exists()) {
+		docSnap.data()["schemaData"].forEach((item: any) => {
+			if (item.name === field) {
+				schemaFromField = item;
+			}
+		});
 
-    console.log(schemaFromField, "**");
-    
-  } else {
-    console.log("No such document!");
-  }
-  return schemaFromField;
+		console.log(schemaFromField, "**");
+	} else {
+		console.log("No such document!");
+	}
+	return schemaFromField;
 };
 // 21
 export const get_data_byID = async (organisationId: string, dataId: string) => {
-  const docRef = doc(db, "organizations", organisationId);
-  const docSnap = await getDoc(docRef);
+	const docRef = doc(db, "organizations", organisationId);
+	const docSnap = await getDoc(docRef);
 
-  let dataDetails: any = {};
+	let dataDetails: any = {};
 
-  if (docSnap.exists()) {
-    docSnap.data()["data"].forEach((item: any) => {
-      if (item.id === dataId) {
-        dataDetails = item;
-      }
-    });
-  } else {
-    console.log("No such document!");
-  }
-  return dataDetails;
+	if (docSnap.exists()) {
+		docSnap.data()["data"].forEach((item: any) => {
+			if (item.id === dataId) {
+				dataDetails = item;
+			}
+		});
+	} else {
+		console.log("No such document!");
+	}
+	return dataDetails;
 };
 // 22 get list by columun typee
 export const get_list_by_column_type = async (
@@ -384,36 +380,81 @@ export const get_user_by_id = async (userId: string) => {
 	}
 };
 // // 25 get user by email
-
 export const get_user_by_email = async (email: string) => {
-  const q = query(collection(db, "users"), where("email", "==", email));
-  const querySnapshot = await getDocs(q);
-  querySnapshot.forEach((doc) => {
-    return doc.data();
-  });
-  return "";
+	const q = query(collection(db, "users"), where("email", "==", email));
+	const querySnapshot = await getDocs(q);
+	let userData; // create a variable to store the user data
+	querySnapshot.forEach((doc) => {
+		userData = doc.data(); // assign the user data to the variable
+	});
+	return userData; // return the variable after the loop has finished
 };
+
 // 26 addd && edit table data
 export const update_data_to_database = async (
-  organisationId: string,
-  data: any
+	organisationId: string,
+	data: any
 ) => {
-  // condition for create data
-  const organizationRef = doc(db, "organizations", organisationId);
-  if (data.id === undefined || data.id === "") {
-    data["id"] = generateRandomId();
-    await updateDoc(organizationRef, {
-      data: arrayUnion(data),
-    });
-  } else {
-    //  condition for update data
-    let docSnap: any = await getDoc(organizationRef);
-    let updatedData: any = docSnap
-      .data()
-      ["data"].filter((item: any) => item.id !== data.id);
-    updatedData.push(data);
-    await updateDoc(organizationRef, {
-      data: updatedData,
-    });
-  }
+	// condition for create data
+	const organizationRef = doc(db, "organizations", organisationId);
+	if (data.id === undefined || data.id === "") {
+		data["id"] = generateRandomId();
+		await updateDoc(organizationRef, {
+			data: arrayUnion(data),
+		});
+	} else {
+		//  condition for update data
+		let docSnap: any = await getDoc(organizationRef);
+		let updatedData: any = docSnap
+			.data()
+			["data"].filter((item: any) => item.id !== data.id);
+		updatedData.push(data);
+		await updateDoc(organizationRef, {
+			data: updatedData,
+		});
+	}
+};
+// 27 get data by coloumn name
+
+export const get_data_by_column_name = async (
+	organisationId: string,
+	field: string
+) => {
+	const orgData: any = await get_organizations_details(organisationId);
+	let data: any = [];
+	orgData.data.forEach((item: any) => {
+		if (item["field"] === field || field === "all") {
+			data.push(item);
+		}
+	});
+	return data;
+};
+// 28 get dropdown options
+export const get_dropdown_options = async (
+	organisationId: string,
+	columnName: string,
+	field: string
+) => {
+	let orgData: any = await get_organizations_details(organisationId);
+	try {
+		return orgData["dropdowns-options"][`${columnName}_${field}`];
+	} catch {
+		return [];
+	}
+};
+// 29 set dropdown options
+export const set_dropdown_options = async (
+	organisationId: string,
+	columnName: string,
+	field: string,
+	options: string[]
+) => {
+	let orgData: any = await get_organizations_details(organisationId);
+
+	orgData["dropdowns-options"][`${columnName}_${field}`] = options;
+
+	const orgRef = doc(db, "organizations", organisationId);
+	await updateDoc(orgRef, {
+		"dropdowns-options": orgData["dropdowns-options"],
+	});
 };

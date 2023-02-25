@@ -147,6 +147,7 @@ const DataTable = (props: Type_DataTableProps) => {
 		// 	tempRowData.push(tempRow);
 		// 	return "";
 		// });
+		console.log("DataTable: useEffect: props.datas", props.datas);
 		setRowData(props.datas);
 	}, [props.datas, props.dataSchema]);
 
