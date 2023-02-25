@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import BuildQuadarnt from "../BuildQuadrant";
-import { DocumentData } from "@firebase/firestore-types";
 
 import { get_schema_data, get_data_by_column_name } from "../../Utils/Backend";
 
@@ -18,17 +17,20 @@ export default function Dashboard() {
 		get_schema_data(organizationId).then((data) => {
 			if (data) setDataSchema(data.schemaData);
 		});
-	}, []);
+	}, [organizationId]);
 
-	useEffect(() => {
+	const getDataByFeildName = useCallback(() => {
 		if (dataSchema)
 			get_data_by_column_name(organizationId, dataSchema[0].name).then(
 				(data) => {
-					console.log("Dashboard: ", data, organizationId);
 					setData(data);
 				}
 			);
-	}, [dataSchema]);
+	}, [dataSchema, organizationId]);
+
+	useEffect(() => {
+		getDataByFeildName();
+	}, [getDataByFeildName]);
 
 	return (
 		<div className="bg-background_color h-[100vh] font-dm_sans">

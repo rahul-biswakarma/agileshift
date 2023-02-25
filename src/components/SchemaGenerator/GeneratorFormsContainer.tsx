@@ -73,28 +73,28 @@ export const GeneratorFormsContainer = () => {
 		setFields(tempFields);
 	}
 
-	function addLinkage(this: any, link: string) {
-		let tempFields = [...fields];
-		tempFields[this.id].linkage.push(link);
-		setFields(tempFields);
-	}
+	// function addLinkage(this: any, link: string) {
+	// 	let tempFields = [...fields];
+	// 	tempFields[this.id].linkage.push(link);
+	// 	setFields(tempFields);
+	// }
 
-	function changeLinkage(this: any, link: string[]) {
-		let tempFields = [...fields];
-		tempFields[this.id].linkage = link;
-		setFields(tempFields);
-	}
+	// function changeLinkage(this: any, link: string[]) {
+	// 	let tempFields = [...fields];
+	// 	tempFields[this.id].linkage = link;
+	// 	setFields(tempFields);
+	// }
 
-	function removeLinkage(this: any, link: string) {
-		let tempFields = [...fields];
-		let tempLinkage = tempFields[this.id].linkage;
-		const index = tempLinkage.indexOf(link);
-		if (index > -1) {
-			tempLinkage.splice(index, 1);
-		}
-		tempFields[this.id].linkage = tempLinkage;
-		setFields(tempFields);
-	}
+	// function removeLinkage(this: any, link: string) {
+	// 	let tempFields = [...fields];
+	// 	let tempLinkage = tempFields[this.id].linkage;
+	// 	const index = tempLinkage.indexOf(link);
+	// 	if (index > -1) {
+	// 		tempLinkage.splice(index, 1);
+	// 	}
+	// 	tempFields[this.id].linkage = tempLinkage;
+	// 	setFields(tempFields);
+	// }
 
 	const submitSchema = () => {
 		create_schema(organisationId, fields);

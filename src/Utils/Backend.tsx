@@ -326,8 +326,6 @@ export const get_schema_data_field = async (
 				schemaFromField = item;
 			}
 		});
-
-		console.log(schemaFromField, "**");
 	} else {
 		console.log("No such document!");
 	}

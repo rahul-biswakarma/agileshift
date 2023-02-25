@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useEffect } from "react";
 
 import Dashboard from "./components/Dashboard/Index";
 import { Login } from "./components/OnBoarding/Login";
@@ -16,11 +15,9 @@ const App = () => {
 	const userIdFromSession = getFromSession("userId");
 	const dispatch = useAppDispatch();
 
-	useEffect(() => {
-		if (userIdFromSession) {
-			dispatch(setUserId(userIdFromSession));
-		}
-	}, []);
+	if (userIdFromSession) {
+		dispatch(setUserId(userIdFromSession));
+	}
 
 	const sideBarList = useAppSelector((state) => state.sidebar.sideBarData);
 	return (
