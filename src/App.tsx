@@ -7,6 +7,7 @@ import OrganizationList from "./components/ManageOrganization/OrganizationList";
 import { GeneratorFormsContainer } from "./components/SchemaGenerator/GeneratorFormsContainer";
 // import { SidebarWrapper } from "./components/Sidebar/SidebarWrapper";
 import Filter from "./components/Filters/Filter";
+import FilterDropdown from "./components/Filters/FilterDropdown";
 
 const App = () => {
 	return (
@@ -48,6 +49,10 @@ const App = () => {
             { columnTitle: "Rev Org", columnType: "string" },
             { columnTitle: "Part", columnType: "string" },
           ]} />}
+				/>
+        <Route
+					path="/filterDropdown"
+					element={<FilterDropdown/>}
 				/>
 			</Routes>
 		</BrowserRouter>

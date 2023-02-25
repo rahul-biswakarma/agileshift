@@ -89,20 +89,36 @@ const Filter = (props:Type_FilterProps) => {
                     </button>
                     {
                         showAllFilters && (
-                            <div className="absolute top-[110%] left-0 bg-slate-500 h-96 w-96">
+                            <div className="absolute top-[85%] left-0 bg-[#26262C]  rounded-md ">
+                                <div className="max-h-60 px-4 py-4 overflow-y-auto flex flex-col">
                                 {
                                     modifiedSchema.map((data, index) => {
                                         if(data.active === "1"){
                                             return (
-                                                <></>
+                                                <div>
+                                                    <button
+                                                        key={index}
+                                                        className="font-fira_code rounded-md border border-[#808080] text-[#000000] text-sm px-[10px] py-[2px] "
+                                                        onClick={() => handleColumnClick(data.columnType)}
+                                                    >{data.columnTitle}
+                                                    </button>
+                                                </div>                                                
                                             )
                                         }else{
                                             return (
-                                                <></>
+                                                <div>
+                                                    <button
+                                                        key={index}
+                                                        className="font-fira_code rounded-md border border-[#808080] text-[#808080] text-sm px-[10px] py-[2px] "
+                                                        onClick={() => handleColumnClick(data.columnType)}
+                                                    >{data.columnTitle}
+                                                    </button>
+                                                </div>
                                             )
                                         }
                                     })
                                 }
+                                </div>
                             </div>
                         )
                     }
