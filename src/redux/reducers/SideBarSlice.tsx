@@ -13,7 +13,81 @@ interface SidebarState {
 
 const initialState: SidebarState = {
   visible: false,
-  sideBarData: [],
+  sideBarData: [
+    {
+      field: "Issue",
+      color: "red",
+      data: {
+        field: "Issue",
+        id: "45634684",
+        owner: "Satyam",
+        title: "Add Responsiveness",
+        stage: [],
+      },
+      schema: {
+        owner: "string",
+        title: "title",
+        stage: "dropdown",
+        id: "string",
+      },
+    },
+    {
+      field: "Ticket",
+      color: "green",
+      data: {
+        field: "Ticket",
+        id: "4564864",
+        owner: "Avnish",
+        title: "Test",
+      },
+      schema: {
+        owner: "string",
+        title: "title",
+        id: "string",
+      },
+    },
+    {
+      field: "Issue",
+      color: "red",
+      data: {
+        field: "Issue",
+        id: "45634684",
+        owner: "Satyam",
+        title: "Add Responsiveness",
+        stage: "deployment",
+      },
+      schema: {
+        owner: "string",
+        title: "title",
+        stage: "string",
+        id: "string",
+      },
+    },
+    {
+      field: "Ticket",
+      color: "green",
+      data: {
+        field: "Ticket",
+        id: "4564864",
+        owner: "Avnish",
+      },
+      schema: {
+        owner: "string",
+        id: "string",
+      },
+    },
+    {
+      field: "Issue",
+      color: "red",
+      data: {},
+      schema: {
+        owner: "string",
+        title: "title",
+        stage: "string",
+        id: "string",
+      },
+    },
+  ],
 };
 
 export const SideBarSlice = createSlice({

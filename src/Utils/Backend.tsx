@@ -218,7 +218,7 @@ export const get_all_Supported_types = async () => {
     console.log("No such userFound document!");
   }
 };
-
+// 13
 export const get_organizations_details = async (organisationId: string) => {
   const docRef = doc(db, "organizations", organisationId);
   const docSnap = await getDoc(docRef);
@@ -241,21 +241,15 @@ export const create_schema = async (
 };
 
 // 15 get schema
-export const get_schema_data = async (
-  organisationId: string,
-  schema: string
-) => {
-  let organizationDetails: any = await get_organizations_details(
-    organisationId
-  );
-  organizationDetails["fields"].forEach((item: any) => {
-    if (item.title === schema) {
-      return {
-        schema: item["schema"],
-        data: item["data"],
-      };
-    }
-  });
+export const get_schema_data = async (organisationId: string) => {
+  const docRef = doc(db, "schema", organisationId);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    return docSnap.data()["schemaData"];
+  } else {
+    console.log("No such document!");
+  }
+  return {};
 };
 //16 get tabs name
 export const get_tabs_name = async (organisationId: string) => {
@@ -417,4 +411,19 @@ export const update_data_to_database = async (
       data: updatedData,
     });
   }
+};
+// 27 get data by coloumn name
+
+export const get_data_by_column_name = async (
+  organisationId: string,
+  field: string
+) => {
+  const orgData: any = await get_organizations_details(organisationId);
+  let data: any = [];
+  orgData.data.forEach((item: any) => {
+    if (item[field] === field || field === "all") {
+      data.push(item);
+    }
+  });
+  return data;
 };

@@ -34,24 +34,29 @@ type type_props = {
   defaultValue: any;
   setFunction: any;
   label: string;
-  fieldData:any
+  fieldData: any;
 };
 const formatOptions = (value: Array<string>) => {
   let data: {
     value: string;
     label: string;
   }[] = [];
-  value.forEach((item) => {
-    data.push({
-      value: item,
-      label: item,
+
+  console.log("value*", value);
+
+  if (value) {
+    value.forEach((item) => {
+      data.push({
+        value: item,
+        label: item,
+      });
     });
-  });
+  }
   return data;
 };
-const formatOutputVlue = (value:any)=>{
-  return value.map((item:any)=>item['value'])
-}
+const formatOutputVlue = (value: any) => {
+  return value.map((item: any) => item["value"]);
+};
 const AutoComplete = (props: type_props) => {
   // const [options, setOption] = React.useState<any>(
   // );
@@ -64,8 +69,13 @@ const AutoComplete = (props: type_props) => {
         <span className=" w-[100%]">
           <Select
             styles={customStyles}
-            options={ formatOptions(props.defaultValue)}
-            onChange={(value) => props.setFunction({...props.fieldData,[props.label]:formatOutputVlue(value)})}
+            options={formatOptions(props.defaultValue)}
+            onChange={(value) =>
+              props.setFunction({
+                ...props.fieldData,
+                [props.label]: formatOutputVlue(value),
+              })
+            }
           />
         </span>
       </div>

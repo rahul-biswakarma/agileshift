@@ -42,12 +42,15 @@ const formatOptions = (value: Array<string>) => {
     value: string;
     label: string;
   }[] = [];
-  value.forEach((item) => {
-    data.push({
-      value: item,
-      label: item,
+
+  if (value) {
+    value.forEach((item) => {
+      data.push({
+        value: item,
+        label: item,
+      });
     });
-  });
+  }
   return data;
 };
 type type_props = {
