@@ -1,4 +1,5 @@
 import React from 'react'
+import { useAppSelector } from '../../redux/hooks';
 import { update_data_to_database } from '../../Utils/Backend';
 
 type Type_SidebarState = {
@@ -16,11 +17,13 @@ type Type_DetailsProps = {
     setFormData: React.Dispatch<React.SetStateAction<any>>
 }
 
+
 const Actions = (props:Type_DetailsProps) => {
+    let organizationId = useAppSelector((state)=>state.auth.organisationId);
+    organizationId = "zB2drPSZDjsAec5hG7wA"
 
     const saveData = async () =>{
         let formDataFromProps = {...props.formData, field:props.state.field} 
-        let organizationId = "mqCSUQt0TvSpskHLduZn";
         await update_data_to_database(organizationId, formDataFromProps);
     }
 

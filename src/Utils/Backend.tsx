@@ -77,6 +77,7 @@ const get_current_time = () => {
 
 25 get user by email
 26 add && edit data (from sidebar)
+// 27 get data by coloumn name
 */
 
 // 1
@@ -136,6 +137,7 @@ export const create_organization = async (
     notifications: [],
     tasks: {},
     data: {},
+    dropdownsOptions: {},
   };
   //  initialling channel in channel Table
   const res = await addDoc(organizationsRef, initializeOrganization);
@@ -253,17 +255,18 @@ export const get_schema_data = async (organisationId: string) => {
 };
 //16 get tabs name
 export const get_tabs_name = async (organisationId: string) => {
-  const docRef = doc(db, "schema", organisationId);
+  const docRef = doc(db, "schemas", organisationId);
   const docSnap = await getDoc(docRef);
-
+  let fieldList = [];
   if (docSnap.exists()) {
-    return docSnap.data()["schemaData"].map((item: any) => {
-      return item.title;
+    fieldList = docSnap.data()["schemaData"].map((item: any) => {
+      return item.name;
     });
+    console.log(fieldList);
   } else {
     console.log("No such document!");
   }
-  return;
+  return fieldList;
 };
 
 // 17 get background color from name
@@ -317,20 +320,23 @@ export const get_schema_data_field = async (
   organisationId: string,
   field: string
 ) => {
-  const docRef = doc(db, "schema", organisationId);
-  const docSnap = await getDoc(docRef);
+  console.log(organisationId);
 
+  const docRef = doc(db, "schemas", organisationId);
+  const docSnap = await getDoc(docRef);
+  let schemaFromField = {};
   if (docSnap.exists()) {
-    docSnap.data()["schemaData"].map((item: any) => {
+    docSnap.data()["schemaData"].forEach((item: any) => {
       if (item.name === field) {
-        return item.list;
+        schemaFromField = item;
       }
-      return {};
     });
+
+    console.log(schemaFromField, "**");
   } else {
     console.log("No such document!");
   }
-  return [];
+  return schemaFromField;
 };
 // 21
 export const get_data_byID = async (organisationId: string, dataId: string) => {
@@ -426,4 +432,33 @@ export const get_data_by_column_name = async (
     }
   });
   return data;
+};
+// 28 get dropdown options
+export const get_dropdown_options = async (
+  organisationId: string,
+  columnName: string,
+  field: string
+) => {
+  let orgData: any = await get_organizations_details(organisationId);
+  try {
+    return orgData["dropdowns-options"][`${columnName}_${field}`];
+  } catch {
+    return [];
+  }
+};
+// 29 set dropdown options
+export const set_dropdown_options = async (
+  organisationId: string,
+  columnName: string,
+  field: string,
+  options: string[]
+) => {
+  let orgData: any = await get_organizations_details(organisationId);
+
+  orgData["dropdowns-options"][`${columnName}_${field}`] = options;
+
+  const orgRef = doc(db, "organizations", organisationId);
+  await updateDoc(orgRef, {
+    "dropdowns-options": orgData["dropdowns-options"],
+  });
 };

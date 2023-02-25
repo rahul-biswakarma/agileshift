@@ -18,7 +18,6 @@ type Type_DetailsProps = {
 };
 
 const DataForm = (props: Type_DetailsProps) => {
-  console.log(props.state.schema, "**");
 
   const [tabs, setTabs] = React.useState<any>({});
   const [selectedTab, setSelectedTab] = React.useState("");
@@ -52,11 +51,12 @@ const DataForm = (props: Type_DetailsProps) => {
         ))}
       </section>
 
-      <section className="">
+      <section className="gap-2">
         {tabs[selectedTab] &&
           tabs[selectedTab].map((tab: string, index: number) => (
             <SideBarInputs
               key={index}
+              sidebarIndex={props.state.index}
               type={selectedTab}
               defaultValue={props.formData[tab]}
               label={tab}

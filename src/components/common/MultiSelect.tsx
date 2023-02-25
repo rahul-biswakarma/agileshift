@@ -42,7 +42,6 @@ const formatOptions = (value: Array<string>) => {
     value: string;
     label: string;
   }[] = [];
-
   if (value) {
     value.forEach((item) => {
       data.push({
@@ -69,15 +68,15 @@ const MultiSelect = (props: type_props) => {
   return (
     <div>
       <div className="flex mt-[0.3rem] bg-background_color">
-        <span className="w-[3rem] h-[2.5rem] flex justify-center items-center   rounded-l font-dm_sans">
-          {"test"}
+        <span className="min-w-fit pl-2 h-[2.5rem] flex justify-center items-center rounded-l font-dm_sans">
+          {props.label}
         </span>
         <span className=" w-[100%]">
           <Select
             closeMenuOnSelect={false}
             defaultValue={[options[0], options[1]]}
             isMulti
-            placeholder={"hii"}
+            placeholder={props.label}
             options={formatOptions(props.defaultValue)}
             styles={customStyles}
             onChange={(value) =>

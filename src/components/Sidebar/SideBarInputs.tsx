@@ -9,6 +9,7 @@ type type_props = {
   setFunction: any;
   fieldData: any;
   label: string;
+  sidebarIndex: number;
 };
 export default function SideBarInputs(props: type_props) {
   if (["dropdown"].includes(props.type)) {
@@ -19,6 +20,7 @@ export default function SideBarInputs(props: type_props) {
           label={props.label}
           setFunction={props.setFunction}
           fieldData={props.fieldData}
+          sidebarIndex={props.sidebarIndex}
         />
       </div>
     );

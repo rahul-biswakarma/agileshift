@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Actions } from "./Actions";
 import { DataForm } from "./DataForm";
 import { Details } from "./Details";
@@ -22,6 +22,15 @@ type Type_SidebarDataProps = {
   index: number;
 };
 
+type Type_ColumnSchema = {
+  columnName:string,
+  columnType:string
+}
+
+function isArray(myArray:Object) {
+  return myArray.constructor === Array;
+}
+
 const Sidebar = (props: Type_SidebarProps) => {
   const [state, setState] = useState<Type_SidebarDataProps>({
     field: props.field,
@@ -34,10 +43,27 @@ const Sidebar = (props: Type_SidebarProps) => {
   const [formData, setFormData] = useState<any>([])
   const [updateFormData, setUpdateFormData] = useState<boolean>(true)
 
-  if(updateFormData){
-    const propsSchema = props.schema
-    console.log(propsSchema);
-    let tempFormData = formData;
+  useEffect(()=>{
+    setUpdateFormData(true)
+  }, [state.schema])
+
+  if(isArray(state.schema)){
+    // console.log( state.schema, "**");
+    let modifiedSchemaObject:TYPE_SCHEMA = {}
+    state.schema.forEach((item:Type_ColumnSchema)=>{
+      modifiedSchemaObject[item.columnName] = item.columnType
+    })
+    console.log(modifiedSchemaObject, "**");
+    
+    setState({...state, schema:modifiedSchemaObject})
+  }
+
+  if(updateFormData && !isArray(state.schema)){
+    console.log("In update", "**");
+    
+    const propsSchema = state.schema
+    // console.log(propsSchema, "**");
+    let tempFormData:TYPE_SCHEMA = {};
     Object.keys(propsSchema).forEach((value:any)=>{
       if(state.data[value]){
         const columnValue =state.data[value]
@@ -46,9 +72,11 @@ const Sidebar = (props: Type_SidebarProps) => {
         tempFormData[value] = "";
       }
     })
+    console.log(tempFormData, "**");
+    
     setFormData(tempFormData)
     setUpdateFormData(false)
-    console.log(tempFormData);
+    // console.log(tempFormData);
   }
 
   return (

@@ -1,5 +1,9 @@
 import React from "react";
+// import { useSelector } from "react-redux";
 import Select from "react-select";
+import { useAppDispatch } from "../../redux/hooks";
+import { setSideBar } from "../../redux/reducers/SideBarSlice";
+// import { RootState } from "../../redux/store";
 const customStyles = {
   control: (provided: any) => ({
     ...provided,
@@ -30,11 +34,20 @@ const customStyles = {
     color: "#FFFFFF", // Set the selected option text color here
   }),
 };
+// type Type_SidebarState = {
+//   field: string;
+//   data: any;
+//   color: string;
+//   schema?: any;
+//   sidebarType?: string;
+// };
+
 type type_props = {
   defaultValue: any;
   setFunction: any;
   label: string;
   fieldData: any;
+  sidebarIndex: number;
 };
 const formatOptions = (value: Array<string>) => {
   let data: {
@@ -60,10 +73,29 @@ const formatOutputVlue = (value: any) => {
 const AutoComplete = (props: type_props) => {
   // const [options, setOption] = React.useState<any>(
   // );
+  const dispatch = useAppDispatch();
+  // const sideBarList: Type_SidebarState[] = useSelector(
+  //   (state: RootState) => state.sidebar.sideBarData
+  // );
+
+  const handleAddOptions = () => {
+    let element: any = {
+      sidebarType: "addOptions",
+      columnName: "",
+      field: "",
+      color: "",
+      schema: {},
+    };
+    // let newSidebarList = sideBarList.splice(props.sidebarIndex, 0, element);
+    // let newSidebarList = sideBarList.splice(props.sidebarIndex, 0, element);
+
+    // console.log(newSidebarList, "888");
+    dispatch(setSideBar([element]));
+  };
   return (
     <div>
       <div className="flex mt-[0.3rem] bg-background_color">
-        <span className="w-[3rem] h-[2.5rem] flex justify-center items-center   rounded-l font-dm_sans">
+        <span className="min-w-fit pl-2 h-[2.5rem] flex justify-center items-center   rounded-l font-dm_sans">
           {props.label}
         </span>
         <span className=" w-[100%]">
@@ -78,6 +110,13 @@ const AutoComplete = (props: type_props) => {
             }
           />
         </span>
+        <button
+          onClick={() => handleAddOptions()}
+          type="button"
+          className="font-bold text-2xl pr-2 flex justify-center active:text-blue-900 cursor-pointer"
+        >
+          +
+        </button>
       </div>
     </div>
   );
