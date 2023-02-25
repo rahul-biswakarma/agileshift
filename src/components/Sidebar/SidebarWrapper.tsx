@@ -16,6 +16,9 @@ const SidebarWrapper = () => {
   const sideBarList: Type_SidebarState[] = useSelector(
     (state: RootState) => state.sidebar.sideBarData
   );
+  console.log("====================================");
+  console.log(sideBarList);
+  console.log("====================================");
   const [colapsTabBar, setColapsTabBar] = React.useState<number>(
     sideBarList.length - 1
   );

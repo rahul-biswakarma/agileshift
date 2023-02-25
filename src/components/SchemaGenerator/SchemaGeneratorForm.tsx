@@ -23,8 +23,6 @@ export const SchemaGeneratorForm = ({
   type,
   list,
   setList,
-  activeTab,
-  setActiveTab,
   isLast,
   submitSchema,
 }: GeneratorFormPropTypes) => {

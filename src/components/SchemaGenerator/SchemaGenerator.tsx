@@ -17,6 +17,9 @@ type GeneratorPropTypes = {
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
   getAllFieldsName: () => string[];
   submitSchema: () => void;
+  duplicateSchema: (this: any) => void;
+  color: string;
+  changeColor: (this: any, color: string) => void;
 };
 
 export const SchemaGenerator = ({
@@ -31,6 +34,9 @@ export const SchemaGenerator = ({
   setActiveTab,
   getAllFieldsName,
   submitSchema,
+  duplicateSchema,
+  color,
+  changeColor,
 }: GeneratorPropTypes) => {
   const colorList = [
     "purple",
@@ -56,7 +62,7 @@ export const SchemaGenerator = ({
           <input
             type="text"
             className="w-40 text-center bg-background_color text-highlight_font_color px-2 placeholder:text-primary_font_color
-            rounded-md border border-primary_font_color"
+            rounded-md border border-primary_font_color mr-2"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />{" "}
@@ -64,11 +70,13 @@ export const SchemaGenerator = ({
           <select
             name="color"
             id={`${name}-color`}
-            className="px-2
+            className="ml-16 px-2
           bg-background_color 
           text-highlight_font_color
           rounded-lg border border-primary_font_color
-          ">
+          "
+            value={color}
+            onChange={(e) => changeColor(e.target.value)}>
             {colorList.map((color, id) => (
               <option
                 value={color}
@@ -79,7 +87,7 @@ export const SchemaGenerator = ({
             ))}
           </select>
         </p>
-        <p className="relative flex items-center">
+        <div className="relative w-full flex justify-center items-center">
           Can be linked to :{" "}
           <div className="relative h-max flex items-center">
             <button
@@ -123,7 +131,14 @@ export const SchemaGenerator = ({
               </div>
             )}
           </div>
-        </p>
+          <button
+            className="absolute right-10 flex items-center px-2 py-2 bg-Secondary_background_color justify-center
+                            text-highlight_font_color rounded-md shadow-lg uppercase
+                            border border-dark_gray"
+            onClick={duplicateSchema}>
+            Duplicate Template
+          </button>
+        </div>
         <SchemaGeneratorForm
           type={name}
           list={list}

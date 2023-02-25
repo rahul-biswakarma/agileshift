@@ -16,7 +16,16 @@ export const FieldGroup = ({
 }: FieldGroupPropTypes) => {
   const [displayFields, setDisplayFields] = useState<boolean>(false);
 
-  const [types] = useState(["string", "number", "tag", "user"]);
+  const [types] = useState([
+    "string",
+    "id",
+    "title",
+    "tag",
+    "user",
+    "dropdown",
+    "date",
+    "currency",
+  ]);
   // const getTypes = async () => {
   //   let data = await get_all_Supported_types();
   //   setTypes(data);
@@ -26,42 +35,48 @@ export const FieldGroup = ({
     <div
       onMouseOver={() => setDisplayFields(true)}
       onMouseLeave={() => setDisplayFields(false)}
-      className="relative flex items-center justify-between gap-4 p-4 w-96 hover:bg-Secondary_background_color rounded-md">
-      <div className="flex flex-col gap-1 flex-1">
-        <label htmlFor="columtitle-1" className="text-sm">
-          Column Title
-        </label>
-        <input
-          type="text"
-          className="p-2 bg-background_color text-highlight_font_color px-2 placeholder:text-primary_font_color
+      className="relative flex flex-col justify-center gap-4 p-4 w-96 hover:bg-Secondary_background_color rounded-md">
+      <div className="flex justify-between">
+        <div className="flex flex-col gap-1 flex-1">
+          <label htmlFor="columtitle-1" className="text-sm">
+            Column Title
+          </label>
+          <input
+            type="text"
+            className="p-2 bg-background_color text-highlight_font_color px-2 placeholder:text-primary_font_color
                  rounded-md border border-primary_font_color"
-          placeholder="Column Title"
-          id="columntitle-1"
-          value={column.columnName}
-          onChange={(e) => changeColumn(id, e.target.value, column.columnType)}
-        />
-      </div>
+            placeholder="Column Title"
+            id="columntitle-1"
+            value={column.columnName}
+            onChange={(e) =>
+              changeColumn(id, e.target.value, column.columnType)
+            }
+          />
+        </div>
 
-      <div className="flex flex-col gap-1">
-        <label htmlFor="columntype-1" className="text-sm">
-          Column Type
-        </label>
-        <select
-          name="columntype-1"
-          id="columntype-1"
-          className="p-2
+        <div className="flex flex-col gap-1">
+          <label htmlFor="columntype-1" className="text-sm">
+            Column Type
+          </label>
+          <select
+            name="columntype-1"
+            id="columntype-1"
+            className="p-2
               bg-background_color 
               text-highlight_font_color
               rounded-lg border border-primary_font_color
               "
-          value={column.columnType}
-          onChange={(e) => changeColumn(id, column.columnName, e.target.value)}>
-          {types.map((type, id) => (
-            <option value={type} key={id}>
-              {type}
-            </option>
-          ))}
-        </select>
+            value={column.columnType}
+            onChange={(e) =>
+              changeColumn(id, column.columnName, e.target.value)
+            }>
+            {types.map((type, id) => (
+              <option value={type} key={id}>
+                {type}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {displayFields && (
@@ -71,6 +86,48 @@ export const FieldGroup = ({
           <img src={CloseIcon} className="w-3 h-3" alt="" />
         </button>
       )}
+      {/* <div className="flex">
+        <div className="flex flex-col gap-1 flex-1">
+          <label htmlFor="columtitle-1" className="text-sm">
+            Column Title
+          </label>
+          <input
+            type="text"
+            className="p-2 bg-background_color text-highlight_font_color px-2 placeholder:text-primary_font_color
+                 rounded-md border border-primary_font_color"
+            placeholder="Column Title"
+            id="columntitle-1"
+            value={column.columnName}
+            onChange={(e) =>
+              changeColumn(id, e.target.value, column.columnType)
+            }
+          />
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label htmlFor="columntype-1" className="text-sm">
+            Column Type
+          </label>
+          <select
+            name="columntype-1"
+            id="columntype-1"
+            className="p-2
+              bg-background_color 
+              text-highlight_font_color
+              rounded-lg border border-primary_font_color
+              "
+            value={column.columnType}
+            onChange={(e) =>
+              changeColumn(id, column.columnName, e.target.value)
+            }>
+            {types.map((type, id) => (
+              <option value={type} key={id}>
+                {type}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div> */}
     </div>
   );
 };

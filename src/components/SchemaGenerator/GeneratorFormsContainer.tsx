@@ -7,13 +7,8 @@ import { NewSchema } from "./NewSchema";
 import { SchemaGenerator } from "./SchemaGenerator";
 
 export const GeneratorFormsContainer = () => {
-  //   const [defaultColumnList, setDefaultColumnList] = useState<TYPE_SCHEMA[]>([
-  //     { columnName: "Ticket Name", columnType: "string" },
-  //     { columnName: "Created By", columnType: "user" },
-  //     { columnName: "Tag", columnType: "tags" },
-  //   ]);
   const defaultColumnList: TYPE_SCHEMA[] = [
-    { columnName: "Ticket Name", columnType: "string" },
+    { columnName: "Title", columnType: "string" },
     { columnName: "Created By", columnType: "user" },
     { columnName: "Tag", columnType: "tag" },
   ];
@@ -32,15 +27,15 @@ export const GeneratorFormsContainer = () => {
     {
       list: makeActualCopy(defaultColumnList),
       name: "Tickets",
-      color: "",
-      icon: "",
+      color: "purple",
+      icon: "home",
       linkage: [],
     },
     {
       list: makeActualCopy(defaultColumnList),
       name: "Issues",
-      color: "",
-      icon: "",
+      color: "cyan",
+      icon: "home",
       linkage: [],
     },
   ]);
@@ -70,6 +65,12 @@ export const GeneratorFormsContainer = () => {
     setFields(tempFields);
   }
 
+  function changeColor(this: any, color: string) {
+    let tempFields = [...fields];
+    tempFields[this.id].color = color;
+    setFields(tempFields);
+  }
+
   function addLinkage(this: any, link: string) {
     let tempFields = [...fields];
     tempFields[this.id].linkage.push(link);
@@ -94,22 +95,40 @@ export const GeneratorFormsContainer = () => {
 
   const addSchema = () => {
     let tempFields = [...fields];
-    let lastField = tempFields[tempFields.length - 1];
-    if (lastField.name === "") {
-      alert("First fill the name idiot");
-      return;
+    for (let field of tempFields) {
+      if (field.name === "") {
+        alert("First fill the name of all the work items");
+        return;
+      }
     }
     let newSchema: TYPE_FIELD = {
       list: makeActualCopy(defaultColumnList),
       name: "",
-      color: "",
-      icon: "",
+      color: "purple",
+      icon: "home",
       linkage: [],
     };
     tempFields.push(newSchema);
     setFields(tempFields);
     setActiveTab("");
   };
+
+  function duplicateSchema(this: any) {
+    let currentField = fields[this.id];
+    if (currentField.name === "") return;
+    let newField: TYPE_FIELD = {
+      name: "",
+      list: makeActualCopy(currentField.list),
+      color: currentField.color,
+      icon: currentField.icon,
+      linkage: currentField.linkage,
+    };
+    const duplicatedArray = fields
+      .slice(0, this.id + 1)
+      .concat(newField, fields.slice(this.id + 1));
+    setFields(duplicatedArray);
+    setActiveTab("");
+  }
 
   return (
     <div className="w-screen h-screen flex divide-x divide-dark_gray">
@@ -128,6 +147,9 @@ export const GeneratorFormsContainer = () => {
           getAllFieldsName={getAllFieldsName}
           key={id}
           submitSchema={submitSchema}
+          duplicateSchema={duplicateSchema.bind({ id: id })}
+          color={field.color}
+          changeColor={changeColor.bind({ id: id })}
         />
       ))}
       <NewSchema addSchema={addSchema} />
