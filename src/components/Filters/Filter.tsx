@@ -16,11 +16,18 @@ type TYPE_ActiveFiltersDropdown = {
 const Filter = (props: Type_FilterProps) => {
   const { schema } = props;
 
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [modifiedSchema, setModifiedSchema] = useState<TYPE_SCHEMA[]>([]);
   const [showAllFilters, setShowAllFilters] = useState<boolean>(false);
   const [activeFilters, setActiveFilters] = useState<TYPE_ActiveFilters>({});
   const [activeFiltersDropdown, setActiveFiltersDropdown] =
     useState<TYPE_ActiveFiltersDropdown>({});
+
+  const handleSearchInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSearchTerm(event.target.value);
+  };
 
   const handleColumnClick = (columnTitle: string) => {
     const newFilters = { ...activeFiltersDropdown };
@@ -36,6 +43,26 @@ const Filter = (props: Type_FilterProps) => {
     }
     setActiveFiltersDropdown(newFilters);
   };
+
+  useEffect(() => {
+    const updateSchema = (schema: TYPE_SCHEMA[]) => {
+      const newSchema: TYPE_SCHEMA[] = schema
+        .filter((data) =>
+          data.columnTitle.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+        .map((data) => {
+          const newData: TYPE_SCHEMA = {
+            ...data,
+            active: "0",
+          };
+          return newData;
+        });
+      newSchema[0].active = "1";
+      newSchema[1].active = "1";
+      setModifiedSchema(newSchema);
+    };
+    updateSchema(schema);
+  }, [schema]);
 
   useEffect(() => {
     const updateSchema = (schema: TYPE_SCHEMA[]) => {
@@ -187,35 +214,71 @@ const Filter = (props: Type_FilterProps) => {
                       </button>
                     ))}
                 </div>
-                <div className="flex items-center p-2 border-b border-white/10">
-                  <input
-                    className="bg-background_color text-xs flex-1 outline-none text-highlight_font_color placeholder:text-white/20"
-                    placeholder="Search"
-                    type="text"
-                  />
-                </div>
-                <div className="flex flex-col gap-1 mt-1 p-1">
-                  {modifiedSchema.map((data, index) => {
-                    if (data.active === "1") {
-                      return (
-                        <div
-                          key={index}
-                          onClick={() => modifyActiveState(index)}
-                          className="px-2 py-1 text-xs font-semibold bg-Secondary_background_color rounded-lg cursor-pointer border border-white/10">
-                          {data.columnTitle}
-                        </div>
-                      );
-                    } else {
-                      return (
-                        <div
-                          key={index}
-                          onClick={() => modifyActiveState(index)}
-                          className="px-2 py-1 text-xs font-semibold hover:bg-Secondary_background_color rounded-lg cursor-pointer border border-transparent hover:border-white/10">
-                          {data.columnTitle}
-                        </div>
-                      );
-                    }
-                  })}
+
+                <div className="relative flex items-center justify-center gap-4">
+                  <button
+                    onClick={() => setShowAllFilters(!showAllFilters)}
+                    className="flex items-center justify-center rounded-md w-6 h-6 border border-1 border-[#808080] text-[#808080] text-sm mr-4 ">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      stroke="#808080"
+                      stroke-linecap="round"
+                      strokeLinejoin="round"
+                      stroke-width="1.5"
+                      className=" w-4 h-4 text-center"
+                      viewBox="0 0 24 24">
+                      <path stroke="none" d="M0 0h24v24H0z" />
+                      <path d="M12 5v14m-7-7h14" />
+                    </svg>
+                  </button>
+                  {showAllFilters && (
+                    <div className="absolute top-[110%] left-0 bg-primary_background_color w-48 rounded-xl p-1 border border-white/20 text-highlight_font_color">
+                      <div className="flex flex-wrap gap-1 p-2 border-b border-white/10">
+                        {modifiedSchema
+                          .filter((column) => column.active === "1")
+                          .map((column, index) => (
+                            <button
+                              key={index}
+                              className="inline-block font-fira_code rounded-md border border-dark_gray text-highlight_font_color text-xs py-1 px-2">
+                              {column.columnTitle}
+                            </button>
+                          ))}
+                      </div>
+                      <div className="flex items-center p-2 border-b border-white/10">
+                        <input
+                          className="bg-background_color text-xs flex-1 outline-none text-highlight_font_color placeholder:text-white/20"
+                          placeholder="Search"
+                          type="text"
+                          value={searchTerm}
+                          onChange={handleSearchInputChange}
+                        />
+                      </div>
+                      <div className="flex flex-col gap-1 mt-1 p-1">
+                        {modifiedSchema.map((data, index) => {
+                          if (data.active === "1") {
+                            return (
+                              <div
+                                key={index}
+                                onClick={() => modifyActiveState(index)}
+                                className="px-2 py-1 text-xs font-semibold bg-Secondary_background_color rounded-lg cursor-pointer border border-white/10">
+                                {data.columnTitle}
+                              </div>
+                            );
+                          } else {
+                            return (
+                              <div
+                                key={index}
+                                onClick={() => modifyActiveState(index)}
+                                className="px-2 py-1 text-xs font-semibold hover:bg-Secondary_background_color rounded-lg cursor-pointer border border-transparent hover:border-white/10">
+                                {data.columnTitle}
+                              </div>
+                            );
+                          }
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
