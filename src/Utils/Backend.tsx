@@ -27,6 +27,15 @@ import {
 import emailjs from "@emailjs/browser";
 import { isValidEmail } from "email-js";
 
+function generateRandomId() {
+  let result = "";
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const charactersLength = characters.length;
+  for (let i = 0; i < 12; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
 const get_current_time = () => {
   let date = new Date();
   return `${date.getFullYear()}-${(date.getMonth() + 1)
@@ -64,6 +73,10 @@ const get_current_time = () => {
 21
 22
 23 add organization to user
+24 get user by id
+
+25 get user by email
+26 add && edit data (from sidebar)
 */
 
 // 1
@@ -152,7 +165,7 @@ export const update_issue = () => {};
 export const create_tags = () => {};
 
 // 11
-export const sendEmail = (emailId: string) => {
+export const sendEmail = async (emailId: string) => {
   //   e.preventDefault(); // prevents the page from reloading when you hit “Send”
 
   let params: {
@@ -169,6 +182,16 @@ export const sendEmail = (emailId: string) => {
     console.log("invalid mail");
     return;
   }
+  const userDetails: TYPE_USER | string = await get_user_by_email(emailId).then(
+    (user) => {
+      return user;
+    }
+  );
+  if (userDetails === "") {
+    console.log("user not found");
+    return;
+  }
+
   emailjs
     .send("service_0dpd4z6", "template_weagkql", params, "sb5MCkizR-ZuN4LVw")
     .then(
@@ -276,7 +299,7 @@ export const get_text_color_from_name = (name: string) => {
 };
 // 19
 export const get_title = async (organisationId: string, field: string) => {
-  const docRef = doc(db, "schema", organisationId);
+  const docRef = doc(db, "schemas", organisationId);
   const docSnap = await getDoc(docRef);
 
   if (docSnap.exists()) {
@@ -317,23 +340,21 @@ export const get_schema_data_field = async (
 };
 // 21
 export const get_data_byID = async (organisationId: string, dataId: string) => {
-	const docRef = doc(db, "organizations", organisationId);
-	const docSnap = await getDoc(docRef);
+  const docRef = doc(db, "organizations", organisationId);
+  const docSnap = await getDoc(docRef);
 
-	let organisationDetails:any ={}
-	if (docSnap.exists()) {
+  let dataDetails: any = {};
 
-		if(docSnap.data()["data"].length > 0) {
-			docSnap.data()["data"].forEach((item:any) => {
-				if (item.id === dataId) {
-					organisationDetails= item
-				}
-			});
-		}
-	} else {
-		console.log("No such document!");
-	}
-	return organisationDetails;
+  if (docSnap.exists()) {
+    docSnap.data()["data"].forEach((item: any) => {
+      if (item.id === dataId) {
+        dataDetails = item;
+      }
+    });
+  } else {
+    console.log("No such document!");
+  }
+  return dataDetails;
 };
 // 22 get list by columun typee
 export const get_list_by_column_type = async (
@@ -366,12 +387,34 @@ export const get_user_by_id = async (userId: string) => {
 // // 25 get user by email
 
 export const get_user_by_email = async (email: string) => {
-	const q = query(collection(db, "users"), where("email", "==", email));
-	const querySnapshot = await getDocs(q);
-	let userDetails={};
-	querySnapshot.forEach((doc) => {
-		userDetails =  doc.data();
-	});
-	return userDetails;
+  const q = query(collection(db, "users"), where("email", "==", email));
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    return doc.data();
+  });
+  return "";
 };
-// 26 create schema
+// 26 addd && edit table data
+export const update_data_to_database = async (
+  organisationId: string,
+  data: any
+) => {
+  // condition for create data
+  const organizationRef = doc(db, "organizations", organisationId);
+  if (data.id === undefined || data.id === "") {
+    data["id"] = generateRandomId();
+    await updateDoc(organizationRef, {
+      data: arrayUnion(data),
+    });
+  } else {
+    //  condition for update data
+    let docSnap: any = await getDoc(organizationRef);
+    let updatedData: any = docSnap
+      .data()
+      ["data"].filter((item: any) => item.id !== data.id);
+    updatedData.push(data);
+    await updateDoc(organizationRef, {
+      data: updatedData,
+    });
+  }
+};

@@ -4,6 +4,8 @@ type Type_SidebarState = {
   field: string;
   data: any;
   color: string;
+  schema:any;
+  index: number;
 };
 
 type Type_HeaderIdComponentProps = {
@@ -12,7 +14,7 @@ type Type_HeaderIdComponentProps = {
 };
 
 const HeaderIdComponent = (props: Type_HeaderIdComponentProps) => {
-  return props.state.data ? (
+  return Object.keys(props.state.data).length>0 ? (
     <span
       style={{
         borderColor: props.state.color,

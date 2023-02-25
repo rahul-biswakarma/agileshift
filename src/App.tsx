@@ -7,7 +7,7 @@ import OrganizationList from "./components/ManageOrganization/OrganizationList";
 import { GeneratorFormsContainer } from "./components/SchemaGenerator/GeneratorFormsContainer";
 import Filter from "./components/Filters/Filter";
 import { getFromSession } from "./Utils/Auth";
-import { useAppDispatch } from "./redux/hooks";
+import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import { setUserId } from "./redux/reducers/AuthSlice";
 import { SidebarWrapper } from "./components/Sidebar/SidebarWrapper";
 
@@ -17,8 +17,14 @@ const App = () => {
   if (userId) {
     dispatch(setUserId(userId));
   }
+  const sideBarLists = useAppSelector((state) => state.sidebar.sideBarData);
   return (
     <BrowserRouter>
+      {/* {sideBarLists.length !== 0 && (
+        <section className="fixed z-50">
+          <SidebarWrapper />
+        </section>
+      )} */}
       <Routes>
         <Route
           path=""

@@ -4,6 +4,7 @@ type Type_SidebarState = {
   field: string;
   data: any;
   color: string;
+  schema?: any;
 };
 interface SidebarState {
   visible: boolean;

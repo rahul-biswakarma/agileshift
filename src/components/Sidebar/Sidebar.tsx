@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { useAppSelector } from "../../redux/hooks";
+import { Actions } from "./Actions";
+import { DataForm } from "./DataForm";
 import { Details } from "./Details";
 import { Header } from "./Header";
 import { LinkageSidebar } from "./LinkageSidebar";
@@ -11,69 +12,54 @@ type Type_SidebarProps = {
   setColapsTabBar: React.Dispatch<React.SetStateAction<number>>;
   index: number;
   data: any;
+  schema?: any;
 };
 
 type Type_SidebarDataProps = {
   field: string;
   color: string;
   data: any;
+  schema: any;
+  index: number;
 };
-
-// type Type_SidebarState = {
-//   field: string;
-//   color: string;
-//   tabColaps: boolean;
-//   setColapsTabBar: React.Dispatch<React.SetStateAction<number>>;
-//   index: number;
-//   data:any
-// };
 
 const Sidebar = (props: Type_SidebarProps) => {
   const [state, setState] = useState<Type_SidebarDataProps>({
     field: props.field,
     color: props.color,
     data: props.data,
+    schema: props.schema,
+    index: props.index,
   });
 
-  // const [tab,setTab] = useState<Type_SidebarState>({
-  //   field: props.field,
-  //   color: props.color,
-  //   tabColaps: props.tabColaps,
-  //   setColapsTabBar: props.setColapsTabBar,
-  //   index: props.index,
-  //   data:[]
-  // })
+  const [formData, setFormData] = useState<any>([]);
+  const [updateFormData, setUpdateFormData] = useState<boolean>(true);
 
-  let organizationId = useAppSelector((state) => state.auth.organisationId);
-  // organizationId = "0boTY0ZwWFdRkDwbNsVw";
-  console.log(organizationId);
-
-  const [formData, setFormData] = useState<TYPE_SCHEMA[]>([]);
-
-  // useEffect(()=>{
-  //   const dataId = props.dataId;
-  //   if(dataId && dataId.length>0){
-  //     let fieldData:TYPE_SCHEMA[]
-  //     get_data_byID(organizationId,dataId).then((result)=>{
-  //       fieldData = result
-  //       console.log(fieldData);
-  //       setState({...state, data:fieldData})
-  //     })
-  //   }
-  // },[props.dataId, organizationId])
+  if (updateFormData) {
+    const propsSchema = props.schema;
+    console.log(propsSchema);
+    let tempFormData = formData;
+    Object.keys(propsSchema).forEach((value: any) => {
+      if (state.data[value]) {
+        const columnValue = state.data[value];
+        tempFormData[value] = columnValue;
+      } else {
+        tempFormData[value] = "";
+      }
+    });
+    setFormData(tempFormData);
+    setUpdateFormData(false);
+    console.log(tempFormData);
+  }
 
   return (
     <div
       className={`${
         props.tabColaps ? "w-[50px] flex items-center" : "w-1/3"
-      } h-screen  bg-sidebar_bg backdrop-filter backdrop-blur-lg bg-opacity-60 border border-primary_font_color p-3`}
-
-      // onClick ={()=>getDataByID("4564864")}
-    >
-      {/* bg-gradient-to-b from-[#badde8] to-[#bdddcc] */}
+      } h-screen  bg-sidebar_bg backdrop-filter backdrop-blur-lg bg-opacity-60 border border-primary_font_color`}>
       {props.tabColaps ? (
         <div
-          className="[writing-mode:vertical-rl]   text-xl cursor-pointer hover:bg-background_color rounded-lg py-4"
+          className="[writing-mode:vertical-rl] h-full w-full flex justify-center items-center text-xl cursor-pointer hover:bg-background_color rounded-lg py-4"
           onClick={() => {
             props.setColapsTabBar(props.index);
           }}>
@@ -82,7 +68,7 @@ const Sidebar = (props: Type_SidebarProps) => {
       ) : state.field === "Linkage" ? (
         <LinkageSidebar />
       ) : (
-        <React.Fragment>
+        <div className="h-full w-full p-3 flex flex-col">
           <Header
             state={state}
             setState={setState}
@@ -95,7 +81,19 @@ const Sidebar = (props: Type_SidebarProps) => {
             formData={formData}
             setFormData={setFormData}
           />
-        </React.Fragment>
+          <DataForm
+            state={state}
+            setState={setState}
+            formData={formData}
+            setFormData={setFormData}
+          />
+          <Actions
+            state={state}
+            setState={setState}
+            formData={formData}
+            setFormData={setFormData}
+          />
+        </div>
       )}
     </div>
   );

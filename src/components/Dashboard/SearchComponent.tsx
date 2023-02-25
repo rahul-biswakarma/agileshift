@@ -1,7 +1,10 @@
 import React from "react";
+import { useAppDispatch } from "../../redux/hooks";
+import { setSideBar } from "../../redux/reducers/SideBarSlice";
 // import notificationIcon from "../../assets/icons/notification.svg";
 
 export default function SearchComponent() {
+  const dispatch = useAppDispatch();
   return (
     <form className="flex flex-row items-center flex-grow gap-6  ">
       <div className="relative flex-grow  h-[100%]">
@@ -60,84 +63,105 @@ export default function SearchComponent() {
             </clipPath>
           </defs>
         </svg>
-        <svg
-          width="30"
-          height="30"
-          viewBox="0 0 30 30"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
+
+        <button
+          onClick={() =>
+            dispatch(
+              setSideBar([
+                {
+                  field: "Issue",
+                  color: "red",
+                  data: {},
+                  schema: {
+                    owner: "string",
+                    title: "title",
+                    stage: "string",
+                    id: "string",
+                  },
+                },
+              ])
+            )
+          }
         >
-          <g clipPath="url(#clip0_7_18)">
-            <path
-              d="M10 10H5V15H10V10Z"
-              stroke="#808080"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M7.5 5V10"
-              stroke="#808080"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M7.5 15V25"
-              stroke="#808080"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M17.5 17.5H12.5V22.5H17.5V17.5Z"
-              stroke="#808080"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M15 5V17.5"
-              stroke="#808080"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M15 22.5V25"
-              stroke="#808080"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M25 6.25H20V11.25H25V6.25Z"
-              stroke="#808080"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M22.5 5V6.25"
-              stroke="#808080"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M22.5 11.25V25"
-              stroke="#808080"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </g>
-          <defs>
-            <clipPath id="clip0_7_18">
-              <rect width="30" height="30" fill="white" />
-            </clipPath>
-          </defs>
-        </svg>
+          <svg
+            width="30"
+            height="30"
+            viewBox="0 0 30 30"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g clipPath="url(#clip0_7_18)">
+              <path
+                d="M10 10H5V15H10V10Z"
+                stroke="#808080"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M7.5 5V10"
+                stroke="#808080"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M7.5 15V25"
+                stroke="#808080"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M17.5 17.5H12.5V22.5H17.5V17.5Z"
+                stroke="#808080"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M15 5V17.5"
+                stroke="#808080"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M15 22.5V25"
+                stroke="#808080"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M25 6.25H20V11.25H25V6.25Z"
+                stroke="#808080"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M22.5 5V6.25"
+                stroke="#808080"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M22.5 11.25V25"
+                stroke="#808080"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </g>
+            <defs>
+              <clipPath id="clip0_7_18">
+                <rect width="30" height="30" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+        </button>
       </>
     </form>
   );

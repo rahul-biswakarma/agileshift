@@ -7,6 +7,7 @@ type Type_SidebarState = {
   field: string;
   data: any;
   color: string;
+  schema?:any;
 };
 
 const SidebarWrapper = () => {
@@ -21,7 +22,7 @@ const SidebarWrapper = () => {
   );
 
   return (
-    <div className="h-screen w-screen flex flex-row-reverse bg-background_color z-20 font-dm_sans text-white overflow-x-scroll">
+    <div className="h-screen w-screen flex flex-row-reverse  z-20 font-dm_sans text-white overflow-x-scroll">
       {sideBarList.map((sidebar: Type_SidebarState, index: number) => (
         <Sidebar
           tabColaps={
@@ -37,6 +38,7 @@ const SidebarWrapper = () => {
           field={sidebar.field}
           color={sidebar.color}
           data={sidebar.data}
+          schema={sidebar.schema}
         />
       ))}
     </div>
