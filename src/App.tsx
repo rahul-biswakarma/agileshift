@@ -59,6 +59,10 @@ const App = () => {
 					element={<GeneratorFormsContainer />}
 				/>
 				<Route
+					path="/edit-organization-schema"
+					element={<GeneratorFormsContainer />}
+				/>
+				<Route
 					path="/organization/:id"
 					element={<Dashboard />}
 				/>

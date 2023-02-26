@@ -26,6 +26,7 @@ import {
 } from "firebase/firestore";
 import emailjs from "@emailjs/browser";
 import { isValidEmail } from "email-js";
+import { removeDuplicates } from "./HelperFunctions";
 
 function generateRandomId() {
 	let result = "";
@@ -420,11 +421,13 @@ export const get_data_by_column_name = async (
 ) => {
 	const orgData: any = await get_organizations_details(organisationId);
 	let data: any = [];
-	orgData.data.forEach((item: any) => {
-		if (item["field"] === field || field === "all") {
-			data.push(item);
-		}
-	});
+	if (orgData.data && orgData.data.length > 0) {
+		orgData.data.forEach((item: any) => {
+			if (item["field"] === field || field === "all") {
+				data.push(item);
+			}
+		});
+	}
 	return data;
 };
 // 28 get dropdown options
@@ -455,4 +458,21 @@ export const set_dropdown_options = async (
 	await updateDoc(orgRef, {
 		"dropdowns-options": orgData["dropdowns-options"],
 	});
+};
+
+// 31 get all columns name return [{name: "columnName", columnType: "text"}}]
+export const get_all_columns_name = async (organisationId: string) => {
+	const docRef = doc(db, "schemas", organisationId);
+	const docSnap = await getDoc(docRef);
+	let columns: any = [];
+	if (docSnap.exists()) {
+		docSnap.data()["schemaData"].forEach((item: any) => {
+			item.list.forEach((listItem: any) => {
+				columns.push(listItem);
+			});
+		});
+	} else {
+		console.log("No such document!");
+	}
+	return removeDuplicates(columns);
 };

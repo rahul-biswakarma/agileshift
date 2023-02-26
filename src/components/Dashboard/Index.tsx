@@ -9,7 +9,6 @@ import { useAppSelector } from "../../redux/hooks";
 
 export default function Dashboard() {
 	const organizationId = useAppSelector((state) => state.auth.organisationId);
-	const [selectedTab, setSelectedTab] = React.useState<string>("Dashboard");
 	const [dataSchema, setDataSchema] = useState<TYPE_FIELD[]>();
 	const [data, setData] = useState();
 
@@ -21,11 +20,9 @@ export default function Dashboard() {
 
 	const getDataByFeildName = useCallback(() => {
 		if (dataSchema)
-			get_data_by_column_name(organizationId, dataSchema[0].name).then(
-				(data) => {
-					setData(data);
-				}
-			);
+			get_data_by_column_name(organizationId, "all").then((data) => {
+				setData(data);
+			});
 	}, [dataSchema, organizationId]);
 
 	useEffect(() => {
@@ -35,13 +32,7 @@ export default function Dashboard() {
 	return (
 		<div className="bg-background_color h-[100vh] font-dm_sans">
 			<Header />
-			{dataSchema && (
-				<TabHeader
-					selectedTab={selectedTab}
-					setSelectedTab={setSelectedTab}
-					fieldsData={dataSchema}
-				/>
-			)}
+			{dataSchema && <TabHeader fieldsData={dataSchema} />}
 			{dataSchema && data && (
 				<BuildQuadarnt
 					fieldData={dataSchema[0]}

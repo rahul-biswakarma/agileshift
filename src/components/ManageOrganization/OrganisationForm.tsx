@@ -6,19 +6,13 @@ import {
 	add_organisation_to_user,
 	create_organization,
 } from "../../Utils/Backend";
+import { setActiveTab } from "../../redux/reducers/SchemaSlice";
+
 require("tailwindcss-writing-mode")({
 	variants: ["responsive", "hover"],
 });
 
-type OrganisationFormPropTypes = {
-	activeTab: number;
-	setActiveTab: React.Dispatch<React.SetStateAction<number>>;
-};
-
-export const OrganisationForm = ({
-	activeTab,
-	setActiveTab,
-}: OrganisationFormPropTypes) => {
+export const OrganisationForm = () => {
 	// States
 	const [isOrgCreated, setIsOrgCreated] = useState<boolean>(false);
 	const [toolTip, setToolTip] = useState<boolean>(false);
@@ -31,6 +25,11 @@ export const OrganisationForm = ({
 	const orgName = useRef<HTMLInputElement>(null);
 	const orgURL = useRef<HTMLInputElement>(null);
 	const userId = useAppSelector((state: RootState) => state.auth.userId);
+
+	// Redux
+	const activeTab = useAppSelector(
+		(state: RootState) => state.schema.activeTab
+	);
 	const dispatch = useAppDispatch();
 
 	const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -71,7 +70,7 @@ export const OrganisationForm = ({
 				dispatch(setOrganisationId(id));
 			});
 			setIsOrgCreated(true);
-			setActiveTab(activeTab + 1);
+			dispatch(setActiveTab(activeTab + 1));
 		}
 	};
 
@@ -182,7 +181,7 @@ export const OrganisationForm = ({
 			<div className="h-screen w-12 flex flex-wrap text-primary_font_color  bg-Secondary_background_color">
 				<button
 					className="h-full w-full"
-					onClick={() => setActiveTab(-1)}
+					onClick={() => dispatch(setActiveTab(-1))}
 				>
 					<span className="[writing-mode:vertical-rl] text-sm font-[600] uppercase font-fira_code">
 						Organisation Form

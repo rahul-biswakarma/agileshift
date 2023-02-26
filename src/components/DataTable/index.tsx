@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { AgGridReact } from "ag-grid-react/lib/agGridReact";
 import type { GridOptions, GridReadyEvent } from "ag-grid-community";
-import { useAppDispatch } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
 import { IdComponent } from "./idComponent";
 import tagComponent from "./tagComponent";
@@ -22,11 +22,6 @@ interface CustomGridOptions extends GridOptions {
 	autoHeight?: boolean;
 }
 
-type Type_DataTableProps = {
-	dataSchema: Array<TYPE_SCHEMA>;
-	datas: any;
-	fieldColor: string;
-};
 type Type_AgGridColsDefs = Array<{
 	field: string;
 	maxWidth?: number;
@@ -38,7 +33,7 @@ type Type_AgGridColsDefs = Array<{
 	wrapText?: boolean;
 }>;
 
-const DataTable = (props: Type_DataTableProps) => {
+const DataTable = () => {
 	const dispatch = useAppDispatch();
 	const gridRef = useRef<any>();
 	const defaultColDef = useMemo<any>(() => {
@@ -47,6 +42,10 @@ const DataTable = (props: Type_DataTableProps) => {
 			resizable: true,
 		};
 	}, []);
+
+	const dataSchema = useAppSelector((state) => state.datatable.dataSchema);
+	const fieldColor = useAppSelector((state) => state.datatable.fieldColor);
+	const datas = useAppSelector((state) => state.datatable.datas);
 
 	const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
 
@@ -60,7 +59,7 @@ const DataTable = (props: Type_DataTableProps) => {
 					field: rowData.field,
 					color: rowData.color,
 					data: rowData,
-					schema: props.dataSchema,
+					schema: dataSchema,
 				})
 			);
 		},
@@ -76,11 +75,11 @@ const DataTable = (props: Type_DataTableProps) => {
 
 	const setDataForAgGrid = useCallback(() => {
 		let tempColumnDefs: Type_AgGridColsDefs = [];
-		props.dataSchema.map((schema: TYPE_SCHEMA) => {
+		dataSchema.map((schema: TYPE_SCHEMA) => {
 			function idComponentWrapper(params: any) {
 				return (
 					<IdComponent
-						color={props.fieldColor}
+						color={fieldColor}
 						itemId={params.value}
 					/>
 				);
@@ -133,13 +132,13 @@ const DataTable = (props: Type_DataTableProps) => {
 		setColumnDefs(tempColumnDefs);
 
 		let allColDefsFromSchema: any = [];
-		props.dataSchema.map((schema: TYPE_SCHEMA) => {
+		dataSchema.map((schema: TYPE_SCHEMA) => {
 			allColDefsFromSchema.push(schema.columnName);
 			return "";
 		});
 
-		setRowData(props.datas);
-	}, [props.dataSchema, props.datas, props.fieldColor]);
+		setRowData(datas);
+	}, [dataSchema, datas, fieldColor]);
 
 	useEffect(() => {
 		// Setting AgGridColumnsDefitions
