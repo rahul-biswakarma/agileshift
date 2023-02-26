@@ -58,10 +58,10 @@ const Filter = (props:Type_FilterProps) => {
     
     const modifyActiveState = (index:number) => {
         const newArray = [...modifiedSchema];
-        if(newArray[index].active == "1"){
+        if(newArray[index].active === "1"){
             newArray[index].active = "0";   
 
-        }else if(newArray[index].active == "0"){
+        }else if(newArray[index].active === "0"){
             newArray[index].active = "1";
         }
         setModifiedSchema(newArray);
