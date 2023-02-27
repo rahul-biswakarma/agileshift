@@ -4,7 +4,7 @@ import {
 } from "../../Utils/Backend";
 
 type Type_IssuesIdComponentProps = {
-	issuesId: string;
+	itemId: string;
 	color: string;
 };
 
@@ -19,7 +19,7 @@ const IdComponent = (props: Type_IssuesIdComponentProps) => {
 			}}
 			className="w-max h-[20px] rounded-[4px] font-fira_code rounded-[8px] text-blue-600 text-center px-[8px] flex justify-center items-center text-[12px] font-[500]"
 		>
-			{props.issuesId}
+			{props.itemId}
 		</div>
 	);
 };

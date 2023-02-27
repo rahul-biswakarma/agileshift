@@ -1,5 +1,13 @@
-import React, { useState, useMemo, useRef, useEffect } from "react";
+import React, {
+	useState,
+	useMemo,
+	useRef,
+	useEffect,
+	useCallback,
+} from "react";
 import { AgGridReact } from "ag-grid-react/lib/agGridReact";
+import type { GridOptions, GridReadyEvent } from "ag-grid-community";
+import { useAppDispatch } from "../../redux/hooks";
 
 import { IdComponent } from "./idComponent";
 import tagComponent from "./tagComponent";
@@ -8,11 +16,16 @@ import stringComponent from "./stringComponent";
 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
+import { setSideBar } from "../../redux/reducers/SideBarSlice";
+
+interface CustomGridOptions extends GridOptions {
+	autoHeight?: boolean;
+}
 
 type Type_DataTableProps = {
-	dataSchema: { color: string; schema: Array<TYPE_SCHEMA> };
+	dataSchema: Array<TYPE_SCHEMA>;
 	datas: any;
-	feildColor: string;
+	fieldColor: string;
 };
 type Type_AgGridColsDefs = Array<{
 	field: string;
@@ -26,6 +39,7 @@ type Type_AgGridColsDefs = Array<{
 }>;
 
 const DataTable = (props: Type_DataTableProps) => {
+	const dispatch = useAppDispatch();
 	const gridRef = useRef<any>();
 	const defaultColDef = useMemo<any>(() => {
 		return {
@@ -33,31 +47,47 @@ const DataTable = (props: Type_DataTableProps) => {
 			resizable: true,
 		};
 	}, []);
+
 	const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
 
-	// const onGridReady = (params: any) => {
-	// 	params.api.sizeColumnsToFit();
-	// };
+	const gridOptions: CustomGridOptions = {
+		detailRowAutoHeight: true,
+		rowSelection: "single",
+		onRowClicked: function (event) {
+			let rowData = event.data;
+			dispatch(
+				setSideBar({
+					field: rowData.field,
+					color: rowData.color,
+					data: rowData,
+					schema: props.dataSchema,
+				})
+			);
+		},
+	};
 
-	const [rowData, setRowData] = useState();
-
+	const [rowData, setRowData] = useState<any>();
 	const [columnDefs, setColumnDefs] = useState<Type_AgGridColsDefs>([]);
 
-	useEffect(() => {
-		// Setting AgGridColumnsDefitions
+	const onGridReady = (params: GridReadyEvent) => {
+		const { api } = params;
+		api.sizeColumnsToFit();
+	};
+
+	const setDataForAgGrid = useCallback(() => {
 		let tempColumnDefs: Type_AgGridColsDefs = [];
-		props.dataSchema.schema.map((schema: TYPE_SCHEMA) => {
+		props.dataSchema.map((schema: TYPE_SCHEMA) => {
 			function idComponentWrapper(params: any) {
 				return (
 					<IdComponent
-						color={props.dataSchema.color}
-						issuesId={params.value}
+						color={props.fieldColor}
+						itemId={params.value}
 					/>
 				);
 			}
 			if (schema.columnType === "id")
 				tempColumnDefs.push({
-					field: schema.columnTitle,
+					field: schema.columnName,
 					maxWidth: 200,
 					minWidth: 200,
 					cellRenderer: idComponentWrapper,
@@ -67,7 +97,8 @@ const DataTable = (props: Type_DataTableProps) => {
 				});
 			else if (schema.columnType === "tag") {
 				tempColumnDefs.push({
-					field: schema.columnTitle,
+					field: schema.columnName,
+					minWidth: 250,
 					cellRenderer: tagComponent,
 					cellClass: ["flex", "items-center", "cell-style-class", "gap-[5px]"],
 					headerClass: ["header-style-class"],
@@ -75,7 +106,8 @@ const DataTable = (props: Type_DataTableProps) => {
 				});
 			} else if (schema.columnType === "user") {
 				tempColumnDefs.push({
-					field: schema.columnTitle,
+					field: schema.columnName,
+					minWidth: 200,
 					cellRenderer: userComponent,
 					cellClass: ["flex", "items-center", "cell-style-class", "gap-[5px]"],
 					headerClass: ["header-style-class"],
@@ -83,8 +115,8 @@ const DataTable = (props: Type_DataTableProps) => {
 				});
 			} else {
 				tempColumnDefs.push({
-					field: schema.columnTitle,
-					minWidth: 100,
+					field: schema.columnName,
+					minWidth: 200,
 					cellRenderer: stringComponent,
 					cellClass: [
 						"flex",
@@ -101,24 +133,18 @@ const DataTable = (props: Type_DataTableProps) => {
 		setColumnDefs(tempColumnDefs);
 
 		let allColDefsFromSchema: any = [];
-		props.dataSchema.schema.map((schema: TYPE_SCHEMA) => {
-			allColDefsFromSchema.push(schema.columnTitle.toLowerCase());
+		props.dataSchema.map((schema: TYPE_SCHEMA) => {
+			allColDefsFromSchema.push(schema.columnName);
 			return "";
 		});
 
-		// Setting AgGridRowsData
-		let tempRowData: any = [];
-		props.datas.map((row: any) => {
-			let tempRow: { [key: string]: any } = {};
-			allColDefsFromSchema.map((colTitle: string) => {
-				tempRow[colTitle] = row[colTitle.toLowerCase()];
-				return "";
-			});
-			tempRowData.push(tempRow);
-			return "";
-		});
-		setRowData(tempRowData);
-	}, [props.datas, props.dataSchema]);
+		setRowData(props.datas);
+	}, [props.dataSchema, props.datas, props.fieldColor]);
+
+	useEffect(() => {
+		// Setting AgGridColumnsDefitions
+		setDataForAgGrid();
+	}, [setDataForAgGrid]);
 
 	return (
 		<div
@@ -128,14 +154,14 @@ const DataTable = (props: Type_DataTableProps) => {
 			<AgGridReact
 				ref={gridRef}
 				rowData={rowData}
-				rowHeight={50}
+				rowHeight={55}
+				animateRows={true}
 				columnDefs={columnDefs}
 				defaultColDef={defaultColDef}
-				onGridSizeChanged={() => {
-					gridRef.current.api.sizeColumnsToFit();
-				}}
+				onGridSizeChanged={onGridReady}
 				domLayout={"autoHeight"}
 				suppressHorizontalScroll={false}
+				gridOptions={gridOptions}
 			></AgGridReact>
 		</div>
 	);

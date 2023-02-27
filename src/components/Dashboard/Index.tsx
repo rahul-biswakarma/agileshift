@@ -1,91 +1,53 @@
-import React from "react";
-import DataTable from "../DataTable";
+import React, { useState, useEffect, useCallback } from "react";
+import BuildQuadarnt from "../BuildQuadrant";
 
-import NavBar from "./NavBar";
-import SearchComponent from "./SearchComponent";
+import { get_schema_data, get_data_by_column_name } from "../../Utils/Backend";
+
+import Header from "./Header";
+import TabHeader from "./TabHeader";
+import { useAppSelector } from "../../redux/hooks";
 
 export default function Dashboard() {
-  const [selectedTab, setSelectedTab] = React.useState<string>("Dashboard");
+	const organizationId = useAppSelector((state) => state.auth.organisationId);
+	const [selectedTab, setSelectedTab] = React.useState<string>("Dashboard");
+	const [dataSchema, setDataSchema] = useState<TYPE_FIELD[]>();
+	const [data, setData] = useState();
 
-  let dummyData = [
-    {
-      id: "TKT-1",
-      title: "Add Responsiveness",
-      owner: {
-        name: "Rahul",
-        avatar:
-          "https://i.pinimg.com/236x/52/fe/87/52fe873be054e7f8345c65281b02c63b.jpg",
-      },
-      tag: [
-        {
-          color: "#FFFFFF",
-          tagName: "Now",
-        },
-      ],
-    },
-    {
-      id: "TKT-2",
-      title: "Add Custom Theme",
-      stage: "Queued",
-      owner: {
-        name: "Nikhil",
-        avatar:
-          "https://i.pinimg.com/236x/52/fe/87/52fe873be054e7f8345c65281b02c63b.jpg",
-      },
-      tag: [
-        {
-          color: "#000000",
-          tagName: "Now",
-        },
-        {
-          color: "#123456",
-          tagName: "Now",
-        },
-        {
-          color: "#943f43",
-          tagName: "Now",
-        },
-      ],
-    },
-    {
-      id: "TKT-3",
-      title: "Add Responsiveness",
-      stage: "Work In Progress",
-      owner: {
-        name: "Rahul",
-        avatar:
-          "https://i.pinimg.com/236x/52/fe/87/52fe873be054e7f8345c65281b02c63b.jpg",
-      },
-      tag: [
-        {
-          color: "#FFFFFF",
-          tagName: "Next",
-        },
-      ],
-    },
-  ];
+	useEffect(() => {
+		get_schema_data(organizationId).then((data) => {
+			if (data) setDataSchema(data.schemaData);
+		});
+	}, [organizationId]);
 
-  return (
-    <div className="bg-background_color h-[100vh] font-dm_sans">
-      <header className="p-2 flex flex-row text-primary_font_color justify-between gap-x-4 gap-y-2 h-50">
-        <NavBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
-        <SearchComponent />
-      </header>
+	const getDataByFeildName = useCallback(() => {
+		if (dataSchema)
+			get_data_by_column_name(organizationId, dataSchema[0].name).then(
+				(data) => {
+					setData(data);
+				}
+			);
+	}, [dataSchema, organizationId]);
 
-      <DataTable
-        datas={dummyData}
-        dataSchema={{
-          color: "purple",
-          schema: [
-            { columnTitle: "id", columnType: "id" },
-            { columnTitle: "title", columnType: "title" },
-            { columnTitle: "stage", columnType: "string" },
-            { columnTitle: "owner", columnType: "user" },
-            { columnTitle: "tag", columnType: "tag" },
-          ],
-        }}
-        feildColor="purple"
-      />
-    </div>
-  );
+	useEffect(() => {
+		getDataByFeildName();
+	}, [getDataByFeildName]);
+
+	return (
+		<div className="bg-background_color h-[100vh] font-dm_sans">
+			<Header />
+			{dataSchema && (
+				<TabHeader
+					selectedTab={selectedTab}
+					setSelectedTab={setSelectedTab}
+					fieldsData={dataSchema}
+				/>
+			)}
+			{dataSchema && data && (
+				<BuildQuadarnt
+					fieldData={dataSchema[0]}
+					datas={data}
+				/>
+			)}
+		</div>
+	);
 }

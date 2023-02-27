@@ -7,13 +7,11 @@ type type_props = {
   type: string;
   defaultValue: string | Array<string>;
   setFunction: any;
-  fieldData:any;
+  fieldData: any;
   label: string;
+  sidebarIndex: number;
 };
 export default function SideBarInputs(props: type_props) {
-  console.log(props, "**");
-  
-  
   if (["dropdown"].includes(props.type)) {
     return (
       <div>
@@ -21,7 +19,8 @@ export default function SideBarInputs(props: type_props) {
           defaultValue={props.defaultValue}
           label={props.label}
           setFunction={props.setFunction}
-          fieldData = {props.fieldData}
+          fieldData={props.fieldData}
+          sidebarIndex={props.sidebarIndex}
         />
       </div>
     );
@@ -32,7 +31,7 @@ export default function SideBarInputs(props: type_props) {
         defaultValue={props.defaultValue}
         label={props.label}
         setFunction={props.setFunction}
-        fieldData = {props.fieldData}
+        fieldData={props.fieldData}
       />
     );
   }
@@ -43,7 +42,7 @@ export default function SideBarInputs(props: type_props) {
         defaultValue={props.defaultValue}
         label={props.label}
         setFunction={props.setFunction}
-        fieldData = {props.fieldData}
+        fieldData={props.fieldData}
       />
     );
   }

@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Dashboard from "./components/Dashboard/Index";
 
+import Dashboard from "./components/Dashboard/Index";
 import { Login } from "./components/OnBoarding/Login";
 import { SignUp } from "./components/OnBoarding/Signup";
 import OrganizationList from "./components/ManageOrganization/OrganizationList";
@@ -12,12 +12,14 @@ import { setUserId } from "./redux/reducers/AuthSlice";
 import { SidebarWrapper } from "./components/Sidebar/SidebarWrapper";
 
 const App = () => {
-	const userId = getFromSession("userId");
+	const userIdFromSession = getFromSession("userId");
 	const dispatch = useAppDispatch();
-	if(userId){
-		dispatch(setUserId(userId));
+
+	if (userIdFromSession) {
+		dispatch(setUserId(userIdFromSession));
 	}
-	const sideBarList = useAppSelector((state)=>state.sidebar.sideBarData)
+
+	const sideBarList = useAppSelector((state) => state.sidebar.sideBarData);
 	return (
 		<BrowserRouter>
 			{sideBarList.length !== 0 && (
@@ -28,7 +30,13 @@ const App = () => {
 			<Routes>
 				<Route
 					path=""
-					element={userId?<Navigate to="/orglist" />:<Navigate to="/signup" />}
+					element={
+						userIdFromSession ? (
+							<Navigate to="/organization-lists" />
+						) : (
+							<Navigate to="/signup" />
+						)
+					}
 				/>
 				<Route
 					path="/signup"
@@ -43,24 +51,37 @@ const App = () => {
 					element={<Dashboard />}
 				/>
 				<Route
-					path="/orglist"
+					path="/organization-lists"
 					element={<OrganizationList />}
 				/>
 				<Route
-					path="/createOrg"
+					path="/create-organization"
 					element={<GeneratorFormsContainer />}
 				/>
-        <Route
+				<Route
+					path="/organization/:id"
+					element={<Dashboard />}
+				/>
+				<Route
+					path="/organization"
+					element={<Navigate to="/organization-lists" />}
+				/>
+				<Route
 					path="/filters"
-					element={<Filter schema={[
-						{ columnTitle: "Title", columnType: "string" },
-						{ columnTitle: "Stage", columnType: "string" },
-						{ columnTitle: "User", columnType: "string" },
-						{ columnTitle: "Tags", columnType: "tag" },
-						{ columnTitle: "Severity", columnType: "string" },
-						{ columnTitle: "Type", columnType: "string" },
-						{ columnTitle: "Part", columnType: "string" }
-					]} />}
+					element={
+						<Filter
+							schema={[
+								{ columnTitle: "Title", columnType: "string" },
+								{ columnTitle: "Stage", columnType: "string" },
+								{ columnTitle: "User", columnType: "string" },
+								{ columnTitle: "Tags", columnType: "tag" },
+								{ columnTitle: "Severity", columnType: "string" },
+								{ columnTitle: "Type", columnType: "string" },
+								{ columnTitle: "Rev Org", columnType: "string" },
+								{ columnTitle: "Part", columnType: "string" },
+							]}
+						/>
+					}
 				/>
 			</Routes>
 		</BrowserRouter>

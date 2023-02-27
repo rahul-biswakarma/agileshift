@@ -22,7 +22,7 @@ module.exports = {
 				Secondary_background_color: "#1F1F1F", //color use in navBar and serch
 
 				//Sidebar
-				sidebar_bg:"#262626",
+				sidebar_bg: "#262626",
 			},
 			fontFamily: {
 				inter: ["Inter", "sans-serif"],

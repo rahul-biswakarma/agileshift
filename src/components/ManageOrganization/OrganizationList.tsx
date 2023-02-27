@@ -1,59 +1,83 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import PlusIcon from "../../assets/icons/plus-icon.svg";
 import { useAppSelector } from "../../redux/hooks";
 import { get_user_by_id } from "../../Utils/Backend";
-import {OrganizationCard} from "./OrganizationCard";
+import { OrganizationCard } from "./OrganizationCard";
 import { get_organizations_details } from "../../Utils/Backend";
 
 const OrganizationList: React.FunctionComponent = () => {
 	const [user, setUser] = useState<any>();
-	const [organizations, setOrganizations] = useState<any>(undefined);
-	const organizationList  = useAppSelector((state) => state.auth.organisationList);
-	const userId  = useAppSelector((state) => state.auth.userId);
+	const [organization, setOrganizations] = useState<any>([]);
+	const userId = useAppSelector((state) => state.auth.userId);
 
 	useEffect(() => {
 		const getUserObj = async () => {
-			await get_user_by_id(userId).then((data) => {
-				setUser(data);
-			})
-		}
-
-		const orgList:any = []
-		organizationList.map(async (orgId) => {
-			const orgObject = await get_organizations_details(orgId.trim());
-			orgList.push(orgObject);
-		})
-		setOrganizations(orgList);
+			const data = await get_user_by_id(userId);
+			setUser(data);
+		};
 		getUserObj();
-	},[organizationList, userId]);
-	
+	}, [userId]);
+
+	useEffect(() => {
+		const getOrganizationsDetails = async () => {
+			if (user && user.organisation) {
+				const organizations = await Promise.all(
+					user.organisation.map(async (orgId: any) => {
+						const orgObject = await get_organizations_details(orgId);
+						return orgObject;
+					})
+				);
+				setOrganizations(organizations);
+			}
+		};
+		if (user) getOrganizationsDetails();
+	}, [user]);
+
 	const navigate = useNavigate();
 
 	return (
 		<div className="bg-background_color h-screen w-screen flex items-center justify-center font-dm_sans">
-			<div className="w-[350px] flex flex-col gap-5">
+			<div className="w-[500px] flex flex-col gap-5">
 				<div className="text-highlight_font_color">
-					<h3 className="text-xl mb-2">Create or Join a AgileShift Org</h3>
-					<p className="text-primary_font_color text-sm">We found following organizations that matches your email address - {user?.email}</p>  
+					<h3 className="text-[1.5rem] mb-2 font-[600]">
+						Create or Join a AgileShift Org
+					</h3>
+					{/* Change this to dynamic username */}
+					<p className="text-primary_font_color text-sm">
+						We found following organizations that matches your email address -{" "}
+						<span className="font-fira_code text-purple-400">
+							{user?.email}
+						</span>
+					</p>
 				</div>
 				<div className="text-highlight_font_color flex flex-col gap-5 my-5">
-					<h4 className="text-md">You AgileOrgs <span className="p-2 rounded-md bg-Secondary_background_color">{organizations?.length}</span></h4>
-					{
-						organizations && organizations?.map((orgData:any, index:number) => {
-							return <OrganizationCard key={index} name={orgData?.name} orgId={orgData?.id} url={orgData?.id} />
-						})
-					}
+					<div className="text-md flex justify-between p-2">
+						<p>Your AgileOrgs</p>
+						<p className="p-[2px_15px] rounded-md bg-Secondary_background_color">
+							{organization?.length}
+						</p>
+					</div>
+					<div className="flex flex-col gap-[1rem] max-h-[40vh] overflow-auto px-[0.3rem]">
+						{organization.map((orgData: any, index: number) => {
+							return (
+								<OrganizationCard
+									key={`oraganization-${index}`}
+									name={orgData?.name}
+									orgId={orgData?.id}
+								/>
+							);
+						})}
+					</div>
 				</div>
-				<button onClick={() => navigate("/createOrg")} className="flex gap-4 items-center justify-center border border-dark_gray py-4 rounded-lg text-highlight_font_color">
-					<img
-						src={PlusIcon}
-						alt="Plus Icon"
-						className="w-4 h-4"
-					/>
+				<button
+					onClick={() => navigate("/create-organization")}
+					className="flex gap-4 items-center justify-center py-4 rounded-lg text-highlight_font_color bg-Secondary_background_color hover:bg-purple-300 hover:text-purple-800 transition-all"
+				>
+					<span className="material-symbols-outlined">add</span>
 					Create new AgileOrg
 				</button>
 			</div>
+			{/* <UploadJSON schemaType="tickets"/> */}
 		</div>
 	);
 };
