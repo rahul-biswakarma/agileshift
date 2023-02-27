@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { renderFilterData } from "../../Utils/Filter";
 import DisplayFilters from "./DisplayFilters";
 
 interface Type_FilterProps {
@@ -134,6 +135,7 @@ const Filter = (props: Type_FilterProps) => {
         }
 
         setFilterSchema(newFilterSchema);
+        renderFilterData(filterSchema);
     }
 
 	const modifyActiveState = (index: number) => {
