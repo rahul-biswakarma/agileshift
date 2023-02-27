@@ -1,7 +1,7 @@
 import React from "react";
 import close_icon from "../../assets/icons/close_icon.svg";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setSideBar } from "../../redux/reducers/SideBarSlice";
+import { setNewSidBar } from "../../redux/reducers/SideBarSlice";
 import { HeaderIdComponent } from "./HeaderIdComponent";
 import { RootState } from "../../redux/store";
 
@@ -9,7 +9,7 @@ type Type_SidebarState = {
   field: string;
   data: any;
   color: string;
-  schema:any;
+  schema: any;
   index: number;
 };
 
@@ -25,9 +25,13 @@ const Header = (props: Type_HeaderProps) => {
 
   const dispatch = useAppDispatch();
   const handleClose = () => {
-    console.log("Close");
+    console.log(
+      "***index",
+      props.state.index,
+      sideBarLists.filter((sideBar, index) => index !== props.state.index)
+    );
     dispatch(
-      setSideBar(
+      setNewSidBar(
         sideBarLists.filter((sideBar, index) => index !== props.state.index)
       )
     );

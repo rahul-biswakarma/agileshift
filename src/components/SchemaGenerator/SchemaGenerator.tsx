@@ -6,9 +6,12 @@ import {
 	SelectChangeEvent,
 	MenuItem,
 } from "@mui/material";
+import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 
 import { SchemaGeneratorForm } from "./SchemaGeneratorForm";
 import UploadJSON from "../UploadJSON";
+import { RootState } from "../../redux/store";
+import { setActiveTab } from "../../redux/reducers/SchemaSlice";
 
 require("tailwindcss-writing-mode")({
 	variants: ["responsive", "hover"],
@@ -20,8 +23,6 @@ type GeneratorPropTypes = {
 	setName: (this: any, name: string) => void;
 	list: TYPE_SCHEMA[];
 	setList: (this: any, list: TYPE_SCHEMA[]) => void;
-	activeTab: number;
-	setActiveTab: React.Dispatch<React.SetStateAction<number>>;
 	getAllFieldsName: () => string[];
 	submitSchema: () => void;
 	duplicateSchema: (this: any) => void;
@@ -36,8 +37,6 @@ export const SchemaGenerator = ({
 	setName,
 	list,
 	setList,
-	activeTab,
-	setActiveTab,
 	getAllFieldsName,
 	submitSchema,
 	duplicateSchema,
@@ -64,6 +63,11 @@ export const SchemaGenerator = ({
 		} = event;
 		setSelectedOptions(typeof value === "string" ? value.split(",") : value);
 	};
+
+	const activeTab = useAppSelector(
+		(state: RootState) => state.schema.activeTab
+	);
+	const dispatch = useAppDispatch();
 
 	if (activeTab === id)
 		return (
@@ -218,7 +222,7 @@ export const SchemaGenerator = ({
 			<div className="h-screen w-12 flex flex-wrap text-primary_font_color bg-Secondary_background_color">
 				<button
 					className="h-full w-full"
-					onClick={() => setActiveTab(id)}
+					onClick={() => dispatch(setActiveTab(id))}
 				>
 					<span className="[writing-mode:vertical-rl] text-sm font-[600] uppercase font-fira_code">
 						{name} Schema Form

@@ -18,7 +18,6 @@ type Type_DetailsProps = {
 };
 
 const DataForm = (props: Type_DetailsProps) => {
-
   const [tabs, setTabs] = React.useState<any>({});
   const [selectedTab, setSelectedTab] = React.useState("");
 
@@ -30,7 +29,10 @@ const DataForm = (props: Type_DetailsProps) => {
     Object.keys(props.state.schema).forEach((key) => {
       tempTabData[props.state.schema[key]].push(key);
     });
-    setSelectedTab(Object.keys(tempTabData)[0]);
+
+    setSelectedTab(
+      Object.keys(tempTabData).filter((key) => key !== "title")[0]
+    );
     setTabs(tempTabData);
   }, [props.state.schema]);
 
