@@ -1,7 +1,7 @@
 import React from "react";
 import close_icon from "../../assets/icons/close_icon.svg";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setNewSidBar, setSideBar } from "../../redux/reducers/SideBarSlice";
+import { setNewSidBar } from "../../redux/reducers/SideBarSlice";
 import { HeaderIdComponent } from "./HeaderIdComponent";
 
 type Type_SidebarState = {

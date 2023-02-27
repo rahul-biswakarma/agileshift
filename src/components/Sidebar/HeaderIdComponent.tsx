@@ -37,8 +37,9 @@ const HeaderIdComponent = (props: Type_HeaderIdComponentProps) => {
   useEffect(() => {
     if (fieldList.length > 0) {
       setSelectedField(fieldList[0]);
-      props.setState({ ...props.state, field: fieldList[0] });
+      // props.setState({ ...props.state, field: fieldList[0] }); do not delete this line
     }
+    console.log("check loop");
   }, [fieldList]);
 
   const handleFieldChange = async (e: SelectChangeEvent) => {
