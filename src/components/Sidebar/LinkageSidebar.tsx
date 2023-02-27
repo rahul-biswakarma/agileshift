@@ -1,10 +1,17 @@
 import Select from "react-select";
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { ShowItem } from "./ShowItem";
-import { get_data_by_column_name } from "../../Utils/Backend";
-export const LinkageSidebar = () => {
+import { get_data_by_column_name, get_schema_data } from "../../Utils/Backend";
+import { IdComponent } from "../DataTable/idComponent";
+
+type LinkageSidebarPropType = {
+  field: TYPE_FIELD;
+};
+
+export const LinkageSidebar = (props: LinkageSidebarPropType) => {
   const [fetchData, setFetchData] = useState(true);
 
+  const organisationId = "SYaaoVaHDndguU9d9lsy";
   // interface MyObject {
   //   type: string;
   //   data: {};
@@ -121,36 +128,106 @@ export const LinkageSidebar = () => {
   const [selectedOptions, setSelectedOptions] = useState<typeof options>([]);
 
   const handleSelectChange = (selected: any) => {
+    console.log("clicked");
+    console.log(selected);
     setSelectedOptions(selected);
   };
-  useEffect(() => {
-    const getAllData = async () => {
-      console.log("fetching data");
-      const allData = await get_data_by_column_name(
-        "BvglwNksA7aAMQGEsn0a",
-        "all"
-      );
-      console.log(allData);
-      let formattedData = [];
-      for (let data of allData) {
-        formattedData.push({
-          value: data["id"],
-          label: data["id"],
-          id: data["id"],
-          color: data["color"],
-          title: "hello",
-        });
-      }
-      setOptions(formattedData);
-      console.log(formattedData);
-    };
-    if (fetchData) {
-      getAllData();
-      setFetchData(false);
+
+  const formatSchemaDataToTypeField = (data: any) => {
+    let formattedData: TYPE_FIELD[] = [];
+    for (let item of data) {
+      formattedData.push({
+        name: item["name"],
+        list: item["list"],
+        icon: item["icon"],
+        linkage: item["linkage"],
+        color: item["color"],
+      });
     }
-  }, [fetchData]);
+    return formattedData;
+  };
+
+  const getTitleFromSchemaData = useCallback(
+    (schemaData: TYPE_FIELD[], name: string) => {
+      let title = "";
+      schemaData.forEach((data) => {
+        if (data["name"] === name) {
+          for (let column of data.list) {
+            if (column.columnType === "title") {
+              title = column.columnName;
+            }
+          }
+        }
+      });
+      return title;
+    },
+    []
+  );
+
+  const getColorFromSchemaData = (schemaData: TYPE_FIELD[], name: string) => {
+    let color = "";
+    schemaData.forEach((data) => {
+      if (data["name"] === name) {
+        color = data["color"];
+      }
+    });
+    return color;
+  };
+
+  const getAllData = async () => {
+    console.log("fetching data");
+    let allData = await get_data_by_column_name(organisationId, "all");
+    allData = allData.filter((data: any) =>
+      props.field.linkage.includes(data["field"])
+    );
+    console.log(allData);
+
+    console.log(props.field, "field");
+
+    const schemaData = await get_schema_data(organisationId);
+    console.log(schemaData, "schemaData");
+    let title = "",
+      color = "";
+    if (schemaData) {
+      title = getTitleFromSchemaData(
+        formatSchemaDataToTypeField(schemaData["schemaData"]),
+        "Tickets"
+      );
+      color = getColorFromSchemaData(
+        formatSchemaDataToTypeField(schemaData["schemaData"]),
+        props.field.name
+      );
+    }
+    console.log(title, "title");
+    console.log(color, "color");
+    let formattedData = [];
+    for (let data of allData) {
+      let color = getColorFromSchemaData(
+        formatSchemaDataToTypeField(schemaData!["schemaData"]),
+        data["field"]
+      );
+      let title = getTitleFromSchemaData(
+        formatSchemaDataToTypeField(schemaData!["schemaData"]),
+        data["field"]
+      );
+      formattedData.push({
+        value: data["id"],
+        label: data[title],
+        id: data["id"],
+        color: color,
+        title: data[title],
+      });
+      console.log(data.field);
+    }
+    setOptions(formattedData);
+    console.log(formattedData);
+  };
+  if (fetchData) {
+    getAllData();
+    setFetchData(false);
+  }
   return (
-    <div className="w-1/3 h-fullbg-sidebar_bg backdrop-filter backdrop-blur-lg bg-opacity-60 border border-primary_font_color">
+    <div className="flex flex-col justify-between w-1/3 h-screen bg-sidebar_bg backdrop-filter backdrop-blur-lg bg-opacity-60 border border-primary_font_color">
       <Select
         closeMenuOnSelect={false}
         isMulti
@@ -162,9 +239,14 @@ export const LinkageSidebar = () => {
         }}
       />
 
-      {selectedOptions.map((item: any) => (
-        <div className="text-white">{item.label}</div>
-      ))}
+      <div className="">
+        {selectedOptions.map((item: any) => (
+          <div className="text-white my-4">
+            <IdComponent itemId={item.value} color={item.color} />
+            {item.title}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

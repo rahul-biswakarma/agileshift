@@ -9,6 +9,7 @@ import { getFromSession } from "./Utils/Auth";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import { setUserId } from "./redux/reducers/AuthSlice";
 import { SidebarWrapper } from "./components/Sidebar/SidebarWrapper";
+import { LinkageSidebar } from "./components/Sidebar/LinkageSidebar";
 
 const App = () => {
   const userIdFromSession = getFromSession("userId");
@@ -53,6 +54,20 @@ const App = () => {
         <Route
           path="/organization"
           element={<Navigate to="/organization-lists" />}
+        />
+        <Route
+          path="/linkage-sidebar"
+          element={
+            <LinkageSidebar
+              field={{
+                name: "Issues",
+                list: [],
+                color: "purple",
+                icon: "home",
+                linkage: ["Tickets", "Issues"],
+              }}
+            />
+          }
         />
       </Routes>
     </BrowserRouter>
