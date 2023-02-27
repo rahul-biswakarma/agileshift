@@ -7,7 +7,7 @@ type type_props = {
   label: string;
   fieldData: any;
 };
-export default function Input(props: type_props) {
+export default function DatePicker(props: type_props) {
   return (
     <div>
       <div className="flex mt-[0.3rem] bg-background_color">
@@ -18,7 +18,7 @@ export default function Input(props: type_props) {
           data-testid="email-input"
           value={props.defaultValue}
           className="w-full h-[2.5rem] bg-background_color focus:outline-none rounded-r px-4 code-font font-dm_sans"
-          type="text"
+          type="date"
           placeholder={props.label}
           onChange={(e) =>
             props.setFunction({

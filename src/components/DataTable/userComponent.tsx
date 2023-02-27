@@ -1,21 +1,37 @@
-import React from "react";
+import React, { useEffect, useCallback } from "react";
+import { get_user_by_id } from "../../Utils/Backend";
 
-const UsersType = (props: any) => {
-	console.log(props);
+type Type_UsersTypeProps = {
+	value: any;
+};
+
+const UsersType = (props: Type_UsersTypeProps) => {
+	const [avatar, setAvatar] = React.useState<any>();
+	const [name, setName] = React.useState<any>();
+
+	const getUser = useCallback(async () => {
+		get_user_by_id(props.value).then((res) => {
+			if (res && res.name && res.avatar) {
+				setAvatar(res.avatar);
+				setName(res.name);
+			}
+		});
+	}, [props.value]);
+
+	useEffect(() => {
+		getUser();
+	}, [getUser]);
+
 	return (
 		<div className="flex items-center">
-			{props.value.avatar !== undefined &&
-			props.value.avatar !== null &&
-			props.value.avatar !== "" ? (
+			{avatar !== undefined && avatar !== null && avatar !== "" ? (
 				<img
 					className="w-8 h-8 rounded-full"
-					src={`${props.value.avatar}`}
-					alt={`${props.value.name}`}
+					src={`${avatar}`}
+					alt={`${name}`}
 				/>
-			) : props.value.avatar !== undefined &&
-			  props.value.avatar !== null &&
-			  props.value.avatar !== "" ? (
-				<span className="font-dm_sans text-[15px]">{props.value.name}</span>
+			) : avatar !== undefined && avatar !== null && avatar !== "" ? (
+				<span className="font-dm_sans text-[15px]">{name}</span>
 			) : (
 				"-"
 			)}

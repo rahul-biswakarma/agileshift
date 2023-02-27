@@ -21,22 +21,22 @@ export const authWithGithub = () => {
 //Function to handle authentication from google
 export const authWithGoogle = () => {
 	const provider = new GoogleAuthProvider();
-	const navigate = signInWithPopupCall(provider)
-    console.log(navigate);
+	const navigate = signInWithPopupCall(provider);
+	console.log(navigate);
 };
 
-export const storeInSession = (itemName:string,itemData:string) =>{
-	if(itemData){
+export const storeInSession = (itemName: string, itemData: string) => {
+	if (itemData) {
 		sessionStorage.setItem(itemName, itemData);
 	}
-}
+};
 
-export const getFromSession = (itemName:string) =>{
-	if(itemName){
-		return sessionStorage.getItem(itemName)
+export const getFromSession = (itemName: string) => {
+	if (itemName) {
+		return sessionStorage.getItem(itemName);
 	}
 	return "";
-}
+};
 
 //Function for popup auth
 const signInWithPopupCall = (
@@ -44,18 +44,14 @@ const signInWithPopupCall = (
 ) => {
 	signInWithPopup(auth, provider)
 		.then(async (result: any) => {
-
 			const user = result.user;
 			const isUser = await check_users_database(user.uid);
-            
 
 			if (isUser) {
 				const organisationList = await get_users_organization(user.uid);
-				console.log(organisationList);
-                store.dispatch(setUserId(user.uid));
-                if(organisationList)
-                    store.dispatch(setOrganisationList(organisationList));
-				
+				store.dispatch(setUserId(user.uid));
+				if (organisationList)
+					store.dispatch(setOrganisationList(organisationList));
 			} else {
 				let userDetails: TYPE_USER = {
 					id: user.uid,
@@ -69,7 +65,7 @@ const signInWithPopupCall = (
 				await create_user(userDetails);
 				store.dispatch(setUserId(user.uid));
 			}
-			storeInSession("userId",user.uid)
+			storeInSession("userId", user.uid);
 		})
 		.catch((error) => {
 			const errorMessage = error.message;

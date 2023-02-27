@@ -3,22 +3,26 @@ import React, { useRef, SyntheticEvent, useState } from "react";
 import LockIcon from "../../assets/icons/lock-icon.svg";
 import EmailIcon from "../../assets/icons/email-icon.svg";
 import ArrowIcon from "../../assets/icons/arrow-icon.svg";
-import { get_users_organization, get_user_by_email, sendEmail } from "../../Utils/Backend";
+import {
+	get_users_organization,
+	get_user_by_email,
+	sendEmail,
+} from "../../Utils/Backend";
 import { useAppDispatch } from "../../redux/hooks";
 import { setOrganisationList, setUserId } from "../../redux/reducers/AuthSlice";
 import { useNavigate } from "react-router-dom";
 import { storeInSession } from "../../Utils/Auth";
 
 type Type_Login_State = {
-	onOtp:boolean,
-	otp:number
-}
+	onOtp: boolean;
+	otp: number;
+};
 
 const LoginForm = () => {
 	const [state, setState] = useState<Type_Login_State>({
-		onOtp:false,
-		otp:0
-	})
+		onOtp: false,
+		otp: 0,
+	});
 
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
@@ -31,22 +35,22 @@ const LoginForm = () => {
 		e: SyntheticEvent<HTMLButtonElement, MouseEvent>
 	) {
 		e.preventDefault();
-		if(passwordInputRef.current){
-			const passwordInput:number = parseInt(passwordInputRef.current.value);
+		if (passwordInputRef.current) {
+			const passwordInput: number = parseInt(passwordInputRef.current.value);
 
-			if (passwordInput){
-				if(passwordInput===state.otp && emailInputRef.current){
-					const userData:any = await get_user_by_email(emailInputRef.current.value)
-					const userId = userData.id
+			if (passwordInput) {
+				if (passwordInput === state.otp && emailInputRef.current) {
+					const userData: any = await get_user_by_email(
+						emailInputRef.current.value
+					);
+					const userId = userData.id;
 					const organizationList = await get_users_organization(userId);
-					console.log(organizationList);
 					dispatch(setUserId(userId));
-					if(organizationList)
-						dispatch(setOrganisationList(organizationList));
-					storeInSession("userId",userId)
-					navigate("/orglist");
+					if (organizationList) dispatch(setOrganisationList(organizationList));
+					storeInSession("userId", userId);
+					navigate("/organization-lists");
 				}
-			}else {
+			} else {
 				emailInputRef.current!.style.borderColor = "red";
 				emailLabelRef.current!.innerText = "Please enter valid otp";
 			}
@@ -58,25 +62,24 @@ const LoginForm = () => {
 
 	const handleNext = async (
 		e: SyntheticEvent<HTMLButtonElement, MouseEvent>
-	) =>{
+	) => {
 		e.preventDefault();
 		let emailInput = emailInputRef.current?.value;
-		
+
 		let emailPattern = new RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$");
 
-		if (emailInput && emailPattern.test(emailInput!)){
-			const sentOtp = await sendEmail(emailInput)
-			if(sentOtp)
-				setState({...state, onOtp:true, otp:sentOtp});
-			else{
+		if (emailInput && emailPattern.test(emailInput!)) {
+			const sentOtp = await sendEmail(emailInput);
+			if (sentOtp) setState({ ...state, onOtp: true, otp: sentOtp });
+			else {
 				emailInputRef.current!.style.borderColor = "red";
 				emailLabelRef.current!.innerText = "Unable to send OTP";
 			}
-		}else {
+		} else {
 			emailInputRef.current!.style.borderColor = "red";
 			emailLabelRef.current!.innerText = "Please enter valid email address";
 		}
-	}
+	};
 
 	return (
 		<form className="py-[3rem] flex flex-col gap-[2rem] font-dm_sans">
@@ -107,7 +110,7 @@ const LoginForm = () => {
 					/>
 				</div>
 			</div>
-			{state.onOtp?
+			{state.onOtp ? (
 				<React.Fragment>
 					<div>
 						<label
@@ -138,27 +141,31 @@ const LoginForm = () => {
 						onClick={(e) => handleLoginFormSubmit(e)}
 						className="bg-blue_1 hover:bg-blue_2 p-[0rem_2rem] h-[2.5rem] rounded flex  items-center justify-center font-dm_sans"
 					>
-						<span className="code-font text-sm text-white font-dm_sans">Login</span>
+						<span className="code-font text-sm text-white font-dm_sans">
+							Login
+						</span>
 						<img
 							className="w-5 h-auto ml-[1rem]"
 							src={ArrowIcon}
 							alt="arrow icon"
 						/>
 					</button>
-				</React.Fragment>:
+				</React.Fragment>
+			) : (
 				<button
 					onClick={(e) => handleNext(e)}
 					className="bg-blue_1 hover:bg-blue_2 p-[0rem_2rem] h-[2.5rem] rounded flex  items-center justify-center font-dm_sans"
 				>
-					<span className="code-font text-sm text-white font-dm_sans">Next</span>
+					<span className="code-font text-sm text-white font-dm_sans">
+						Next
+					</span>
 					<img
 						className="w-5 h-auto ml-[1rem]"
 						src={ArrowIcon}
 						alt="arrow icon"
 					/>
 				</button>
-			}
-				
+			)}
 		</form>
 	);
 };

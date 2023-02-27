@@ -8,18 +8,16 @@ import { useAppSelector } from "../../redux/hooks";
 import { Outlet, useNavigate } from "react-router-dom";
 
 const SignUp = () => {
-
 	const userId = useAppSelector((state) => state.auth.userId);
-	let navigate = useNavigate(); 
+	let navigate = useNavigate();
 
 	useEffect(() => {
 		document.title = "Sign into AgileShift";
 	}, []);
 
-	useEffect(()=>{
-		if(userId.length>0)
-			navigate("/orglist");
-	}, [userId, navigate])
+	useEffect(() => {
+		if (userId.length > 0) navigate("/organization-lists");
+	}, [userId, navigate]);
 
 	return (
 		<div

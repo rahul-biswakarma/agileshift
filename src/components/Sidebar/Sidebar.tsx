@@ -41,6 +41,16 @@ const Sidebar = (props: Type_SidebarProps) => {
     index: props.index,
   });
 
+  React.useEffect(() => {
+    setState({
+      field: props.field,
+      color: props.color,
+      data: props.data,
+      schema: props.schema,
+      index: props.index,
+    });
+  }, [props.field, props.color, props.data, props.schema, props.index, props]);
+
   const [formData, setFormData] = useState<any>([]);
   const [updateFormData, setUpdateFormData] = useState<boolean>(true);
 
@@ -60,10 +70,7 @@ const Sidebar = (props: Type_SidebarProps) => {
   }
 
   if (updateFormData && !isArray(state.schema)) {
-    console.log("In update", "**");
-
     const propsSchema = state.schema;
-    // console.log(propsSchema, "**");
     let tempFormData: TYPE_SCHEMA = {};
     Object.keys(propsSchema).forEach((value: any) => {
       if (state.data[value]) {
@@ -73,24 +80,24 @@ const Sidebar = (props: Type_SidebarProps) => {
         tempFormData[value] = "";
       }
     });
-    console.log(tempFormData, "**");
 
     setFormData(tempFormData);
     setUpdateFormData(false);
-    // console.log(tempFormData);
   }
 
   return (
     <div
       className={`${
         props.tabColaps ? "w-[50px] flex items-center" : "w-1/3"
-      } h-screen  bg-sidebar_bg backdrop-filter backdrop-blur-lg bg-opacity-60 border border-primary_font_color`}>
+      } h-screen  bg-sidebar_bg backdrop-filter backdrop-blur-lg bg-opacity-60 border border-primary_font_color`}
+    >
       {props.tabColaps ? (
         <div
           className="[writing-mode:vertical-rl] h-full w-full flex justify-center items-center text-xl cursor-pointer hover:bg-background_color rounded-lg py-4"
           onClick={() => {
             props.setColapsTabBar(props.index);
-          }}>
+          }}
+        >
           {state.field}
         </div>
       ) : state.field === "Linkage" ? (

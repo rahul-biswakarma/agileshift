@@ -14,7 +14,7 @@ export const ShowItem = (props: OptionProps<ShowItemPropType>) => {
   const { data, isSelected, isFocused } = props;
   return (
     <div className="w-max">
-      <IdComponent issuesId={data.id} color={data.color} />
+      <IdComponent itemId={data.id} color={data.color} />
       {data.title && <span>{data.title}</span>}
     </div>
   );

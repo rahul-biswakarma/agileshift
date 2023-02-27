@@ -1,16 +1,26 @@
 import { useState } from "react";
-import { useAppSelector } from "../../redux/hooks";
+import { useNavigate } from "react-router-dom";
 import { RootState } from "../../redux/store";
 import { create_schema } from "../../Utils/Backend";
 import { OrganisationForm } from "../ManageOrganization/OrganisationForm";
 import { NewSchema } from "./NewSchema";
 import { SchemaGenerator } from "./SchemaGenerator";
 
+import { useAppSelector, useAppDispatch } from "../../redux/hooks";
+import { setActiveTab } from "../../redux/reducers/SchemaSlice";
+
 export const GeneratorFormsContainer = () => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  let activeTab = useAppSelector((state: RootState) => state.schema.activeTab);
+
   const defaultColumnList: TYPE_SCHEMA[] = [
-    { columnName: "Title", columnType: "string" },
+    { columnName: "Name", columnType: "title" },
     { columnName: "Created By", columnType: "user" },
     { columnName: "Tag", columnType: "tag" },
+    { columnName: "Owner", columnType: "user" },
+    { columnName: "Deadline", columnType: "date" },
   ];
 
   const makeActualCopy = (columnList: TYPE_SCHEMA[]): TYPE_SCHEMA[] => {
@@ -21,7 +31,7 @@ export const GeneratorFormsContainer = () => {
     return newColumnList;
   };
 
-  const [activeTab, setActiveTab] = useState("Organisation");
+  // const [activeTab, dispatch(setActiveTab(] = useState(-1));
 
   const [fields, setFields] = useState<TYPE_FIELD[]>([
     {
@@ -61,56 +71,54 @@ export const GeneratorFormsContainer = () => {
   function changeName(this: any, name: string) {
     let tempFields = [...fields];
     tempFields[this.id].name = name;
-    setActiveTab(name);
     setFields(tempFields);
   }
 
-  function changeColor(this: any, color: string) {
-    let tempFields = [...fields];
-    tempFields[this.id].color = color;
-    setFields(tempFields);
-  }
+  // function addLinkage(this: any, link: string) {
+  // 	let tempFields = [...fields];
+  // 	tempFields[this.id].linkage.push(link);
+  // 	setFields(tempFields);
+  // }
 
-  function addLinkage(this: any, link: string) {
-    let tempFields = [...fields];
-    tempFields[this.id].linkage.push(link);
-    setFields(tempFields);
-  }
+  // function changeLinkage(this: any, link: string[]) {
+  // 	let tempFields = [...fields];
+  // 	tempFields[this.id].linkage = link;
+  // 	setFields(tempFields);
+  // }
 
-  function removeLinkage(this: any, link: string) {
-    let tempFields = [...fields];
-    let tempLinkage = tempFields[this.id].linkage;
-    const index = tempLinkage.indexOf(link);
-    if (index > -1) {
-      tempLinkage.splice(index, 1);
-    }
-    tempFields[this.id].linkage = tempLinkage;
-    setFields(tempFields);
-  }
+  // function removeLinkage(this: any, link: string) {
+  // 	let tempFields = [...fields];
+  // 	let tempLinkage = tempFields[this.id].linkage;
+  // 	const index = tempLinkage.indexOf(link);
+  // 	if (index > -1) {
+  // 		tempLinkage.splice(index, 1);
+  // 	}
+  // 	tempFields[this.id].linkage = tempLinkage;
+  // 	setFields(tempFields);
+  // }
 
   const submitSchema = () => {
-    create_schema(organisationId, fields);
-    console.log(organisationId, fields);
+    create_schema(organisationId, fields, false);
+    navigate(`/organization/${organisationId}`);
   };
 
   const addSchema = () => {
     let tempFields = [...fields];
-    for (let field of tempFields) {
-      if (field.name === "") {
-        alert("First fill the name of all the work items");
-        return;
-      }
+    let lastField = tempFields[tempFields.length - 1];
+    if (lastField.name === "") {
+      alert("First fill the name");
+      return;
     }
     let newSchema: TYPE_FIELD = {
       list: makeActualCopy(defaultColumnList),
       name: "",
-      color: "purple",
-      icon: "home",
+      color: "",
+      icon: "",
       linkage: [],
     };
     tempFields.push(newSchema);
     setFields(tempFields);
-    setActiveTab("");
+    dispatch(setActiveTab(activeTab + 1));
   };
 
   function duplicateSchema(this: any) {
@@ -127,27 +135,37 @@ export const GeneratorFormsContainer = () => {
       .slice(0, this.id + 1)
       .concat(newField, fields.slice(this.id + 1));
     setFields(duplicatedArray);
-    setActiveTab("");
+    dispatch(setActiveTab(activeTab + 1));
+  }
+
+  function deleteSchema(this: any) {
+    let tempFields = [...fields];
+    tempFields.splice(this.id, 1);
+    setFields(tempFields);
+    dispatch(setActiveTab(activeTab - 1));
+  }
+
+  function changeColor(this: any, color: string) {
+    let tempFields = [...fields];
+    tempFields[this.id].color = color;
+    setFields(tempFields);
   }
 
   return (
     <div className="w-screen h-screen flex divide-x divide-dark_gray">
-      <OrganisationForm activeTab={activeTab} setActiveTab={setActiveTab} />
+      <OrganisationForm />
       {fields.map((field, id) => (
         <SchemaGenerator
+          id={id}
           name={field.name}
           setName={changeName.bind({ id: id })}
           list={field.list}
           setList={changeList.bind({ id: id })}
-          linkage={field.linkage}
-          addLinkage={addLinkage.bind({ id: id })}
-          removeLinkage={removeLinkage.bind({ id: id })}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
           getAllFieldsName={getAllFieldsName}
           key={id}
           submitSchema={submitSchema}
           duplicateSchema={duplicateSchema.bind({ id: id })}
+          deleteSchema={deleteSchema.bind({ id: id })}
           color={field.color}
           changeColor={changeColor.bind({ id: id })}
         />

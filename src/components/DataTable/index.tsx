@@ -1,5 +1,13 @@
-import React, { useState, useMemo, useRef, useEffect } from "react";
+import React, {
+	useState,
+	useMemo,
+	useRef,
+	useEffect,
+	useCallback,
+} from "react";
 import { AgGridReact } from "ag-grid-react/lib/agGridReact";
+import type { GridOptions, GridReadyEvent } from "ag-grid-community";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
 import { IdComponent } from "./idComponent";
 import tagComponent from "./tagComponent";
@@ -8,12 +16,12 @@ import stringComponent from "./stringComponent";
 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
+import { setSideBar } from "../../redux/reducers/SideBarSlice";
 
-type Type_DataTableProps = {
-	dataSchema: { color: string; schema: Array<TYPE_SCHEMA> };
-	datas: any;
-	feildColor: string;
-};
+interface CustomGridOptions extends GridOptions {
+	autoHeight?: boolean;
+}
+
 type Type_AgGridColsDefs = Array<{
 	field: string;
 	maxWidth?: number;
@@ -25,7 +33,8 @@ type Type_AgGridColsDefs = Array<{
 	wrapText?: boolean;
 }>;
 
-const DataTable = (props: Type_DataTableProps) => {
+const DataTable = () => {
+	const dispatch = useAppDispatch();
 	const gridRef = useRef<any>();
 	const defaultColDef = useMemo<any>(() => {
 		return {
@@ -33,31 +42,51 @@ const DataTable = (props: Type_DataTableProps) => {
 			resizable: true,
 		};
 	}, []);
+
+	const dataSchema = useAppSelector((state) => state.datatable.dataSchema);
+	const fieldColor = useAppSelector((state) => state.datatable.fieldColor);
+	const datas = useAppSelector((state) => state.datatable.datas);
+
 	const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
 
-	// const onGridReady = (params: any) => {
-	// 	params.api.sizeColumnsToFit();
-	// };
+	const gridOptions: CustomGridOptions = {
+		detailRowAutoHeight: true,
+		rowSelection: "single",
+		onRowClicked: function (event) {
+			let rowData = event.data;
+			dispatch(
+				setSideBar({
+					field: rowData.field,
+					color: rowData.color,
+					data: rowData,
+					schema: dataSchema,
+				})
+			);
+		},
+	};
 
-	const [rowData, setRowData] = useState();
-
+	const [rowData, setRowData] = useState<any>();
 	const [columnDefs, setColumnDefs] = useState<Type_AgGridColsDefs>([]);
 
-	useEffect(() => {
-		// Setting AgGridColumnsDefitions
+	const onGridReady = (params: GridReadyEvent) => {
+		const { api } = params;
+		api.sizeColumnsToFit();
+	};
+
+	const setDataForAgGrid = useCallback(() => {
 		let tempColumnDefs: Type_AgGridColsDefs = [];
-		props.dataSchema.schema.map((schema: TYPE_SCHEMA) => {
+		dataSchema.map((schema: TYPE_SCHEMA) => {
 			function idComponentWrapper(params: any) {
 				return (
 					<IdComponent
-						color={props.dataSchema.color}
-						issuesId={params.value}
+						color={fieldColor}
+						itemId={params.value}
 					/>
 				);
 			}
 			if (schema.columnType === "id")
 				tempColumnDefs.push({
-					field: schema.columnTitle,
+					field: schema.columnName,
 					maxWidth: 200,
 					minWidth: 200,
 					cellRenderer: idComponentWrapper,
@@ -67,7 +96,8 @@ const DataTable = (props: Type_DataTableProps) => {
 				});
 			else if (schema.columnType === "tag") {
 				tempColumnDefs.push({
-					field: schema.columnTitle,
+					field: schema.columnName,
+					minWidth: 250,
 					cellRenderer: tagComponent,
 					cellClass: ["flex", "items-center", "cell-style-class", "gap-[5px]"],
 					headerClass: ["header-style-class"],
@@ -75,7 +105,8 @@ const DataTable = (props: Type_DataTableProps) => {
 				});
 			} else if (schema.columnType === "user") {
 				tempColumnDefs.push({
-					field: schema.columnTitle,
+					field: schema.columnName,
+					minWidth: 200,
 					cellRenderer: userComponent,
 					cellClass: ["flex", "items-center", "cell-style-class", "gap-[5px]"],
 					headerClass: ["header-style-class"],
@@ -83,8 +114,8 @@ const DataTable = (props: Type_DataTableProps) => {
 				});
 			} else {
 				tempColumnDefs.push({
-					field: schema.columnTitle,
-					minWidth: 100,
+					field: schema.columnName,
+					minWidth: 200,
 					cellRenderer: stringComponent,
 					cellClass: [
 						"flex",
@@ -101,42 +132,51 @@ const DataTable = (props: Type_DataTableProps) => {
 		setColumnDefs(tempColumnDefs);
 
 		let allColDefsFromSchema: any = [];
-		props.dataSchema.schema.map((schema: TYPE_SCHEMA) => {
-			allColDefsFromSchema.push(schema.columnTitle.toLowerCase());
+		dataSchema.map((schema: TYPE_SCHEMA) => {
+			allColDefsFromSchema.push(schema.columnName);
 			return "";
 		});
 
-		// Setting AgGridRowsData
-		let tempRowData: any = [];
-		props.datas.map((row: any) => {
-			let tempRow: { [key: string]: any } = {};
-			allColDefsFromSchema.map((colTitle: string) => {
-				tempRow[colTitle] = row[colTitle.toLowerCase()];
-				return "";
-			});
-			tempRowData.push(tempRow);
-			return "";
-		});
-		setRowData(tempRowData);
-	}, [props.datas, props.dataSchema]);
+		setRowData(datas);
+	}, [dataSchema, datas, fieldColor]);
+
+	useEffect(() => {
+		// Setting AgGridColumnsDefitions
+		setDataForAgGrid();
+	}, [setDataForAgGrid]);
 
 	return (
 		<div
 			className="ag-theme-alpine"
 			style={gridStyle}
 		>
-			<AgGridReact
-				ref={gridRef}
-				rowData={rowData}
-				rowHeight={50}
-				columnDefs={columnDefs}
-				defaultColDef={defaultColDef}
-				onGridSizeChanged={() => {
-					gridRef.current.api.sizeColumnsToFit();
-				}}
-				domLayout={"autoHeight"}
-				suppressHorizontalScroll={false}
-			></AgGridReact>
+			{rowData && rowData.length > 0 ? (
+				<AgGridReact
+					ref={gridRef}
+					rowData={rowData}
+					rowHeight={55}
+					animateRows={true}
+					columnDefs={columnDefs}
+					defaultColDef={defaultColDef}
+					onGridSizeChanged={onGridReady}
+					domLayout={"autoHeight"}
+					suppressHorizontalScroll={false}
+					gridOptions={gridOptions}
+				></AgGridReact>
+			) : (
+				<div>
+					<div className="flex border-b-[1px] border-white/10 pb-[0.5rem]">
+						{dataSchema.map((schema) => {
+							return (
+								<p className="text-white w-full min-w-[200px] border-r-[1px] border-white/10 p-[0.2rem_1rem] font-dm_sans">
+									{schema.columnName}
+								</p>
+							);
+						})}
+					</div>
+					<p className="text-white text-center py-[3rem]">No Data</p>
+				</div>
+			)}
 		</div>
 	);
 };
