@@ -4,8 +4,6 @@ import BuildQuadarnt from "../BuildQuadrant";
 import {
   get_schema_data,
   get_data_by_column_name,
-  get_all_columns_name,
-  get_user_suggestions,
 } from "../../Utils/Backend";
 
 import Header from "./Header";
