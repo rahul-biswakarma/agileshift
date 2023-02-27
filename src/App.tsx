@@ -10,6 +10,7 @@ import { getFromSession } from "./Utils/Auth";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import { setUserId } from "./redux/reducers/AuthSlice";
 import { SidebarWrapper } from "./components/Sidebar/SidebarWrapper";
+import { LinkageSidebar } from "./components/Sidebar/LinkageSidebar";
 
 const App = () => {
   const userId = getFromSession("userId");
@@ -37,6 +38,7 @@ const App = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/orglist" element={<OrganizationList />} />
         <Route path="/createOrg" element={<GeneratorFormsContainer />} />
+        <Route path="/linkage-sidebar" element={<LinkageSidebar />} />
         <Route
           path="/filters"
           element={

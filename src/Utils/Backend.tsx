@@ -263,9 +263,9 @@ export const get_tabs_name = async (organisationId: string) => {
   const docSnap = await getDoc(docRef);
   let fieldList = [];
   if (docSnap.exists()) {
-    fieldList=docSnap.data()["schemaData"].map((item: any) => {
+    fieldList = docSnap.data()["schemaData"].map((item: any) => {
       return item.name;
-    })
+    });
     console.log(fieldList);
   } else {
     console.log("No such document!");
@@ -325,12 +325,11 @@ export const get_schema_data_field = async (
   field: string
 ) => {
   console.log(organisationId);
-  
+
   const docRef = doc(db, "schemas", organisationId);
   const docSnap = await getDoc(docRef);
   let schemaFromField = {};
   if (docSnap.exists()) {
-    
     docSnap.data()["schemaData"].forEach((item: any) => {
       if (item.name === field) {
         schemaFromField = item;
@@ -338,7 +337,6 @@ export const get_schema_data_field = async (
     });
 
     console.log(schemaFromField, "**");
-    
   } else {
     console.log("No such document!");
   }
@@ -423,4 +421,21 @@ export const update_data_to_database = async (
       data: updatedData,
     });
   }
+};
+
+// 27 get data by coloumn name
+export const get_data_by_column_name = async (
+  organisationId: string,
+  field: string
+) => {
+  const orgData: any = await get_organizations_details(organisationId);
+  let data: any = [];
+  if (orgData.data && orgData.data.length > 0) {
+    orgData.data.forEach((item: any) => {
+      if (item["field"] === field || field === "all") {
+        data.push(item);
+      }
+    });
+  }
+  return data;
 };
