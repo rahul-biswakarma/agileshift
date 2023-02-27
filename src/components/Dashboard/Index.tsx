@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import BuildQuadarnt from "../BuildQuadrant";
+import { RootState } from "../../redux/store";
 
 import { get_schema_data, get_data_by_column_name } from "../../Utils/Backend";
 
@@ -8,7 +9,7 @@ import TabHeader from "./TabHeader";
 import { useAppSelector } from "../../redux/hooks";
 
 export default function Dashboard() {
-	const organizationId = useAppSelector((state) => state.auth.organisationId);
+	const organizationId = useAppSelector((state:RootState) => state.auth.organisationId);
 	const [selectedTab, setSelectedTab] = React.useState<string>("Dashboard");
 	const [dataSchema, setDataSchema] = useState<TYPE_FIELD[]>();
 	const [data, setData] = useState();

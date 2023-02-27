@@ -10,6 +10,7 @@ import { getFromSession } from "./Utils/Auth";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import { setUserId } from "./redux/reducers/AuthSlice";
 import { SidebarWrapper } from "./components/Sidebar/SidebarWrapper";
+import { RootState } from "./redux/store";
 
 const App = () => {
 	const userIdFromSession = getFromSession("userId");
@@ -19,7 +20,7 @@ const App = () => {
 		dispatch(setUserId(userIdFromSession));
 	}
 
-	const sideBarList = useAppSelector((state) => state.sidebar.sideBarData);
+	const sideBarList = useAppSelector((state:RootState) => state.sidebar.sideBarData);
 	return (
 		<BrowserRouter>
 			{sideBarList.length !== 0 && (

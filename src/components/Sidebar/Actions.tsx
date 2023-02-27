@@ -1,6 +1,7 @@
 import React from "react";
 import { useAppSelector } from "../../redux/hooks";
 import { update_data_to_database } from "../../Utils/Backend";
+import { RootState } from "../../redux/store";
 
 type Type_SidebarState = {
   field: string;
@@ -18,7 +19,7 @@ type Type_DetailsProps = {
 };
 
 const Actions = (props: Type_DetailsProps) => {
-  let organizationId = useAppSelector((state) => state.auth.organisationId);
+  let organizationId = useAppSelector((state:RootState) => state.auth.organisationId);
   organizationId = "zB2drPSZDjsAec5hG7wA";
 
   const saveData = async () => {
