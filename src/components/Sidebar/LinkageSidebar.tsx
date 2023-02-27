@@ -1,11 +1,8 @@
 import Select from "react-select";
 import { useEffect, useState } from "react";
 import { ShowItem } from "./ShowItem";
-import { SelectChangeEvent } from "@mui/material";
 import { get_data_by_column_name } from "../../Utils/Backend";
-import { useAppSelector } from "../../redux/hooks";
 export const LinkageSidebar = () => {
-  const organisationId = useAppSelector((state) => state.auth.organisationId);
   const [fetchData, setFetchData] = useState(true);
 
   // interface MyObject {
@@ -103,28 +100,28 @@ export const LinkageSidebar = () => {
       color: "#FFFFFF", // Set the input text color here
     }),
   };
-  const formatOptions = (value: Array<string>) => {
-    let data: {
-      value: string;
-      label: string;
-    }[] = [];
-    if (value) {
-      value.forEach((item) => {
-        data.push({
-          value: item,
-          label: item,
-        });
-      });
-    }
-    return data;
-  };
+  // const formatOptions = (value: Array<string>) => {
+  //   let data: {
+  //     value: string;
+  //     label: string;
+  //   }[] = [];
+  //   if (value) {
+  //     value.forEach((item) => {
+  //       data.push({
+  //         value: item,
+  //         label: item,
+  //       });
+  //     });
+  //   }
+  //   return data;
+  // };
+  // const formatOutputVlue = (value: any) => {
+  //   return value.map((item: any) => item["value"]);
+  // };
   const [selectedOptions, setSelectedOptions] = useState<typeof options>([]);
 
   const handleSelectChange = (selected: any) => {
     setSelectedOptions(selected);
-  };
-  const formatOutputVlue = (value: any) => {
-    return value.map((item: any) => item["value"]);
   };
   useEffect(() => {
     const getAllData = async () => {

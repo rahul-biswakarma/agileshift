@@ -11,7 +11,7 @@ type ShowItemPropType = {
 };
 
 export const ShowItem = (props: OptionProps<ShowItemPropType>) => {
-  const { data, isSelected, isFocused } = props;
+  const { data } = props;
   return (
     <div className="w-max">
       <IdComponent itemId={data.id} color={data.color} />

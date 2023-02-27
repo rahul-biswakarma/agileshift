@@ -9,7 +9,6 @@ import { getFromSession } from "./Utils/Auth";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import { setUserId } from "./redux/reducers/AuthSlice";
 import { SidebarWrapper } from "./components/Sidebar/SidebarWrapper";
-import { LinkageSidebar } from "./components/Sidebar/LinkageSidebar";
 
 const App = () => {
   const userIdFromSession = getFromSession("userId");
