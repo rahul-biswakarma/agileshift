@@ -12,3 +12,28 @@ export function sortObjectKeysByArrayLength(obj: any) {
   // Return the sorted keys
   return keys;
 }
+
+export const getNoOfDays = (dateOfCreation:Date):number=>{
+  const creationDate = new Date(dateOfCreation)
+  let today = new Date();
+  let diff = Math.abs(today.getTime() - creationDate.getTime());
+  
+  let diffDays = Math.floor(diff / (1000 * 3600 * 24));
+  
+  return diffDays;
+}
+
+export const removeDuplicates = (arr: any) => {
+  return arr.reduce((unique: any, item: any) => {
+    // Check if the current item already exists in the new array
+    const index = unique.findIndex(
+      (obj: any) =>
+        obj.columnName === item.columnName && obj.columnType === item.columnType
+    );
+    if (index === -1) {
+      // If not, add it to the new array
+      unique.push(item);
+    }
+    return unique;
+  }, []);
+};

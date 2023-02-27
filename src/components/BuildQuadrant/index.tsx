@@ -1,7 +1,12 @@
-import React from "react";
+import { useAppDispatch } from "../../redux/hooks";
 
 import DataTable from "../DataTable";
 import BuildQuadarntHeader from "./BuildQuadarntHeader";
+import {
+	setDatas,
+	setDataSchema,
+	setFieldColor,
+} from "../../redux/reducers/DataTableSlice";
 
 type Type_BuildQuadarntProps = {
 	fieldData: TYPE_FIELD;
@@ -9,15 +14,16 @@ type Type_BuildQuadarntProps = {
 };
 
 const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
+	const dispatch = useAppDispatch();
+	dispatch(setFieldColor(props.fieldData.color));
+	dispatch(setDatas(props.datas));
+	dispatch(setDataSchema(props.fieldData.list));
+
 	return (
 		<div>
-			<BuildQuadarntHeader itemName={props.fieldData.name} />
+			<BuildQuadarntHeader />
 			<main className="p-[1rem]">
-				<DataTable
-					datas={props.datas}
-					dataSchema={props.fieldData.list}
-					fieldColor={props.fieldData.color}
-				/>
+				<DataTable />
 			</main>
 		</div>
 	);

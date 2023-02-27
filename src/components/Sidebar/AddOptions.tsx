@@ -6,6 +6,7 @@ type Type_AddOptionsProps = {
   index: number;
 };
 export default function AddOptions(props: Type_AddOptionsProps) {
+  console.log("add opitons");
   return (
     <div>
       {props.tabColaps ? (

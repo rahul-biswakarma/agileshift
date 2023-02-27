@@ -1,33 +1,37 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { getFromSession, storeInSession } from "../../Utils/Auth";
 
 interface AuthState {
-    userId: string,
-    organisationId: string,
-    organisationList : string[]
+  userId: string;
+  organisationId: any;
+  organisationList: string[];
 }
 
 const initialState: AuthState = {
-    userId: "",
-    organisationId: "",
-    organisationList: []
-}
+  userId: "",
+  organisationId: getFromSession("organisationId"),
+  organisationList: [],
+};
 
 export const AuthSlice = createSlice({
-    name:"auth",
-    initialState,
-    reducers:{
-        setUserId: (state, action: PayloadAction<string>) => {
-            state.userId = action.payload
-        },
-        setOrganisationList: (state, action: PayloadAction<string[]>) => {
-            state.organisationList = action.payload
-        },
-        setOrganisationId: (state, action: PayloadAction<string>) => {
-            state.organisationId = action.payload
-        }
-    }
-})
+  name: "auth",
+  initialState,
+  reducers: {
+    setUserId: (state, action: PayloadAction<string>) => {
+      state.userId = action.payload;
+    },
+    setOrganisationList: (state, action: PayloadAction<string[]>) => {
+      state.organisationList = action.payload;
+    },
+    setOrganisationId: (state, action: PayloadAction<string>) => {
+      storeInSession("organisationId", action.payload);
 
-export const {setUserId, setOrganisationId, setOrganisationList} = AuthSlice.actions
+      state.organisationId = action.payload;
+    },
+  },
+});
 
-export default AuthSlice.reducer
+export const { setUserId, setOrganisationId, setOrganisationList } =
+  AuthSlice.actions;
+
+export default AuthSlice.reducer;
