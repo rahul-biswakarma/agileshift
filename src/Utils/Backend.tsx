@@ -78,6 +78,8 @@ const get_current_time = () => {
 25 get user by email
 26 add && edit data (from sidebar)
 // 27 get data by coloumn name
+
+30 set notification
 */
 
 // 1
@@ -456,3 +458,49 @@ export const set_dropdown_options = async (
 		"dropdowns-options": orgData["dropdowns-options"],
 	});
 };
+
+//30 set notification
+export const set_notification = async (
+	organisationId: string,
+	userId: string,
+	dataId: string,
+	notificationData: string
+) => {
+	let orgData: any = await get_organizations_details(organisationId);
+	
+	const notification = {
+		dataId: dataId,
+		notificationData: notificationData,
+		notificationId:generateRandomId(),
+		dateOfCreation: get_current_time(),
+		isSeen: false,
+	}
+	if(orgData["notifications"][userId] === undefined){
+		orgData["notifications"][userId] = [];
+	}
+	orgData["notifications"][userId].push(notification);
+	const organizationRef = doc(db, "organizations", organisationId);
+	await updateDoc(organizationRef, {
+		notifications: orgData["notifications"],
+	});
+}
+
+// 31 update notification
+export const update_notification = async (
+	organisationId: string,
+	userId: string,
+	notification:any
+) => {
+	const organizationRef = doc(db, "organizations", organisationId);
+	let docSnap: any = await getDoc(organizationRef);
+	let updatedNotification: any = docSnap
+		.data()
+		["notifications"]
+	let filteredNotification = updatedNotification[userId].filter((item: any) => item.notificationId !== notification.notificationId);
+	
+	filteredNotification.push(notification);
+	updatedNotification[userId] = filteredNotification;
+	await updateDoc(organizationRef, {
+		notifications: updatedNotification,
+	});
+}

@@ -12,3 +12,13 @@ export function sortObjectKeysByArrayLength(obj: any) {
   // Return the sorted keys
   return keys;
 }
+
+export const getNoOfDays = (dateOfCreation:Date):number=>{
+  const creationDate = new Date(dateOfCreation)
+  let today = new Date();
+  let diff = Math.abs(today.getTime() - creationDate.getTime());
+  
+  let diffDays = Math.floor(diff / (1000 * 3600 * 24));
+  
+  return diffDays;
+}
