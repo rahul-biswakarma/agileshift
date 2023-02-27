@@ -505,9 +505,8 @@ export const get_all_columns_name = async (organisationId: string) => {
     console.log("No such document!");
   }
   return removeDuplicates(columns);
-  // Convert the Set back to an array using the spread operator
-  return columns;
 };
+
 //  get user suggestions
 export const get_user_suggestions = async (organisationId: string) => {
   let userIsList: any = await get_organizations_details(organisationId);
@@ -522,3 +521,49 @@ export const get_user_suggestions = async (organisationId: string) => {
 
   return userDetails;
 };
+
+//30 set notification
+export const set_notification = async (
+	organisationId: string,
+	userId: string,
+	dataId: string,
+	notificationData: string
+) => {
+	let orgData: any = await get_organizations_details(organisationId);
+	
+	const notification = {
+		dataId: dataId,
+		notificationData: notificationData,
+		notificationId:generateRandomId(),
+		dateOfCreation: get_current_time(),
+		isSeen: false,
+	}
+	if(orgData["notifications"][userId] === undefined){
+		orgData["notifications"][userId] = [];
+	}
+	orgData["notifications"][userId].push(notification);
+	const organizationRef = doc(db, "organizations", organisationId);
+	await updateDoc(organizationRef, {
+		notifications: orgData["notifications"],
+	});
+}
+
+// 31 update notification
+export const update_notification = async (
+	organisationId: string,
+	userId: string,
+	notification:any
+) => {
+	const organizationRef = doc(db, "organizations", organisationId);
+	let docSnap: any = await getDoc(organizationRef);
+	let updatedNotification: any = docSnap
+		.data()
+		["notifications"]
+	let filteredNotification = updatedNotification[userId].filter((item: any) => item.notificationId !== notification.notificationId);
+	
+	filteredNotification.push(notification);
+	updatedNotification[userId] = filteredNotification;
+	await updateDoc(organizationRef, {
+		notifications: updatedNotification,
+	});
+}
