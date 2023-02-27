@@ -7,7 +7,7 @@ import {
 	setDataSchema,
 	setFieldColor,
 } from "../../redux/reducers/DataTableSlice";
-import Filter from "../Filters/Filter";
+// import Filter from "../Filters/Filter";
 
 type Type_BuildQuadarntProps = {
 	fieldData: TYPE_FIELD;
