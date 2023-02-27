@@ -1,11 +1,7 @@
 import React from "react";
 import Select from "react-select";
 import { get_user_suggestions } from "../../Utils/Backend";
-const options = [
-  { value: "chocolate", label: "Chocolate" },
-  { value: "strawberry", label: "Strawberry" },
-  { value: "vanilla", label: "Vanilla" },
-];
+
 const customStyles = {
   control: (provided: any) => ({
     ...provided,
@@ -38,21 +34,7 @@ const customStyles = {
     color: "#FFFFFF", // Set the input text color here
   }),
 };
-const formatOptions = (value: Array<string>) => {
-  let data: {
-    value: string;
-    label: string;
-  }[] = [];
-  if (value) {
-    value.forEach((item) => {
-      data.push({
-        value: item,
-        label: item,
-      });
-    });
-  }
-  return data;
-};
+
 type type_props = {
   defaultValue: any;
   setFunction: any;

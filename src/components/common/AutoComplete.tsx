@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 // import { useSelector } from "react-redux";
 import Select from "react-select";
 import { useAppDispatch } from "../../redux/hooks";
-import { setNewSidBar, setSideBar } from "../../redux/reducers/SideBarSlice";
+import { setNewSidBar } from "../../redux/reducers/SideBarSlice";
 import { RootState } from "../../redux/store";
 // import { RootState } from "../../redux/store";
 const customStyles = {
