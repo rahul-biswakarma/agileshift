@@ -152,6 +152,12 @@ export const GeneratorFormsContainer = () => {
 		setFields(tempFields);
 	}
 
+	function changeIcon(this: any, icon: string) {
+		let tempFields = [...fields];
+		tempFields[this.id].icon = icon;
+		setFields(tempFields);
+	}
+
 	return (
 		<div className="flex flex-col max-h-screen">
 			<SchemaGeneratorFormHeader />
@@ -171,6 +177,8 @@ export const GeneratorFormsContainer = () => {
 						deleteSchema={deleteSchema.bind({ id: id })}
 						color={field.color}
 						changeColor={changeColor.bind({ id: id })}
+						icon={field.icon}
+						changeIcon={changeIcon.bind({ id: id })}
 					/>
 				))}
 				<NewSchema addSchema={addSchema} />
