@@ -139,7 +139,7 @@ export const create_organization = async (
     users: [userId],
     imageUrl: imgUrl,
     tags: [],
-    notifications: [],
+    notifications: {},
     tasks: {},
     data: {},
     dropdownsOptions: {},
@@ -565,5 +565,14 @@ export const update_notification = async (
   updatedNotification[userId] = filteredNotification;
   await updateDoc(organizationRef, {
     notifications: updatedNotification,
+  });
+};
+
+// 33 user active time
+export const user_active_time = async (userId: string) => {
+  const userRef = doc(db, "users", userId);
+  const currentData = get_current_time();
+  await updateDoc(userRef, {
+    active: arrayUnion(currentData),
   });
 };
