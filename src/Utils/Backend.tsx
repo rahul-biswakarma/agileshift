@@ -505,9 +505,8 @@ export const get_all_columns_name = async (organisationId: string) => {
     console.log("No such document!");
   }
   return removeDuplicates(columns);
-  // Convert the Set back to an array using the spread operator
-  return columns;
 };
+
 //  get user suggestions
 export const get_user_suggestions = async (organisationId: string) => {
   let userIsList: any = await get_organizations_details(organisationId);
