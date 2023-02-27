@@ -1,20 +1,19 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
 import { create_schema } from "../../Utils/Backend";
 import { OrganisationForm } from "../ManageOrganization/OrganisationForm";
 import { NewSchema } from "./NewSchema";
 import { SchemaGenerator } from "./SchemaGenerator";
 
-export const GeneratorFormsContainer = () => {
-  //   const [defaultColumnList, setDefaultColumnList] = useState<TYPE_SCHEMA[]>([
-  //     { columnName: "Ticket Name", columnType: "string" },
-  //     { columnName: "Created By", columnType: "user" },
-  //     { columnName: "Tag", columnType: "tags" },
-  //   ]);
+import { useAppSelector, useAppDispatch } from "../../redux/hooks";
+import { setActiveTab } from "../../redux/reducers/SchemaSlice";
 
+export const GeneratorFormsContainer = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  let activeTab = useAppSelector((state: RootState) => state.schema.activeTab);
 
   const defaultColumnList: TYPE_SCHEMA[] = [
     { columnName: "Name", columnType: "title" },
@@ -32,7 +31,7 @@ export const GeneratorFormsContainer = () => {
     return newColumnList;
   };
 
-  const [activeTab, setActiveTab] = useState(-1);
+  // const [activeTab, dispatch(setActiveTab(] = useState(-1));
 
   const [fields, setFields] = useState<TYPE_FIELD[]>([
     {
@@ -75,31 +74,31 @@ export const GeneratorFormsContainer = () => {
     setFields(tempFields);
   }
 
-  function addLinkage(this: any, link: string) {
-    let tempFields = [...fields];
-    tempFields[this.id].linkage.push(link);
-    setFields(tempFields);
-  }
+  // function addLinkage(this: any, link: string) {
+  // 	let tempFields = [...fields];
+  // 	tempFields[this.id].linkage.push(link);
+  // 	setFields(tempFields);
+  // }
 
-  function changeLinkage(this: any, link: string[]) {
-    let tempFields = [...fields];
-    tempFields[this.id].linkage = link;
-    setFields(tempFields);
-  }
+  // function changeLinkage(this: any, link: string[]) {
+  // 	let tempFields = [...fields];
+  // 	tempFields[this.id].linkage = link;
+  // 	setFields(tempFields);
+  // }
 
-  function removeLinkage(this: any, link: string) {
-    let tempFields = [...fields];
-    let tempLinkage = tempFields[this.id].linkage;
-    const index = tempLinkage.indexOf(link);
-    if (index > -1) {
-      tempLinkage.splice(index, 1);
-    }
-    tempFields[this.id].linkage = tempLinkage;
-    setFields(tempFields);
-  }
+  // function removeLinkage(this: any, link: string) {
+  // 	let tempFields = [...fields];
+  // 	let tempLinkage = tempFields[this.id].linkage;
+  // 	const index = tempLinkage.indexOf(link);
+  // 	if (index > -1) {
+  // 		tempLinkage.splice(index, 1);
+  // 	}
+  // 	tempFields[this.id].linkage = tempLinkage;
+  // 	setFields(tempFields);
+  // }
 
   const submitSchema = () => {
-    create_schema(organisationId, fields);
+    create_schema(organisationId, fields, false);
     navigate(`/organization/${organisationId}`);
   };
 
@@ -119,7 +118,7 @@ export const GeneratorFormsContainer = () => {
     };
     tempFields.push(newSchema);
     setFields(tempFields);
-    setActiveTab(activeTab + 1);
+    dispatch(setActiveTab(activeTab + 1));
   };
 
   function duplicateSchema(this: any) {
@@ -136,14 +135,14 @@ export const GeneratorFormsContainer = () => {
       .slice(0, this.id + 1)
       .concat(newField, fields.slice(this.id + 1));
     setFields(duplicatedArray);
-    setActiveTab(activeTab + 1);
+    dispatch(setActiveTab(activeTab + 1));
   }
 
   function deleteSchema(this: any) {
     let tempFields = [...fields];
     tempFields.splice(this.id, 1);
     setFields(tempFields);
-    setActiveTab(activeTab - 1);
+    dispatch(setActiveTab(activeTab - 1));
   }
 
   function changeColor(this: any, color: string) {
@@ -154,7 +153,7 @@ export const GeneratorFormsContainer = () => {
 
   return (
     <div className="w-screen h-screen flex divide-x divide-dark_gray">
-      <OrganisationForm activeTab={activeTab} setActiveTab={setActiveTab} />
+      <OrganisationForm />
       {fields.map((field, id) => (
         <SchemaGenerator
           id={id}
@@ -162,8 +161,6 @@ export const GeneratorFormsContainer = () => {
           setName={changeName.bind({ id: id })}
           list={field.list}
           setList={changeList.bind({ id: id })}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
           getAllFieldsName={getAllFieldsName}
           key={id}
           submitSchema={submitSchema}

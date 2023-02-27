@@ -238,12 +238,20 @@ export const get_organizations_details = async (organisationId: string) => {
 // 14 create a new schema
 export const create_schema = async (
   organisationId: string,
-  schemas: TYPE_FIELD[]
+  schemas: TYPE_FIELD[],
+  isEdit: boolean
 ) => {
-  const schemaDetails = {
-    schemaData: schemas,
-  };
-  await setDoc(doc(db, "schemas", organisationId), schemaDetails);
+  if (isEdit) {
+    const schemaDetails = {
+      schemaData: schemas,
+    };
+    await updateDoc(doc(db, "schemas", organisationId), schemaDetails);
+  } else {
+    const schemaDetails = {
+      schemaData: schemas,
+    };
+    await setDoc(doc(db, "schemas", organisationId), schemaDetails);
+  }
 };
 
 // 15 get schema
@@ -331,8 +339,6 @@ export const get_schema_data_field = async (
         schemaFromField = item;
       }
     });
-
-    console.log(schemaFromField, "**");
   } else {
     console.log("No such document!");
   }
@@ -427,11 +433,13 @@ export const get_data_by_column_name = async (
 ) => {
   const orgData: any = await get_organizations_details(organisationId);
   let data: any = [];
-  orgData.data.forEach((item: any) => {
-    if (item["field"] === field || field === "all") {
-      data.push(item);
-    }
-  });
+  if (orgData.data && orgData.data.length > 0) {
+    orgData.data.forEach((item: any) => {
+      if (item["field"] === field || field === "all") {
+        data.push(item);
+      }
+    });
+  }
   return data;
 };
 // 28 get dropdown options

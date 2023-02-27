@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import { FieldGroup } from "./FieldGroup";
@@ -48,7 +47,7 @@ export const SchemaGeneratorForm = ({
 					<Droppable droppableId="dragableList">
 						{(provided) => (
 							<div
-								className="flex-1 flex flex-col gap-[1rem] transition-all"
+								className="flex-1 flex flex-col gap-[1rem] transition-all pt-[1rem]"
 								{...provided.droppableProps}
 								ref={provided.innerRef}
 							>

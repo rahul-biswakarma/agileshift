@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { get_user_by_id } from "../../Utils/Backend";
 
 type Type_UsersTypeProps = {
@@ -9,14 +9,18 @@ const UsersType = (props: Type_UsersTypeProps) => {
 	const [avatar, setAvatar] = React.useState<any>();
 	const [name, setName] = React.useState<any>();
 
-	useEffect(() => {
+	const getUser = useCallback(async () => {
 		get_user_by_id(props.value).then((res) => {
 			if (res && res.name && res.avatar) {
 				setAvatar(res.avatar);
 				setName(res.name);
 			}
 		});
-	}, []);
+	}, [props.value]);
+
+	useEffect(() => {
+		getUser();
+	}, [getUser]);
 
 	return (
 		<div className="flex items-center">

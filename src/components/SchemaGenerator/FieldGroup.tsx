@@ -21,7 +21,8 @@ export const FieldGroup = ({
   changeColumn,
   deleteColumn,
 }: FieldGroupPropTypes) => {
-  const [displayFields, setDisplayFields] = useState<boolean>(false);
+	const [displayFields, setDisplayFields] = useState<boolean>(false);
+	console.log("FieldGroup: displayFields", displayFields);
 
   const [types] = useState([
     "string",

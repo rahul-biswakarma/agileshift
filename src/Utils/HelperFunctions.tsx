@@ -12,6 +12,7 @@ export function sortObjectKeysByArrayLength(obj: any) {
   // Return the sorted keys
   return keys;
 }
+
 export const removeDuplicates = (arr: any) => {
   return arr.reduce((unique: any, item: any) => {
     // Check if the current item already exists in the new array

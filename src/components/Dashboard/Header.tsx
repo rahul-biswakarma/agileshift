@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { useAppSelector } from "../../redux/hooks";
 
 import logoSvg from "../../assets/logo.svg";
+import { get_user_by_id } from "../../Utils/Backend";
 
 const Header = () => {
 	const [userData, setUserData] = useState<TYPE_USER>({
@@ -11,15 +13,22 @@ const Header = () => {
 		organisation: [""],
 	});
 
+	const userId = useAppSelector((state) => state.auth.userId);
+
 	useEffect(() => {
-		setUserData({
-			id: "123",
-			name: "Rahul",
-			email: "rahul.id39@gmail.com",
-			avatar: "https://cdn.wallpapersafari.com/30/24/Vwmyh9.jpg",
-			organisation: ["dsjbfshj"],
+		get_user_by_id(userId).then((data) => {
+			if (data) {
+				const user = {
+					id: data.id,
+					name: data.name,
+					email: data.email,
+					avatar: data.avatar,
+					organisation: data.organisation,
+				};
+				setUserData(user);
+			}
 		});
-	}, []);
+	}, [userId]);
 
 	return (
 		<div className="p-[1rem_2rem] flex gap-[3rem] justify-between border-[2px] border-Secondary_background_color">
@@ -65,4 +74,3 @@ const Header = () => {
 };
 
 export default Header;
- 
