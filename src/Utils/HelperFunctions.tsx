@@ -22,3 +22,18 @@ export const getNoOfDays = (dateOfCreation:Date):number=>{
   
   return diffDays;
 }
+
+export const removeDuplicates = (arr: any) => {
+  return arr.reduce((unique: any, item: any) => {
+    // Check if the current item already exists in the new array
+    const index = unique.findIndex(
+      (obj: any) =>
+        obj.columnName === item.columnName && obj.columnType === item.columnType
+    );
+    if (index === -1) {
+      // If not, add it to the new array
+      unique.push(item);
+    }
+    return unique;
+  }, []);
+};

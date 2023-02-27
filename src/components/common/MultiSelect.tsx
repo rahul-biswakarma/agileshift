@@ -1,10 +1,7 @@
 import React from "react";
 import Select from "react-select";
-const options = [
-  { value: "chocolate", label: "Chocolate" },
-  { value: "strawberry", label: "Strawberry" },
-  { value: "vanilla", label: "Vanilla" },
-];
+import { get_user_suggestions } from "../../Utils/Backend";
+
 const customStyles = {
   control: (provided: any) => ({
     ...provided,
@@ -37,21 +34,7 @@ const customStyles = {
     color: "#FFFFFF", // Set the input text color here
   }),
 };
-const formatOptions = (value: Array<string>) => {
-  let data: {
-    value: string;
-    label: string;
-  }[] = [];
-  if (value) {
-    value.forEach((item) => {
-      data.push({
-        value: item,
-        label: item,
-      });
-    });
-  }
-  return data;
-};
+
 type type_props = {
   defaultValue: any;
   setFunction: any;
@@ -59,25 +42,59 @@ type type_props = {
   fieldData: any;
 };
 const MultiSelect = (props: type_props) => {
-  // const [options, setOption] = React.useState<any>(
-  //   formatOptions(props.defaultValue)
-  // );
+  const [options, setOption] = React.useState<any>([{ value: "", label: "" }]);
+
+  React.useEffect(() => {
+    let optionsData: any;
+    const get_suggestions = async () => {
+      const res = await get_user_suggestions("gjzRfX39RmV7A3HxK41W");
+      optionsData = res;
+      console.log(optionsData, "hellow");
+      if (optionsData) {
+        optionsData.forEach((item: any) => {
+          item.value = item.id;
+          item.label = item.name;
+        });
+      }
+      console.log(optionsData, "hellow after change");
+      setOption(optionsData);
+    };
+    get_suggestions();
+    // let optionsData: any;
+    // get_user_suggestions("gjzRfX39RmV7A3HxK41W").then((res) => {
+    //   console.log(res);
+    // });
+    // console.log(optionsData, "hellow");
+    // if (optionsData) {
+    //   optionsData.forEach((item: any) => {
+    //     item.value = item.id;
+    //     item.label = item.name;
+    //   });
+    // }
+
+    // console.log("hellow", optionsData);
+  }, []);
+
+  //TODO:
+  //both users and tags getting manipulated at the same time
+  //Only one user in every org, no way to add user.
+  //adding multiple users in select, makes it look weird
+
   const formatOutputVlue = (value: any) => {
     return value.map((item: any) => item["value"]);
   };
   return (
     <div>
       <div className="flex mt-[0.3rem] bg-background_color">
-        <span className="min-w-fit pl-2 h-[2.5rem] flex justify-center items-center rounded-l font-dm_sans">
+        <span className="min-w-fit p h-[2.5rem] flex justify-center items-center rounded-l font-dm_sans">
           {props.label}
         </span>
         <span className=" w-[100%]">
           <Select
             closeMenuOnSelect={false}
-            defaultValue={[options[0], options[1]]}
             isMulti
             placeholder={props.label}
-            options={formatOptions(props.defaultValue)}
+            options={options}
             styles={customStyles}
             onChange={(value) =>
               props.setFunction({

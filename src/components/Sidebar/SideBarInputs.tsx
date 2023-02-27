@@ -1,5 +1,6 @@
 import React from "react";
 import AutoComplete from "../common/AutoComplete";
+import DatePicker from "../common/DatePicker";
 import Input from "../common/Input";
 import MultiSelect from "../common/MultiSelect";
 
@@ -39,6 +40,17 @@ export default function SideBarInputs(props: type_props) {
     return (
       <Input
         type={"string"}
+        defaultValue={props.defaultValue}
+        label={props.label}
+        setFunction={props.setFunction}
+        fieldData={props.fieldData}
+      />
+    );
+  }
+  if (["date"].includes(props.type)) {
+    return (
+      <DatePicker
+        type={"date"}
         defaultValue={props.defaultValue}
         label={props.label}
         setFunction={props.setFunction}

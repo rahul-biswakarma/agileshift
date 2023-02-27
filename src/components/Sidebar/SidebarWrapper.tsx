@@ -16,19 +16,17 @@ const SidebarWrapper = () => {
   const sideBarList: Type_SidebarState[] = useSelector(
     (state: RootState) => state.sidebar.sideBarData
   );
-  console.log("====================================");
-  console.log(sideBarList);
-  console.log("====================================");
+
   const [colapsTabBar, setColapsTabBar] = React.useState<number>(
     sideBarList.length - 1
   );
-  console.log("sideBarList::: ", sideBarList);
-
+  React.useEffect(() => {
+    setColapsTabBar(sideBarList.length - 1);
+  }, [sideBarList]);
   return (
     <div className="h-screen w-screen flex flex-row-reverse  z-20 font-dm_sans text-white overflow-x-scroll">
       {sideBarList.map((sidebar: Type_SidebarState, index: number) => {
         if (sidebar.sidebarType === "addOptions") {
-          console.log("addOptions");
           return (
             <>
               <AddOptions

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { useAppSelector } from "../../redux/hooks";
 
 import logoSvg from "../../assets/logo.svg";
-import { useAppSelector } from "../../redux/hooks";
-import { set_notification } from "../../Utils/Backend";
+import { set_notification, get_user_by_id } from "../../Utils/Backend";
+import {  } from "../../Utils/Backend";
 
 interface TYPE_HeaderProps {
 	showNotification: boolean;
@@ -23,14 +24,19 @@ const Header = (props:TYPE_HeaderProps) => {
 	});
 
 	useEffect(() => {
-		setUserData({
-			id: "123",
-			name: "Rahul",
-			email: "rahul.id39@gmail.com",
-			avatar: "https://cdn.wallpapersafari.com/30/24/Vwmyh9.jpg",
-			organisation: ["dsjbfshj"],
+		get_user_by_id(userId).then((data) => {
+			if (data) {
+				const user = {
+					id: data.id,
+					name: data.name,
+					email: data.email,
+					avatar: data.avatar,
+					organisation: data.organisation,
+				};
+				setUserData(user);
+			}
 		});
-	}, []);
+	}, [userId]);
 
 	const handleNotificationToggle = () => {
 		props.setShowNotification((state => { 
@@ -92,4 +98,3 @@ const Header = (props:TYPE_HeaderProps) => {
 };
 
 export default Header;
- 

@@ -1,15 +1,51 @@
-import React from "react";
+import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
-type Type_BuildQuadrantHeaderProp = {
-	itemName: string;
-};
+import { setSideBar } from "../../redux/reducers/SideBarSlice";
+import { get_text_color_from_name } from "../../Utils/Backend";
 
-const BuildQuadarntHeader = (props: Type_BuildQuadrantHeaderProp) => {
+const BuildQuadarntHeader = () => {
+	const [hoveredButtonIndex, setHoveredButtonIndex] = useState(-1);
+
+	const fieldColor = useAppSelector((state) => state.datatable.fieldColor);
+	const dataSchema = useAppSelector((state) => state.datatable.dataSchema);
+	const tabName = useAppSelector((state) => state.datatable.tabName);
+
+	const buttonStyle = {
+		color:
+			hoveredButtonIndex === 0
+				? `${get_text_color_from_name(fieldColor)}`
+				: "rgba(255, 255, 255, 0.3)",
+	};
+
+	const dispatch = useAppDispatch();
+
 	return (
-		<div className="bg-Secondary_background_color p-[1rem_2rem]">
-			<p className="font-fira_code text-[0.9rem] font-[600] text-white">
-				<span className="text-white/50">BUILD /</span> {props.itemName}
-			</p>
+		<div className="relative bg-Secondary_background_color flex justify-between p-[1rem_2rem]">
+			<div className="font-fira_code text-[0.9rem] font-[600] text-white">
+				<div>
+					<span className="text-white/50">BUILD /</span> {tabName}
+				</div>
+			</div>
+			<button
+				onClick={() => {
+					dispatch(
+						setSideBar({
+							field: tabName,
+							color: fieldColor,
+							data: {},
+							schema: dataSchema,
+						})
+					);
+				}}
+				style={buttonStyle}
+				className={` font-dm_sans text-[1rem] flex gap-[0.2rem] text-white/30 cursor-pointer rounded-sm hover:bg-Secondary_background_color`}
+				onMouseOver={() => setHoveredButtonIndex(0)}
+				onMouseOut={() => setHoveredButtonIndex(-1)}
+			>
+				<span className="material-symbols-outlined text-inherit">add</span>
+				<p className="capitalize font-fira_code">{tabName}</p>
+			</button>
 		</div>
 	);
 };
