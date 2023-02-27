@@ -205,13 +205,13 @@ export const SchemaGenerator = ({
 					setList={setList}
 				/>
 				<button
-					className="absolute bottom-[1rem] left-[1rem] flex justify-center items-center p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm text-dark_gray border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 hover:text-purple-800 transition-all duration-200 ease-in-out
+					className="absolute bottom-[4rem] left-[1rem] flex justify-center items-center p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm text-dark_gray border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 hover:text-purple-800 transition-all duration-200 ease-in-out
 		"
 					onClick={() => dispatch(setActiveTab(id - 1))}
 				>
 					<span className="material-symbols-outlined">arrow_back</span>
 				</button>
-				<div className="absolute bottom-[1rem] right-[1rem] flex items-center justify-end bg-background_color z-10">
+				<div className="absolute bottom-[4rem] right-[1rem] flex items-center justify-end bg-background_color z-10">
 					{getAllFieldsName().length - 1 === id && (
 						<button
 							className="flex justify-center items-center p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm text-highlight_font_color border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 hover:text-purple-800 transition-all duration-200 ease-in-out

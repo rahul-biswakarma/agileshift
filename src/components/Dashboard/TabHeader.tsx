@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
-import { setActiveTab } from "../../redux/reducers/SchemaSlice";
+import { setActiveTab, setIsEdit } from "../../redux/reducers/SchemaSlice";
 import {
 	setFieldColor,
 	setDatas,
@@ -30,6 +30,7 @@ const TabHeader = (props: Type_TabHeaderProps) => {
 
 	const openSchemaEditForm = () => {
 		dispatch(setActiveTab(0));
+		dispatch(setIsEdit(true));
 		navigate("/edit-organization-schema");
 	};
 
