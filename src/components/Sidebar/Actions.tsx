@@ -1,6 +1,9 @@
 import React from "react";
 import { useAppSelector } from "../../redux/hooks";
-import { update_data_to_database } from "../../Utils/Backend";
+import {
+  edit_table_data_in_organization,
+  update_data_to_database,
+} from "../../Utils/Backend";
 
 type Type_SidebarState = {
   field: string;
@@ -19,11 +22,22 @@ type Type_DetailsProps = {
 
 const Actions = (props: Type_DetailsProps) => {
   let organizationId = useAppSelector((state) => state.auth.organisationId);
-  organizationId = "zB2drPSZDjsAec5hG7wA";
 
   const saveData = async () => {
-    let formDataFromProps = { ...props.formData, field: props.state.field };
-    await update_data_to_database(organizationId, formDataFromProps);
+    let formDataFromProps = {
+      ...props.formData,
+      id: props.state.data.id,
+      field: props.state.field,
+    };
+    if (formDataFromProps.id === "" || formDataFromProps.id === undefined) {
+      await update_data_to_database(organizationId, formDataFromProps);
+    } else {
+      await edit_table_data_in_organization(
+        organizationId,
+        formDataFromProps.id,
+        formDataFromProps
+      );
+    }
   };
 
   return (
@@ -33,7 +47,8 @@ const Actions = (props: Type_DetailsProps) => {
       </button>
       <button
         className="bg-white text-black py-1 px-2 rounded-md"
-        onClick={() => saveData()}>
+        onClick={() => saveData()}
+      >
         Save {props.state.field}
       </button>
     </div>

@@ -1,8 +1,10 @@
 import React from "react";
+import { useSelector } from "react-redux";
 // import { useSelector } from "react-redux";
 import Select from "react-select";
 import { useAppDispatch } from "../../redux/hooks";
-import { setSideBar } from "../../redux/reducers/SideBarSlice";
+import { setNewSidBar, setSideBar } from "../../redux/reducers/SideBarSlice";
+import { RootState } from "../../redux/store";
 // import { RootState } from "../../redux/store";
 const customStyles = {
   control: (provided: any) => ({
@@ -34,13 +36,13 @@ const customStyles = {
     color: "#FFFFFF", // Set the selected option text color here
   }),
 };
-// type Type_SidebarState = {
-//   field: string;
-//   data: any;
-//   color: string;
-//   schema?: any;
-//   sidebarType?: string;
-// };
+type Type_SidebarState = {
+  field: string;
+  data: any;
+  color: string;
+  schema?: any;
+  sidebarType?: string;
+};
 
 type type_props = {
   defaultValue: any;
@@ -74,9 +76,9 @@ const AutoComplete = (props: type_props) => {
   // const [options, setOption] = React.useState<any>(
   // );
   const dispatch = useAppDispatch();
-  // const sideBarList: Type_SidebarState[] = useSelector(
-  //   (state: RootState) => state.sidebar.sideBarData
-  // );
+  let sideBarList: Type_SidebarState[] = useSelector(
+    (state: RootState) => state.sidebar.sideBarData
+  );
 
   const handleAddOptions = () => {
     let element: any = {
@@ -86,11 +88,11 @@ const AutoComplete = (props: type_props) => {
       color: "",
       schema: {},
     };
-    // let newSidebarList = sideBarList.splice(props.sidebarIndex, 0, element);
-    // let newSidebarList = sideBarList.splice(props.sidebarIndex, 0, element);
+    // let newSidebarList: any = sideBarList.splice(1, 0, element);
+    let newSidebarList: any = [element, ...sideBarList];
 
-    // console.log(newSidebarList, "888");
-    dispatch(setSideBar([element]));
+    console.log(newSidebarList, "888");
+    dispatch(setNewSidBar(newSidebarList));
   };
   return (
     <div>
