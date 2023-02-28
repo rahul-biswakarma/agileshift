@@ -1,5 +1,6 @@
 import React from "react";
 import Select from "react-select";
+import { useAppSelector } from "../../redux/hooks";
 import { get_user_suggestions } from "../../Utils/Backend";
 
 const customStyles = {
@@ -40,41 +41,32 @@ type type_props = {
   setFunction: any;
   label: string;
   fieldData: any;
+  selectedTab: string;
 };
 const MultiSelect = (props: type_props) => {
   const [options, setOption] = React.useState<any>([{ value: "", label: "" }]);
+  const organizationId = useAppSelector((state) => state.auth.organisationId);
 
   React.useEffect(() => {
-    let optionsData: any;
-    const get_suggestions = async () => {
-      const res = await get_user_suggestions("gjzRfX39RmV7A3HxK41W");
-      optionsData = res;
-      console.log(optionsData, "hellow");
-      if (optionsData) {
-        optionsData.forEach((item: any) => {
-          item.value = item.id;
-          item.label = item.name;
-        });
-      }
-      console.log(optionsData, "hellow after change");
-      setOption(optionsData);
-    };
-    get_suggestions();
-    // let optionsData: any;
-    // get_user_suggestions("gjzRfX39RmV7A3HxK41W").then((res) => {
-    //   console.log(res);
-    // });
-    // console.log(optionsData, "hellow");
-    // if (optionsData) {
-    //   optionsData.forEach((item: any) => {
-    //     item.value = item.id;
-    //     item.label = item.name;
-    //   });
-    // }
+    if (props.selectedTab === "user") {
+      let optionsData: any;
+      const get_suggestions = async () => {
+        const res = await get_user_suggestions(organizationId);
+        optionsData = res;
+        if (optionsData) {
+          optionsData.forEach((item: any) => {
+            item.value = item.id;
+            item.label = item.name;
+          });
+        }
 
-    // console.log("hellow", optionsData);
-  }, []);
-
+        setOption(optionsData);
+      };
+      get_suggestions();
+    } else {
+      setOption([{ value: "", label: "" }]);
+    }
+  }, [props.selectedTab]);
   //TODO:
   //both users and tags getting manipulated at the same time
   //Only one user in every org, no way to add user.
@@ -85,9 +77,9 @@ const MultiSelect = (props: type_props) => {
   };
   return (
     <div>
-      <div className="flex mt-[0.3rem] bg-background_color">
-        <span className="min-w-fit p h-[2.5rem] flex justify-center items-center rounded-l font-dm_sans">
-          {props.label}
+      <div className="flex mt-[0.3rem] bg-background_color items-center">
+        <span className="min-w-fit p h-[2.5rem] flex justify-center items-center rounded-l font-dm_sans px-2">
+          {props.label} :
         </span>
         <span className=" w-[100%]">
           <Select

@@ -1,4 +1,5 @@
 import React from "react";
+import { useAppSelector } from "../../redux/hooks";
 import AutoComplete from "../common/AutoComplete";
 import DatePicker from "../common/DatePicker";
 import Input from "../common/Input";
@@ -11,8 +12,11 @@ type type_props = {
   fieldData: any;
   label: string;
   sidebarIndex: number;
+  selectedTab?: string;
 };
 export default function SideBarInputs(props: type_props) {
+  console.log(props, "**");
+
   if (["dropdown"].includes(props.type)) {
     return (
       <div>
@@ -22,6 +26,7 @@ export default function SideBarInputs(props: type_props) {
           setFunction={props.setFunction}
           fieldData={props.fieldData}
           sidebarIndex={props.sidebarIndex}
+          selectedTab={props.selectedTab === undefined ? "" : props.selectedTab}
         />
       </div>
     );
@@ -33,6 +38,7 @@ export default function SideBarInputs(props: type_props) {
         label={props.label}
         setFunction={props.setFunction}
         fieldData={props.fieldData}
+        selectedTab={props.selectedTab === undefined ? "" : props.selectedTab}
       />
     );
   }

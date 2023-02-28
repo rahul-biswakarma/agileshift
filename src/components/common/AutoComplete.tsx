@@ -2,9 +2,10 @@ import React from "react";
 import { useSelector } from "react-redux";
 // import { useSelector } from "react-redux";
 import Select from "react-select";
-import { useAppDispatch } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setNewSidBar } from "../../redux/reducers/SideBarSlice";
 import { RootState } from "../../redux/store";
+import { get_user_suggestions } from "../../Utils/Backend";
 // import { RootState } from "../../redux/store";
 const customStyles = {
   control: (provided: any) => ({
@@ -50,6 +51,7 @@ type type_props = {
   label: string;
   fieldData: any;
   sidebarIndex: number;
+  selectedTab: string;
 };
 const formatOptions = (value: Array<string>) => {
   let data: {
@@ -73,8 +75,30 @@ const formatOutputVlue = (value: any) => {
   return value.map((item: any) => item["value"]);
 };
 const AutoComplete = (props: type_props) => {
-  // const [options, setOption] = React.useState<any>(
-  // );
+  const [options, setOption] = React.useState<any>([{ value: "", label: "" }]);
+  const organizationId = useAppSelector((state) => state.auth.organisationId);
+
+  React.useEffect(() => {
+    if (props.selectedTab === "user") {
+      console.log("multiselect call");
+      let optionsData: any;
+      const get_suggestions = async () => {
+        const res = await get_user_suggestions(organizationId);
+        optionsData = res;
+        if (optionsData) {
+          optionsData.forEach((item: any) => {
+            item.value = item.id;
+            item.label = item.name;
+          });
+        }
+
+        setOption(optionsData);
+      };
+      get_suggestions();
+    } else {
+      setOption([{ value: "", label: "" }]);
+    }
+  }, [props.selectedTab]);
   const dispatch = useAppDispatch();
   let sideBarList: Type_SidebarState[] = useSelector(
     (state: RootState) => state.sidebar.sideBarData

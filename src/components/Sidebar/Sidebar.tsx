@@ -59,12 +59,10 @@ const Sidebar = (props: Type_SidebarProps) => {
   }, [state.schema]);
 
   if (isArray(state.schema)) {
-    // console.log( state.schema, "**");
     let modifiedSchemaObject: TYPE_SCHEMA = {};
     state.schema.forEach((item: Type_ColumnSchema) => {
       modifiedSchemaObject[item.columnName] = item.columnType;
     });
-    console.log(modifiedSchemaObject, "**");
 
     setState({ ...state, schema: modifiedSchemaObject });
   }

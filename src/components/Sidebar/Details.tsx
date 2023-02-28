@@ -23,11 +23,9 @@ const Details = (props: Type_DetailsProps) => {
     const schemaFromProps = props.state.schema;
     if (titleField === "" || !(titleField in schemaFromProps)) {
       let newTitle = "";
-      console.log("Change Title", "**");
 
       Object.keys(schemaFromProps).forEach((key: any) => {
         if (schemaFromProps[key] === "title") {
-          console.log(key, "**");
           newTitle = key;
         }
       });

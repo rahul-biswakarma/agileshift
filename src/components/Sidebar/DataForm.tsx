@@ -38,7 +38,7 @@ const DataForm = (props: Type_DetailsProps) => {
 
   return (
     <div className="h-[70%] border-y border-primary_font_color text-white p-2 grow">
-      <section className="flex flex-row">
+      <section className=" flex flex-row">
         {sortObjectKeysByArrayLength(tabs).map((tab) => (
           <button
             onClick={() => setSelectedTab(tab)}
@@ -64,6 +64,7 @@ const DataForm = (props: Type_DetailsProps) => {
               label={tab}
               fieldData={props.formData}
               setFunction={props.setFormData}
+              selectedTab={selectedTab}
             />
           ))}
       </section>

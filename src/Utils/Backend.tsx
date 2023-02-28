@@ -1,17 +1,4 @@
 import { db } from "../firebaseConfig";
-// import {
-// 	doc,
-// 	updateDoc,
-// 	arrayUnion,
-// 	addDoc,
-// 	collection,
-// 	query,
-// 	where,
-// 	getDocs,
-// 	getDoc,
-// 	setDoc,
-// 	onSnapshot,
-// } from "firebase/firestore";
 import {
   doc,
   getDoc,
@@ -23,6 +10,7 @@ import {
   query,
   where,
   getDocs,
+  onSnapshot,
 } from "firebase/firestore";
 import emailjs from "@emailjs/browser";
 import { isValidEmail } from "email-js";
@@ -71,11 +59,10 @@ const get_current_time = () => {
  17 get color from name
 19 get_title
 20 get schema using field id
-21
-22
+21 get data by ID
+22 get list by columun type
 23 add organization to user
 24 get user by id
-
 25 get user by email
 26 add && edit data (from sidebar)
 27 get data by coloumn name
@@ -83,6 +70,8 @@ const get_current_time = () => {
 30 edit table data in organization
 31 get all columns name
 32 user suggestions
+33 get active  time
+34 create filter schema
 */
 
 // 1
@@ -246,10 +235,49 @@ export const create_schema = async (
       schemaData: schemas,
     };
     await updateDoc(doc(db, "schemas", organisationId), schemaDetails);
+
+    let filterData: any = {};
+    schemas.forEach((schema) => {
+      filterData[schema.name] = [];
+      schema.list.forEach((item) => {
+        if (item.columnType !== "string") {
+          filterData[schema.name].push({
+            active: true,
+            data: [],
+            columnName: item.columnName,
+          });
+        }
+      });
+    });
+    const filterDetails = {
+      data: filterData,
+    };
+
+    await updateDoc(doc(db, "filterSchema", organisationId), filterDetails);
   } else {
+    let filterData: any = {};
+    schemas.forEach((schema) => {
+      filterData[schema.name] = [];
+      schema.list.forEach((item) => {
+        if (item.columnType !== "string") {
+          filterData[schema.name].push({
+            active: true,
+            data: [],
+            columnName: item.columnName,
+          });
+        }
+      });
+    });
+    const filterDetails = {
+      data: filterData,
+    };
+
+    await setDoc(doc(db, "filterSchema", organisationId), filterDetails);
+
     const schemaDetails = {
       schemaData: schemas,
     };
+
     await setDoc(doc(db, "schemas", organisationId), schemaDetails);
   }
 };
@@ -344,7 +372,7 @@ export const get_schema_data_field = async (
   }
   return schemaFromField;
 };
-// 21
+// 21 get data by ID
 export const get_data_byID = async (organisationId: string, dataId: string) => {
   const docRef = doc(db, "organizations", organisationId);
   const docSnap = await getDoc(docRef);
@@ -432,6 +460,16 @@ export const get_data_by_column_name = async (
   field: string
 ) => {
   const orgData: any = await get_organizations_details(organisationId);
+
+  let d: any = {};
+  const unsub = onSnapshot(doc(db, "organizations", organisationId), (doc) => {
+    d = doc.data();
+    console.log(doc.data(), "inside");
+  });
+  console.log(d, "hii");
+  console.log(d, "hii");
+  console.log(d, "hii");
+
   let data: any = [];
   if (orgData.data && orgData.data.length > 0) {
     orgData.data.forEach((item: any) => {
@@ -440,6 +478,8 @@ export const get_data_by_column_name = async (
       }
     });
   }
+  console.log(d, "data");
+
   return data;
 };
 // 28 get dropdown options
@@ -507,7 +547,7 @@ export const get_all_columns_name = async (organisationId: string) => {
   return removeDuplicates(columns);
 };
 
-//  get user suggestions
+//32  get user suggestions
 export const get_user_suggestions = async (organisationId: string) => {
   let userIsList: any = await get_organizations_details(organisationId);
   userIsList = userIsList["users"];
@@ -520,4 +560,53 @@ export const get_user_suggestions = async (organisationId: string) => {
   });
 
   return userDetails;
+};
+
+// 33 user active time
+export const user_active_time = async (userId: string) => {
+  const userRef = doc(db, "users", userId);
+
+  const currentData = get_current_time();
+
+  await updateDoc(userRef, {
+    active: arrayUnion(currentData),
+  });
+};
+// 34 main search function
+export const main_search_function = async (
+  organizationId: string,
+  searchText: string
+) => {
+  let results: any = [];
+  let organizationTableData: any = await get_organizations_details(
+    organizationId
+  );
+  organizationTableData = organizationTableData["data"];
+
+  try {
+    organizationTableData.forEach((item: any) => {
+      if (wil_include(item, searchText)) {
+        results.push(item);
+      }
+    });
+  } catch {
+    console.log("error");
+    return [];
+  }
+
+  return results;
+};
+
+export const wil_include = (item: any, searchText: string) => {
+  let flag = false;
+  Object.keys(item).forEach((field: any) => {
+    if (!flag) {
+      try {
+        flag = item[field].toLowerCase().includes(searchText.toLowerCase());
+      } catch {
+        flag = false;
+      }
+    }
+  });
+  return flag;
 };
