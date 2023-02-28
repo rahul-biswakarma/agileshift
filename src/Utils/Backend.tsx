@@ -648,3 +648,14 @@ export const wil_include = (item: any, searchText: string) => {
   });
   return flag;
 };
+
+export const get_filter_schema = async (organizationId: string) => {
+  const filterRef = doc(db, "filterSchema", organizationId);
+  const filterSnap = await getDoc(filterRef);
+  if (filterSnap.exists()) {
+    return filterSnap.data();
+  } else {
+    console.log("No such document!");
+    return;
+  }
+}
