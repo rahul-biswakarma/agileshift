@@ -1,6 +1,6 @@
 import { useState } from "react";
+// import { useAppSelector } from "../../redux/hooks";
 import { renderFilterData } from "../../Utils/Filter";
-import CustomizeComponent from "./CustomizeComponent";
 import DisplayFilters from "./DisplayFilters";
 
 type TYPE_FilterOption = {
@@ -102,6 +102,10 @@ const filters = [
 ];
 
 const Filter = () => {
+
+	// const organizationId = useAppSelector((state) => state.auth.organisationId);
+	// const filters = get_filter_schema(organizationId);
+
 	const [filterSchema, setFilterSchema] = useState<TYPE_Filters[]>(filters);
 	const [showAllFilters, setShowAllFilters] = useState<boolean>(false);
 	const [activeFiltersDropdown, setActiveFiltersDropdown] =
@@ -362,7 +366,6 @@ const Filter = () => {
 							<path d="m6 9 6 6 6-6" />
 						</svg>
 					</div>
-					{/* <CustomizeComponent/> */}
 				</div>
 			</div>
 		</div>
