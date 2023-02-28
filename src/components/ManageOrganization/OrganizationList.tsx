@@ -4,11 +4,12 @@ import { useAppSelector } from "../../redux/hooks";
 import { get_user_by_id, user_active_time } from "../../Utils/Backend";
 import { OrganizationCard } from "./OrganizationCard";
 import { get_organizations_details } from "../../Utils/Backend";
+import { RootState } from "../../redux/store";
 
 const OrganizationList: React.FunctionComponent = () => {
 	const [user, setUser] = useState<any>();
 	const [organization, setOrganizations] = useState<any>([]);
-	const userId = useAppSelector((state) => state.auth.userId);
+	const userId = useAppSelector((state:RootState) => state.auth.userId);
 
 	useEffect(() => {
 		const getUserObj = async () => {

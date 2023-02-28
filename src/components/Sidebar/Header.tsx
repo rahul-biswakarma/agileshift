@@ -3,6 +3,7 @@ import close_icon from "../../assets/icons/close_icon.svg";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setNewSidBar } from "../../redux/reducers/SideBarSlice";
 import { HeaderIdComponent } from "./HeaderIdComponent";
+import { RootState } from "../../redux/store";
 
 type Type_SidebarState = {
   field: string;
@@ -20,7 +21,7 @@ type Type_HeaderProps = {
 };
 
 const Header = (props: Type_HeaderProps) => {
-  const sideBarLists = useAppSelector((state) => state.sidebar.sideBarData);
+  const sideBarLists = useAppSelector((state:RootState) => state.sidebar.sideBarData);
 
   const dispatch = useAppDispatch();
   const handleClose = () => {

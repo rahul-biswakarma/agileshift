@@ -23,6 +23,10 @@ module.exports = {
 
 				//Sidebar
 				sidebar_bg: "#262626",
+
+				//Notification_unRead
+				notification_unRead: "#262626",
+				
 			},
 			fontFamily: {
 				inter: ["Inter", "sans-serif"],

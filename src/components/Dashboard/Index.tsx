@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import BuildQuadarnt from "../BuildQuadrant";
 
+
 import { get_schema_data, get_data_by_column_name } from "../../Utils/Backend";
 
 import Header from "./Header";
@@ -35,7 +36,7 @@ export default function Dashboard() {
 		<div className="bg-background_color h-[100vh] flex flex-col font-dm_sans">
 			<Header showNotification={showNotification} setShowNotification={setShowNotification}/>
 			{showNotification?
-				<NotificationMainComponent />
+				<NotificationMainComponent showNotification={showNotification} setShowNotification={setShowNotification} />
 				:
 				<React.Fragment>
 					{dataSchema && <TabHeader fieldsData={dataSchema} />}
