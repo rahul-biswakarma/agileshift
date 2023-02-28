@@ -1,4 +1,6 @@
 import { useState } from "react";
+// import { useAppSelector } from "../../redux/hooks";
+import { renderFilterData } from "../../Utils/Filter";
 import DisplayFilters from "./DisplayFilters";
 
 type TYPE_FilterOption = {
@@ -100,6 +102,10 @@ const filters = [
 ];
 
 const Filter = () => {
+
+	// const organizationId = useAppSelector((state) => state.auth.organisationId);
+	// const filters = get_filter_schema(organizationId);
+
 	const [filterSchema, setFilterSchema] = useState<TYPE_Filters[]>(filters);
 	const [showAllFilters, setShowAllFilters] = useState<boolean>(false);
 	const [activeFiltersDropdown, setActiveFiltersDropdown] =
@@ -133,8 +139,9 @@ const Filter = () => {
 			filterObj.filterOptions[filterOptionIndex].active = true;
 		}
 
-		setFilterSchema(newFilterSchema);
-	};
+        setFilterSchema(newFilterSchema);
+        renderFilterData(filterSchema);
+    }
 
 	const modifyActiveState = (index: number) => {
 		const newArray = [...filterSchema];
@@ -146,8 +153,18 @@ const Filter = () => {
 		setFilterSchema(newArray);
 	};
 
+    const resetFilters = () => {
+        const resetFilterSchema = [...filterSchema];
+        resetFilterSchema.forEach((filterObj) => {
+            filterObj.filterOptions.forEach((filterOptionObj) => {
+                filterOptionObj.active = false;
+            });
+        });
+        setFilterSchema(resetFilterSchema);
+    }
+
 	return (
-		<div className="w-screen h-screen bg-[#161616]">
+		<div className="w-screen h-auto bg-[#161616]">
 			<div className="flex justify-between mb-4 mx-9 pt-4">
 				<div className="flex flex-wrap gap-3">
 					<div className="flex">
@@ -236,7 +253,7 @@ const Filter = () => {
 												.map((filter, index) => (
 													<button
 														key={index}
-														className="inline-block font-fira_code rounded-md border border-dark_gray text-highlight_font_color text-[5px] py-[2px] px-[5px]"
+														className="flex items-center justify-center font-fira_code rounded-md border border-dark_gray text-highlight_font_color text-center text-[6px] px-[5px]"
 													>
 														{filter.filterOptionName}
 													</button>
@@ -244,7 +261,7 @@ const Filter = () => {
 										</div>
 									</div>
 									{activeFiltersDropdown[filter.filterName] === true && (
-										<div className="absolute top-[100%]">
+										<div className="absolute top-[100%] bg-black">
 											<DisplayFilters
 												filterData={filter.filterOptions}
 												type={filter.filterName}
@@ -279,7 +296,7 @@ const Filter = () => {
 							</svg>
 						</button>
 						{showAllFilters && (
-							<div className="absolute top-[110%] left-0 bg-primary_background_color w-48 rounded-xl p-1 border border-white/20 text-highlight_font_color">
+							<div className="absolute top-[110%] left-0 bg-background_color w-48 rounded-xl p-1 border border-white/20 text-highlight_font_color">
 								<div className="flex flex-wrap gap-1 p-2 border-b border-white/10">
 									{filterSchema
 										.filter((filter) => filter.active === true)
@@ -322,7 +339,7 @@ const Filter = () => {
 					</div>
 
 					<div className="flex items-center gap-4">
-						<button className="rounded-md h-7 text-[#808080] text-sm font-bold ">
+						<button onClick={() => resetFilters()} className="rounded-md h-7 text-[#808080] text-sm font-bold ">
 							Clear
 						</button>
 					</div>
@@ -331,48 +348,6 @@ const Filter = () => {
 					<div className="flex hover:bg-[#49494D] rounded-md px-4 py-2">
 						<button className="rounded-md h-7 text-[#808080] text-sm font-bold">
 							Sort
-						</button>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							stroke="#808080"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="1.5"
-							className="w-4 h-4icon icon-tabler icon-tabler-chevron-down"
-							viewBox="0 0 24 24"
-						>
-							<path
-								stroke="none"
-								d="M0 0h24v24H0z"
-							/>
-							<path d="m6 9 6 6 6-6" />
-						</svg>
-					</div>
-					<div className="flex hover:bg-[#49494D] rounded-md px-4 py-2">
-						<button className="rounded-md h-7 text-[#808080] text-sm font-bold">
-							Group
-						</button>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							stroke="#808080"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="1.5"
-							className="w-4 h-4icon icon-tabler icon-tabler-chevron-down"
-							viewBox="0 0 24 24"
-						>
-							<path
-								stroke="none"
-								d="M0 0h24v24H0z"
-							/>
-							<path d="m6 9 6 6 6-6" />
-						</svg>
-					</div>
-					<div className="flex  hover:bg-[#49494D] rounded-md px-4 py-2">
-						<button className="rounded-md h-7 text-[#808080] text-sm font-bold">
-							Customize
 						</button>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"

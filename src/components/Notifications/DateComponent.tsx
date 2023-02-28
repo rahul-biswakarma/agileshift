@@ -6,7 +6,7 @@ interface TYPE_DateComponentProps {
 
 const DateComponent = (props: TYPE_DateComponentProps) =>{
     return (
-        <span className="text-xs text-primary_font_color">
+        <span className="text-xs text-primary_font_color font-dm_sans">
             {props.daysAgo === 0 ? "Today" : props.daysAgo === 1 ? "Yesterday" : `${props.daysAgo} days ago`}
         </span>
     )
