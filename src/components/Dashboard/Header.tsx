@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useAppSelector } from "../../redux/hooks";
 
 import logoSvg from "../../assets/logo.svg";
-import { set_notification, get_user_by_id } from "../../Utils/Backend";
-import {  } from "../../Utils/Backend";
+import { set_notification, get_user_by_id, get_organization_name_by_id } from "../../Utils/Backend";
+
 
 interface TYPE_HeaderProps {
 	showNotification: boolean;
@@ -53,6 +53,14 @@ const Header = (props:TYPE_HeaderProps) => {
 			"New Issue Added"
 		)
 	}
+
+	useEffect(() => {
+		get_organization_name_by_id(organizationId).then((data) => {
+			console.log(data)
+			document.title = `${data} | Dashboard`
+
+		})
+	},[])
 
 	return (
 		<div className="p-[1rem_2rem] flex gap-[3rem] justify-between border-[2px] border-Secondary_background_color">

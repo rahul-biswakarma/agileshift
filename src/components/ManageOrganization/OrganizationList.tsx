@@ -35,6 +35,10 @@ const OrganizationList: React.FunctionComponent = () => {
 		if (user) getOrganizationsDetails();
 	}, [user]);
 
+	useEffect(() => {
+		document.title = "Organization List";
+	}, []);
+
 	const navigate = useNavigate();
 
 	return (

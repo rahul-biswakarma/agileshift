@@ -611,3 +611,15 @@ export const user_active_time = async (userId: string) => {
     active: arrayUnion(currentData),
   });
 };
+
+
+// 35 get organization name by id
+export const get_organization_name_by_id = async (organizationId: string) => {
+  const organizationRef = doc(db, "organizations", organizationId);
+  const docSnap = await getDoc(organizationRef);
+  if (docSnap.exists()) {
+    return docSnap.data()["name"];
+  } else {
+    return "";
+  }
+};
