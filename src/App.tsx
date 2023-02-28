@@ -5,17 +5,11 @@ import { Login } from "./components/OnBoarding/Login";
 import { SignUp } from "./components/OnBoarding/Signup";
 import OrganizationList from "./components/ManageOrganization/OrganizationList";
 import { GeneratorFormsContainer } from "./components/SchemaGenerator/GeneratorFormsContainer";
-import Filter from "./components/Filters/Filter";
 import { getFromSession } from "./Utils/Auth";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import { setUserId } from "./redux/reducers/AuthSlice";
 import { SidebarWrapper } from "./components/Sidebar/SidebarWrapper";
-import {
-  get_data_by_column_name,
-  get_organizations_details,
-  main_search_function,
-  user_active_time,
-} from "./Utils/Backend";
+import { LinkageSidebar } from "./components/Sidebar/LinkageSidebar";
 
 const App = () => {
   const userIdFromSession = getFromSession("userId");
@@ -33,18 +27,6 @@ const App = () => {
           <SidebarWrapper />
         </section>
       )}
-
-      <div
-        onClick={() =>
-          console.log(
-            get_data_by_column_name("BvglwNksA7aAMQGEsn0a", "all"),
-            "***"
-          )
-        }
-      >
-        dfdf
-      </div>
-
       <Routes>
         <Route
           path=""
@@ -74,19 +56,16 @@ const App = () => {
           element={<Navigate to="/organization-lists" />}
         />
         <Route
-          path="/filters"
+          path="/linkage-sidebar"
           element={
-            <Filter
-              schema={[
-                { columnTitle: "Title", columnType: "string" },
-                { columnTitle: "Stage", columnType: "string" },
-                { columnTitle: "User", columnType: "string" },
-                { columnTitle: "Tags", columnType: "tag" },
-                { columnTitle: "Severity", columnType: "string" },
-                { columnTitle: "Type", columnType: "string" },
-                { columnTitle: "Rev Org", columnType: "string" },
-                { columnTitle: "Part", columnType: "string" },
-              ]}
+            <LinkageSidebar
+              field={{
+                name: "Issues",
+                list: [],
+                color: "purple",
+                icon: "home",
+                linkage: ["Tickets", "Issues"],
+              }}
             />
           }
         />

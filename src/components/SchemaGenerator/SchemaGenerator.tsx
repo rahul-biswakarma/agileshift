@@ -12,6 +12,7 @@ import { SchemaGeneratorForm } from "./SchemaGeneratorForm";
 import UploadJSON from "../UploadJSON";
 import { RootState } from "../../redux/store";
 import { setActiveTab } from "../../redux/reducers/SchemaSlice";
+import SelectIconComponent from "./SelectIconComponent";
 
 require("tailwindcss-writing-mode")({
 	variants: ["responsive", "hover"],
@@ -29,6 +30,8 @@ type GeneratorPropTypes = {
 	deleteSchema: (this: any) => void;
 	color: string;
 	changeColor: (this: any, color: string) => void;
+	icon: string;
+	changeIcon: (this: any, icon: string) => void;
 };
 
 export const SchemaGenerator = ({
@@ -43,6 +46,8 @@ export const SchemaGenerator = ({
 	deleteSchema,
 	color,
 	changeColor,
+	icon,
+	changeIcon,
 }: GeneratorPropTypes) => {
 	const colorList = [
 		"purple",
@@ -84,7 +89,7 @@ export const SchemaGenerator = ({
 							type="text"
 							value={name}
 							onChange={(e) => setName(e.target.value)}
-							placeholder="Ticket"
+							placeholder="Case Name"
 							className="flex-1 font-fira_code text-[1rem] rounded-r-lg px-4 bg-Secondary_background_color h-10 outline-none placeholder:text-white/30 text-white/70"
 						/>
 					</div>
@@ -149,6 +154,11 @@ export const SchemaGenerator = ({
 						</FormControl>
 					</div>
 
+					<SelectIconComponent
+						icon={icon}
+						changeIcon={changeIcon}
+					/>
+
 					<div className="relative flex items-center font-dm_sans gap-[10px]">
 						<FormControl
 							sx={{
@@ -204,8 +214,15 @@ export const SchemaGenerator = ({
 					list={list}
 					setList={setList}
 				/>
-				<div className="absolute bottom-[1rem] right-[1rem] flex items-center justify-end bg-background_color z-10">
-					{getAllFieldsName()[getAllFieldsName().length - 1] === name && (
+				<button
+					className="absolute bottom-[4rem] left-[1rem] flex justify-center items-center p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm text-dark_gray border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 hover:text-purple-800 transition-all duration-200 ease-in-out
+		"
+					onClick={() => dispatch(setActiveTab(id - 1))}
+				>
+					<span className="material-symbols-outlined">arrow_back</span>
+				</button>
+				<div className="absolute bottom-[4rem] right-[1rem] flex items-center justify-end bg-background_color z-10">
+					{getAllFieldsName().length - 1 === id && (
 						<button
 							className="flex justify-center items-center p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm text-highlight_font_color border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 hover:text-purple-800 transition-all duration-200 ease-in-out
           "
@@ -213,6 +230,17 @@ export const SchemaGenerator = ({
 						>
 							Submit Schema
 						</button>
+					)}
+					{getAllFieldsName().length - 1 !== id && (
+						<div>
+							<button
+								className="flex justify-center items-center p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm text-dark_gray border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 hover:text-purple-800 transition-all duration-200 ease-in-out
+		"
+								onClick={() => dispatch(setActiveTab(id + 1))}
+							>
+								<span className="material-symbols-outlined">arrow_forward</span>
+							</button>
+						</div>
 					)}
 				</div>
 			</section>

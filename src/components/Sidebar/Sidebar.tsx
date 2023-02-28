@@ -3,7 +3,6 @@ import { Actions } from "./Actions";
 import { DataForm } from "./DataForm";
 import { Details } from "./Details";
 import { Header } from "./Header";
-import { LinkageSidebar } from "./LinkageSidebar";
 
 type Type_SidebarProps = {
   field: string;
@@ -87,19 +86,15 @@ const Sidebar = (props: Type_SidebarProps) => {
     <div
       className={`${
         props.tabColaps ? "w-[50px] flex items-center" : "w-1/3"
-      } h-screen  bg-sidebar_bg backdrop-filter backdrop-blur-lg bg-opacity-60 border border-primary_font_color`}
-    >
+      } h-screen  bg-sidebar_bg backdrop-filter backdrop-blur-lg bg-opacity-60 border border-primary_font_color`}>
       {props.tabColaps ? (
         <div
           className="[writing-mode:vertical-rl] h-full w-full flex justify-center items-center text-xl cursor-pointer hover:bg-background_color rounded-lg py-4"
           onClick={() => {
             props.setColapsTabBar(props.index);
-          }}
-        >
+          }}>
           {state.field}
         </div>
-      ) : state.field === "Linkage" ? (
-        <LinkageSidebar />
       ) : (
         <div className="h-full w-full p-3 flex flex-col">
           <Header
