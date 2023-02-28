@@ -23,6 +23,9 @@ export const OrganisationForm = () => {
 	const [orgUrlErrorMessage, setOrgUrlErrorMessage] = useState<string>("");
 	const [orgNameState, setOrgNameState] = useState<string>("");
 	const [orgUrlState, setOrgUrlState] = useState<string>("");
+	const [isSubmitDisabled, setIsSubmitDisabled] = useState<boolean>(true);
+
+
 	const organizationId = useAppSelector((state) => state.auth.organisationId);
 
 	// Refs
@@ -38,6 +41,10 @@ export const OrganisationForm = () => {
 			document.title = `Schema Form | ${data}`
 		})
 	})
+
+	useEffect(() => {
+		setIsSubmitDisabled(!orgNameState || !orgUrlState);
+	  }, [orgNameState, orgUrlState]);
 
 	// Redux
 	const activeTab = useAppSelector(
@@ -179,6 +186,7 @@ export const OrganisationForm = () => {
 								: "cursor-not-allowed"
 						} transition-all`}
 						onClick={addOrganisation}
+						disabled={isSubmitDisabled}
 					>
 						<span className="material-symbols-outlined">add</span>
 						Create new AgileOrg
