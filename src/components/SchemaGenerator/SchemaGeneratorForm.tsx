@@ -42,12 +42,12 @@ export const SchemaGeneratorForm = ({
 
 	return (
 		<div className="flex justify-center gap-6 w-full">
-			<section className="flex flex-col h-full overflow-auto py-0 w-full">
+			<section className="flex flex-col items-center h-full py-0 w-full">
 				<DragDropContext onDragEnd={handleOnDragEnd}>
 					<Droppable droppableId="dragableList">
 						{(provided) => (
 							<div
-								className="flex-1 flex flex-col gap-[1rem] transition-all pt-[1rem]"
+								className="w-max px-[1rem] flex-1 flex flex-col gap-[1rem] transition-all pt-[1rem] max-h-[50vh] overflow-auto"
 								{...provided.droppableProps}
 								ref={provided.innerRef}
 							>

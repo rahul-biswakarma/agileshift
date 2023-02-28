@@ -3,6 +3,7 @@ import AuthSlice from "./reducers/AuthSlice";
 import SchemaSlice from "./reducers/SchemaSlice";
 import SideBarSlice from "./reducers/SideBarSlice";
 import DataTableSlice from "./reducers/DataTableSlice";
+import IconsSlice from "./reducers/IconsSlice";
 
 export const store = configureStore({
 	reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
 		schema: SchemaSlice,
 		sidebar: SideBarSlice,
 		datatable: DataTableSlice,
+		icons: IconsSlice,
 	},
 });
 

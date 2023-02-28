@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../redux/hooks";
-import { get_user_by_id } from "../../Utils/Backend";
+import { get_user_by_id, user_active_time } from "../../Utils/Backend";
 import { OrganizationCard } from "./OrganizationCard";
 import { get_organizations_details } from "../../Utils/Backend";
 import { RootState } from "../../redux/store";
@@ -17,6 +17,7 @@ const OrganizationList: React.FunctionComponent = () => {
 			setUser(data);
 		};
 		getUserObj();
+		user_active_time(userId);
 	}, [userId]);
 
 	useEffect(() => {

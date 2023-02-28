@@ -5,21 +5,25 @@ import { Login } from "./components/OnBoarding/Login";
 import { SignUp } from "./components/OnBoarding/Signup";
 import OrganizationList from "./components/ManageOrganization/OrganizationList";
 import { GeneratorFormsContainer } from "./components/SchemaGenerator/GeneratorFormsContainer";
-import Filter from "./components/Filters/Filter";
 import { getFromSession } from "./Utils/Auth";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import { setUserId } from "./redux/reducers/AuthSlice";
 import { SidebarWrapper } from "./components/Sidebar/SidebarWrapper";
+<<<<<<< HEAD
 import { RootState } from "./redux/store";
+=======
+import { LinkageSidebar } from "./components/Sidebar/LinkageSidebar";
+>>>>>>> f2e2c04d7f3c66ddee0d6345484c1d449fb44dc7
 
 const App = () => {
-	const userIdFromSession = getFromSession("userId");
-	const dispatch = useAppDispatch();
+  const userIdFromSession = getFromSession("userId");
+  const dispatch = useAppDispatch();
 
-	if (userIdFromSession) {
-		dispatch(setUserId(userIdFromSession));
-	}
+  if (userIdFromSession) {
+    dispatch(setUserId(userIdFromSession));
+  }
 
+<<<<<<< HEAD
 	const sideBarList = useAppSelector((state:RootState) => state.sidebar.sideBarData);
 	return (
 		<BrowserRouter>
@@ -91,6 +95,61 @@ const App = () => {
 			</Routes>
 		</BrowserRouter>
 	);
+=======
+  const sideBarList = useAppSelector((state) => state.sidebar.sideBarData);
+  return (
+    <BrowserRouter>
+      {sideBarList.length !== 0 && (
+        <section className="fixed z-50">
+          <SidebarWrapper />
+        </section>
+      )}
+      <Routes>
+        <Route
+          path=""
+          element={
+            userIdFromSession ? (
+              <Navigate to="/organization-lists" />
+            ) : (
+              <Navigate to="/signup" />
+            )
+          }
+        />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/organization-lists" element={<OrganizationList />} />
+        <Route
+          path="/create-organization"
+          element={<GeneratorFormsContainer />}
+        />
+        <Route
+          path="/edit-organization-schema"
+          element={<GeneratorFormsContainer />}
+        />
+        <Route path="/organization/:id" element={<Dashboard />} />
+        <Route
+          path="/organization"
+          element={<Navigate to="/organization-lists" />}
+        />
+        <Route
+          path="/linkage-sidebar"
+          element={
+            <LinkageSidebar
+              field={{
+                name: "Issues",
+                list: [],
+                color: "purple",
+                icon: "home",
+                linkage: ["Tickets", "Issues"],
+              }}
+            />
+          }
+        />
+      </Routes>
+    </BrowserRouter>
+  );
+>>>>>>> f2e2c04d7f3c66ddee0d6345484c1d449fb44dc7
 };
 
 export default App;

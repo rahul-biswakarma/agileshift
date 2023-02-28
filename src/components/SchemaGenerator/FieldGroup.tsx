@@ -21,8 +21,6 @@ export const FieldGroup = ({
   changeColumn,
   deleteColumn,
 }: FieldGroupPropTypes) => {
-	const [displayFields, setDisplayFields] = useState<boolean>(false);
-	console.log("FieldGroup: displayFields", displayFields);
 
   const [types] = useState([
     "string",
@@ -41,8 +39,6 @@ export const FieldGroup = ({
   // getTypes();
   return (
     <div
-      onMouseOver={() => setDisplayFields(true)}
-      onMouseLeave={() => setDisplayFields(false)}
       className="relative flex items-center justify-center gap-4 py-1 px-2 w-full hover:bg-Secondary_background_color rounded-md"
     >
       <span className="material-symbols-outlined">drag_indicator</span>
