@@ -12,7 +12,6 @@ type TYPE_Filters = {
   filterOptions: TYPE_FilterOption[],
 };
 
-
 export const renderFilterData = (filterData: TYPE_Filters[]) => {
 	const dataTables = store.getState().datatable;
   console.log(dataTables);

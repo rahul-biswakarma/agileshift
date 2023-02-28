@@ -67,7 +67,7 @@ const Header = (props:TYPE_HeaderProps) => {
 				</h1> */}
 			</div>
 
-			<div className="w-full max-w-[800px] rounded-md flex gap-[10px] bg-Secondary_background_color p-[2px]">
+			<div className="relative w-full max-w-[800px] rounded-md flex gap-[10px] bg-Secondary_background_color p-[2px]">
 				<div className="flex rounded-md bg-background_color items-center px-4">
 					<span className="material-symbols-outlined text-white/30">
 						search
@@ -76,7 +76,7 @@ const Header = (props:TYPE_HeaderProps) => {
 				<input
 					name="search-input"
 					type="text"
-					placeholder="Search items, feilds, users and etc"
+					placeholder="Search items, fields, users and etc"
 					className="w-full flex-1 font-fira_code font-lg rounded-r-lg px-4 bg-Secondary_background_color h-9 outline-none text-white placeholder:text-white/20"
 				/>
 			</div>

@@ -1,20 +1,17 @@
 import { useState } from "react";
 import { renderFilterData } from "../../Utils/Filter";
+import CustomizeComponent from "./CustomizeComponent";
 import DisplayFilters from "./DisplayFilters";
 
-interface Type_FilterProps {
-	schema: Array<TYPE_SCHEMA>;
+type TYPE_FilterOption = {
+	filterOptionName: string;
+	active: boolean;
 };
 
-type TYPE_FilterOption = {
-    filterOptionName: string,
-    active: boolean,
-}
-
 type TYPE_Filters = {
-    filterName: string,
-    active: boolean,
-    filterOptions: TYPE_FilterOption[],
+	filterName: string;
+	active: boolean;
+	filterOptions: TYPE_FilterOption[];
 };
 
 type TYPE_ActiveFiltersDropdown = {
@@ -22,92 +19,93 @@ type TYPE_ActiveFiltersDropdown = {
 };
 
 const filters = [
-    {
-      filterName: "Priority",
-      active: true,
-      filterOptions: [
-        {
-          filterOptionName:"P0",
-          active:false
-        },
-        {
-          filterOptionName:"P1",
-          active:false
-        },
-        {
-          filterOptionName:"P2",
-          active:false
-        },
-        {
-          filterOptionName:"P3",
-          active:false
-        },
-      ]
-    },
-    {
-      filterName: "Stage",
-      active: true,
-      filterOptions: [
-        {
-          filterOptionName:"Open",
-          active:false
-        },
-        {
-          filterOptionName:"In Progress",
-          active:false
-        },
-        {
-          filterOptionName:"Closed",
-          active:false
-        }
-      ]
-    },
-    {
-      filterName: "Severity",
-      active: false,
-      filterOptions: [
-        {
-          filterOptionName:"Blocker",
-          active:false
-        },
-        {
-          filterOptionName:"High",
-          active:false
-        },
-        {
-          filterOptionName:"Medium",
-          active:false
-        },
-        {
-          filterOptionName:"Low",
-          active:false
-        }
-      ]
-    },
-    {
-      filterName: "Tags",
-      active: false,
-      filterOptions: [
-        {
-          filterOptionName:"Now",
-          active:false
-        },
-        {
-          filterOptionName:"Next",
-          active:false
-        },
-        {
-          filterOptionName:"Later",
-          active:false
-        }
-      ]
-    },
+	{
+		filterName: "Priority",
+		active: true,
+		filterOptions: [
+			{
+				filterOptionName: "P0",
+				active: false,
+			},
+			{
+				filterOptionName: "P1",
+				active: false,
+			},
+			{
+				filterOptionName: "P2",
+				active: false,
+			},
+			{
+				filterOptionName: "P3",
+				active: false,
+			},
+		],
+	},
+	{
+		filterName: "Stage",
+		active: true,
+		filterOptions: [
+			{
+				filterOptionName: "Open",
+				active: false,
+			},
+			{
+				filterOptionName: "In Progress",
+				active: false,
+			},
+			{
+				filterOptionName: "Closed",
+				active: false,
+			},
+		],
+	},
+	{
+		filterName: "Severity",
+		active: false,
+		filterOptions: [
+			{
+				filterOptionName: "Blocker",
+				active: false,
+			},
+			{
+				filterOptionName: "High",
+				active: false,
+			},
+			{
+				filterOptionName: "Medium",
+				active: false,
+			},
+			{
+				filterOptionName: "Low",
+				active: false,
+			},
+		],
+	},
+	{
+		filterName: "Tags",
+		active: false,
+		filterOptions: [
+			{
+				filterOptionName: "Now",
+				active: false,
+			},
+			{
+				filterOptionName: "Next",
+				active: false,
+			},
+			{
+				filterOptionName: "Later",
+				active: false,
+			},
+		],
+	},
 ];
 
-const Filter = (props: Type_FilterProps) => {
+const Filter = () => {
 	const [filterSchema, setFilterSchema] = useState<TYPE_Filters[]>(filters);
 	const [showAllFilters, setShowAllFilters] = useState<boolean>(false);
-	const [activeFiltersDropdown, setActiveFiltersDropdown] = useState<TYPE_ActiveFiltersDropdown>({});
+	const [activeFiltersDropdown, setActiveFiltersDropdown] =
+		useState<TYPE_ActiveFiltersDropdown>({});
 
 	const handleColumnClick = (columnTitle: string) => {
 		const newFilters = { ...activeFiltersDropdown };
@@ -124,15 +122,18 @@ const Filter = (props: Type_FilterProps) => {
 		setActiveFiltersDropdown(newFilters);
 	};
 
-    const modifyActiveFilterState = (filterName:string, filterOptionIndex:number) => {
-        const newFilterSchema = [...filterSchema];
-        const filterObj = newFilterSchema.find(x => x.filterName === filterName)!;
-        
-        if(filterObj?.filterOptions[filterOptionIndex].active === true){
-            filterObj.filterOptions[filterOptionIndex].active = false;
-        }else{
-            filterObj.filterOptions[filterOptionIndex].active = true;
-        }
+	const modifyActiveFilterState = (
+		filterName: string,
+		filterOptionIndex: number
+	) => {
+		const newFilterSchema = [...filterSchema];
+		const filterObj = newFilterSchema.find((x) => x.filterName === filterName)!;
+
+		if (filterObj?.filterOptions[filterOptionIndex].active === true) {
+			filterObj.filterOptions[filterOptionIndex].active = false;
+		} else {
+			filterObj.filterOptions[filterOptionIndex].active = true;
+		}
 
         setFilterSchema(newFilterSchema);
         renderFilterData(filterSchema);
@@ -148,8 +149,18 @@ const Filter = (props: Type_FilterProps) => {
 		setFilterSchema(newArray);
 	};
 
+    const resetFilters = () => {
+        const resetFilterSchema = [...filterSchema];
+        resetFilterSchema.forEach((filterObj) => {
+            filterObj.filterOptions.forEach((filterOptionObj) => {
+                filterOptionObj.active = false;
+            });
+        });
+        setFilterSchema(resetFilterSchema);
+    }
+
 	return (
-		<div className="w-screen h-screen bg-[#161616]">
+		<div className="w-screen h-auto bg-[#161616]">
 			<div className="flex justify-between mb-4 mx-9 pt-4">
 				<div className="flex flex-wrap gap-3">
 					<div className="flex">
@@ -232,20 +243,21 @@ const Filter = (props: Type_FilterProps) => {
 										onClick={() => handleColumnClick(filter.filterName)}
 									>
 										<h4>{filter.filterName}</h4>
-                                        <div className="flex gap-1">
-                                        {filter.filterOptions
-                                            .filter((filter) => filter.active === true)
-                                            .map((filter, index) => (
-                                            <button
-                                                key={index}
-                                                className="inline-block font-fira_code rounded-md border border-dark_gray text-highlight_font_color text-[5px] py-[2px] px-[5px]">
-                                                {filter.filterOptionName}
-                                            </button>
-                                            ))}
-                                        </div>
+										<div className="flex gap-1">
+											{filter.filterOptions
+												.filter((filter) => filter.active === true)
+												.map((filter, index) => (
+													<button
+														key={index}
+														className="flex items-center justify-center font-fira_code rounded-md border border-dark_gray text-highlight_font_color text-center text-[6px] px-[5px]"
+													>
+														{filter.filterOptionName}
+													</button>
+												))}
+										</div>
 									</div>
 									{activeFiltersDropdown[filter.filterName] === true && (
-										<div className="absolute top-[100%]">
+										<div className="absolute top-[100%] bg-black">
 											<DisplayFilters
 												filterData={filter.filterOptions}
 												type={filter.filterName}
@@ -279,51 +291,51 @@ const Filter = (props: Type_FilterProps) => {
 								<path d="M12 5v14m-7-7h14" />
 							</svg>
 						</button>
-                        {showAllFilters && (
-                            <div className="absolute top-[110%] left-0 bg-primary_background_color w-48 rounded-xl p-1 border border-white/20 text-highlight_font_color">
-                                <div className="flex flex-wrap gap-1 p-2 border-b border-white/10">
-                                    {filterSchema
-                                        .filter((filter) => filter.active === true)
-                                        .map((filter, index) => (
-                                            <button
-                                                key={index}
-                                                className="inline-block font-fira_code rounded-md border border-dark_gray text-highlight_font_color text-xs py-1 px-2"
-                                            >
-                                                {filter.filterName}
-                                            </button>
-                                        ))}
-                                </div>
-                                <div className="flex flex-col gap-1 mt-1 p-1">
-                                    {filterSchema.map((data, index) => {
-                                        if (data.active === true) {
-                                            return (
-                                                <div
-                                                    key={index}
-                                                    onClick={() => modifyActiveState(index)}
-                                                    className="px-2 py-1 text-xs font-semibold bg-Secondary_background_color rounded-lg cursor-pointer border border-white/10"
-                                                >
-                                                    {data.filterName}
-                                                </div>
-                                            );
-                                        } else {
-                                            return (
-                                                <div
-                                                    key={index}
-                                                    onClick={() => modifyActiveState(index)}
-                                                    className="px-2 py-1 text-xs font-semibold hover:bg-Secondary_background_color rounded-lg cursor-pointer border border-transparent hover:border-white/10"
-                                                >
-                                                    {data.filterName}
-                                                </div>
-                                            );
-                                        }
-                                    })}
-                                </div>
-                            </div>
-                        )}
+						{showAllFilters && (
+							<div className="absolute top-[110%] left-0 bg-background_color w-48 rounded-xl p-1 border border-white/20 text-highlight_font_color">
+								<div className="flex flex-wrap gap-1 p-2 border-b border-white/10">
+									{filterSchema
+										.filter((filter) => filter.active === true)
+										.map((filter, index) => (
+											<button
+												key={index}
+												className="inline-block font-fira_code rounded-md border border-dark_gray text-highlight_font_color text-xs py-1 px-2"
+											>
+												{filter.filterName}
+											</button>
+										))}
+								</div>
+								<div className="flex flex-col gap-1 mt-1 p-1">
+									{filterSchema.map((data, index) => {
+										if (data.active === true) {
+											return (
+												<div
+													key={index}
+													onClick={() => modifyActiveState(index)}
+													className="px-2 py-1 text-xs font-semibold bg-Secondary_background_color rounded-lg cursor-pointer border border-white/10"
+												>
+													{data.filterName}
+												</div>
+											);
+										} else {
+											return (
+												<div
+													key={index}
+													onClick={() => modifyActiveState(index)}
+													className="px-2 py-1 text-xs font-semibold hover:bg-Secondary_background_color rounded-lg cursor-pointer border border-transparent hover:border-white/10"
+												>
+													{data.filterName}
+												</div>
+											);
+										}
+									})}
+								</div>
+							</div>
+						)}
 					</div>
 
 					<div className="flex items-center gap-4">
-						<button className="rounded-md h-7 text-[#808080] text-sm font-bold ">
+						<button onClick={() => resetFilters()} className="rounded-md h-7 text-[#808080] text-sm font-bold ">
 							Clear
 						</button>
 					</div>
@@ -350,48 +362,7 @@ const Filter = (props: Type_FilterProps) => {
 							<path d="m6 9 6 6 6-6" />
 						</svg>
 					</div>
-					<div className="flex hover:bg-[#49494D] rounded-md px-4 py-2">
-						<button className="rounded-md h-7 text-[#808080] text-sm font-bold">
-							Group
-						</button>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							stroke="#808080"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="1.5"
-							className="w-4 h-4icon icon-tabler icon-tabler-chevron-down"
-							viewBox="0 0 24 24"
-						>
-							<path
-								stroke="none"
-								d="M0 0h24v24H0z"
-							/>
-							<path d="m6 9 6 6 6-6" />
-						</svg>
-					</div>
-					<div className="flex  hover:bg-[#49494D] rounded-md px-4 py-2">
-						<button className="rounded-md h-7 text-[#808080] text-sm font-bold">
-							Customize
-						</button>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							stroke="#808080"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="1.5"
-							className="w-4 h-4icon icon-tabler icon-tabler-chevron-down"
-							viewBox="0 0 24 24"
-						>
-							<path
-								stroke="none"
-								d="M0 0h24v24H0z"
-							/>
-							<path d="m6 9 6 6 6-6" />
-						</svg>
-					</div>
+					{/* <CustomizeComponent/> */}
 				</div>
 			</div>
 		</div>

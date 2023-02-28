@@ -121,15 +121,9 @@ export const OrganisationForm = () => {
 								htmlFor=""
 								className="font-lg text-dark_gray font-[500]"
 							>
-								URL
+								Image URL
 							</label>
 							<div className="flex rounded-lg border-[2px] border-white/5 items-center">
-								<label
-									htmlFor=""
-									className="px-4 text-white/50"
-								>
-									app.agileshift.ai/
-								</label>
 								<input
 									ref={orgURL}
 									onChange={(e) => {
@@ -141,7 +135,8 @@ export const OrganisationForm = () => {
 									onFocus={() => setToolTip(!toolTip)}
 									onBlur={() => setToolTip(!toolTip)}
 									type="text"
-									className="flex-1 font-fira_code font-lg rounded-r-lg px-4 bg-Secondary_background_color h-10 outline-none"
+									className="flex-1 font-fira_code font-lg rounded-r-lg px-4 bg-Secondary_background_color h-10 outline-none placeholder:text-white/20"
+									placeholder="Enter Org. Logo URL"
 								/>
 							</div>
 							{orgUrlErrorMessage.length > 0 && (
