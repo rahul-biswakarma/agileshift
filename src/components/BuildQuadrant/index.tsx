@@ -7,7 +7,7 @@ import {
 	setDataSchema,
 	setFieldColor,
 } from "../../redux/reducers/DataTableSlice";
-import Filter from "../Filters/Filter";
+// import Filter from "../Filters/Filter";
 
 type Type_BuildQuadarntProps = {
 	fieldData: TYPE_FIELD;
@@ -23,7 +23,7 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 	return (
 		<div>
 			<BuildQuadarntHeader />
-			<Filter  />
+			{/* <Filter  /> */}
 			<main className="p-[1rem]">
 				<DataTable />
 			</main>
