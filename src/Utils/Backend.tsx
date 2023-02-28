@@ -526,8 +526,8 @@ export const get_user_suggestions = async (organisationId: string) => {
 export const set_notification = async (
   organisationId: string,
   userId: string,
-  dataId: string,
-  notificationData: string
+  notificationData: string,
+  dataId?: string,
 ) => {
   let orgData: any = await get_organizations_details(organisationId);
 
@@ -575,4 +575,41 @@ export const user_active_time = async (userId: string) => {
   await updateDoc(userRef, {
     active: arrayUnion(currentData),
   });
+};
+
+// 34 main search function
+export const main_search_function = async (
+  organizationId: string,
+  searchText: string
+) => {
+  let results: any = [];
+  let organizationTableData: any = await get_organizations_details(
+    organizationId
+  );
+  organizationTableData = organizationTableData["data"];
+  try {
+    organizationTableData.forEach((item: any) => {
+      if (wil_include(item, searchText)) {
+        results.push(item);
+      }
+    });
+  } catch {
+    console.log("error");
+    return [];
+  }
+  return results;
+};
+
+export const wil_include = (item: any, searchText: string) => {
+  let flag = false;
+  Object.keys(item).forEach((field: any) => {
+    if (!flag) {
+      try {
+        flag = item[field].toLowerCase().includes(searchText.toLowerCase());
+      } catch {
+        flag = false;
+      }
+    }
+  });
+  return flag;
 };

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useAppSelector } from "../../redux/hooks";
 
 import logoSvg from "../../assets/logo.svg";
-import { set_notification, get_user_by_id } from "../../Utils/Backend";
-import {  } from "../../Utils/Backend";
+import { get_user_by_id } from "../../Utils/Backend";
+import { SearchComponent } from "./SearchComponent";
 
 interface TYPE_HeaderProps {
 	showNotification: boolean;
@@ -13,7 +13,6 @@ interface TYPE_HeaderProps {
 const Header = (props:TYPE_HeaderProps) => {
 
 	const userId = useAppSelector((state) => state.auth.userId);
-    const organizationId = useAppSelector((state) => state.auth.organisationId);
 
 	const [userData, setUserData] = useState<TYPE_USER>({
 		id: "",
@@ -22,7 +21,7 @@ const Header = (props:TYPE_HeaderProps) => {
 		avatar: "",
 		organisation: [""],
 	});
-
+	
 	useEffect(() => {
 		get_user_by_id(userId).then((data) => {
 			if (data) {
@@ -45,14 +44,14 @@ const Header = (props:TYPE_HeaderProps) => {
 		}))
 	}
 
-	const setTempNotification = () =>{
-		set_notification(
-			organizationId,
-			userId,
-			"UBKYEHHULHNG",
-			"New Issue Added"
-		)
-	}
+	// const setTempNotification = () =>{
+	// 	set_notification(
+	// 		organizationId,
+	// 		userId,
+	// 		"UBKYEHHULHNG",
+	// 		"New Issue Added"
+	// 	)
+	// }
 
 	return (
 		<div className="p-[1rem_2rem] flex gap-[3rem] justify-between border-[2px] border-Secondary_background_color">
@@ -67,24 +66,13 @@ const Header = (props:TYPE_HeaderProps) => {
 				</h1> */}
 			</div>
 
-			<div className="relative w-full max-w-[800px] rounded-md flex gap-[10px] bg-Secondary_background_color p-[2px]">
-				<div className="flex rounded-md bg-background_color items-center px-4">
-					<span className="material-symbols-outlined text-white/30">
-						search
-					</span>
-				</div>
-				<input
-					name="search-input"
-					type="text"
-					placeholder="Search items, fields, users and etc"
-					className="w-full flex-1 font-fira_code font-lg rounded-r-lg px-4 bg-Secondary_background_color h-9 outline-none text-white placeholder:text-white/20"
-				/>
-			</div>
+			<SearchComponent />
+
 			<div className="flex gap-[2rem] items-center">
 				<span className="material-symbols-outlined text-white/20 cursor-pointer hover:text-white" onClick={()=>handleNotificationToggle()}>
 					notifications
 				</span>
-				<span className="material-symbols-outlined text-white/20 cursor-pointer hover:text-white" onClick={()=>setTempNotification()}>
+				<span className="material-symbols-outlined text-white/20 cursor-pointer hover:text-white">
 					settings
 				</span>
 				<img
