@@ -3,10 +3,13 @@ import BuildQuadarnt from "../BuildQuadrant";
 
 
 import { get_schema_data, get_data_by_column_name } from "../../Utils/Backend";
+import { useNavigate } from "react-router-dom";
+import { setActiveTab, setIsEdit } from "../../redux/reducers/SchemaSlice";
+
 
 import Header from "./Header";
 import TabHeader from "./TabHeader";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppSelector , useAppDispatch} from "../../redux/hooks";
 import { NotificationMainComponent } from "../Notifications/NotificationMainComponent";
 
 export default function Dashboard() {
@@ -15,9 +18,15 @@ export default function Dashboard() {
 	const [data, setData] = useState();
 	const [showNotification, setShowNotification] = useState(false);
 
+	const navigate = useNavigate();
+	const dispatch = useAppDispatch();
+
   useEffect(() => {
     get_schema_data(organizationId).then((data) => {
       if (data) setDataSchema(data.schemaData);
+	  	dispatch(setActiveTab(0));
+		dispatch(setIsEdit(true));
+		navigate("/edit-organization-schema");
     });
   }, [organizationId]);
 
