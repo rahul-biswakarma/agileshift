@@ -246,7 +246,41 @@ export const create_schema = async (
       schemaData: schemas,
     };
     await updateDoc(doc(db, "schemas", organisationId), schemaDetails);
+    let filterData: any = {};
+    schemas.forEach((schema) => {
+      filterData[schema.name] = [];
+      schema.list.forEach((item) => {
+        if (item.columnType !== "string" && item.columnType !== "title" && item.columnType !== "id" && item.columnType !== "currency") {
+          filterData[schema.name].push({
+            active: true,
+            data: [],
+            columnName: item.columnName,
+          });
+        }
+      });
+    });
+    const filterDetails = {
+      data: filterData,
+    };
+    await updateDoc(doc(db, "filterSchema", organisationId), filterDetails);
   } else {
+    let filterData: any = {};
+    schemas.forEach((schema) => {
+      filterData[schema.name] = [];
+      schema.list.forEach((item) => {
+        if (item.columnType !== "string" && item.columnType !== "title" && item.columnType !== "id" && item.columnType !== "currency") {
+          filterData[schema.name].push({
+            active: true,
+            data: [],
+            columnName: item.columnName,
+          });
+        }
+      });
+    });
+    const filterDetails = {
+      data: filterData,
+    };
+    await setDoc(doc(db, "filterSchema", organisationId), filterDetails);
     const schemaDetails = {
       schemaData: schemas,
     };
@@ -264,6 +298,7 @@ export const get_schema_data = async (organisationId: string) => {
     console.log("No such document!");
   }
 };
+
 //16 get tabs name
 export const get_tabs_name = async (organisationId: string) => {
   const docRef = doc(db, "schemas", organisationId);
@@ -576,3 +611,15 @@ export const user_active_time = async (userId: string) => {
     active: arrayUnion(currentData),
   });
 };
+
+
+export const get_filter_schema = async (organizationId: string) => {
+  const filterRef = doc(db, "filterSchema", organizationId);
+  const filterSnap = await getDoc(filterRef);
+  if (filterSnap.exists()) {
+    return filterSnap.data();
+  } else {
+    console.log("No such document!");
+    return;
+  }
+}
