@@ -23,18 +23,26 @@ export default function Dashboard() {
 
   useEffect(() => {
     get_schema_data(organizationId).then((data) => {
-      if (data) setDataSchema(data.schemaData);
-	  	dispatch(setActiveTab(0));
+		console.log("data:", data);
+      if (data) {setDataSchema(data.schemaData);
+		
+	  	}else{
+		dispatch(setActiveTab(0));
 		dispatch(setIsEdit(true));
 		navigate("/edit-organization-schema");
+		}
     });
   }, [organizationId]);
 
   const getDataByFeildName = useCallback(() => {
     if (dataSchema)
-      get_data_by_column_name(organizationId, "all").then((data) => {
+     { get_data_by_column_name(organizationId, "all").then((data) => {
         setData(data);
       });
+	 
+	}
+	  
+	
   }, [dataSchema, organizationId]);
 
   useEffect(() => {

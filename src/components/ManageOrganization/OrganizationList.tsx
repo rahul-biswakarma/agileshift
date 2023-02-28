@@ -10,6 +10,7 @@ const OrganizationList: React.FunctionComponent = () => {
 	const [user, setUser] = useState<any>();
 	const [organization, setOrganizations] = useState<any>([]);
 	const userId = useAppSelector((state:RootState) => state.auth.userId);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const getUserObj = async () => {
@@ -37,9 +38,10 @@ const OrganizationList: React.FunctionComponent = () => {
 
 	useEffect(() => {
 		document.title = "Organization List";
-	}, []);
-
-	const navigate = useNavigate();
+		if(!userId){
+			navigate('/login')
+		}
+	}, []);	
 
 	return (
 		<div className="bg-background_color h-screen w-screen flex items-center justify-center font-dm_sans">
