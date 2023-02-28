@@ -611,3 +611,15 @@ export const user_active_time = async (userId: string) => {
     active: arrayUnion(currentData),
   });
 };
+
+
+export const get_filter_schema = async (organizationId: string) => {
+  const filterRef = doc(db, "filterSchema", organizationId);
+  const filterSnap = await getDoc(filterRef);
+  if (filterSnap.exists()) {
+    return filterSnap.data();
+  } else {
+    console.log("No such document!");
+    return;
+  }
+}
