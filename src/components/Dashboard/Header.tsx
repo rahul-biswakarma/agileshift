@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAppSelector } from "../../redux/hooks";
 
 import logoSvg from "../../assets/logo.svg";
-import { get_user_by_id } from "../../Utils/Backend";
+import { get_user_by_id, set_notification } from "../../Utils/Backend";
 import { SearchComponent } from "./SearchComponent";
 
 interface TYPE_HeaderProps {
@@ -13,6 +13,7 @@ interface TYPE_HeaderProps {
 const Header = (props:TYPE_HeaderProps) => {
 
 	const userId = useAppSelector((state) => state.auth.userId);
+	const organizationId = useAppSelector((state) => state.auth.organisationId);
 
 	const [userData, setUserData] = useState<TYPE_USER>({
 		id: "",
@@ -42,16 +43,17 @@ const Header = (props:TYPE_HeaderProps) => {
 			console.log(!state);
 			return !state
 		}))
+		
 	}
 
-	// const setTempNotification = () =>{
-	// 	set_notification(
-	// 		organizationId,
-	// 		userId,
-	// 		"UBKYEHHULHNG",
-	// 		"New Issue Added"
-	// 	)
-	// }
+	const setTempNotification = () =>{
+		set_notification(
+			organizationId,
+			[userId],
+			["New Issue Added"],
+			"UBKYEHHULHNG"
+		)
+	}
 
 	return (
 		<div className="p-[1rem_2rem] flex gap-[3rem] justify-between border-[2px] border-Secondary_background_color">
@@ -69,10 +71,10 @@ const Header = (props:TYPE_HeaderProps) => {
 			<SearchComponent />
 
 			<div className="flex gap-[2rem] items-center">
-				<span className="material-symbols-outlined text-white/20 cursor-pointer hover:text-white" onClick={()=>handleNotificationToggle()}>
+				<span className={`material-symbols-outlined cursor-pointer hover:text-white ${props.showNotification===true?'text-white':'text-white/20'}`} onClick={()=>handleNotificationToggle()}>
 					notifications
 				</span>
-				<span className="material-symbols-outlined text-white/20 cursor-pointer hover:text-white">
+				<span className="material-symbols-outlined text-white/20 cursor-pointer hover:text-white" onClick={()=>setTempNotification()}>
 					settings
 				</span>
 				<img
