@@ -9,70 +9,69 @@ import { getFromSession } from "./Utils/Auth";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import { setUserId } from "./redux/reducers/AuthSlice";
 import { SidebarWrapper } from "./components/Sidebar/SidebarWrapper";
-import { LinkageSidebar } from "./components/Sidebar/LinkageSidebar";
+
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
-  const userIdFromSession = getFromSession("userId");
-  const dispatch = useAppDispatch();
+	const userIdFromSession = getFromSession("userId");
+	const dispatch = useAppDispatch();
 
-  if (userIdFromSession) {
-    dispatch(setUserId(userIdFromSession));
-  }
+	if (userIdFromSession) {
+		dispatch(setUserId(userIdFromSession));
+	}
 
-  const sideBarList = useAppSelector((state) => state.sidebar.sideBarData);
-  return (
-    <BrowserRouter>
-      {sideBarList.length !== 0 && (
-        <section className="fixed z-50">
-          <SidebarWrapper />
-        </section>
-      )}
-      <Routes>
-        <Route
-          path=""
-          element={
-            userIdFromSession ? (
-              <Navigate to="/organization-lists" />
-            ) : (
-              <Navigate to="/signup" />
-            )
-          }
-        />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/organization-lists" element={<OrganizationList />} />
-        <Route
-          path="/create-organization"
-          element={<GeneratorFormsContainer />}
-        />
-        <Route
-          path="/edit-organization-schema"
-          element={<GeneratorFormsContainer />}
-        />
-        <Route path="/organization/:id" element={<Dashboard />} />
-        <Route
-          path="/organization"
-          element={<Navigate to="/organization-lists" />}
-        />
-        <Route
-          path="/linkage-sidebar"
-          element={
-            <LinkageSidebar
-              field={{
-                name: "Issues",
-                list: [],
-                color: "purple",
-                icon: "home",
-                linkage: ["Tickets", "Issues", "MicroIssues"],
-              }}
-            />
-          }
-        />
-      </Routes>
-    </BrowserRouter>
-    // Intentional dummy line
-  );
+	const sideBarList = useAppSelector((state) => state.sidebar.sideBarData);
+	return (
+		<BrowserRouter>
+			<ToastContainer />
+			{sideBarList.length !== 0 && (
+				<section className="fixed z-50">
+					<SidebarWrapper />
+				</section>
+			)}
+			<Routes>
+				<Route
+					path=""
+					element={
+						userIdFromSession ? (
+							<Navigate to="/organization-lists" />
+						) : (
+							<Navigate to="/signup" />
+						)
+					}
+				/>
+				<Route
+					path="/signup"
+					element={<SignUp />}
+				/>
+				<Route
+					path="/login"
+					element={<Login />}
+				/>
+				<Route
+					path="/organization-lists"
+					element={<OrganizationList />}
+				/>
+				<Route
+					path="/create-organization"
+					element={<GeneratorFormsContainer />}
+				/>
+				<Route
+					path="/edit-organization-schema"
+					element={<GeneratorFormsContainer />}
+				/>
+				<Route
+					path="/organization/:id"
+					element={<Dashboard />}
+				/>
+				<Route
+					path="/organization"
+					element={<Navigate to="/organization-lists" />}
+				/>
+			</Routes>
+		</BrowserRouter>
+	);
 };
 
 export default App;

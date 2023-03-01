@@ -1,16 +1,19 @@
-import { useRef, useState, ChangeEvent } from "react";
+import { useRef, useState, ChangeEvent, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setOrganisationId } from "../../redux/reducers/AuthSlice";
 import { RootState } from "../../redux/store";
 import {
 	add_organisation_to_user,
 	create_organization,
+	get_organization_name_by_id
 } from "../../Utils/Backend";
 import { setActiveTab } from "../../redux/reducers/SchemaSlice";
 
 require("tailwindcss-writing-mode")({
 	variants: ["responsive", "hover"],
 });
+
+
 
 export const OrganisationForm = () => {
 	// States
@@ -20,11 +23,28 @@ export const OrganisationForm = () => {
 	const [orgUrlErrorMessage, setOrgUrlErrorMessage] = useState<string>("");
 	const [orgNameState, setOrgNameState] = useState<string>("");
 	const [orgUrlState, setOrgUrlState] = useState<string>("");
+	const [isSubmitDisabled, setIsSubmitDisabled] = useState<boolean>(true);
+
+
+	const organizationId = useAppSelector((state) => state.auth.organisationId);
 
 	// Refs
 	const orgName = useRef<HTMLInputElement>(null);
 	const orgURL = useRef<HTMLInputElement>(null);
 	const userId = useAppSelector((state: RootState) => state.auth.userId);
+
+	// doc title
+
+	useEffect(() => {
+		get_organization_name_by_id(organizationId).then((data) => {
+			console.log(data);
+			document.title = `Schema Form | ${data}`
+		})
+	})
+
+	useEffect(() => {
+		setIsSubmitDisabled(!orgNameState || !orgUrlState);
+	  }, [orgNameState, orgUrlState]);
 
 	// Redux
 	const activeTab = useAppSelector(
@@ -62,6 +82,8 @@ export const OrganisationForm = () => {
 				break;
 		}
 	};
+
+	
 
 	const addOrganisation = () => {
 		if (!isOrgCreated) {
@@ -164,6 +186,7 @@ export const OrganisationForm = () => {
 								: "cursor-not-allowed"
 						} transition-all`}
 						onClick={addOrganisation}
+						disabled={isSubmitDisabled}
 					>
 						<span className="material-symbols-outlined">add</span>
 						Create new AgileOrg

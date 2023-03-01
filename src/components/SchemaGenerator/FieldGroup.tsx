@@ -6,6 +6,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Modal,
 } from "@mui/material";
 
 type FieldGroupPropTypes = {
@@ -32,33 +33,30 @@ export const FieldGroup = ({
     "date",
     "currency",
   ]);
-  // const getTypes = async () => {
-  //   let data = await get_all_Supported_types();
-  //   setTypes(data);
-  // };
-  // getTypes();
+
+
+  const [showModal , setShowModal] = useState(false);
+
+  const handleDeleteClick = () => {
+    setShowModal(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    deleteColumn(id);
+    setShowModal(false);
+  }
+
+  const handleDeleteCancel = () => {
+    setShowModal(false);
+  }
+
+  
   return (
     <div
       className="relative flex items-center justify-center gap-4 py-1 px-2 w-full hover:bg-Secondary_background_color rounded-md"
     >
       <span className="material-symbols-outlined">drag_indicator</span>
-      {/* <div className="flex flex-col gap-1 flex-1">
-				<label
-					htmlFor="columtitle-1"
-					className="text-sm"
-				>
-					Column Title
-				</label>
-				<input
-					type="text"
-					className="p-2 bg-background_color text-highlight_font_color px-2 placeholder:text-primary_font_color
-                 rounded-md border border-primary_font_color"
-					placeholder="Column Title"
-					id="columntitle-1"
-					value={column.columnName}
-					onChange={(e) => changeColumn(id, e.target.value, column.columnType)}
-				/>
-			</div> */}
+      
       <TextField
         sx={{
           m: 1,
@@ -116,30 +114,38 @@ export const FieldGroup = ({
           ))}
         </Select>
       </FormControl>
-      {/* <div className="flex flex-col gap-1">
-				<label
-					htmlFor="columntype-1"
-					className="text-sm"
-				>
-					Column Type
-				</label>
-				<select
-					name="columntype-1"
-					id="columntype-1"
-					className="p-2
-              bg-background_color 
-              text-highlight_font_color
-              rounded-lg border border-primary_font_color
-              "
-					value={column.columnType}
-				></select>
-			</div> */}
+      
       <button
-        onClick={(e) => deleteColumn(id)}
+        onClick={handleDeleteClick}
         className="material-symbols-outlined"
       >
         delete
       </button>
+
+      <Modal
+        open={showModal}
+        onClose={handleDeleteCancel}
+        aria-labelledby="delete-column-modal"
+        aria-describedby="delete-column-modal-description"
+      >
+        
+          <div className="absolute m-4 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
+            rounded-lg font-dm_sans bg-Secondary_background_color shadow-lg p-6 text-left align-middle text-primary_font_color">
+          <p className = "mb-7" id="delete-column-modal-description">
+            Are you sure you want to delete this column?
+          </p>
+          <div className="flex justify-end items-center mt-7 gap-[1rem] font-fira_code">
+            <button className="bg-sidebar_bg px-[15px] py-[5px] font-[500] rounded-md flex items-center border-0 border-transparent hover:text-white " onClick={handleDeleteCancel}>Cancel</button>
+            <button className = "bg-rose-400 text-rose-800 px-[15px] py-[5px] flex items-center font-[500] rounded-md border-0 border-transparent hover:bg-rose-800 hover:text-rose-400 "onClick={handleDeleteConfirm}>Delete</button>
+
+          </div>
+          
+          </div>
+          
+          </Modal>
+
+
+
     </div>
   );
 };
