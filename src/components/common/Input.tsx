@@ -1,7 +1,6 @@
 import React from "react";
 
 type type_props = {
-  type: string;
   defaultValue: string | Array<string>;
   setFunction: any;
   label: string;

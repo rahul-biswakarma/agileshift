@@ -12,66 +12,7 @@ export const LinkageSidebar = (props: LinkageSidebarPropType) => {
   const [fetchData, setFetchData] = useState(true);
 
   const organisationId = "SYaaoVaHDndguU9d9lsy";
-  // interface MyObject {
-  //   type: string;
-  //   data: {};
-  //   // add any additional properties here if needed
-  // }
 
-  // const objects: MyObject[] = [
-  //   /* your array of objects */
-  // ];
-  // const result: MyObject[] = [];
-
-  // const types = [...new Set(objects.map((obj) => obj.type))] as string[]; // get all unique types
-
-  // types.forEach((type) => {
-  //   const filteredObjects = objects.filter((obj) => obj.type === type); // get all objects of this type
-  //   result.push(...filteredObjects.slice(0, 3)); // add the first three objects to the result array
-  // });
-
-  // console.log(result);
-
-  // const ITEM_HEIGHT = 48;
-  // const ITEM_PADDING_TOP = 8;
-  // const MenuProps = {
-  //   PaperProps: {
-  //     style: {
-  //       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-  //       width: 250,
-  //     },
-  //   },
-  // };
-  // const names = [
-  //   "Oliver Hansen",
-  //   "Van Henry",
-  //   "April Tucker",
-  //   "Ralph Hubbard",
-  //   "Omar Alexander",
-  //   "Carlos Abbott",
-  //   "Miriam Wagner",
-  //   "Bradley Wilkerson",
-  //   "Virginia Andrews",
-  //   "Kelly Snyder",
-  // ];
-
-  // const [personName, setPersonName] = useState<string[]>([]);
-
-  // const handleChange = (event:SelectChangeEvent<typeof personName>) => {
-  //   const {
-  //     target: { value },
-  //   } = event;
-  //   setPersonName(
-  //     // On autofill we get a stringified value.
-  //     typeof value === "string" ? value.split(",") : value
-  //   );
-  // };
-  // let options = [
-  //   { value: "apple", label: "Apple" },
-  //   { value: "banana", label: "Banana" },
-  //   { value: "orange", label: "Orange" },
-  //   { value: "watermelon", label: "Watermelon" },
-  // ];
 
   type optionsType = {
     value: string;
@@ -118,24 +59,7 @@ export const LinkageSidebar = (props: LinkageSidebarPropType) => {
       color: "#FFFFFF", // Set the input text color here
     }),
   };
-  // const formatOptions = (value: Array<string>) => {
-  //   let data: {
-  //     value: string;
-  //     label: string;
-  //   }[] = [];
-  //   if (value) {
-  //     value.forEach((item) => {
-  //       data.push({
-  //         value: item,
-  //         label: item,
-  //       });
-  //     });
-  //   }
-  //   return data;
-  // };
-  // const formatOutputVlue = (value: any) => {
-  //   return value.map((item: any) => item["value"]);
-  // };
+
   const [selectedOptions, setSelectedOptions] = useState<typeof options>([]);
 
   const handleSelectChange = (selected: any) => {
