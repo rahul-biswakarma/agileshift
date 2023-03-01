@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "../../redux/store";
 import { create_schema } from "../../Utils/Backend";
@@ -10,9 +10,20 @@ import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { setActiveTab } from "../../redux/reducers/SchemaSlice";
 import SchemaGeneratorFormHeader from "./Header";
 
+
 export const GeneratorFormsContainer = () => {
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
+	const navigate = useNavigate();
+	const dispatch = useAppDispatch();
+	const userId = useAppSelector((state:RootState) => state.auth.userId);
+
+	
+
+	useEffect(() => {
+		if(!userId){
+			navigate('/login')
+		}
+	}, [navigate, userId]);	
+
 
   let activeTab = useAppSelector((state: RootState) => state.schema.activeTab);
 

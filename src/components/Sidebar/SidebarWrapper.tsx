@@ -30,16 +30,6 @@ const SidebarWrapper = () => {
           return (
             <>
               <AddOptions
-                setColapsTabBar={setColapsTabBar}
-                key={index}
-                index={index}
-                tabColaps={
-                  sideBarList.length <= 3
-                    ? false
-                    : index === colapsTabBar
-                    ? false
-                    : true
-                }
               />
             </>
           );

@@ -749,6 +749,16 @@ export const wil_include = (item: any, searchText: string) => {
   return flag;
 };
 
+// 35 get organization name by id
+export const get_organization_name_by_id = async (organizationId: string) => {
+  const organizationRef = doc(db, "organizations", organizationId);
+  const docSnap = await getDoc(organizationRef);
+  if (docSnap.exists()) {
+    return docSnap.data()["name"];
+  } else {
+    return "";
+  }
+};
 export const get_filter_schema = async (organizationId: string) => {
   const filterRef = doc(db, "filterSchema", organizationId);
   const filterSnap = await getDoc(filterRef);
