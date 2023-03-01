@@ -60,7 +60,7 @@ const Header = (props:TYPE_HeaderProps) => {
 			document.title = `${data} | Dashboard`
 
 		})
-	},[])
+	},[organizationId])
 
 	return (
 		<div className="p-[1rem_2rem] flex gap-[3rem] justify-between border-[2px] border-Secondary_background_color">

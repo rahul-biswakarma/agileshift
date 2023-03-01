@@ -25,7 +25,7 @@ export default function Dashboard() {
 		if(!organizationId){
 			navigate('/organization-lists')
 		}
-	},[])
+	},[navigate, organizationId])
 
   useEffect(() => {
     get_schema_data(organizationId).then((data) => {
@@ -38,7 +38,7 @@ export default function Dashboard() {
 		navigate("/edit-organization-schema");
 		}
     });
-  }, [organizationId]);
+  }, [organizationId, dispatch, navigate]);
 
   const getDataByFeildName = useCallback(() => {
     if (dataSchema)

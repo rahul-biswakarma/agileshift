@@ -41,7 +41,7 @@ const OrganizationList: React.FunctionComponent = () => {
 		if(!userId){
 			navigate('/login')
 		}
-	}, []);	
+	}, [navigate, userId]);	
 
 	return (
 		<div className="bg-background_color h-screen w-screen flex items-center justify-center font-dm_sans">
