@@ -415,7 +415,6 @@ export const add_organisation_to_user = async (
   });
 };
 // // 24 get user by id
-
 export const get_user_by_id = async (userId: string) => {
   const docRef = doc(db, "users", userId);
   const docSnap = await getDoc(docRef);
@@ -436,7 +435,7 @@ export const get_user_by_email = async (email: string) => {
   return userData; // return the variable after the loop has finished
 };
 
-// 26 addd && edit table data
+// 26 add && edit table data
 export const update_data_to_database = async (
   organisationId: string,
   data: any

@@ -50,12 +50,12 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 		return result;
 	}
 
-
 	useEffect(()=>{
 		const getFilterSchema = async () => {
 			const filters = await get_filter_schema(organizationId);
 			if(tabName !== "All"){
 				setFilterSchema(filters!.data[tabName]);
+				console.log(filters!.data[tabName]);
 			}else{
 				let filter:TYPE_Filters[] = [];
 				for(const tabName in filters!.data){	
@@ -65,7 +65,6 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 				}
 				filter = removeDuplicates(filter);
 				setFilterSchema(filter);
-				console.log(filters!.data[tabName]);
 			}
 		}
 		getFilterSchema();

@@ -25,7 +25,7 @@ const DisplayFilters = ({
   }
 
   return (
-    <div>
+    <div className="">
       <div className="absolute top-[110%] left-0 bg-background_color w-48 rounded-xl p-1 border border-white/20 text-highlight_font_color">
         <div className="flex flex-wrap gap-1 p-2 border-b border-white/10">
           {modifiedFilterData
