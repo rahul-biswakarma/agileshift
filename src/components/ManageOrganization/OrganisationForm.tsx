@@ -66,7 +66,7 @@ export const OrganisationForm = () => {
 	const addOrganisation = () => {
 		if (!isOrgCreated) {
 			create_organization(userId, orgNameState, orgUrlState).then((id) => {
-				add_organisation_to_user(userId, id);
+				add_organisation_to_user(userId, id,"");
 				dispatch(setOrganisationId(id));
 			});
 			setIsOrgCreated(true);

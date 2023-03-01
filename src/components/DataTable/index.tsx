@@ -48,18 +48,18 @@ const DataTable = () => {
 	const datas = useAppSelector((state) => state.datatable.datas);
 
 	const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
-
+	
 	const gridOptions: CustomGridOptions = {
 		detailRowAutoHeight: true,
 		rowSelection: "single",
+		suppressDragLeaveHidesColumns: true,
 		onRowClicked: function (event) {
 			let rowData = event.data;
 			dispatch(
 				setSideBar({
-					field: rowData.field,
-					color: rowData.color,
-					data: rowData,
-					schema: dataSchema,
+					sidebarType: "create 	Mode",
+					createModeCalledByField: "",
+					fieldId: rowData.field.id,
 				})
 			);
 		},

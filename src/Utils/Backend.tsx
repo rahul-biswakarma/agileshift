@@ -407,7 +407,8 @@ export const get_list_by_column_type = async (
 // 23 add organization to user
 export const add_organisation_to_user = async (
 	userId: string,
-	organisationId: string
+	organisationId: string,
+	email:string
 ) => {
 	const userRef = doc(db, "users", userId);
 	await updateDoc(userRef, {
@@ -417,6 +418,24 @@ export const add_organisation_to_user = async (
 	await updateDoc(userRef, {
 		users: arrayUnion(organisationId),
 	}); 
+
+	
+	const docRef = doc(db, "invitations", email);
+		const docSnap = await getDoc(docRef);
+		let dataDetails: any =[] 
+
+	if (docSnap.exists()) {
+		dataDetails = docSnap.data()
+		dataDetails = dataDetails.filter((item: any) => item !== organisationId)
+		await updateDoc(docRef, {
+			pendingList: dataDetails,
+		});
+	} else {
+	// doc.data() will be undefined in this case
+	console.log("No such document!");
+	}
+
+
 };
 // // 24 get user by id
 export const get_user_by_id = async (userId: string) => {
@@ -705,7 +724,7 @@ export const get_invitations_list = async (userID: string) => {
 	const userRef = doc(db, "invitations", userDetails['email']);
 	const docSnap = await getDoc(userRef);
 	if (docSnap.exists()) {
-		return docSnap.data()["invitations"];
+		return docSnap.data()["pendingList"];
 	} else {
 		return [];
 	}
