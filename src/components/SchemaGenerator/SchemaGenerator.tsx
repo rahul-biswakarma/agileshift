@@ -16,51 +16,51 @@ import { setActiveTab } from "../../redux/reducers/SchemaSlice";
 import SelectIconComponent from "./SelectIconComponent";
 
 require("tailwindcss-writing-mode")({
-	variants: ["responsive", "hover"],
+  variants: ["responsive", "hover"],
 });
 
 type GeneratorPropTypes = {
-	id: number;
-	name: string;
-	setName: (this: any, name: string) => void;
-	list: TYPE_SCHEMA[];
-	setList: (this: any, list: TYPE_SCHEMA[]) => void;
-	getAllFieldsName: () => string[];
-	submitSchema: () => void;
-	duplicateSchema: (this: any) => void;
-	deleteSchema: (this: any) => void;
-	color: string;
-	changeColor: (this: any, color: string) => void;
-	icon: string;
-	changeIcon: (this: any, icon: string) => void;
+  id: number;
+  name: string;
+  setName: (this: any, name: string) => void;
+  list: TYPE_SCHEMA[];
+  setList: (this: any, list: TYPE_SCHEMA[]) => void;
+  getAllFieldsName: () => string[];
+  submitSchema: () => void;
+  duplicateSchema: (this: any) => void;
+  deleteSchema: (this: any) => void;
+  color: string;
+  changeColor: (this: any, color: string) => void;
+  icon: string;
+  changeIcon: (this: any, icon: string) => void;
 };
 
 export const SchemaGenerator = ({
-	id,
-	name,
-	setName,
-	list,
-	setList,
-	getAllFieldsName,
-	submitSchema,
-	duplicateSchema,
-	deleteSchema,
-	color,
-	changeColor,
-	icon,
-	changeIcon,
+  id,
+  name,
+  setName,
+  list,
+  setList,
+  getAllFieldsName,
+  submitSchema,
+  duplicateSchema,
+  deleteSchema,
+  color,
+  changeColor,
+  icon,
+  changeIcon,
 }: GeneratorPropTypes) => {
-	const colorList = [
-		"purple",
-		"slate",
-		"red",
-		"amber",
-		"lime",
-		"cyan",
-		"indigo",
-		"pink",
-	];
-	const [selectedOptions, setSelectedOptions] = useState([]);
+  const colorList = [
+    "purple",
+    "slate",
+    "red",
+    "amber",
+    "lime",
+    "cyan",
+    "indigo",
+    "pink",
+  ];
+  const [selectedOptions, setSelectedOptions] = useState([]);
 
 	const [showModal , setShowModal] = useState(false);
 
@@ -85,10 +85,10 @@ export const SchemaGenerator = ({
 		setSelectedOptions(typeof value === "string" ? value.split(",") : value);
 	};
 
-	const activeTab = useAppSelector(
-		(state: RootState) => state.schema.activeTab
-	);
-	const dispatch = useAppDispatch();
+  const activeTab = useAppSelector(
+    (state: RootState) => state.schema.activeTab
+  );
+  const dispatch = useAppDispatch();
 
 	if (activeTab === id)
 		return (
@@ -147,153 +147,127 @@ export const SchemaGenerator = ({
 					</div>
 				</div>
 
-				<div className="flex w-full justify-center gap-[3rem] items-center py-[1.5rem]">
-					<div className="flex gap-[0.5rem] min-w-[100px] font-dm-sans">
-						<FormControl
-							sx={{
-								m: 1,
-								minWidth: 120,
-								"& label": {
-									color: "#fff",
-									fontFamily: "DM Sans",
-								},
-								"& .MuiFormControl-root": {
-									borderColor: "white",
-								},
-							}}
-							size="small"
-							fullWidth
-						>
-							<InputLabel
-								sx={{ color: "#f00" }}
-								id="color-input-id"
-							>
-								Color
-							</InputLabel>
-							<Select
-								name="color"
-								id={`${name}-color`}
-								labelId="color-label-id"
-								label="Color"
-								value={color}
-								onChange={(e) => changeColor(e.target.value)}
-							>
-								{colorList.map((color, id) => {
-									return (
-										<MenuItem
-											key={id}
-											value={color}
-										>
-											{color}
-										</MenuItem>
-									);
-								})}
-							</Select>
-						</FormControl>
-					</div>
+        <div className="flex w-full justify-center gap-[3rem] items-center py-[1.5rem]">
+          <div className="flex gap-[0.5rem] min-w-[100px] font-dm-sans">
+            <FormControl
+              sx={{
+                m: 1,
+                minWidth: 120,
+                "& label": {
+                  color: "#fff",
+                  fontFamily: "DM Sans",
+                },
+                "& .MuiFormControl-root": {
+                  borderColor: "white",
+                },
+              }}
+              size="small"
+              fullWidth>
+              <InputLabel sx={{ color: "#f00" }} id="color-input-id">
+                Color
+              </InputLabel>
+              <Select
+                name="color"
+                id={`${name}-color`}
+                labelId="color-label-id"
+                label="Color"
+                value={color}
+                onChange={(e) => changeColor(e.target.value)}>
+                {colorList.map((color, id) => {
+                  return (
+                    <MenuItem key={id} value={color}>
+                      {color}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+          </div>
 
-					<SelectIconComponent
-						icon={icon}
-						changeIcon={changeIcon}
-					/>
+          <SelectIconComponent icon={icon} changeIcon={changeIcon} />
 
-					<div className="relative flex items-center font-dm_sans gap-[10px]">
-						<FormControl
-							sx={{
-								m: 1,
-								minWidth: 120,
-								"& label": {
-									color: "#fff",
-									fontFamily: "DM Sans",
-								},
-								"& .MuiFormControl-root": {
-									borderColor: "white",
-								},
-							}}
-							size="small"
-							fullWidth
-						>
-							<InputLabel
-								sx={{ color: "#f00" }}
-								id="assosiate-label-id"
-							>
-								Associates
-							</InputLabel>
-							<Select
-								multiple
-								name="associates"
-								id={`${name}-associates`}
-								labelId="associate-label-id"
-								label="Associates"
-								value={selectedOptions}
-								onChange={handleChange}
-								renderValue={(selected) => {
-									console.log("selected", selected);
-									return selected.join(", ");
-								}}
-							>
-								{getAllFieldsName().map((name) => (
-									<MenuItem
-										key={name}
-										value={name}
-									>
-										{name}
-									</MenuItem>
-								))}
-							</Select>
-						</FormControl>
-					</div>
-					<UploadJSON setList={setList} />
-				</div>
+          <div className="relative flex items-center font-dm_sans gap-[10px]">
+            <FormControl
+              sx={{
+                m: 1,
+                minWidth: 120,
+                "& label": {
+                  color: "#fff",
+                  fontFamily: "DM Sans",
+                },
+                "& .MuiFormControl-root": {
+                  borderColor: "white",
+                },
+              }}
+              size="small"
+              fullWidth>
+              <InputLabel sx={{ color: "#f00" }} id="assosiate-label-id">
+                Associates
+              </InputLabel>
+              <Select
+                multiple
+                name="associates"
+                id={`${name}-associates`}
+                labelId="associate-label-id"
+                label="Associates"
+                value={selectedOptions}
+                onChange={handleChange}
+                renderValue={(selected) => {
+                  console.log("selected", selected);
+                  return selected.join(", ");
+                }}>
+                {getAllFieldsName().map((name) => (
+                  <MenuItem key={name} value={name}>
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+          <UploadJSON setList={setList} />
+        </div>
 
-				<hr className="w-full h-[1px] border-t-[2px] border-t-white/10" />
+        <hr className="w-full h-[1px] border-t-[2px] border-t-white/10" />
 
-				<SchemaGeneratorForm
-					list={list}
-					setList={setList}
-				/>
-				<button
-					className="absolute bottom-[4rem] left-[1rem] flex justify-center items-center p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm text-dark_gray border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 hover:text-purple-800 transition-all duration-200 ease-in-out
+        <SchemaGeneratorForm list={list} setList={setList} />
+        <button
+          className="absolute bottom-[4rem] left-[1rem] flex justify-center items-center p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm text-dark_gray border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 hover:text-purple-800 transition-all duration-200 ease-in-out
 		"
-					onClick={() => dispatch(setActiveTab(id - 1))}
-				>
-					<span className="material-symbols-outlined">arrow_back</span>
-				</button>
-				<div className="absolute bottom-[4rem] right-[1rem] flex items-center justify-end bg-background_color z-10">
-					{getAllFieldsName().length - 1 === id && (
-						<button
-							className="flex justify-center items-center p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm text-highlight_font_color border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 hover:text-purple-800 transition-all duration-200 ease-in-out
+          onClick={() => dispatch(setActiveTab(id - 1))}>
+          <span className="material-symbols-outlined">arrow_back</span>
+        </button>
+        <div className="absolute bottom-[4rem] right-[1rem] flex items-center justify-end bg-background_color z-10">
+          {getAllFieldsName().length - 1 === id && (
+            <button
+              className="flex justify-center items-center p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm text-highlight_font_color border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 hover:text-purple-800 transition-all duration-200 ease-in-out
           "
-							onClick={submitSchema}
-						>
-							Submit Schema
-						</button>
-					)}
-					{getAllFieldsName().length - 1 !== id && (
-						<div>
-							<button
-								className="flex justify-center items-center p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm text-dark_gray border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 hover:text-purple-800 transition-all duration-200 ease-in-out
+              onClick={submitSchema}>
+              Submit Schema
+            </button>
+          )}
+          {getAllFieldsName().length - 1 !== id && (
+            <div>
+              <button
+                className="flex justify-center items-center p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm text-dark_gray border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 hover:text-purple-800 transition-all duration-200 ease-in-out
 		"
-								onClick={() => dispatch(setActiveTab(id + 1))}
-							>
-								<span className="material-symbols-outlined">arrow_forward</span>
-							</button>
-						</div>
-					)}
-				</div>
-			</section>
-		);
-	else
-		return (
-			<div className="h-screen w-12 flex flex-wrap text-primary_font_color bg-Secondary_background_color">
-				<button
-					className="h-full w-full"
-					onClick={() => dispatch(setActiveTab(id))}
-				>
-					<span className="[writing-mode:vertical-rl] text-sm font-[600] uppercase font-fira_code">
-						{name} Schema Form
-					</span>
-				</button>
-			</div>
-		);
+                onClick={() => dispatch(setActiveTab(id + 1))}>
+                <span className="material-symbols-outlined">arrow_forward</span>
+              </button>
+            </div>
+          )}
+        </div>
+      </section>
+    );
+  else
+    return (
+      <div className="h-screen w-12 flex flex-wrap text-primary_font_color bg-Secondary_background_color">
+        <button
+          className="h-full w-full"
+          onClick={() => dispatch(setActiveTab(id))}>
+          <span className="[writing-mode:vertical-rl] text-sm font-[600] uppercase font-fira_code">
+            {name} Schema Form
+          </span>
+        </button>
+      </div>
+    );
 };

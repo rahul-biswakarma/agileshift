@@ -134,9 +134,9 @@ export const FieldGroup = ({
           <p className = "mb-7" id="delete-column-modal-description">
             Are you sure you want to delete this column?
           </p>
-          <div className="flex justify-end items-center mt-7 gap-[1rem]">
-            <button className="bg-sidebar_bg px-[15px] py-[5px] font-bold rounded-md flex items-center border-0 border-transparent hover:text-white " onClick={handleDeleteCancel}>Cancel</button>
-            <button className = "bg-rose-400 text-rose-800 px-[15px] py-[5px] flex items-center font-bold rounded-md border-0 border-transparent hover:bg-rose-800 hover:text-rose-400 "onClick={handleDeleteConfirm}>Delete</button>
+          <div className="flex justify-end items-center mt-7 gap-[1rem] font-fira_code">
+            <button className="bg-sidebar_bg px-[15px] py-[5px] font-[500] rounded-md flex items-center border-0 border-transparent hover:text-white " onClick={handleDeleteCancel}>Cancel</button>
+            <button className = "bg-rose-400 text-rose-800 px-[15px] py-[5px] flex items-center font-[500] rounded-md border-0 border-transparent hover:bg-rose-800 hover:text-rose-400 "onClick={handleDeleteConfirm}>Delete</button>
 
           </div>
           

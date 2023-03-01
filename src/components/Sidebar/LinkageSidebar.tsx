@@ -73,13 +73,22 @@ export const LinkageSidebar = (props: LinkageSidebarPropType) => {
   //   { value: "watermelon", label: "Watermelon" },
   // ];
 
-  const [options, setOptions] = useState<any>([]);
+  type optionsType = {
+    value: string;
+    label: string;
+    id: string;
+    color: string;
+    title: string;
+  };
+
+  const [options, setOptions] = useState<optionsType[]>([]);
 
   const customStyles = {
     control: (provided: any) => ({
       ...provided,
       backgroundColor: "#161616", // Set the background color here
-      border: "0px",
+      border: "1px solid rgba(255, 255, 255, 0.30)",
+      borderRadius: "0.375rem",
     }),
     option: (provided: any, state: any) => ({
       ...provided,
@@ -101,6 +110,8 @@ export const LinkageSidebar = (props: LinkageSidebarPropType) => {
       marginTop: 0, // remove margin top
       marginBottom: 0, // remove margin bottom
       backgroundColor: "#1F1F1F",
+      border: "1px solid rgba(255, 255, 255, 0.20)",
+      borderRadius: "0.375rem",
     }),
     input: (provided: any) => ({
       ...provided,
@@ -128,8 +139,6 @@ export const LinkageSidebar = (props: LinkageSidebarPropType) => {
   const [selectedOptions, setSelectedOptions] = useState<typeof options>([]);
 
   const handleSelectChange = (selected: any) => {
-    console.log("clicked");
-    console.log(selected);
     setSelectedOptions(selected);
   };
 
@@ -180,26 +189,8 @@ export const LinkageSidebar = (props: LinkageSidebarPropType) => {
     allData = allData.filter((data: any) =>
       props.field.linkage.includes(data["field"])
     );
-    console.log(allData);
-
-    console.log(props.field, "field");
 
     const schemaData = await get_schema_data(organisationId);
-    console.log(schemaData, "schemaData");
-    let title = "",
-      color = "";
-    if (schemaData) {
-      title = getTitleFromSchemaData(
-        formatSchemaDataToTypeField(schemaData["schemaData"]),
-        "Tickets"
-      );
-      color = getColorFromSchemaData(
-        formatSchemaDataToTypeField(schemaData["schemaData"]),
-        props.field.name
-      );
-    }
-    console.log(title, "title");
-    console.log(color, "color");
     let formattedData = [];
     for (let data of allData) {
       let color = getColorFromSchemaData(
@@ -217,35 +208,55 @@ export const LinkageSidebar = (props: LinkageSidebarPropType) => {
         color: color,
         title: data[title],
       });
-      console.log(data.field);
     }
     setOptions(formattedData);
-    console.log(formattedData);
   };
   if (fetchData) {
     getAllData();
     setFetchData(false);
   }
   return (
-    <div className="flex flex-col justify-between w-1/3 h-screen bg-sidebar_bg backdrop-filter backdrop-blur-lg bg-opacity-60 border border-primary_font_color">
+    <div
+      className="flex flex-col justify-between w-1/3 h-screen bg-sidebar_bg backdrop-filter backdrop-blur-lg bg-opacity-60 border border-primary_font_color
+    p-4
+    ">
       <Select
         closeMenuOnSelect={false}
+        hideSelectedOptions={false}
+        controlShouldRenderValue={false}
+        placeholder="Search for item"
         isMulti
         options={options}
         styles={customStyles}
+        getOptionLabel={(option) => option.label}
+        isOptionSelected={(option) =>
+          selectedOptions.some(
+            (selectedOption: optionsType) =>
+              selectedOption.value === option.value
+          )
+        }
         components={{ Option: ShowItem }}
         onChange={(value) => {
           handleSelectChange(value);
         }}
       />
 
-      <div className="">
-        {selectedOptions.map((item: any) => (
-          <div className="text-white my-4">
-            <IdComponent itemId={item.value} color={item.color} />
-            {item.title}
-          </div>
-        ))}
+      <div className=" border border-white/20 flex flex-col gap-2 p-4 text-white max-h-[90%] rounded-md mt-4">
+        <p className="font-bold text-2xl">Linked Items</p>
+        <div className="max-h-1/5 overflow-auto">
+          {selectedOptions.length === 0 && (
+            <p className="text-white/50">No items linked</p>
+          )}
+          {selectedOptions.length > 0 &&
+            selectedOptions.map((item: optionsType, id: number) => (
+              <div
+                className="text-white bg-background_color p-3 rounded-md border border-white/10"
+                key={id}>
+                <IdComponent itemId={item.value} color={item.color} />
+                {item.title}
+              </div>
+            ))}
+        </div>
       </div>
     </div>
   );

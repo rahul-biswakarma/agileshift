@@ -1,188 +1,149 @@
-import React from "react";
-import { useAppDispatch } from "../../redux/hooks";
-import { setSideBar } from "../../redux/reducers/SideBarSlice";
-// import notificationIcon from "../../assets/icons/notification.svg";
+import React, { useState } from 'react'
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { setSideBar } from '../../redux/reducers/SideBarSlice';
+import { get_schema_data_field, main_search_function } from '../../Utils/Backend';
+import { useDebounceCallback } from '../../Utils/useDebounce';
+import { IdComponent } from '../DataTable/idComponent';
 
-export default function SearchComponent() {
-	const dispatch = useAppDispatch();
-	return (
-		<form className="flex flex-row items-center flex-grow gap-6  ">
-			<div className="relative flex-grow  h-[100%]">
-				<input
-					type="search"
-					id="default-search"
-					className="block p-3 w-[100%]  pr-10 text-sm h-[100%]  text-primary_font_color focus:outline-none rounded-lg bg-Secondary_background_color"
-					placeholder="Search Tickets, Issues and Parts"
-					required
-				/>
-				<div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-					<svg
-						aria-hidden="true"
-						className="w-5 h-5 text-gray-500 dark:text-gray-400"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-						xmlns="http://www.w3.org/2000/svg"
-					>
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							strokeWidth="2"
-							d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-						></path>
-					</svg>
-				</div>
-			</div>
-			<>
-				<svg
-					width="30"
-					height="30"
-					viewBox="0 0 30 30"
-					fill="none"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<g clipPath="url(#clip0_6_14)">
-						<path
-							d="M12.5 6.25C12.5 5.58696 12.7634 4.95107 13.2322 4.48223C13.7011 4.01339 14.337 3.75 15 3.75C15.663 3.75 16.2989 4.01339 16.7678 4.48223C17.2366 4.95107 17.5 5.58696 17.5 6.25C18.9355 6.92878 20.1593 7.98541 21.0401 9.30662C21.9209 10.6278 22.4255 12.1638 22.5 13.75V17.5C22.5941 18.2771 22.8693 19.0213 23.3035 19.6727C23.7377 20.324 24.3188 20.8643 25 21.25H5C5.68117 20.8643 6.26226 20.324 6.69648 19.6727C7.13071 19.0213 7.40593 18.2771 7.5 17.5V13.75C7.57445 12.1638 8.07913 10.6278 8.95994 9.30662C9.84075 7.98541 11.0645 6.92878 12.5 6.25Z"
-							stroke="#808080"
-							strokeWidth="2"
-							strokeLinecap="round"
-							strokeLinejoin="round"
-						/>
-						<path
-							d="M11.25 21.25V22.5C11.25 23.4946 11.6451 24.4484 12.3483 25.1517C13.0516 25.8549 14.0054 26.25 15 26.25C15.9946 26.25 16.9484 25.8549 17.6517 25.1517C18.3549 24.4484 18.75 23.4946 18.75 22.5V21.25"
-							stroke="#808080"
-							strokeWidth="2"
-							strokeLinecap="round"
-							strokeLinejoin="round"
-						/>
-					</g>
-					<defs>
-						<clipPath id="clip0_6_14">
-							<rect
-								width="30"
-								height="30"
-								fill="white"
-							/>
-						</clipPath>
-					</defs>
-				</svg>
+type Type_SuggestionsState = {
+	field: string;
+	data: any;
+	color: string;
+	schema?: any;
+	titleData?: string;
+};
 
-				<button
-					onClick={() =>
-						dispatch(
-							setSideBar([
-								{
-									field: "Issue",
-									color: "red",
-									data: {},
-									schema: [
-										{
-											columnName: "owner",
-											columnType: "string",
-										},
-										{
-											columnName: "title",
-											columnType: "title",
-										},
-										{
-											columnName: "stage",
-											columnType: "string",
-										},
-										{
-											columnName: "id",
-											columnType: "string",
-										},
-									],
-								},
-							])
-						)
-					}
-				>
-					<svg
-						width="30"
-						height="30"
-						viewBox="0 0 30 30"
-						fill="none"
-						xmlns="http://www.w3.org/2000/svg"
-					>
-						<g clipPath="url(#clip0_7_18)">
-							<path
-								d="M10 10H5V15H10V10Z"
-								stroke="#808080"
-								strokeWidth="2"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-							/>
-							<path
-								d="M7.5 5V10"
-								stroke="#808080"
-								strokeWidth="2"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-							/>
-							<path
-								d="M7.5 15V25"
-								stroke="#808080"
-								strokeWidth="2"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-							/>
-							<path
-								d="M17.5 17.5H12.5V22.5H17.5V17.5Z"
-								stroke="#808080"
-								strokeWidth="2"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-							/>
-							<path
-								d="M15 5V17.5"
-								stroke="#808080"
-								strokeWidth="2"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-							/>
-							<path
-								d="M15 22.5V25"
-								stroke="#808080"
-								strokeWidth="2"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-							/>
-							<path
-								d="M25 6.25H20V11.25H25V6.25Z"
-								stroke="#808080"
-								strokeWidth="2"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-							/>
-							<path
-								d="M22.5 5V6.25"
-								stroke="#808080"
-								strokeWidth="2"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-							/>
-							<path
-								d="M22.5 11.25V25"
-								stroke="#808080"
-								strokeWidth="2"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-							/>
-						</g>
-						<defs>
-							<clipPath id="clip0_7_18">
-								<rect
-									width="30"
-									height="30"
-									fill="white"
-								/>
-							</clipPath>
-						</defs>
-					</svg>
-				</button>
-			</>
-		</form>
-	);
+type TYPE_SchemaItem = {
+	columnName:string,
+	columnType:string,
 }
+
+const SearchComponent = () => {
+	const organizationId = useAppSelector((state) => state.auth.organisationId);
+	const dispatch = useAppDispatch();
+
+	const [searchedDataList,setSearchedDataList] = useState<Type_SuggestionsState[]>([]);
+
+	const [searchTerm, setSearchTerm] = useState<string>("");
+
+	const getDataListFromSearchTerm =async (term:string) =>{
+		console.log(term, "term");
+		let modifiedDataList:Type_SuggestionsState[] = [];
+		if(term.length>0){
+			const dataListFromBackend = await main_search_function(organizationId, term)
+			console.log(dataListFromBackend, "dataListFromBackend");
+			
+			modifiedDataList = await Promise.all(await modifyDataList(dataListFromBackend));
+		}
+		setSearchedDataList(modifiedDataList);
+		console.log(modifiedDataList, "modifiedDataList");
+	}
+
+	const modifyDataList = (dataListFromBackend:TYPE_SCHEMA[]) =>{
+		if(dataListFromBackend.length >0){
+			const modifiedDataList = dataListFromBackend.map(async (data)=>{
+				const field = data.field;
+				const schemaFromDatabase:any = await get_schema_data_field(organizationId, field);
+				console.log(schemaFromDatabase, "schema");
+				const titleData = getTitleData(schemaFromDatabase.list, data);  
+				let modifiedData={
+					field:field,
+					data:data,
+					color:schemaFromDatabase.color,
+					schema:schemaFromDatabase.list,
+					titleData:titleData,
+				}
+				console.log(modifiedData, "modifiedData");
+				
+				return modifiedData;
+			})
+			return modifiedDataList;
+		}
+		return [];
+	}
+
+	const getTitleData = (schema:TYPE_SchemaItem[], data:any) =>{
+		let titleData = "";
+
+		schema.forEach((schemaItem:TYPE_SchemaItem)=>{
+			if(schemaItem.columnType === "title"){
+				titleData = data[schemaItem.columnName];
+			}
+		})
+		console.log(titleData, "titleData");
+		
+		return titleData;
+	}
+
+	const debouncedCallback = useDebounceCallback(getDataListFromSearchTerm, 500);
+
+	const handleSuggestionsSelect = (suggestion:Type_SuggestionsState) =>{
+		console.log(suggestion, "suggestion");
+		const sidebarData = {
+            field:suggestion.field,
+            color:suggestion.color,
+            data:suggestion.data,
+            schema:suggestion.schema
+        }
+        dispatch(setSideBar(sidebarData));
+	}
+
+	const handleSearchTermChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setSearchTerm(e.target.value);
+		debouncedCallback(e.target.value);
+	}
+
+	const handleClear = () =>{
+		setSearchTerm("");
+		setSearchedDataList([]);
+	}
+
+	return (
+		<div className="relative flex flex-col w-full max-w-[800px]">
+			<div className="w-full rounded-md flex gap-[10px] bg-Secondary_background_color p-[2px]">
+				<div className="flex rounded-md bg-background_color items-center px-4">
+					<span className="material-symbols-outlined text-white/30">
+						search
+					</span>
+				</div>
+				<input
+					name="search-input"
+					type="text"
+					placeholder="Search items, fields, users and etc"
+					onChange= {(e)=>handleSearchTermChange(e)}
+					value={searchTerm}
+					className="w-full flex-1 font-fira_code font-lg rounded-r-lg px-4 bg-Secondary_background_color h-9 outline-none text-white placeholder:text-white/20"
+				/>
+				{searchTerm.length > 0 &&
+					<button className="flex rounded-md text-white/30 hover:text-red-400 items-center px-1" onClick={()=>handleClear()}>
+						<span className="material-symbols-outlined text-md">
+							close
+						</span>
+					</button>
+				}
+			</div>
+			{ searchTerm.length > 0 && 
+				<div className="w-full z-30 absolute h-auto max-h-[350px] overflow-y-auto top-[110%] rounded-md p-[2px] bg-Secondary_background_color text-primary_font_color border border-white/10">
+					{searchedDataList.length > 0? searchedDataList.map((data,index)=>{
+						return <div key={`search-data-${index}`} className="w-full p-2 rounded-md hover:bg-sidebar_bg hover:text-highlight_font_color flex items-center cursor-pointer border-primary_font_color hover:border-white" onClick={()=>handleSuggestionsSelect(data)}>
+							<IdComponent itemId={data.data.id} color={data.color} />
+							<span className="ml-2 grow text-left">{data.titleData}</span>
+							<button
+								onClick={() => {
+									console.log(data, "data");
+								}}
+								className="p-[0.10rem_0.60rem] flex items-center bg-Secondary_background_color border border-inherit text-center text-lg rounded-lg"
+							>
+								<span className="material-symbols-outlined text-base">arrow_forward</span>
+							</button>
+						</div>
+					}):
+					<div className="w-full p-2 rounded-md text-center text-white/30">No results found</div>
+					}
+				</div>
+			}
+		</div>
+	)
+}
+
+export {SearchComponent}
