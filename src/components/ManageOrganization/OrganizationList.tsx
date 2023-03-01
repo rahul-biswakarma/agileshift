@@ -18,7 +18,6 @@ const OrganizationList: React.FunctionComponent = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		console.log("userid", userId);
 		const getUserObj = async () => {
 			const data = await get_user_by_id(userId);
 			setUser(data);

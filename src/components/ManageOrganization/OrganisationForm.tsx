@@ -37,7 +37,6 @@ export const OrganisationForm = () => {
 
 	useEffect(() => {
 		get_organization_name_by_id(organizationId).then((data) => {
-			console.log(data);
 			document.title = `Schema Form | ${data}`
 		})
 	})

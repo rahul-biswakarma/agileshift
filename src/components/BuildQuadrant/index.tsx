@@ -33,8 +33,6 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 	dispatch(setDatas(props.datas));
 	dispatch(setDataSchema(props.fieldData.list));
 
-	console.log(props.datas);
-
 	const organizationId = useAppSelector((state) => state.auth.organisationId);
 	const tabName = useAppSelector((state) => state.datatable.tabName);
 	const [filterSchema, setFilterSchema] = useState<TYPE_Filters[]>([]);
@@ -57,7 +55,6 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 			const filters = await get_filter_schema(organizationId);
 			if(tabName !== "All"){
 				setFilterSchema(filters!.data[tabName]);
-				console.log(filters!.data[tabName]);
 			}else{
 				let filter:TYPE_Filters[] = [];
 				for(const tabName in filters!.data){	
@@ -67,7 +64,6 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 				}
 				filter = removeDuplicates(filter);
 				setFilterSchema(filter);
-				console.log(filter);
 			}
 		}
 		getFilterSchema();
@@ -98,9 +94,6 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 							if(filterObject[key] && filterObject[key].length>0){
 								if(propsData[key].length > 0){
 									propsData[key].forEach((data:any) => {
-										console.log('====================================');
-										console.log(filterObject[key], data.tagName);
-										console.log('====================================');
 										if(filterObject[key].includes(data.tagName)){
 											dataFromFilter = propsData
 										}

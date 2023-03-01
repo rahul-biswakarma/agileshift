@@ -103,7 +103,6 @@ export const FieldGroup = ({
           label="Type"
           value={column.columnType}
           onChange={(e) => {
-            console.log(e.target.value);
             changeColumn(id, column.columnName, e.target.value);
           }}
         >
