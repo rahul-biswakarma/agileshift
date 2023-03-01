@@ -64,13 +64,14 @@ const App = () => {
                 list: [],
                 color: "purple",
                 icon: "home",
-                linkage: ["Tickets", "Issues"],
+                linkage: ["Tickets", "Issues", "MicroIssues"],
               }}
             />
           }
         />
       </Routes>
     </BrowserRouter>
+    // Intentional dummy line
   );
 };
 
