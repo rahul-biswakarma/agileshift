@@ -70,6 +70,8 @@ export default function CreateData(props: any) {
               organizationId,
               props.sidebar.fieldId
             );
+
+            console.log(currentState,"***")
             setSelectedField(currentState.field)
 
           }
@@ -81,7 +83,7 @@ export default function CreateData(props: any) {
         };
         fetchData()
       },
-      [organizationId, props.sidebar.createModeCalledByField],
+      [organizationId, props.sidebar.createModeCalledByField,props.sidebar.fieldId,props.sidebar.sidebarType,selectedField],
     )
     
     React.useEffect(() => {
@@ -103,12 +105,17 @@ export default function CreateData(props: any) {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    let tempFormData: any = {};
 
     if(props.sidebar.sidebarType === "createMode") {
-      setFormData({...formData, field: props.sidebar.createModeCalledByField,createdBy:creatorOfData,linkedData:[]})
+      setFormData({...formData, field: selectedField,createdBy:creatorOfData,linkedData:[]})
+      tempFormData = {...formData, field: selectedField,createdBy:creatorOfData,linkedData:[]} // for immediate update
+    }
+    else{
+    tempFormData = formData
     }
 
-    await update_data_to_database(organizationId, formData);
+    await update_data_to_database(organizationId, tempFormData);
   };
 
   console.log("formSchema", props.sidebar)
