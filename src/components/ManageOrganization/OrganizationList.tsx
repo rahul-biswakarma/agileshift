@@ -38,7 +38,7 @@ const OrganizationList: React.FunctionComponent = () => {
 
 	return (
 		<div className="bg-background_color h-screen w-screen flex items-center justify-center font-dm_sans">
-			<div className="w-[500px] flex flex-col gap-5">
+			<div className="w-[40vw] max-w-[600px] flex flex-col gap-5">
 				<div className="text-highlight_font_color">
 					<h3 className="text-[1.5rem] mb-2 font-[600]">
 						Create or Join a AgileShift Org

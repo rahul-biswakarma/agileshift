@@ -26,7 +26,7 @@ const SelectIconComponent = (props: Type_SelectIconComponentProps) => {
 
 	return (
 		<div
-			className=" flex items-center max-w-[110px] w-full h-full border-[2px] border-white/30 rounded-[5px] p-[2px] cursor-pointer"
+			className="relative flex items-center max-w-[110px] w-full h-full border-[2px] border-white/30 rounded-[5px] p-[2px] cursor-pointer"
 			onClick={() => {
 				toggleIconMenu();
 			}}
@@ -38,7 +38,7 @@ const SelectIconComponent = (props: Type_SelectIconComponentProps) => {
 				{selectedIcon}
 			</span>
 			<div
-				className={`mt-[25%] ml-[-10px] absolute flex flex-wrap gap-[0.7rem] max-w-[350px] max-h-[300px] w-full h-full bg-Secondary_background_color overflow-auto border border-white/30 rounded-xl p-[0.7rem] z-50 ${
+				className={`top-[115%] ml-[-3px] absolute flex flex-wrap gap-[0.7rem] min-w-[350px] min-h-[300px] max-w-[350px] w-full h-full bg-Secondary_background_color overflow-auto border-[2px] border-white/30 rounded-md p-[0.7rem] z-50 ${
 					isIconMenuOpen ? "flex" : "hidden"
 				}`}
 			>

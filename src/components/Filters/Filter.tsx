@@ -147,7 +147,7 @@ const Filter = () => {
 	};
 
 	return (
-		<div className="w-screen h-screen bg-[#161616]">
+		<div className="w-screen h-auto bg-background_color z-50">
 			<div className="flex justify-between mb-4 mx-9 pt-4">
 				<div className="flex flex-wrap gap-3">
 					<div className="flex">
@@ -244,7 +244,7 @@ const Filter = () => {
 										</div>
 									</div>
 									{activeFiltersDropdown[filter.filterName] === true && (
-										<div className="absolute top-[100%]">
+										<div className="absolute top-[100%] bg-background_color z-50">
 											<DisplayFilters
 												filterData={filter.filterOptions}
 												type={filter.filterName}

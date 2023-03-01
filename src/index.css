@@ -67,6 +67,18 @@ code {
 	font-weight: 500;
 }
 
+/* #header .MuiInputBase-input {
+	padding: 5px;
+}
+
+#header .MuiFormLabel-root {
+	margin-top: -10px;
+} */
+
+#header .MuiFormHelperText-root {
+	position: absolute;
+}
+
 * {
 	--ag-alpine-active-color: #3b82f6;
 	--ag-foreground-color: #fff;
