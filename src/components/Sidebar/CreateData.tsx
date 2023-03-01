@@ -10,8 +10,7 @@ import {
   update_data_to_database,
 } from "../../Utils/Backend";
 import SideBarInputs from "./SideBarInputs";
-import { setNewSidBar } from "../../redux/reducers/SideBarSlice";
-// export default function CreateData(props: Type_SidebarState) {
+import { setNewSidBar, setSideBar } from "../../redux/reducers/SideBarSlice";
 
 export default function CreateData(props: any) {
   const [selectedField, setSelectedField] = React.useState<string>("");
@@ -20,6 +19,7 @@ export default function CreateData(props: any) {
   const [formSchema, setFormSchema] = React.useState<any>();
   const organizationId = useAppSelector((state) => state.auth.organisationId);
   const creatorOfData = useAppSelector((state) => state.auth.userId);
+  const dispatch = useAppDispatch();
 
   console.log(props.sidebar)
   React.useEffect(() => {
@@ -57,6 +57,18 @@ export default function CreateData(props: any) {
     fetchData();
   }, [selectedField, organizationId, props.sidebar.fieldId]);
 
+  const handleAddLink = ()=>{
+
+    dispatch(
+      setSideBar({
+        sidebarType: "linkMode",
+        fieldName:selectedField,
+        linkedCalledByID: formData.id,
+      })
+    );
+
+  }
+
     //   getting dropdown data fields
     const fetchDataCallback = useCallback(
       () => {
@@ -83,7 +95,7 @@ export default function CreateData(props: any) {
         };
         fetchData()
       },
-      [organizationId, props.sidebar.createModeCalledByField,props.sidebar.fieldId,props.sidebar.sidebarType,selectedField],
+      [organizationId, props.sidebar.createModeCalledByField, props.sidebar.fieldId, props.sidebar.sidebarType, selectedField],
     )
     
     React.useEffect(() => {
@@ -94,7 +106,7 @@ export default function CreateData(props: any) {
 ;
 
   const sideBarLists = useAppSelector((state) => state.sidebar.sideBarData);
-  const dispatch = useAppDispatch();
+ 
   const handleClose = () => {
     dispatch(
       setNewSidBar(
@@ -181,7 +193,7 @@ export default function CreateData(props: any) {
       </div>
       <footer className=" right-0 mb-4   flex flex-row gap-2">
         <button
-          // onClick={handleSubmit}
+          onClick={handleAddLink}
           className="w-full h-10 bg-primary_font_color rounded-md text-white active:opacity-50"
         >
           Link
