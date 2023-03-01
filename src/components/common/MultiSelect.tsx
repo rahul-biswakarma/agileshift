@@ -66,7 +66,7 @@ const MultiSelect = (props: type_props) => {
     } else {
       setOption([{ value: "", label: "" }]);
     }
-  }, [props.selectedTab]);
+  }, [props.selectedTab, organizationId]);
   //TODO:
   //both users and tags getting manipulated at the same time
   //Only one user in every org, no way to add user.

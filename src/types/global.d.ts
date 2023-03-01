@@ -4,6 +4,12 @@ declare global {
 	type TYPE_SCHEMA = {
 		[key: string]: string;
 	};
+	type Type_SidebarState = {
+		fieldId?: string;
+		sidebarType: string;
+		createModeCalledByField?: string; // this is the field that called the create mode
+		linkedCalledByID?: string; // this is the id of the field that called the link
+	  };
 	type TYPE_TAG = {
 		color: string; //hash code of color
 		tagName: string;

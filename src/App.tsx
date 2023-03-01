@@ -8,8 +8,7 @@ import { GeneratorFormsContainer } from "./components/SchemaGenerator/GeneratorF
 import { getFromSession } from "./Utils/Auth";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import { setUserId } from "./redux/reducers/AuthSlice";
-import { SidebarWrapper } from "./components/Sidebar/SidebarWrapper";
-import { LinkageSidebar } from "./components/Sidebar/LinkageSidebar";
+import SideBarScreen from "./components/Sidebar";
 
 const App = () => {
   const userIdFromSession = getFromSession("userId");
@@ -24,7 +23,7 @@ const App = () => {
     <BrowserRouter>
       {sideBarList.length !== 0 && (
         <section className="fixed z-50">
-          <SidebarWrapper />
+          <SideBarScreen />
         </section>
       )}
       <Routes>
@@ -54,20 +53,6 @@ const App = () => {
         <Route
           path="/organization"
           element={<Navigate to="/organization-lists" />}
-        />
-        <Route
-          path="/linkage-sidebar"
-          element={
-            <LinkageSidebar
-              field={{
-                name: "Issues",
-                list: [],
-                color: "purple",
-                icon: "home",
-                linkage: ["Tickets", "Issues"],
-              }}
-            />
-          }
         />
       </Routes>
     </BrowserRouter>

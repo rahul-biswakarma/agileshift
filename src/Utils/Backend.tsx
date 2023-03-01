@@ -10,7 +10,6 @@ import {
   query,
   where,
   getDocs,
-  onSnapshot,
 } from "firebase/firestore";
 import emailjs from "@emailjs/browser";
 import { isValidEmail } from "email-js";
@@ -72,6 +71,7 @@ const get_current_time = () => {
 32 user suggestions
 33 get active  time
 34 create filter schema
+35 get org name by id
 */
 
 // 1
@@ -240,7 +240,7 @@ export const create_schema = async (
     schemas.forEach((schema) => {
       filterData[schema.name] = [];
       schema.list.forEach((item) => {
-        if (item.columnType !== "string") {
+        if (item.columnType !== "id" && item.columnType !== "string") {
           filterData[schema.name].push({
             active: true,
             data: [],
@@ -460,16 +460,6 @@ export const get_data_by_column_name = async (
   field: string
 ) => {
   const orgData: any = await get_organizations_details(organisationId);
-
-  let d: any = {};
-  const unsub = onSnapshot(doc(db, "organizations", organisationId), (doc) => {
-    d = doc.data();
-    console.log(doc.data(), "inside");
-  });
-  console.log(d, "hii");
-  console.log(d, "hii");
-  console.log(d, "hii");
-
   let data: any = [];
   if (orgData.data && orgData.data.length > 0) {
     orgData.data.forEach((item: any) => {
@@ -478,8 +468,6 @@ export const get_data_by_column_name = async (
       }
     });
   }
-  console.log(d, "data");
-
   return data;
 };
 // 28 get dropdown options
@@ -653,4 +641,31 @@ export const wil_include = (item: any, searchText: string) => {
     }
   });
   return flag;
+};
+
+// 35 get organization name by id
+export const get_organization_name_by_id = async (organizationId: string) => {
+  const organizationRef = doc(db, "organizations", organizationId);
+  const docSnap = await getDoc(organizationRef);
+  if (docSnap.exists()) {
+    return docSnap.data()["name"];
+  } else {
+    return "";
+  }
+};
+
+// 36 get all tabs name
+export const get_all_tabs_name = async (organisationId: string) => {
+  const docRef = doc(db, "schemas", organisationId);
+  const docSnap = await getDoc(docRef);
+  let tabs: any = [];
+
+  if (docSnap.exists()) {
+    docSnap.data()["schemaData"].forEach((item: any) => {
+      tabs.push(item.name);
+    });
+  } else {
+    console.log("No such document!");
+  }
+  return tabs;
 };
