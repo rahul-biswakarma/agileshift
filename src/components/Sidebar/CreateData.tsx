@@ -1,5 +1,5 @@
 import { MenuItem, Select } from "@mui/material";
-import React from "react";
+import React, { useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import close_icon from "../../assets/icons/close_icon.svg";
 import {
@@ -19,6 +19,7 @@ export default function CreateData(props: any) {
   const [formData, setFormData] = React.useState<any>();
   const [formSchema, setFormSchema] = React.useState<any>();
   const organizationId = useAppSelector((state) => state.auth.organisationId);
+  const creatorOfData = useAppSelector((state) => state.auth.userId);
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -26,7 +27,7 @@ export default function CreateData(props: any) {
         organizationId,
         selectedField
       );
-
+       
       let tempFormData: any = {};
 
       schemaData.list.forEach((item: any) => {
@@ -49,28 +50,39 @@ export default function CreateData(props: any) {
       }
 
       setFormData(tempFormData);
-
       setFormSchema(schemaData);
     };
 
     fetchData();
   }, [selectedField, organizationId, props.sidebar.fieldId]);
 
-  //   getting dropdown data fields
-  React.useEffect(() => {
-    const fetchData = async () => {
-      let fieldList: string[] = await get_all_tabs_name(organizationId);
-      setFieldList(fieldList);
-      setSelectedField(fieldList[0]);
-      let schemaData: any = await get_schema_data_field(
-        organizationId,
-        selectedField
-      );
-      setFormSchema(schemaData);
-    };
+    //   getting dropdown data fields
+    const fetchDataCallback = useCallback(
+      () => {
+        const fetchData = async () => {
+          let fieldList: string[] = await get_all_tabs_name(organizationId);
+          setFieldList(fieldList);
 
-    fetchData();
-  }, [organizationId]);
+          
+    
+          setSelectedField(props.sidebar.createModeCalledByField.toLowerCase()!=="all" ?props.sidebar.createModeCalledByField:fieldList[0]);
+          let schemaData: any = await get_schema_data_field(
+            organizationId,
+            selectedField
+          );
+          setFormSchema(schemaData);
+        };
+        fetchData()
+      },
+      [organizationId, selectedField, props.sidebar.createModeCalledByField],
+    )
+    
+    React.useEffect(() => {
+  
+      fetchDataCallback();
+    }, [fetchDataCallback]);
+
+;
 
   const sideBarLists = useAppSelector((state) => state.sidebar.sideBarData);
   const dispatch = useAppDispatch();
@@ -85,14 +97,20 @@ export default function CreateData(props: any) {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
+    if(props.sidebar.sidebarType === "createMode") {
+      setFormData({...formData, field: props.sidebar.createModeCalledByField,createdBy:creatorOfData,linkedData:[]})
+    }
+
     await update_data_to_database(organizationId, formData);
   };
+
+  console.log("formSchema", props.sidebar)
 
   return (
     <div className=" p-4 flex flex-col justify-between h-screen relative bg-sidebar_bg backdrop-filter backdrop-blur-lg bg-opacity-60 border border-primary_font_color">
       <div>
         <header className="flex justify-between mb-8">
-          {props.sidebar.sidebarType === "createMode" ? (
+          {props.sidebar.sidebarType === "createMode" && (
             <Select
               style={{
                 borderColor: formSchema ? formSchema.color : "",
@@ -113,8 +131,10 @@ export default function CreateData(props: any) {
                 </MenuItem>
               ))}
             </Select>
-          ) : (
-            <div>{formData === undefined ? "" : formData.id}</div>
+          )}
+          {props.sidebar.sidebarType === "editMode" && (
+            <div className="border-2 p-2 rounded font-bold text-sm" >{props.sidebar.fieldId}</div>
+            // <div>{props.sideBar}</div>
           )}
 
           <button
@@ -147,7 +167,7 @@ export default function CreateData(props: any) {
       </div>
       <footer className=" right-0 mb-4   flex flex-row gap-2">
         <button
-          onClick={handleSubmit}
+          // onClick={handleSubmit}
           className="w-full h-10 bg-primary_font_color rounded-md text-white active:opacity-50"
         >
           Link
@@ -156,7 +176,7 @@ export default function CreateData(props: any) {
           onClick={handleSubmit}
           className="w-full h-10 bg-primary_font_color rounded-md text-white active:opacity-50"
         >
-          Submit
+          {props.sidebar.sidebarType === "createMode"? "Create" : "Update"}
         </button>
       </footer>
     </div>

@@ -2,31 +2,31 @@ import { useState, useEffect } from "react";
 import { useAppSelector } from "../../redux/hooks";
 
 type Type_SelectIconComponentProps = {
-	icon: string;
-	changeIcon: (this: any, icon: string) => void;
+  icon: string;
+  changeIcon: (this: any, icon: string) => void;
 };
 
 const SelectIconComponent = (props: Type_SelectIconComponentProps) => {
-	let icons = useAppSelector((state) => state.icons.icons);
-	const [isIconMenuOpen, setIsIconMenuOpen] = useState(false);
-	const [selectedIcon, setSelectedIcon] = useState("");
+  let icons = useAppSelector((state) => state.icons.icons);
+  const [isIconMenuOpen, setIsIconMenuOpen] = useState(false);
+  const [selectedIcon, setSelectedIcon] = useState("");
 
-	useEffect(() => {
-		setSelectedIcon(props.icon);
-	}, [props.icon]);
+  useEffect(() => {
+    setSelectedIcon(props.icon);
+  }, [props.icon]);
 
-	function toggleIconMenu() {
-		setIsIconMenuOpen(!isIconMenuOpen);
-	}
+  function toggleIconMenu() {
+    setIsIconMenuOpen(!isIconMenuOpen);
+  }
 
-	function updateSelectedIcon(icon: string) {
-		setSelectedIcon(icon);
-		props.changeIcon(icon);
-	}
+  function updateSelectedIcon(icon: string) {
+    setSelectedIcon(icon);
+    props.changeIcon(icon);
+  }
 
 	return (
 		<div
-			className=" flex items-center max-w-[110px] w-full h-full border-[2px] border-white/30 rounded-[5px] p-[2px] cursor-pointer"
+			className="relative flex items-center max-w-[110px] w-full h-full border-[2px] border-white/30 rounded-[5px] p-[2px] cursor-pointer"
 			onClick={() => {
 				toggleIconMenu();
 			}}
@@ -38,7 +38,7 @@ const SelectIconComponent = (props: Type_SelectIconComponentProps) => {
 				{selectedIcon}
 			</span>
 			<div
-				className={`mt-[25%] ml-[-10px] absolute flex flex-wrap gap-[0.7rem] max-w-[350px] max-h-[300px] w-full h-full bg-Secondary_background_color overflow-auto border border-white/30 rounded-xl p-[0.7rem] z-50 ${
+				className={`top-[115%] ml-[-3px] absolute flex flex-wrap gap-[0.7rem] min-w-[350px] min-h-[300px] max-w-[350px] w-full h-full bg-Secondary_background_color overflow-auto border-[2px] border-white/30 rounded-md p-[0.7rem] z-50 ${
 					isIconMenuOpen ? "flex" : "hidden"
 				}`}
 			>

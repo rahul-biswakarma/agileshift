@@ -8,7 +8,6 @@ const BuildQuadarntHeader = () => {
   const [hoveredButtonIndex, setHoveredButtonIndex] = useState(-1);
 
   const fieldColor = useAppSelector((state) => state.datatable.fieldColor);
-  const dataSchema = useAppSelector((state) => state.datatable.dataSchema);
   const tabName = useAppSelector((state) => state.datatable.tabName);
 
   const buttonStyle = {

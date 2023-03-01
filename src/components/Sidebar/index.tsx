@@ -17,6 +17,7 @@ export default function SideBarScreen() {
           sidebar.sidebarType === "editMode" ||
           sidebar.sidebarType === "createMode"
         ) {
+          console.log("sidebar", sidebar);
           return (
             <div key={index} className="w-[400px]">
               <CreateData sidebar={sidebar} index={index} />
@@ -25,6 +26,7 @@ export default function SideBarScreen() {
         } else if (sidebar.sidebarType === "linkMode") {
           return <div key={index}>linkMode</div>;
         }
+        return(<div></div>)
       })}
     </div>
   );

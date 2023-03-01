@@ -19,6 +19,11 @@ const initialState: SidebarState = {
     //   createModeCalledByField: "Issues",
     //   fieldId: "BYRCRZNWFRZS",
     // },
+    //   {
+    //   sidebarType: "linkData",
+    //   fieldId: "BYRCRZNWFRZS",
+    //   fieldName:"ambulnce",
+    // },
     // {
     //   sidebarType: "createMode",
     //   createModeCalledByField: "Tickets",

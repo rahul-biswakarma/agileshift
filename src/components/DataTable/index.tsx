@@ -54,11 +54,12 @@ const DataTable = () => {
     rowSelection: "single",
     onRowClicked: function (event) {
       let rowData = event.data;
+      console.log(rowData,"****")
       dispatch(
         setSideBar({
           sidebarType: "editMode",
           createModeCalledByField: "",
-          fieldId: rowData.field.id,
+          fieldId: rowData.id,
         })
       );
     },

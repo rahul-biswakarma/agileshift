@@ -4,11 +4,12 @@ import { useAppSelector } from "../../redux/hooks";
 import { get_user_by_id, user_active_time } from "../../Utils/Backend";
 import { OrganizationCard } from "./OrganizationCard";
 import { get_organizations_details } from "../../Utils/Backend";
+import { RootState } from "../../redux/store";
 
 const OrganizationList: React.FunctionComponent = () => {
 	const [user, setUser] = useState<any>();
 	const [organization, setOrganizations] = useState<any>([]);
-	const userId = useAppSelector((state) => state.auth.userId);
+	const userId = useAppSelector((state:RootState) => state.auth.userId);
 
 	useEffect(() => {
 		const getUserObj = async () => {
@@ -38,7 +39,7 @@ const OrganizationList: React.FunctionComponent = () => {
 
 	return (
 		<div className="bg-background_color h-screen w-screen flex items-center justify-center font-dm_sans">
-			<div className="w-[500px] flex flex-col gap-5">
+			<div className="w-[40vw] max-w-[600px] flex flex-col gap-5">
 				<div className="text-highlight_font_color">
 					<h3 className="text-[1.5rem] mb-2 font-[600]">
 						Create or Join a AgileShift Org

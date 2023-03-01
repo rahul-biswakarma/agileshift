@@ -6,9 +6,10 @@ import { SignUpButtons } from "./SignUpButtons";
 import ProductImage from "../../assets/images/product-image.png";
 import { useAppSelector } from "../../redux/hooks";
 import { Outlet, useNavigate } from "react-router-dom";
+import { RootState } from "../../redux/store";
 
 const SignUp = () => {
-	const userId = useAppSelector((state) => state.auth.userId);
+	const userId = useAppSelector((state:RootState) => state.auth.userId);
 	let navigate = useNavigate();
 
 	useEffect(() => {
