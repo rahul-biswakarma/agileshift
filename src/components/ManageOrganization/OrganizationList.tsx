@@ -8,16 +8,17 @@ import { RootState } from "../../redux/store";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
 
-
 const OrganizationList: React.FunctionComponent = () => {
 	const [user, setUser] = useState<any>();
 	const [organization, setOrganizations] = useState<TYPE_ORGANISATION[]>([]);
 	const [pendingInvitations, setPendingInvitations] = useState<string[]>([]);
-	const [pendingInvitationsOrgData, setPendingInvitationsOrgData] = useState<any>([])
-
+	const [pendingInvitationsOrgData, setPendingInvitationsOrgData] =
+		useState<any>([]);
 	const userId = useAppSelector((state: RootState) => state.auth.userId);
+	const navigate = useNavigate();
 
 	useEffect(() => {
+		console.log("userid", userId);
 		const getUserObj = async () => {
 			const data = await get_user_by_id(userId);
 			setUser(data);
@@ -25,22 +26,21 @@ const OrganizationList: React.FunctionComponent = () => {
 		getUserObj();
 		user_active_time(userId);
 	}, [userId]);
-	
+
 	const fetchPendingInvitations = useCallback(() => {
-		if(user && user.email)
+		if (user && user.email)
 			onSnapshot(doc(db, "invitations", user.email), (doc) => {
 				if (doc.exists()) {
 					let data = doc.data();
-					let orgIds = Object.keys(data);
-					setPendingInvitations(orgIds);
+					let orgIds = data;
+					setPendingInvitations(orgIds["pendingList"]);
 				}
 			});
 	}, [user]);
-	
+
 	useEffect(() => {
 		fetchPendingInvitations();
 	}, [fetchPendingInvitations]);
-	
 
 	useEffect(() => {
 		const getPendingInvitationsOrgData = async () => {
@@ -72,7 +72,12 @@ const OrganizationList: React.FunctionComponent = () => {
 		if (user) getOrganizationsDetails();
 	}, [user]);
 
-	const navigate = useNavigate();
+	useEffect(() => {
+		document.title = "Organization List";
+		if (!userId) {
+			navigate("/login");
+		}
+	}, [navigate, userId]);
 
 	return (
 		<div className="bg-background_color h-screen w-screen flex items-center justify-center font-dm_sans">
@@ -98,7 +103,6 @@ const OrganizationList: React.FunctionComponent = () => {
 					</div>
 					<div className="flex flex-col gap-[1rem] max-h-[40vh] overflow-auto px-[0.3rem]">
 						{pendingInvitationsOrgData.map((orgData: any, index: number) => {
-							
 							return (
 								<OrganizationCard
 									key={`oraganization-${index}`}
@@ -109,16 +113,18 @@ const OrganizationList: React.FunctionComponent = () => {
 								/>
 							);
 						})}
-						{organization.map((orgData: any, index: number) => {
-							return (
-								<OrganizationCard
-									key={`oraganization-${index}`}
-									name={orgData?.name}
-									orgId={orgData?.id}
-									user={user}
-								/>
-							);
-						})}
+						<div className="flex flex-col-reverse">
+							{organization.map((orgData: any, index: number) => {
+								return (
+									<OrganizationCard
+										key={`oraganization-${index}`}
+										name={orgData?.name}
+										orgId={orgData?.id}
+										user={user}
+									/>
+								);
+							})}
+						</div>
 					</div>
 				</div>
 				<button

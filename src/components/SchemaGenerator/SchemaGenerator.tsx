@@ -1,10 +1,11 @@
 import { useState } from "react";
 import {
-  FormControl,
-  InputLabel,
-  Select,
-  SelectChangeEvent,
-  MenuItem,
+	FormControl,
+	InputLabel,
+	Select,
+	SelectChangeEvent,
+	MenuItem,
+	Modal
 } from "@mui/material";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 
@@ -61,50 +62,90 @@ export const SchemaGenerator = ({
   ];
   const [selectedOptions, setSelectedOptions] = useState([]);
 
-  // Handle change function to update selected options
-  const handleChange = (event: SelectChangeEvent<any>) => {
-    const {
-      target: { value },
-    } = event;
-    setSelectedOptions(typeof value === "string" ? value.split(",") : value);
-  };
+	const [showModal , setShowModal] = useState(false);
+
+	const handleDeleteClick = () => {
+	  setShowModal(true);
+	};
+  
+	const handleDeleteConfirm = () => {
+	  deleteSchema();
+	  setShowModal(false);
+	}
+  
+	const handleDeleteCancel = () => {
+	  setShowModal(false);
+	}
+
+	// Handle change function to update selected options
+	const handleChange = (event: SelectChangeEvent<any>) => {
+		const {
+			target: { value },
+		} = event;
+		setSelectedOptions(typeof value === "string" ? value.split(",") : value);
+	};
 
   const activeTab = useAppSelector(
     (state: RootState) => state.schema.activeTab
   );
   const dispatch = useAppDispatch();
 
-  if (activeTab === id)
-    return (
-      <section
-        className="relative h-screen w-screen bg-background_color text-primary_font_color
-        flex flex-col items-center gap-4 font-dm_sans ">
-        <div className="relative w-full py-4 bg-Secondary_background_color text-xl text-highlight_font_color text-center border-b border-dark_gray flex justify-center items-center">
-          <div className="flex rounded-lg border-[2px] border-white/5 items-center font-dm_sans overflow-hidden max-h-[45px]">
-            <label className="text-white/30 bg-background_color h-[50px] flex items-center rounded-md font-dm_sans text-[16px] px-4 rounded-r-none">
-              Case Name
-            </label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Case Name"
-              className="flex-1 font-fira_code text-[1rem] rounded-r-lg px-4 bg-Secondary_background_color h-10 outline-none placeholder:text-white/30 text-white/70"
-            />
-          </div>
-          <div className="absolute right-[1rem] flex gap-[1rem]">
-            <button
-              className="material-symbols-outlined text-white/30 hover:text-yellow-400 cursor-pointer"
-              onClick={duplicateSchema}>
-              content_copy
-            </button>
-            <button
-              className="material-symbols-outlined text-white/30 hover:text-rose-400 cursor-pointer"
-              onClick={deleteSchema}>
-              delete
-            </button>
-          </div>
-        </div>
+	if (activeTab === id)
+		return (
+			<section
+				className="relative h-screen w-screen bg-background_color text-primary_font_color
+        flex flex-col items-center gap-4 font-dm_sans "
+			>
+				<div className="relative w-full py-4 bg-Secondary_background_color text-xl text-highlight_font_color text-center border-b border-dark_gray flex justify-center items-center">
+					<div className="flex rounded-lg border-[2px] border-white/5 items-center font-dm_sans overflow-hidden max-h-[45px]">
+						<label className="text-white/30 bg-background_color h-[50px] flex items-center rounded-md font-dm_sans text-[16px] px-4 rounded-r-none">
+							Case Name
+						</label>
+						<input
+							type="text"
+							value={name}
+							onChange={(e) => setName(e.target.value)}
+							placeholder="Case Name"
+							className="flex-1 font-fira_code text-[1rem] rounded-r-lg px-4 bg-Secondary_background_color h-10 outline-none placeholder:text-white/30 text-white/70"
+						/>
+					</div>
+					<div className="absolute right-[1rem] flex gap-[1rem]">
+						<button
+							className="material-symbols-outlined text-white/30 hover:text-yellow-400 cursor-pointer"
+							onClick={duplicateSchema}
+						>
+							content_copy
+						</button>
+						<button
+							className="material-symbols-outlined text-white/30 hover:text-rose-400 cursor-pointer"
+							onClick={handleDeleteClick}
+						>
+							delete
+						</button>
+
+						<Modal
+							open={showModal}
+							onClose={handleDeleteCancel}
+							aria-labelledby="delete-column-modal"
+							aria-describedby="delete-column-modal-description"
+						>
+							
+							<div className="absolute m-4 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
+								rounded-lg font-dm_sans bg-Secondary_background_color shadow-lg p-6 text-left align-middle text-primary_font_color">
+							<p className = "mb-7" id="delete-column-modal-description">
+								Are you sure you want to delete this schema?
+							</p>
+							<div className="flex justify-end items-center mt-7 gap-[1rem]">
+								<button className="bg-sidebar_bg px-[15px] py-[5px] font-bold rounded-md flex items-center border-0 border-transparent hover:text-white " onClick={handleDeleteCancel}>Cancel</button>
+								<button className = "bg-rose-400 text-rose-800 px-[15px] py-[5px] flex items-center font-bold rounded-md border-0 border-transparent hover:bg-rose-800 hover:text-rose-400 "onClick={handleDeleteConfirm}>Delete</button>
+
+							</div>
+							
+							</div>
+          
+          				</Modal>
+					</div>
+				</div>
 
         <div className="flex w-full justify-center gap-[3rem] items-center py-[1.5rem]">
           <div className="flex gap-[0.5rem] min-w-[100px] font-dm-sans">

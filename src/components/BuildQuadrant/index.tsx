@@ -33,6 +33,8 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 	dispatch(setDatas(props.datas));
 	dispatch(setDataSchema(props.fieldData.list));
 
+	console.log(props.datas);
+
 	const organizationId = useAppSelector((state) => state.auth.organisationId);
 	const tabName = useAppSelector((state) => state.datatable.tabName);
 	const [filterSchema, setFilterSchema] = useState<TYPE_Filters[]>([]);
@@ -65,15 +67,68 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 				}
 				filter = removeDuplicates(filter);
 				setFilterSchema(filter);
+				console.log(filter);
 			}
 		}
 		getFilterSchema();
 	},[organizationId, tabName]);
 
+
+	const modifyData = (filterSchema: TYPE_Filters[]) => {
+		let newData = [...props.datas];
+		const filters = [...filterSchema];
+		const filterObject:any = {}
+		filters.forEach((filterData)=>{
+			let filterValues:any = []
+			filterData.data.forEach((filterOptionData)=>{
+				if(filterOptionData.active)
+					filterValues.push(filterOptionData.filterOptionName)
+			})
+			if(filterValues.length>0)
+				filterObject[filterData.columnName] = filterValues
+		})
+
+		if(Object.keys(filterObject).length>0){
+			let dataList:any = []
+			newData.forEach((propsData) => {
+				let dataFromFilter:any;
+				Object.keys(propsData).forEach((key)=>{
+					if(!dataFromFilter){
+						if(key === "Tag"){
+							if(filterObject[key] && filterObject[key].length>0){
+								if(propsData[key].length > 0){
+									propsData[key].forEach((data:any) => {
+										console.log('====================================');
+										console.log(filterObject[key], data.tagName);
+										console.log('====================================');
+										if(filterObject[key].includes(data.tagName)){
+											dataFromFilter = propsData
+										}
+									})
+								}
+							}
+						}else{
+							if(filterObject[key] && filterObject[key].length>0){
+								if(filterObject[key].includes(propsData[key])){
+									dataFromFilter = propsData
+								}
+							}
+						}
+					}
+				})
+				if(dataFromFilter)
+					dataList.push(propsData);
+			})
+			dispatch(setDatas(dataList));
+		}else{
+			dispatch(setDatas(newData));
+		}
+	}
+
 	return (
 		<div>
 			<BuildQuadarntHeader />
-			<Filter filters={filterSchema} setNewFilterSchema={setFilterSchema} />
+			<Filter filters={filterSchema} modifyData={modifyData} />
 			<main className="p-[1rem]">
 				<DataTable />
 			</main>

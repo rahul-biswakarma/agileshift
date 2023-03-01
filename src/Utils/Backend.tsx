@@ -426,7 +426,7 @@ export const add_organisation_to_user = async (
 
 	if (docSnap.exists()) {
 		dataDetails = docSnap.data()
-		dataDetails = dataDetails.filter((item: any) => item !== organisationId)
+		dataDetails = dataDetails["pendingList"].filter((item: any) => item !== organisationId)
 		await updateDoc(docRef, {
 			pendingList: dataDetails,
 		});
@@ -768,13 +768,45 @@ export const wil_include = (item: any, searchText: string) => {
   return flag;
 };
 
+// 35 get organization name by id
+export const get_organization_name_by_id = async (organizationId: string) => {
+  const organizationRef = doc(db, "organizations", organizationId);
+  const docSnap = await getDoc(organizationRef);
+  if (docSnap.exists()) {
+    return docSnap.data()["name"];
+  } else {
+    return "";
+  }
+};
 export const get_filter_schema = async (organizationId: string) => {
   const filterRef = doc(db, "filterSchema", organizationId);
+  console.log(organizationId)
   const filterSnap = await getDoc(filterRef);
   if (filterSnap.exists()) {
+    console.log(filterSnap.data())
     return filterSnap.data();
   } else {
     console.log("No such document!");
     return;
   }
 }
+
+// reject invitation
+export const reject_invitation = async (organisationId: string, emailId: string) => {
+	
+	const docRef = doc(db, "invitations", emailId);
+		const docSnap = await getDoc(docRef);
+		let dataDetails: any =[] 
+
+	if (docSnap.exists()) {
+		dataDetails = docSnap.data()
+		dataDetails = dataDetails["pendingList"].filter((item: any) => item !== organisationId)
+		await updateDoc(docRef, {
+			pendingList: dataDetails,
+		});
+	} else {
+	// doc.data() will be undefined in this case
+	console.log("No such document!");
+	}
+
+};

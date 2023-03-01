@@ -18,10 +18,10 @@ type TYPE_ActiveFiltersDropdown = {
 
 type TYPE_FilterProps = {
 	filters: TYPE_Filters[],
-	setNewFilterSchema: React.Dispatch<React.SetStateAction<TYPE_Filters[]>>
+	modifyData: (filterSchema: TYPE_Filters[]) => void
 }
 
-const Filter = ({filters, setNewFilterSchema}: TYPE_FilterProps) => {
+const Filter = ({filters, modifyData}: TYPE_FilterProps) => {
 	const [filterSchema, setFilterSchema] = useState<TYPE_Filters[]>(filters);
 	const [showAllFilters, setShowAllFilters] = useState<boolean>(false);
 	const [activeFiltersDropdown, setActiveFiltersDropdown] =
@@ -59,6 +59,7 @@ const Filter = ({filters, setNewFilterSchema}: TYPE_FilterProps) => {
 			filterObj.data[filterOptionIndex].active = true;
 		}
         setFilterSchema(newFilterSchema);
+		modifyData(newFilterSchema);
     }
 
 	const modifyActiveState = (index: number) => {
@@ -69,6 +70,7 @@ const Filter = ({filters, setNewFilterSchema}: TYPE_FilterProps) => {
 			newArray[index].active = true;
 		}
 		setFilterSchema(newArray);
+		modifyData(newArray);
 	};
 
     const resetFilters = () => {
@@ -79,6 +81,7 @@ const Filter = ({filters, setNewFilterSchema}: TYPE_FilterProps) => {
             });
         });
         setFilterSchema(resetFilterSchema);
+		modifyData(resetFilterSchema);
     }
 
 	return (
@@ -193,22 +196,11 @@ const Filter = ({filters, setNewFilterSchema}: TYPE_FilterProps) => {
 							</div>
 						)}
 					</div>
-
-					<div className="flex items-center gap-4">
+				</div>
+				<div className="flex items-center gap-4">
 						<button onClick={() => resetFilters()} className="rounded-md h-7 text-[#808080] text-sm font-bold ">
 							Clear
 						</button>
-					</div>
-				</div>
-				<div className="flex items-center font-dm_sans">
-					<div className="flex hover:bg-[#49494D] rounded-md px-4 py-2 gap-1 items-center">
-						<button className="rounded-md h-7 text-[#808080] text-md font-bold">
-							Sort
-						</button>
-						<span className="material-symbols-outlined">
-							keyboard_arrow_down
-						</span>
-					</div>
 				</div>
 			</div>
 		</div>
