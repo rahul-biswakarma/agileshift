@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "../../redux/store";
 import { create_schema } from "../../Utils/Backend";
@@ -9,10 +9,27 @@ import { SchemaGenerator } from "./SchemaGenerator";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { setActiveTab } from "../../redux/reducers/SchemaSlice";
 import SchemaGeneratorFormHeader from "./Header";
+import { toast } from "react-toastify";
+
+
 
 export const GeneratorFormsContainer = () => {
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
+	const navigate = useNavigate();
+	const dispatch = useAppDispatch();
+	const userId = useAppSelector((state:RootState) => state.auth.userId);
+
+  
+
+ 
+
+	
+
+	useEffect(() => {
+		if(!userId){
+			navigate('/login')
+		}
+	}, [navigate, userId]);	
+
 
   let activeTab = useAppSelector((state: RootState) => state.schema.activeTab);
 
@@ -106,7 +123,7 @@ export const GeneratorFormsContainer = () => {
     let tempFields = [...fields];
     let lastField = tempFields[tempFields.length - 1];
     if (lastField.name === "") {
-      alert("First fill the name");
+      toast("Please fill the name first");
       return;
     }
     let newSchema: TYPE_FIELD = {

@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useAppSelector } from "../../redux/hooks";
 
 import logoSvg from "../../assets/logo.svg";
+import {  get_user_by_id, get_organization_name_by_id } from "../../Utils/Backend";
+
 import InviteUserComponent from "./InviteUserComponent";
-import { get_user_by_id } from "../../Utils/Backend";
 import { SearchComponent } from "./SearchComponent";
 
 interface TYPE_HeaderProps {
@@ -13,7 +14,7 @@ interface TYPE_HeaderProps {
 
 const Header = (props: TYPE_HeaderProps) => {
 	const userId = useAppSelector((state) => state.auth.userId);
-	// const organizationId = useAppSelector((state) => state.auth.organisationId);
+	const organizationId = useAppSelector((state) => state.auth.organisationId);
 
 	const [userData, setUserData] = useState<TYPE_USER>({
 		id: "",
@@ -55,6 +56,13 @@ const Header = (props: TYPE_HeaderProps) => {
 	const handleInviteUerButtonClick = () => {
 		setIsInviteUserComponentOpen(!isInviteUserComponentOpen);
 	};
+
+	useEffect(() => {
+		get_organization_name_by_id(organizationId).then((data) => {
+			document.title = `${data} | Dashboard`
+
+		})
+	},[organizationId])
 
 	return (
 		<div

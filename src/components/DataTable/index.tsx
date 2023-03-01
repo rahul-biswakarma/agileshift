@@ -54,7 +54,6 @@ const DataTable = () => {
     rowSelection: "single",
     onRowClicked: function (event) {
       let rowData = event.data;
-      console.log(rowData,"****")
       dispatch(
         setSideBar({
           sidebarType: "editMode",

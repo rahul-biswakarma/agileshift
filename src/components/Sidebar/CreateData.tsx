@@ -21,11 +21,12 @@ export default function CreateData(props: any) {
   const organizationId = useAppSelector((state) => state.auth.organisationId);
   const creatorOfData = useAppSelector((state) => state.auth.userId);
 
+  console.log(props.sidebar)
   React.useEffect(() => {
     const fetchData = async () => {
       let schemaData: any = await get_schema_data_field(
         organizationId,
-        selectedField
+        selectedField 
       );
        
       let tempFormData: any = {};
@@ -62,10 +63,16 @@ export default function CreateData(props: any) {
         const fetchData = async () => {
           let fieldList: string[] = await get_all_tabs_name(organizationId);
           setFieldList(fieldList);
-
-          
-    
+          if(props.sidebar.sidebarType === "createMode")
           setSelectedField(props.sidebar.createModeCalledByField.toLowerCase()!=="all" ?props.sidebar.createModeCalledByField:fieldList[0]);
+          else{
+            let currentState: any = await get_data_byID(
+              organizationId,
+              props.sidebar.fieldId
+            );
+            setSelectedField(currentState.field)
+
+          }
           let schemaData: any = await get_schema_data_field(
             organizationId,
             selectedField
@@ -74,7 +81,7 @@ export default function CreateData(props: any) {
         };
         fetchData()
       },
-      [organizationId, selectedField, props.sidebar.createModeCalledByField],
+      [organizationId, props.sidebar.createModeCalledByField],
     )
     
     React.useEffect(() => {

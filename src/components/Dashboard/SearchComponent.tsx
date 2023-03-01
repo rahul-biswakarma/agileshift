@@ -27,16 +27,13 @@ const SearchComponent = () => {
 	const [searchTerm, setSearchTerm] = useState<string>("");
 
 	const getDataListFromSearchTerm =async (term:string) =>{
-		console.log(term, "term");
 		let modifiedDataList:Type_SuggestionsState[] = [];
 		if(term.length>0){
 			const dataListFromBackend = await main_search_function(organizationId, term)
-			console.log(dataListFromBackend, "dataListFromBackend");
 			
 			modifiedDataList = await Promise.all(await modifyDataList(dataListFromBackend));
 		}
 		setSearchedDataList(modifiedDataList);
-		console.log(modifiedDataList, "modifiedDataList");
 	}
 
 	const modifyDataList = (dataListFromBackend:TYPE_SCHEMA[]) =>{
@@ -44,7 +41,6 @@ const SearchComponent = () => {
 			const modifiedDataList = dataListFromBackend.map(async (data)=>{
 				const field = data.field;
 				const schemaFromDatabase:any = await get_schema_data_field(organizationId, field);
-				console.log(schemaFromDatabase, "schema");
 				const titleData = getTitleData(schemaFromDatabase.list, data);  
 				let modifiedData={
 					field:field,
@@ -53,7 +49,6 @@ const SearchComponent = () => {
 					schema:schemaFromDatabase.list,
 					titleData:titleData,
 				}
-				console.log(modifiedData, "modifiedData");
 				
 				return modifiedData;
 			})
@@ -70,7 +65,6 @@ const SearchComponent = () => {
 				titleData = data[schemaItem.columnName];
 			}
 		})
-		console.log(titleData, "titleData");
 		
 		return titleData;
 	}
@@ -78,7 +72,6 @@ const SearchComponent = () => {
 	const debouncedCallback = useDebounceCallback(getDataListFromSearchTerm, 500);
 
 	const handleSuggestionsSelect = (suggestion:Type_SuggestionsState) =>{
-		console.log(suggestion, "suggestion");
 		const sidebarData = {
             field:suggestion.field,
             color:suggestion.color,
@@ -130,7 +123,6 @@ const SearchComponent = () => {
 							<span className="ml-2 grow text-left">{data.titleData}</span>
 							<button
 								onClick={() => {
-									console.log(data, "data");
 								}}
 								className="p-[0.10rem_0.60rem] flex items-center bg-Secondary_background_color border border-inherit text-center text-lg rounded-lg"
 							>
