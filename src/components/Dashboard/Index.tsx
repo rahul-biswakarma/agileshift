@@ -21,6 +21,12 @@ export default function Dashboard() {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 
+	useEffect(() => {
+		if(!organizationId){
+			navigate('/organization-lists')
+		}
+	},[])
+
   useEffect(() => {
     get_schema_data(organizationId).then((data) => {
 		console.log("data:", data);
