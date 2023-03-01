@@ -415,7 +415,6 @@ export const add_organisation_to_user = async (
   });
 };
 // // 24 get user by id
-
 export const get_user_by_id = async (userId: string) => {
   const docRef = doc(db, "users", userId);
   const docSnap = await getDoc(docRef);
@@ -436,7 +435,7 @@ export const get_user_by_email = async (email: string) => {
   return userData; // return the variable after the loop has finished
 };
 
-// 26 addd && edit table data
+// 26 add && edit table data
 export const update_data_to_database = async (
   organisationId: string,
   data: any
@@ -560,23 +559,25 @@ export const get_user_suggestions = async (organisationId: string) => {
 //30 set notification
 export const set_notification = async (
   organisationId: string,
-  userId: string,
-  notificationData: string,
+  userId: string[],
+  notificationData: string[],
   dataId?: string,
 ) => {
   let orgData: any = await get_organizations_details(organisationId);
-
-  const notification = {
-    dataId: dataId,
-    notificationData: notificationData,
-    notificationId: generateRandomId(),
-    dateOfCreation: get_current_time(),
-    isSeen: false,
-  };
-  if (orgData["notifications"][userId] === undefined) {
-    orgData["notifications"][userId] = [];
-  }
-  orgData["notifications"][userId].push(notification);
+  
+  userId.forEach(async (user, index) => {
+    const notification = {
+      dataId: dataId,
+      notificationData: notificationData[index],
+      notificationId: generateRandomId(),
+      dateOfCreation: get_current_time(),
+      isSeen: false,
+    };
+    if (orgData["notifications"][user] === undefined) {
+      orgData["notifications"][user] = [];
+    }
+    orgData["notifications"][user].push(notification);
+  })
   const organizationRef = doc(db, "organizations", organisationId);
   await updateDoc(organizationRef, {
     notifications: orgData["notifications"],
@@ -598,6 +599,20 @@ export const update_notification = async (
 
   filteredNotification.push(notification);
   updatedNotification[userId] = filteredNotification;
+  await updateDoc(organizationRef, {
+    notifications: updatedNotification,
+  });
+};
+
+export const mark_notification_seen = async (
+  organisationId: string,
+  userId: string,
+  notificationList: TYPE_NOTIFICATION[]
+) => {
+  const organizationRef = doc(db, "organizations", organisationId);
+  let docSnap: any = await getDoc(organizationRef);
+  let updatedNotification: any = docSnap.data()["notifications"];
+  updatedNotification[userId] = notificationList;
   await updateDoc(organizationRef, {
     notifications: updatedNotification,
   });
