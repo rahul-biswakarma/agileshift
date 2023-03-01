@@ -18,13 +18,13 @@ const DisplayFilters = ({
 }: DisplayFiltersProps) => {
  const [modifiedFilterData, setModifiedFilterData] = useState(filterData);
 
- const searchFilters = (event: React.ChangeEvent<HTMLInputElement>) => {
-  const newFilterData = filterData.filter((filterData) =>
-   filterData.filterOptionName.includes(event.target.value)
-  );
-  setModifiedFilterData(newFilterData);
- };
 
+  const searchFilters = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newFilterData = filterData.filter((filterData) => filterData.filterOptionName.includes(event.target.value));
+    setModifiedFilterData(newFilterData);
+  }
+
+  
  return (
   <div>
    <div className="absolute top-[110%] left-0 bg-background_color w-48 rounded-xl p-1 border border-white/20 text-highlight_font_color">

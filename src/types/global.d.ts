@@ -9,10 +9,11 @@ declare global {
 		tagName: string;
 	};
 	type TYPE_NOTIFICATION = {
-		type: string; //issues, tickets, or parts.
-		id: string; //id of ticket or issues mentioned in update
-		message: string;
-		isRead: boolean;
+		dataId:string,
+		dateOfCreation:Date,
+		isSeen:boolean,
+		notificationData:string,
+		notificationId:string
 	};
 	type TYPE_VISTA = {
 		[key: string]: string;

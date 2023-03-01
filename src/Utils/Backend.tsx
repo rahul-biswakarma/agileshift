@@ -241,17 +241,51 @@ export const create_schema = async (
 	schemas: TYPE_FIELD[],
 	isEdit: boolean
 ) => {
-	if (isEdit) {
-		const schemaDetails = {
-			schemaData: schemas,
-		};
-		await updateDoc(doc(db, "schemas", organisationId), schemaDetails);
-	} else {
-		const schemaDetails = {
-			schemaData: schemas,
-		};
-		await setDoc(doc(db, "schemas", organisationId), schemaDetails);
-	}
+  if (isEdit) {
+    const schemaDetails = {
+      schemaData: schemas,
+    };
+    await updateDoc(doc(db, "schemas", organisationId), schemaDetails);
+    let filterData: any = {};
+    schemas.forEach((schema) => {
+      filterData[schema.name] = [];
+      schema.list.forEach((item) => {
+        if (item.columnType !== "string" && item.columnType !== "title" && item.columnType !== "id" && item.columnType !== "currency") {
+          filterData[schema.name].push({
+            active: true,
+            data: [],
+            columnName: item.columnName,
+          });
+        }
+      });
+    });
+    const filterDetails = {
+      data: filterData,
+    };
+    await updateDoc(doc(db, "filterSchema", organisationId), filterDetails);
+  } else {
+    let filterData: any = {};
+    schemas.forEach((schema) => {
+      filterData[schema.name] = [];
+      schema.list.forEach((item) => {
+        if (item.columnType !== "string" && item.columnType !== "title" && item.columnType !== "id" && item.columnType !== "currency") {
+          filterData[schema.name].push({
+            active: true,
+            data: [],
+            columnName: item.columnName,
+          });
+        }
+      });
+    });
+    const filterDetails = {
+      data: filterData,
+    };
+    await setDoc(doc(db, "filterSchema", organisationId), filterDetails);
+    const schemaDetails = {
+      schemaData: schemas,
+    };
+    await setDoc(doc(db, "schemas", organisationId), schemaDetails);
+  }
 };
 
 // 15 get schema
@@ -264,6 +298,7 @@ export const get_schema_data = async (organisationId: string) => {
 		console.log("No such document!");
 	}
 };
+
 //16 get tabs name
 export const get_tabs_name = async (organisationId: string) => {
 	const docRef = doc(db, "schemas", organisationId);
@@ -384,7 +419,6 @@ export const add_organisation_to_user = async (
 	}); 
 };
 // // 24 get user by id
-
 export const get_user_by_id = async (userId: string) => {
 	const docRef = doc(db, "users", userId);
 	const docSnap = await getDoc(docRef);
@@ -410,7 +444,7 @@ export const get_user_by_email = async (email: string) => {
 	return userData; // return the variable after the loop has finished
 };
 
-// 26 addd && edit table data
+// 26 add && edit table data
 export const update_data_to_database = async (
 	organisationId: string,
 	data: any
@@ -533,28 +567,30 @@ export const get_user_suggestions = async (organisationId: string) => {
 
 //30 set notification
 export const set_notification = async (
-	organisationId: string,
-	userId: string,
-	dataId: string,
-	notificationData: string
+  organisationId: string,
+  userId: string[],
+  notificationData: string[],
+  dataId?: string,
 ) => {
-	let orgData: any = await get_organizations_details(organisationId);
-
-	const notification = {
-		dataId: dataId,
-		notificationData: notificationData,
-		notificationId: generateRandomId(),
-		dateOfCreation: get_current_time(),
-		isSeen: false,
-	};
-	if (orgData["notifications"][userId] === undefined) {
-		orgData["notifications"][userId] = [];
-	}
-	orgData["notifications"][userId].push(notification);
-	const organizationRef = doc(db, "organizations", organisationId);
-	await updateDoc(organizationRef, {
-		notifications: orgData["notifications"],
-	});
+  let orgData: any = await get_organizations_details(organisationId);
+  
+  userId.forEach(async (user, index) => {
+    const notification = {
+      dataId: dataId,
+      notificationData: notificationData[index],
+      notificationId: generateRandomId(),
+      dateOfCreation: get_current_time(),
+      isSeen: false,
+    };
+    if (orgData["notifications"][user] === undefined) {
+      orgData["notifications"][user] = [];
+    }
+    orgData["notifications"][user].push(notification);
+  })
+  const organizationRef = doc(db, "organizations", organisationId);
+  await updateDoc(organizationRef, {
+    notifications: orgData["notifications"],
+  });
 };
 
 // 31 update notification
@@ -575,6 +611,20 @@ export const update_notification = async (
 	await updateDoc(organizationRef, {
 		notifications: updatedNotification,
 	});
+};
+
+export const mark_notification_seen = async (
+  organisationId: string,
+  userId: string,
+  notificationList: TYPE_NOTIFICATION[]
+) => {
+  const organizationRef = doc(db, "organizations", organisationId);
+  let docSnap: any = await getDoc(organizationRef);
+  let updatedNotification: any = docSnap.data()["notifications"];
+  updatedNotification[userId] = notificationList;
+  await updateDoc(organizationRef, {
+    notifications: updatedNotification,
+  });
 };
 
 // 33 user active time
@@ -662,3 +712,50 @@ export const get_invitations_list = async (userID: string) => {
 	
 }
 
+// 34 main search function
+export const main_search_function = async (
+  organizationId: string,
+  searchText: string
+) => {
+  let results: any = [];
+  let organizationTableData: any = await get_organizations_details(
+    organizationId
+  );
+  organizationTableData = organizationTableData["data"];
+  try {
+    organizationTableData.forEach((item: any) => {
+      if (wil_include(item, searchText)) {
+        results.push(item);
+      }
+    });
+  } catch {
+    console.log("error");
+    return [];
+  }
+  return results;
+};
+
+export const wil_include = (item: any, searchText: string) => {
+  let flag = false;
+  Object.keys(item).forEach((field: any) => {
+    if (!flag) {
+      try {
+        flag = item[field].toLowerCase().includes(searchText.toLowerCase());
+      } catch {
+        flag = false;
+      }
+    }
+  });
+  return flag;
+};
+
+export const get_filter_schema = async (organizationId: string) => {
+  const filterRef = doc(db, "filterSchema", organizationId);
+  const filterSnap = await getDoc(filterRef);
+  if (filterSnap.exists()) {
+    return filterSnap.data();
+  } else {
+    console.log("No such document!");
+    return;
+  }
+}

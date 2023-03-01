@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useAppSelector } from "../../redux/hooks";
 
 import logoSvg from "../../assets/logo.svg";
-import { get_user_by_id } from "../../Utils/Backend";
-import {} from "../../Utils/Backend";
 import InviteUserComponent from "./InviteUserComponent";
+import { get_user_by_id } from "../../Utils/Backend";
+import { SearchComponent } from "./SearchComponent";
 
 interface TYPE_HeaderProps {
 	showNotification: boolean;
@@ -13,6 +13,7 @@ interface TYPE_HeaderProps {
 
 const Header = (props: TYPE_HeaderProps) => {
 	const userId = useAppSelector((state) => state.auth.userId);
+	// const organizationId = useAppSelector((state) => state.auth.organisationId);
 
 	const [userData, setUserData] = useState<TYPE_USER>({
 		id: "",
@@ -68,19 +69,7 @@ const Header = (props: TYPE_HeaderProps) => {
 				/>
 			</div>
 
-			<div className="relative w-full max-w-[800px] rounded-md flex gap-[10px] bg-Secondary_background_color p-[2px]">
-				<div className="flex rounded-md bg-background_color items-center px-4">
-					<span className="material-symbols-outlined text-white/30">
-						search
-					</span>
-				</div>
-				<input
-					name="search-input"
-					type="text"
-					placeholder="Search items, fields, users and etc"
-					className="w-full flex-1 font-fira_code font-lg rounded-r-lg px-4 bg-Secondary_background_color h-9 outline-none text-white placeholder:text-white/20"
-				/>
-			</div>
+			<SearchComponent />
 
 			<div className="flex gap-[2rem] items-center">
 				<button

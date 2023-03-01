@@ -2,27 +2,27 @@ import { useState, useEffect } from "react";
 import { useAppSelector } from "../../redux/hooks";
 
 type Type_SelectIconComponentProps = {
-	icon: string;
-	changeIcon: (this: any, icon: string) => void;
+  icon: string;
+  changeIcon: (this: any, icon: string) => void;
 };
 
 const SelectIconComponent = (props: Type_SelectIconComponentProps) => {
-	let icons = useAppSelector((state) => state.icons.icons);
-	const [isIconMenuOpen, setIsIconMenuOpen] = useState(false);
-	const [selectedIcon, setSelectedIcon] = useState("");
+  let icons = useAppSelector((state) => state.icons.icons);
+  const [isIconMenuOpen, setIsIconMenuOpen] = useState(false);
+  const [selectedIcon, setSelectedIcon] = useState("");
 
-	useEffect(() => {
-		setSelectedIcon(props.icon);
-	}, [props.icon]);
+  useEffect(() => {
+    setSelectedIcon(props.icon);
+  }, [props.icon]);
 
-	function toggleIconMenu() {
-		setIsIconMenuOpen(!isIconMenuOpen);
-	}
+  function toggleIconMenu() {
+    setIsIconMenuOpen(!isIconMenuOpen);
+  }
 
-	function updateSelectedIcon(icon: string) {
-		setSelectedIcon(icon);
-		props.changeIcon(icon);
-	}
+  function updateSelectedIcon(icon: string) {
+    setSelectedIcon(icon);
+    props.changeIcon(icon);
+  }
 
 	return (
 		<div

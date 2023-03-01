@@ -3,9 +3,9 @@ import { setIsEdit } from "../../redux/reducers/SchemaSlice";
 import { useNavigate } from "react-router-dom";
 
 const SchemaGeneratorFormHeader = () => {
-	const dispatch = useAppDispatch();
-	const navigate = useNavigate();
-	let organisationId = useAppSelector((state) => state.auth.organisationId);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  let organisationId = useAppSelector((state) => state.auth.organisationId);
 
 	function navigateToDashboard() {
 		dispatch(setIsEdit(false));
