@@ -72,13 +72,13 @@ const SearchComponent = () => {
 	const debouncedCallback = useDebounceCallback(getDataListFromSearchTerm, 500);
 
 	const handleSuggestionsSelect = (suggestion:Type_SuggestionsState) =>{
-		const sidebarData = {
-            field:suggestion.field,
-            color:suggestion.color,
-            data:suggestion.data,
-            schema:suggestion.schema
-        }
-        dispatch(setSideBar(sidebarData));
+		dispatch(
+			setSideBar({
+				sidebarType: "editMode",
+				createModeCalledByField: "",
+				fieldId: suggestion.data.id,
+			})
+		);
 	}
 
 	const handleSearchTermChange = (e: React.ChangeEvent<HTMLInputElement>) => {

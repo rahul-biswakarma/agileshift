@@ -81,7 +81,7 @@ const Header = (props: TYPE_HeaderProps) => {
 
 			<div className="flex gap-[2rem] items-center">
 				<button
-					className="material-symbols-outlined text-white/20 cursor-pointer hover:text-white transition-all"
+					className={`${props.showNotification ? "text-white": "text-white/20" } material-symbols-outlined cursor-pointer hover:text-white transition-all`}
 					onClick={() => handleNotificationToggle()}
 				>
 					notifications

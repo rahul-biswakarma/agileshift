@@ -52,6 +52,7 @@ const DataTable = () => {
   const gridOptions: CustomGridOptions = {
     detailRowAutoHeight: true,
     rowSelection: "single",
+    suppressDragLeaveHidesColumns: true,
     onRowClicked: function (event) {
       let rowData = event.data;
       dispatch(

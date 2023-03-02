@@ -118,7 +118,9 @@ export const GeneratorFormsContainer = () => {
     let tempFields = [...fields];
     let lastField = tempFields[tempFields.length - 1];
     if (lastField.name === "") {
-      toast("Please fill the name first");
+      toast.warning("Please fill the name first",{
+        className: 'toast-message'
+      });
       return;
     }
     let newSchema: TYPE_FIELD = {
