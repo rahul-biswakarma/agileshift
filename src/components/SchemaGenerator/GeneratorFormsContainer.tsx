@@ -13,16 +13,11 @@ import { toast } from "react-toastify";
 
 
 
+
 export const GeneratorFormsContainer = () => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 	const userId = useAppSelector((state:RootState) => state.auth.userId);
-
-  
-
- 
-
-	
 
 	useEffect(() => {
 		if(!userId){

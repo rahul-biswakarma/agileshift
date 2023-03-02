@@ -9,6 +9,7 @@ declare global {
 		sidebarType: string;
 		createModeCalledByField?: string; // this is the field that called the create mode
 		linkedCalledByID?: string; // this is the id of the field that called the link
+		fieldName?:string;
 	  };
 	type TYPE_TAG = {
 		color: string; //hash code of color

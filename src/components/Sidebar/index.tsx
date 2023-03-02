@@ -2,11 +2,14 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import CreateData from "./CreateData";
+import { LinkageSidebar } from "./LinkageSidebar";
 
 export default function SideBarScreen() {
   const sideBarList: Type_SidebarState[] = useSelector(
     (state: RootState) => state.sidebar.sideBarData
   );
+
+  console.log(sideBarList,'***')
 
   return (
     <div className="h-screen w-screen  flex flex-row-reverse  z-20 font-dm_sans  text-white overflow-x-scroll">
@@ -24,7 +27,7 @@ export default function SideBarScreen() {
             </div>
           );
         } else if (sidebar.sidebarType === "linkMode") {
-          return <div key={index}>linkMode</div>;
+          return <div className="w-[400px]" key={index}><LinkageSidebar sidebar={sidebar} index={index}/></div>;
         }
         return(<div></div>)
       })}
