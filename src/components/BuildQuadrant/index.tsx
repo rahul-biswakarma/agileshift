@@ -10,7 +10,6 @@ import {
 import Filter from "../Filters/Filter";
 import { useEffect, useState } from "react";
 import { get_filter_schema } from "../../Utils/Backend";
-import { callExpression } from "@babel/types";
 
 type Type_BuildQuadarntProps = {
 	fieldData: TYPE_FIELD;
@@ -30,10 +29,6 @@ type TYPE_Filters = {
 
 const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 	const dispatch = useAppDispatch();
-	dispatch(setFieldColor(props.fieldData.color));
-	dispatch(setDatas(props.datas));
-	dispatch(setDataSchema(props.fieldData.list));
-
 	console.log(props.datas);
 
 	const organizationId = useAppSelector((state) => state.auth.organisationId);
@@ -53,7 +48,7 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 		return result;
 	}
 
-	useEffect(()=>{
+	useEffect(()=>{		
 		const getFilterSchema = async () => {
 			const filters = await get_filter_schema(organizationId);
 			if(tabName !== "All"){
@@ -72,7 +67,10 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 			}
 		}
 		getFilterSchema();
-	},[organizationId, tabName]);
+		dispatch(setFieldColor(props.fieldData.color));
+		dispatch(setDatas(props.datas));
+		dispatch(setDataSchema(props.fieldData.list));
+	},[organizationId, tabName, props, dispatch]);
 
 
 	const modifyData = (filterSchema: TYPE_Filters[]) => {
@@ -99,9 +97,6 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 							if(filterObject[key] && filterObject[key].length>0){
 								if(propsData[key].length > 0){
 									propsData[key].forEach((data:any) => {
-										console.log('====================================');
-										console.log(filterObject[key], data.tagName);
-										console.log('====================================');
 										if(filterObject[key].includes(data.tagName)){
 											dataFromFilter = propsData
 										}
