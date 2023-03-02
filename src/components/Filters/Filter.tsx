@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import DisplayFilters from "./DisplayFilters";
+import VistaPopup from "./VistaPopup";
 
 type TYPE_FilterOption = {
 	filterOptionName: string;
@@ -92,11 +93,6 @@ const Filter = ({filters, modifyData}: TYPE_FilterProps) => {
 						<button className="mr-4">
 							<span className="material-symbols-outlined">
 								alternate_email
-							</span>
-						</button>
-						<button className="mr-4">
-							<span className="material-symbols-outlined">
-								signal_cellular_alt
 							</span>
 						</button>
 						<button className="mr-4">
@@ -198,9 +194,11 @@ const Filter = ({filters, modifyData}: TYPE_FilterProps) => {
 					</div>
 				</div>
 				<div className="flex items-center gap-4">
-						<button onClick={() => resetFilters()} className="rounded-md h-7 text-[#808080] text-sm font-bold ">
+						<button onClick={() => resetFilters()} className="rounded-md h-7
+						text-[#808080] text-sm font-bold ">
 							Clear
 						</button>
+						<VistaPopup />
 				</div>
 			</div>
 		</div>

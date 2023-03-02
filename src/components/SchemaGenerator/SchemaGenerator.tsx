@@ -36,6 +36,7 @@ type GeneratorPropTypes = {
   changeColor: (this: any, color: string) => void;
   icon: string;
   changeIcon: (this: any, icon: string) => void;
+  changeLinkage:(this: any, link: string[])=> void
 };
 
 export const SchemaGenerator = ({
@@ -52,6 +53,7 @@ export const SchemaGenerator = ({
   changeColor,
   icon,
   changeIcon,
+  changeLinkage,
 }: GeneratorPropTypes) => {
   const colorList = [
     "purple",
@@ -88,7 +90,9 @@ export const SchemaGenerator = ({
 		const {
 			target: { value },
 		} = event;
+    changeLinkage(value);
 		setSelectedOptions(typeof value === "string" ? value.split(",") : value);
+
 	};
 
   const activeTab = useAppSelector(
@@ -267,11 +271,7 @@ export const SchemaGenerator = ({
                 labelId="associate-label-id"
                 label="Associates"
                 value={selectedOptions}
-                onChange={handleChange}
-                renderValue={(selected) => {
-                  console.log("selected", selected);
-                  return selected.join(", ");
-                }}>
+                onChange={handleChange}>
                 {getAllFieldsName().map((name) => (
                   <MenuItem key={name} value={name}>
                     {name}

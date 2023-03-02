@@ -29,35 +29,45 @@ type TYPE_Filters = {
 
 const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 	const dispatch = useAppDispatch();
-	dispatch(setFieldColor(props.fieldData.color));
-	dispatch(setDatas(props.datas));
-	dispatch(setDataSchema(props.fieldData.list));
-
-	console.log(props.datas);
-
 	const organizationId = useAppSelector((state) => state.auth.organisationId);
 	const tabName = useAppSelector((state) => state.datatable.tabName);
 	const [filterSchema, setFilterSchema] = useState<TYPE_Filters[]>([]);
 
 	const removeDuplicates = (filters: TYPE_Filters[]) => {
-		let uniqueValues = new Set();
+		console.log(filters);
+		let uniqueValues = new Map();
 		let result = [];
 		for (let obj of filters) {
 			let value = obj.columnName;
-			if (!uniqueValues.has(value)) {
-				uniqueValues.add(value);
-				result.push(obj);
+			if (!uniqueValues.get(value)) {
+				uniqueValues.set(value, obj);
+			}else{
+				let newObj = obj;
+				newObj.data = [...obj.data, ...uniqueValues.get(value).data];
+				let uniqueOptionsName = new Set();
+				let uniqueOptions:TYPE_FilterOption[] = [];
+				newObj.data.forEach((objData)=>{
+					if(!uniqueOptionsName.has(objData.filterOptionName)){
+						uniqueOptionsName.add(objData.filterOptionName)
+						uniqueOptions.push(objData);
+					}
+				})
+				newObj.data = uniqueOptions;
+				uniqueValues.set(value, newObj);
 			}
 		}
+		result = Array.from(uniqueValues, ([name, value]) => value);
 		return result;
 	}
 
-	useEffect(()=>{
+	useEffect(()=>{		
+		dispatch(setFieldColor(props.fieldData.color));
+		dispatch(setDatas(props.datas));
+		dispatch(setDataSchema(props.fieldData.list));
 		const getFilterSchema = async () => {
 			const filters = await get_filter_schema(organizationId);
 			if(tabName !== "All"){
 				setFilterSchema(filters!.data[tabName]);
-				console.log(filters!.data[tabName]);
 			}else{
 				let filter:TYPE_Filters[] = [];
 				for(const tabName in filters!.data){	
@@ -67,12 +77,10 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 				}
 				filter = removeDuplicates(filter);
 				setFilterSchema(filter);
-				console.log(filter);
 			}
 		}
 		getFilterSchema();
-	},[organizationId, tabName]);
-
+	},[organizationId, tabName, props, dispatch]);
 
 	const modifyData = (filterSchema: TYPE_Filters[]) => {
 		let newData = [...props.datas];
@@ -98,9 +106,6 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 							if(filterObject[key] && filterObject[key].length>0){
 								if(propsData[key].length > 0){
 									propsData[key].forEach((data:any) => {
-										console.log('====================================');
-										console.log(filterObject[key], data.tagName);
-										console.log('====================================');
 										if(filterObject[key].includes(data.tagName)){
 											dataFromFilter = propsData
 										}
