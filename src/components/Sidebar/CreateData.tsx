@@ -59,6 +59,12 @@ export default function CreateData(props: any) {
 
   const handleAddLink = ()=>{
 
+    console.log({
+      sidebarType: "linkMode",
+      fieldName:selectedField,
+      linkedCalledByID: props.sidebar.fieldId,
+    })
+
     dispatch(
       setSideBar({
         sidebarType: "linkMode",
@@ -95,7 +101,7 @@ export default function CreateData(props: any) {
         };
         fetchData()
       },
-      [organizationId, props.sidebar.createModeCalledByField, props.sidebar.fieldId, props.sidebar.sidebarType, selectedField],
+      [organizationId, props.sidebar.createModeCalledByField, props.sidebar.fieldId, props.sidebar.sidebarType],
     )
     
     React.useEffect(() => {

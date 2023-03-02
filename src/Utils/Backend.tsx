@@ -10,6 +10,7 @@ import {
 	query,
 	where,
 	getDocs,
+	onSnapshot,
 } from "firebase/firestore";
 import emailjs from "@emailjs/browser";
 import { isValidEmail } from "email-js";
@@ -68,12 +69,14 @@ const get_current_time = () => {
 29 st dropdoewn options
 30 edit table data in organization
 31 get all columns name
-32 user suggestions
+ 32 mark notification seen
 33 get active  time
-34 create filter schema
-35 get org name by id
+34 main search function
+35 get organization name by id
+36 get all tabs name
+37 get filter schema
+38 get dropdown options
 */
-
 // 1
 export const check_users_database = async (userId: string) => {
 	const docRef = doc(db, "users", userId);
@@ -133,7 +136,6 @@ export const create_organization = async (
 		data: {},
 		dropdownsOptions: {},
 	};
-	//  initialling channel in channel Table
 	const res = await addDoc(organizationsRef, initializeOrganization);
 	const orgRef = doc(db, "organizations", res.id);
 	await updateDoc(orgRef, {
@@ -239,7 +241,8 @@ export const create_schema = async (
     schemas.forEach((schema) => {
       filterData[schema.name] = [];
       schema.list.forEach((item) => {
-        if (item.columnType !== "string" && item.columnType !== "title" && item.columnType !== "id" && item.columnType !== "currency") {
+		
+	 if (item.columnType !== "string" && item.columnType !== "title" && item.columnType !== "id" && item.columnType !== "currency") {
           filterData[schema.name].push({
             active: true,
             data: [],
@@ -434,13 +437,7 @@ export const get_user_by_id = async (userId: string) => {
 	if (docSnap.exists()) {
 		return docSnap.data();
 	}
-	return false;
-
-
-
-
-
-	
+	return false;	
 };
 // // 25 get user by email
 export const get_user_by_email = async (email: string) => {
@@ -503,12 +500,12 @@ export const get_dropdown_options = async (
 	columnName: string,
 	field: string
 ) => {
-	let orgData: any = await get_organizations_details(organisationId);
-	try {
-		return orgData["dropdowns-options"][`${columnName}_${field}`];
-	} catch {
-		return [];
-	}
+	onSnapshot(doc(db, "filterSchema", organisationId), (doc) => {
+		let filterSchemaDetails:any = doc.data()
+		let selectedColumn = filterSchemaDetails["schemaData"].filter((item:any)=>item.columnName === columnName)
+		return selectedColumn[0]["data"]   
+});
+	
 };
 // 29 set dropdown options
 export const set_dropdown_options = async (
@@ -517,14 +514,33 @@ export const set_dropdown_options = async (
 	field: string,
 	options: string[]
 ) => {
-	let orgData: any = await get_organizations_details(organisationId);
 
-	orgData["dropdowns-options"][`${columnName}_${field}`] = options;
 
-	const orgRef = doc(db, "organizations", organisationId);
-	await updateDoc(orgRef, {
-		"dropdowns-options": orgData["dropdowns-options"],
-	});
+	const filterSchemaRef = doc(db, "filterSchema", organisationId);
+
+	const docSnap = await getDoc(filterSchemaRef);
+
+	let dataDetails: any = []
+	
+	if (docSnap.exists()) {
+		dataDetails =  docSnap.data()
+		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
+		dataDetails[columnName].forEach((item:any)=>{
+			if(item.columnName === columnName){
+				item.data = options
+			}
+		})
+	} else {
+	// doc.data() will be undefined in this case
+	console.log("No such document!");
+	}
+
+
+
+	await updateDoc(filterSchemaRef, {
+		data: dataDetails
+	  });
+	  
 };
 
 // 30 edit table data in organization
@@ -625,6 +641,7 @@ export const update_notification = async (
 	});
 };
 
+// 32 mark notification seen
 export const mark_notification_seen = async (
   organisationId: string,
   userId: string,
@@ -648,7 +665,7 @@ export const user_active_time = async (userId: string) => {
 	});
 };
 
-//  send invite
+//34  send invite
 export const send_invite = async (
 	senderId: string,
 	receiverEmail: string,
@@ -658,9 +675,27 @@ export const send_invite = async (
 
 	console.log("senderId", receiverEmail);
 
-	await setDoc(invitatonRef, {
-		pendingList: [organisationId],
-	});
+	const docSnap = await getDoc(invitatonRef);
+
+	if(docSnap.exists()){
+		const data = docSnap.data()
+		if(data["pendingList"].includes(organisationId)){
+			return
+		}
+		else{
+			await updateDoc(invitatonRef, {
+				pendingList: arrayUnion(organisationId),
+			});
+		}
+	}
+	else{
+		await setDoc(invitatonRef, {
+			pendingList: [organisationId],
+		});
+
+	}
+
+	
 	const senderDetails: any = await get_user_by_id(senderId);
 	const organizationDetails: any = await get_organizations_details(
 		organisationId
@@ -787,7 +822,7 @@ export const get_all_tabs_name = async (organisationId: string) => {
   }
   return tabs;
 };
-
+// 37 get filter schema
 export const get_filter_schema = async (organizationId: string) => {
   const filterRef = doc(db, "filterSchema", organizationId);
   console.log(organizationId)
@@ -820,3 +855,6 @@ export const reject_invitation = async (organisationId: string, emailId: string)
 	}
 
 };
+
+
+
