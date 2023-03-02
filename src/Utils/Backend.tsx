@@ -68,6 +68,7 @@ const get_current_time = () => {
 36 get all tabs name
 37 get filter schema
 38 get dropdown options
+39 get dark background color from name
 */
 // 1
 export const check_users_database = async (userId: string) => {
@@ -315,18 +316,6 @@ export const get_background_color_from_name = (name: string) => {
 	else return "#1d4ed8";
 };
 
-export const get_dark_background_color_from_name = (name: string) => {
-	if (name === "purple") return "#242230";
-	else if (name === "slate") return "#1e293b";
-	else if (name === "red") return "#302225";
-	else if (name === "amber") return "#302b22";
-	else if (name === "lime") return "#283022";
-	else if (name === "cyan") return "#223030";
-	else if (name === "indigo") return "#222830";
-	else if (name === "pink") return "#2f2230";
-	else return "#282230";
-};
-
 // 18 get text color from name
 export const get_text_color_from_name = (name: string) => {
 	if (name === "purple") return "#d8b4fe";
@@ -416,7 +405,7 @@ export const add_organisation_to_user = async (
 	});
 	const organisationRef = doc(db, "organizations", organisationId);
 	await updateDoc(organisationRef, {
-		users: arrayUnion(organisationId),
+		users: arrayUnion(userId),
 	}); 
 
 	
@@ -869,6 +858,17 @@ export const link_data_to_parent_data = async (organizationId:string,childId:str
 	parentData["linkedData"] = [...parentData["linkedData"],childId]
 	await update_data_to_database(organizationId,parentData,"")
 }
-
+// 39 get dark background color from name
+export const get_dark_background_color_from_name = (name: string) => {
+	if (name === "purple") return "#242230";
+	else if (name === "slate") return "#1e293b";
+	else if (name === "red") return "#302225";
+	else if (name === "amber") return "#302b22";
+	else if (name === "lime") return "#283022";
+	else if (name === "cyan") return "#223030";
+	else if (name === "indigo") return "#222830";
+	else if (name === "pink") return "#2f2230";
+	else return "#282230";
+};
 
 
