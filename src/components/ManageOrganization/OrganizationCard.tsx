@@ -54,7 +54,7 @@ export const OrganizationCard = ({
 						<button
 							className="p-[0.5rem_1rem] flex items-center bg-Secondary_background_color border border-inherit text-center text-lg rounded-lg text-sm font-fira_code hover:text-green-800 hover:bg-green-400 hover:border-green-500 transition-all"
 							onClick={() => {
-								add_organisation_to_user(userId, orgId, user.email);
+								add_organisation_to_user(userId, orgId, user.email,"invitations");
 								cardRef.current!.style.display = "none";
 								dispatch(setOrganisationId(orgId));
 								navigate(`/organization/${orgId}`);

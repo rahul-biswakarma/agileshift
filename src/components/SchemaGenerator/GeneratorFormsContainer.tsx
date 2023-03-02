@@ -117,7 +117,12 @@ export const GeneratorFormsContainer = () => {
 
   const submitSchema = () => {
     create_schema(organisationId, fields, false);
-    navigate(`/organization/${organisationId}`);
+    toast("Creating Schema");
+    setTimeout(() => {
+      toast("Schema Created Successfully");
+      navigate(`/organization/${organisationId}`);
+    }, 1000);
+    
   };
 
   const addSchema = () => {

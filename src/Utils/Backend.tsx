@@ -408,7 +408,8 @@ export const get_list_by_column_type = async (
 export const add_organisation_to_user = async (
 	userId: string,
 	organisationId: string,
-	email:string
+	email: string,
+	page: string
 ) => {
 	const userRef = doc(db, "users", userId);
 	await updateDoc(userRef, {
@@ -417,10 +418,10 @@ export const add_organisation_to_user = async (
 	// const organisationRef = doc(db, "organizations", organisationId);
 	await updateDoc(userRef, {
 		users: arrayUnion(organisationId),
-	}); 
-
+	});
 	
-	const docRef = doc(db, "invitations", email);
+	if (page === "invitation") {
+		const docRef = doc(db, "invitations", email);
 		const docSnap = await getDoc(docRef);
 		let dataDetails: any =[] 
 
@@ -434,12 +435,17 @@ export const add_organisation_to_user = async (
 	// doc.data() will be undefined in this case
 	console.log("No such document!");
 	}
+		
+	}
+	
+	
+	
 
 
 };
 // // 24 get user by id
 export const get_user_by_id = async (userId: string) => {
-	const docRef = doc(db, "users", userId);
+	const docRef = doc(db, "users", userId); 
 	const docSnap = await getDoc(docRef);
 	if (docSnap.exists()) {
 		return docSnap.data();
