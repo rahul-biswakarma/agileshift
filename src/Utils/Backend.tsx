@@ -183,7 +183,8 @@ export const sendEmail = async (emailId: string) => {
 	).then((user) => {
 		return user;
 	});
-	if (userDetails === "") {
+
+	if (!userDetails ) {
 		console.log("user not found");
 		return;
 	}
