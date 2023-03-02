@@ -9,7 +9,14 @@ export default function SideBarScreen() {
     (state: RootState) => state.sidebar.sideBarData
   );
 
-  console.log(sideBarList,'***')
+  const [colapsTabBar, setColapsTabBar] = React.useState<number>(
+    sideBarList.length - 1
+  );
+  React.useEffect(() => {
+    setColapsTabBar(sideBarList.length - 1);
+  }, [sideBarList]);
+
+  console.log(sideBarList, "***");
 
   return (
     <div className="h-screen w-max  flex flex-row-reverse  z-20 font-dm_sans  text-white overflow-x-scroll">
@@ -22,21 +29,57 @@ export default function SideBarScreen() {
         ) {
           console.log("sidebar", sidebar);
           return (
-            <div key={index} className="w-[400px]">
-              <CreateData sidebar={sidebar} index={index} />
+            <div key={index} >
+              <CreateData
+                tabColaps={
+                  sideBarList.length <= 3
+                    ? false
+                    : index === colapsTabBar
+                    ? false
+                    : true
+                }
+                setColapsTabBar={setColapsTabBar}
+                sidebar={sidebar}
+                index={index}
+              />
             </div>
           );
         } else if (sidebar.sidebarType === "linkMode") {
-          return <div className="w-[400px]" key={index}><LinkageSidebar sidebar={sidebar} index={index}/></div>;
+          return (
+            <div  key={index}>
+              <LinkageSidebar
+                tabColaps={
+                  sideBarList.length <= 3
+                    ? false
+                    : index === colapsTabBar
+                    ? false
+                    : true
+                }
+                setColapsTabBar={setColapsTabBar}
+                sidebar={sidebar}
+                index={index}
+              />
+            </div>
+          );
+        } else if (sidebar.sidebarType === "createNewsLink") {
+          return (
+            <div key={index} >
+              <CreateData
+                tabColaps={
+                  sideBarList.length <= 3
+                    ? false
+                    : index === colapsTabBar
+                    ? false
+                    : true
+                }
+                setColapsTabBar={setColapsTabBar}
+                sidebar={sidebar}
+                index={index}
+              />
+            </div>
+          );
         }
-        else if(sidebar.sidebarType === "createNewsLink"){
-          return(
-            <div key={index} className="w-[400px]">
-            <CreateData sidebar={sidebar} index={index} />
-          </div>
-          )
-        }
-        return(<div></div>)
+        return <div></div>;
       })}
     </div>
   );
