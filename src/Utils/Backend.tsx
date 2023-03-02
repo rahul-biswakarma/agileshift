@@ -13,17 +13,9 @@ import {
 } from "firebase/firestore";
 import emailjs from "@emailjs/browser";
 import { isValidEmail } from "email-js";
-import { removeDuplicates } from "./HelperFunctions";
+import { generateRandomId, removeDuplicates } from "./HelperFunctions";
 
-function generateRandomId() {
-	let result = "";
-	const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	const charactersLength = characters.length;
-	for (let i = 0; i < 12; i++) {
-		result += characters.charAt(Math.floor(Math.random() * charactersLength));
-	}
-	return result;
-}
+
 const get_current_time = () => {
 	let date = new Date();
 	return `${date.getFullYear()}-${(date.getMonth() + 1)
@@ -183,7 +175,8 @@ export const sendEmail = async (emailId: string) => {
 	).then((user) => {
 		return user;
 	});
-	if (userDetails === "") {
+
+	if (!userDetails ) {
 		console.log("user not found");
 		return;
 	}
@@ -243,6 +236,7 @@ export const create_schema = async (
           filterData[schema.name].push({
             active: true,
             data: [],
+            type: item.columnType, 
             columnName: item.columnName,
           });
         }
@@ -261,6 +255,7 @@ export const create_schema = async (
           filterData[schema.name].push({
             active: true,
             data: [],
+            type: item.columnType, 
             columnName: item.columnName,
           });
         }
@@ -456,14 +451,14 @@ export const get_user_by_email = async (email: string) => {
 // 26 add && edit table data
 export const update_data_to_database = async (
 	organisationId: string,
-	data: any
+	data: any,
+	mode:string
 ) => {
 
 	console.log("data",data)
 	// condition for create data
 	const organizationRef = doc(db, "organizations", organisationId);
-	if (data.id === undefined || data.id === "") {
-		data["id"] = generateRandomId();
+	if (mode === "createMode") {
 		data["created_at"] = get_current_time();
 		await updateDoc(organizationRef, {
 			data: arrayUnion(data),

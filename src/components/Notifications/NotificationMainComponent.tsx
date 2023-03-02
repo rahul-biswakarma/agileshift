@@ -80,13 +80,15 @@ const NotificationMainComponent = (props:TYPE_NotificationProps) => {
     }
 
     const handleViewSidebar = async (notification:TYPE_ModifiedNotificationData) =>{
-        const sidebarData = {
-            field:notification.field,
-            color:notification.color,
-            data:notification.data,
-            schema:notification.schema
-        }
-        dispatch(setSideBar(sidebarData));
+        console.log(notification);
+        
+        dispatch(
+          setSideBar({
+            sidebarType: "editMode",
+            createModeCalledByField: "",
+            fieldId: notification.data.id,
+          })
+        );
         notification.isSeen = true;
         await update_notification(organizationId, userId, notification);
     }
@@ -131,7 +133,7 @@ const NotificationMainComponent = (props:TYPE_NotificationProps) => {
                     notificationList
                     .map((notification:TYPE_ModifiedNotificationData, index) => {
                       return (
-                          <div className='flex hover:bg-Secondary_background_color'>                            
+                          <div key={"Notification - "+index} className='flex hover:bg-Secondary_background_color'>                            
                             <button type="button" key={index} 
                               className={`w-full flex justify-between items-center border-b border-white/10 hover:bg-Secondary_background_color py-4 px-10 
                               ${!notification.isSeen ? 'bg-notification_unRead font-bold' : ''}`} 

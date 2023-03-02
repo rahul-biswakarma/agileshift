@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
 import { setSideBar } from "../../redux/reducers/SideBarSlice";
 import { get_text_color_from_name } from "../../Utils/Backend";
+import { generateRandomId } from "../../Utils/HelperFunctions";
 
 const BuildQuadarntHeader = () => {
   const [hoveredButtonIndex, setHoveredButtonIndex] = useState(-1);
@@ -32,6 +33,8 @@ const BuildQuadarntHeader = () => {
             setSideBar({
               sidebarType: "createMode",
               createModeCalledByField: tabName,
+              id:generateRandomId(),
+              linkedData:[],
             })
           );
         }}
