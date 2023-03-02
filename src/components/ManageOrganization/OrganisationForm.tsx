@@ -8,10 +8,13 @@ import {
 	get_organization_name_by_id
 } from "../../Utils/Backend";
 import { setActiveTab } from "../../redux/reducers/SchemaSlice";
+import { toast } from "react-toastify";
 
 require("tailwindcss-writing-mode")({
 	variants: ["responsive", "hover"],
 });
+
+
 
 
 
@@ -23,7 +26,7 @@ export const OrganisationForm = () => {
 	const [orgUrlErrorMessage, setOrgUrlErrorMessage] = useState<string>("");
 	const [orgNameState, setOrgNameState] = useState<string>("");
 	const [orgUrlState, setOrgUrlState] = useState<string>("");
-	const [isSubmitDisabled, setIsSubmitDisabled] = useState<boolean>(true);
+	// const [isSubmitDisabled, setIsSubmitDisabled] = useState<boolean>(true);
 
 
 	const organizationId = useAppSelector((state) => state.auth.organisationId);
@@ -42,9 +45,9 @@ export const OrganisationForm = () => {
 		})
 	})
 
-	useEffect(() => {
-		setIsSubmitDisabled(!orgNameState || !orgUrlState);
-	  }, [orgNameState, orgUrlState]);
+	// useEffect(() => {
+	// 	setIsSubmitDisabled(!orgNameState || !orgUrlState);
+	//   }, [orgNameState, orgUrlState]);
 
 	// Redux
 	const activeTab = useAppSelector(
@@ -66,16 +69,9 @@ export const OrganisationForm = () => {
 				}
 				break;
 			case "org-url":
-				if (value.length < 3) {
-					setOrgUrlErrorMessage("AgileOrg URL requires a minimum length of 3.");
-				} else if (value.startsWith("-") || value.endsWith("-")) {
-					setOrgUrlErrorMessage(
-						"AgileOrg URL should not start or end with hyphen"
-					);
-				} else if (value.includes("--")) {
-					setOrgUrlErrorMessage(
-						"AgileOrg URL cannot have two consecutive hyphens"
-					);
+				const urlRegExp = /^(ftp|http|https):\/\/[^ "]+$/;
+				if (!urlRegExp.test(value)) {
+					setOrgUrlErrorMessage("Please enter a valid URL.");
 				} else {
 					setOrgUrlErrorMessage("");
 				}
@@ -86,6 +82,17 @@ export const OrganisationForm = () => {
 	
 
 	const addOrganisation = () => {
+		const name = orgName.current?.value;
+
+
+  
+
+  if (!name) {
+    toast.error("Please provide Name");
+    return;
+  }
+
+  
 		if (!isOrgCreated) {
 			create_organization(userId, orgNameState, orgUrlState).then((id) => {
 				add_organisation_to_user(userId, id,"");
@@ -138,7 +145,7 @@ export const OrganisationForm = () => {
 								</p>
 							)}
 						</div>
-						<div className="relative flex flex-col gap-1">
+						{/* <div className="relative flex flex-col gap-1">
 							<label
 								htmlFor=""
 								className="font-lg text-dark_gray font-[500]"
@@ -177,7 +184,7 @@ export const OrganisationForm = () => {
 									</ul>
 								</div>
 							)}
-						</div>
+						</div> */}
 					</div>
 					<button
 						className={`flex gap-4 items-center justify-center py-2 rounded-lg border-[2px] border-Secondary_background_color text-white/40 stroke-white/40 ${
@@ -186,7 +193,7 @@ export const OrganisationForm = () => {
 								: "cursor-not-allowed"
 						} transition-all`}
 						onClick={addOrganisation}
-						disabled={isSubmitDisabled}
+						// disabled={isSubmitDisabled}
 					>
 						<span className="material-symbols-outlined">add</span>
 						Create new AgileOrg

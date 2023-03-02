@@ -159,7 +159,7 @@ export const GeneratorFormsContainer = () => {
     let currentField = fields[this.id];
     if (currentField.name === "") return;
     let newField: TYPE_FIELD = {
-      name: "",
+      name: `${currentField.name} Duplicate`,
       list: makeActualCopy(currentField.list),
       color: currentField.color,
       icon: currentField.icon,

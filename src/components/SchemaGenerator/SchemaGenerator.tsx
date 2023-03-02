@@ -1,4 +1,4 @@
-import {  useState } from "react";
+import {  useState, useEffect } from "react";
 import {
 	FormControl,
 	InputLabel,
@@ -14,7 +14,7 @@ import UploadJSON from "../UploadJSON";
 import { RootState } from "../../redux/store";
 import { setActiveTab } from "../../redux/reducers/SchemaSlice";
 import SelectIconComponent from "./SelectIconComponent";
-import { get_tabs_name } from "../../Utils/Backend";
+import { get_background_color_from_name, get_dark_background_color_from_name, get_tabs_name } from "../../Utils/Backend";
 import { toast } from "react-toastify";
 import { useDebounceCallback } from "../../Utils/useDebounce";
 
@@ -66,6 +66,7 @@ export const SchemaGenerator = ({
   const [selectedOptions, setSelectedOptions] = useState([]);
 
 	const [showModal , setShowModal] = useState(false);
+  const [selectedColor, setSelectedColor]=  useState("");
 
   // const organizationId = useAppSelector((state) => state.auth.organisationId);
 
@@ -137,6 +138,11 @@ export const SchemaGenerator = ({
   
     submitSchema();
   };
+
+  useEffect(()=>{
+    if(color) setSelectedColor(color);
+  }
+  , [])
   
 
 	if (activeTab === id)
@@ -222,7 +228,7 @@ export const SchemaGenerator = ({
                 labelId="color-label-id"
                 label="Color"
                 value={color}
-                onChange={(e) => changeColor(e.target.value)}>
+                onChange={(e) => {setSelectedColor(e.target.value); changeColor(e.target.value)}}>
                 {colorList.map((color, id) => {
                   return (
                     <MenuItem key={id} value={color}>
@@ -310,7 +316,9 @@ export const SchemaGenerator = ({
     );
   else
     return (
-      <div className="h-screen w-12 flex flex-wrap text-primary_font_color bg-Secondary_background_color">
+      <div style={{
+        background: selectedColor===""? "#1F1F1F" : get_dark_background_color_from_name(selectedColor),
+      }} className={`h-screen w-12 flex flex-wrap text-primary_font_color`}>
         <button
           className="h-full w-full"
           onClick={() => dispatch(setActiveTab(id))}>
