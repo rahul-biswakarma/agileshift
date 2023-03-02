@@ -1,77 +1,34 @@
 import Select from "react-select";
 import { useCallback, useState } from "react";
 import { ShowItem } from "./ShowItem";
-import { get_data_by_column_name, get_schema_data } from "../../Utils/Backend";
+import { get_data_by_column_name, get_schema_data, get_schema_data_field } from "../../Utils/Backend";
 import { IdComponent } from "../DataTable/idComponent";
+import { setNewSidBar } from "../../redux/reducers/SideBarSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import close_icon from "../../assets/icons/close_icon.svg";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+
 
 type LinkageSidebarPropType = {
-  field: TYPE_FIELD;
+  sidebar: Type_SidebarState;
+  index:number;
 };
 
 export const LinkageSidebar = (props: LinkageSidebarPropType) => {
+
+  const sideBarList: Type_SidebarState[] = useSelector(
+    (state: RootState) => state.sidebar.sideBarData
+  );
+  const dispatch = useAppDispatch();
+
+  const organisationId = useAppSelector((state:RootState)=>state.auth.organisationId);
+
+  
+
   const [fetchData, setFetchData] = useState(true);
 
-  const organisationId = "SYaaoVaHDndguU9d9lsy";
-  // interface MyObject {
-  //   type: string;
-  //   data: {};
-  //   // add any additional properties here if needed
-  // }
 
-  // const objects: MyObject[] = [
-  //   /* your array of objects */
-  // ];
-  // const result: MyObject[] = [];
-
-  // const types = [...new Set(objects.map((obj) => obj.type))] as string[]; // get all unique types
-
-  // types.forEach((type) => {
-  //   const filteredObjects = objects.filter((obj) => obj.type === type); // get all objects of this type
-  //   result.push(...filteredObjects.slice(0, 3)); // add the first three objects to the result array
-  // });
-
-  // console.log(result);
-
-  // const ITEM_HEIGHT = 48;
-  // const ITEM_PADDING_TOP = 8;
-  // const MenuProps = {
-  //   PaperProps: {
-  //     style: {
-  //       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-  //       width: 250,
-  //     },
-  //   },
-  // };
-  // const names = [
-  //   "Oliver Hansen",
-  //   "Van Henry",
-  //   "April Tucker",
-  //   "Ralph Hubbard",
-  //   "Omar Alexander",
-  //   "Carlos Abbott",
-  //   "Miriam Wagner",
-  //   "Bradley Wilkerson",
-  //   "Virginia Andrews",
-  //   "Kelly Snyder",
-  // ];
-
-  // const [personName, setPersonName] = useState<string[]>([]);
-
-  // const handleChange = (event:SelectChangeEvent<typeof personName>) => {
-  //   const {
-  //     target: { value },
-  //   } = event;
-  //   setPersonName(
-  //     // On autofill we get a stringified value.
-  //     typeof value === "string" ? value.split(",") : value
-  //   );
-  // };
-  // let options = [
-  //   { value: "apple", label: "Apple" },
-  //   { value: "banana", label: "Banana" },
-  //   { value: "orange", label: "Orange" },
-  //   { value: "watermelon", label: "Watermelon" },
-  // ];
 
   type optionsType = {
     value: string;
@@ -118,24 +75,7 @@ export const LinkageSidebar = (props: LinkageSidebarPropType) => {
       color: "#FFFFFF", // Set the input text color here
     }),
   };
-  // const formatOptions = (value: Array<string>) => {
-  //   let data: {
-  //     value: string;
-  //     label: string;
-  //   }[] = [];
-  //   if (value) {
-  //     value.forEach((item) => {
-  //       data.push({
-  //         value: item,
-  //         label: item,
-  //       });
-  //     });
-  //   }
-  //   return data;
-  // };
-  // const formatOutputVlue = (value: any) => {
-  //   return value.map((item: any) => item["value"]);
-  // };
+
   const [selectedOptions, setSelectedOptions] = useState<typeof options>([]);
 
   const handleSelectChange = (selected: any) => {
@@ -145,16 +85,21 @@ export const LinkageSidebar = (props: LinkageSidebarPropType) => {
   const formatSchemaDataToTypeField = (data: any) => {
     let formattedData: TYPE_FIELD[] = [];
     for (let item of data) {
-      formattedData.push({
-        name: item["name"],
-        list: item["list"],
-        icon: item["icon"],
-        linkage: item["linkage"],
-        color: item["color"],
-      });
+      formattedData.push(formatDataToTypeField(item));
     }
     return formattedData;
   };
+
+  const formatDataToTypeField=(data:any)=>{
+    let formattedData:TYPE_FIELD={
+      name: data["name"],
+        list: data["list"],
+        icon: data["icon"],
+        linkage: data["linkage"],
+        color: data["color"],
+    };
+return formattedData;
+  }
 
   const getTitleFromSchemaData = useCallback(
     (schemaData: TYPE_FIELD[], name: string) => {
@@ -173,6 +118,14 @@ export const LinkageSidebar = (props: LinkageSidebarPropType) => {
     []
   );
 
+  const handleClose = () => {
+    dispatch(
+      setNewSidBar(
+        sideBarList.filter((sideBar, index) => index !== props.index)
+      )
+    );
+  };
+
   const getColorFromSchemaData = (schemaData: TYPE_FIELD[], name: string) => {
     let color = "";
     schemaData.forEach((data) => {
@@ -185,9 +138,12 @@ export const LinkageSidebar = (props: LinkageSidebarPropType) => {
 
   const getAllData = async () => {
     console.log("fetching data");
+
+    let field=formatDataToTypeField(await get_schema_data_field(organisationId,props.sidebar.fieldName!));
+
     let allData = await get_data_by_column_name(organisationId, "all");
     allData = allData.filter((data: any) =>
-      props.field.linkage.includes(data["field"])
+      field.linkage.includes(data["field"])
     );
 
     const schemaData = await get_schema_data(organisationId);
@@ -210,6 +166,7 @@ export const LinkageSidebar = (props: LinkageSidebarPropType) => {
       });
     }
     setOptions(formattedData);
+    
   };
   if (fetchData) {
     getAllData();
@@ -217,9 +174,20 @@ export const LinkageSidebar = (props: LinkageSidebarPropType) => {
   }
   return (
     <div
-      className="flex flex-col justify-between w-1/3 h-screen bg-sidebar_bg backdrop-filter backdrop-blur-lg bg-opacity-60 border border-primary_font_color
+      className="flex flex-col justify-between h-screen bg-sidebar_bg backdrop-filter backdrop-blur-lg bg-opacity-60 border border-primary_font_color
     p-4
+    pt-12
     ">
+      <button
+            onClick={handleClose}
+            className="absolute right-3 top-3 rounded-full w-8 h-8 hover:border-2 active:bg-slate-800 flex items-center justify-center p-1 hover:bg-primary_font_color cursor-pointer"
+          >
+            <img
+              src={close_icon}
+              alt="close Icon"
+              className="w-4 h-4 text-white"
+            />
+          </button>
       <Select
         closeMenuOnSelect={false}
         hideSelectedOptions={false}
@@ -261,3 +229,4 @@ export const LinkageSidebar = (props: LinkageSidebarPropType) => {
     </div>
   );
 };
+

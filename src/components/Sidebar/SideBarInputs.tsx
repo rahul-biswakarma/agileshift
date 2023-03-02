@@ -1,60 +1,66 @@
 import React from "react";
-import AutoComplete from "../common/AutoComplete";
+// import { useAppSelector } from "../../redux/hooks";
+// import AutoComplete from "../common/AutoComplete";
 import DatePicker from "../common/DatePicker";
 import Input from "../common/Input";
-import MultiSelect from "../common/MultiSelect";
+// import MultiSelect from "../common/MultiSelect";
 
 type type_props = {
-  type: string;
-  defaultValue: string | Array<string>;
-  setFunction: any;
-  fieldData: any;
-  label: string;
-  sidebarIndex: number;
+  columnDetails: {
+    columnName: string;
+    columnType: string;
+  };
+  formData: any;
+  setFormData: React.Dispatch<any>;
+  defaultValue?: any;
+  selectedTab?: string;
 };
 export default function SideBarInputs(props: type_props) {
-  if (["dropdown"].includes(props.type)) {
+  if (["dropdown"].includes(props.columnDetails.columnType)) {
     return (
       <div>
-        <AutoComplete
+        Autocomplete
+        {/* <AutoComplete
           defaultValue={props.defaultValue}
-          label={props.label}
-          setFunction={props.setFunction}
-          fieldData={props.fieldData}
-          sidebarIndex={props.sidebarIndex}
-        />
+          label={props.columnDetails.columnName}
+          setFunction={props.setFormData}
+          fieldData={props.formData}
+          selectedTab={props.selectedTab === undefined ? "" : props.selectedTab}
+          sidebarIndex={0}
+        /> */}
       </div>
     );
   }
-  if (["tag", "user"].includes(props.type)) {
+  if (["tag", "user"].includes(props.columnDetails.columnType)) {
     return (
-      <MultiSelect
-        defaultValue={props.defaultValue}
-        label={props.label}
-        setFunction={props.setFunction}
-        fieldData={props.fieldData}
-      />
+      <div>Multiselect</div>
+      // <MultiSelect
+      //   defaultValue={props.defaultValue}
+      //   label={props.columnDetails.columnName}
+      //   setFunction={props.setFormData}
+      //   fieldData={props.formData}
+      //   selectedTab={props.selectedTab === undefined ? "" : props.selectedTab}
+      // />
     );
   }
-  if (["string", "title"].includes(props.type)) {
+  if (["string", "title"].includes(props.columnDetails.columnType)) {
     return (
       <Input
-        type={"string"}
         defaultValue={props.defaultValue}
-        label={props.label}
-        setFunction={props.setFunction}
-        fieldData={props.fieldData}
+        label={props.columnDetails.columnName}
+        setFunction={props.setFormData}
+        fieldData={props.formData}
       />
     );
   }
-  if (["date"].includes(props.type)) {
+  if (["date"].includes(props.columnDetails.columnType)) {
     return (
       <DatePicker
         type={"date"}
         defaultValue={props.defaultValue}
-        label={props.label}
-        setFunction={props.setFunction}
-        fieldData={props.fieldData}
+        label={props.columnDetails.columnName}
+        setFunction={props.setFormData}
+        fieldData={props.formData}
       />
     );
   }
