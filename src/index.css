@@ -162,3 +162,8 @@ code {
 	outline: none;
 	border-radius: 999px;
 }
+
+.Toastify__close-button {
+	color: #fff !important;
+}
+
