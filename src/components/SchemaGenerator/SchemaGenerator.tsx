@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {  useState } from "react";
 import {
 	FormControl,
 	InputLabel,
@@ -14,6 +14,9 @@ import UploadJSON from "../UploadJSON";
 import { RootState } from "../../redux/store";
 import { setActiveTab } from "../../redux/reducers/SchemaSlice";
 import SelectIconComponent from "./SelectIconComponent";
+import { get_tabs_name } from "../../Utils/Backend";
+import { toast } from "react-toastify";
+import { useDebounceCallback } from "../../Utils/useDebounce";
 
 require("tailwindcss-writing-mode")({
   variants: ["responsive", "hover"],
@@ -64,6 +67,8 @@ export const SchemaGenerator = ({
 
 	const [showModal , setShowModal] = useState(false);
 
+  // const organizationId = useAppSelector((state) => state.auth.organisationId);
+
 	const handleDeleteClick = () => {
 	  setShowModal(true);
 	};
@@ -90,6 +95,50 @@ export const SchemaGenerator = ({
   );
   const dispatch = useAppDispatch();
 
+  
+
+  const handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+    const fieldName = getAllFieldsName();
+    
+    console.log(fieldName); // log the fieldName array to the console
+
+    let similarNameCount = 0;
+    fieldName.forEach(name => {
+      if(name.toLowerCase() === e.target.value.toLowerCase()) similarNameCount++;
+    });
+                
+    if (similarNameCount>=2) {
+        // perform validation logic here
+        toast.error(`${e.target.value} already exists`)
+    } 
+    
+
+  }
+
+  const dummyFunction = (e:React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+    debouncedCallback(e)
+  }
+  
+  const debouncedCallback = useDebounceCallback(handleInputChange, 200);
+
+  const checkSchema = () => {
+    const fieldName = getAllFieldsName();
+    console.log(fieldName);
+  
+    for (let i = 0; i < fieldName.length; i++) {
+      for (let j = i + 1; j < fieldName.length; j++) {
+        if (fieldName[i].toLowerCase() === fieldName[j].toLowerCase()) {
+          toast.error(`Duplicate field name detected: ${fieldName[i]}`);
+          return;
+        }
+      }
+    }
+  
+    submitSchema();
+  };
+  
+
 	if (activeTab === id)
 		return (
 			<section
@@ -102,12 +151,13 @@ export const SchemaGenerator = ({
 							Case Name
 						</label>
 						<input
-							type="text"
-							value={name}
-							onChange={(e) => setName(e.target.value)}
-							placeholder="Case Name"
-							className="flex-1 font-fira_code text-[1rem] rounded-r-lg px-4 bg-Secondary_background_color h-10 outline-none placeholder:text-white/30 text-white/70"
-						/>
+              type="text"
+              value={name}
+              onChange={(e) => {dummyFunction(e)}}
+              placeholder="Case Name"
+              className="flex-1 font-fira_code text-[1rem] rounded-r-lg px-4 bg-Secondary_background_color h-10 outline-none placeholder:text-white/30 text-white/70"
+            />
+
 					</div>
 					<div className="absolute right-[1rem] flex gap-[1rem]">
 						<button
@@ -241,7 +291,7 @@ export const SchemaGenerator = ({
             <button
               className="flex justify-center items-center p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm text-highlight_font_color border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 hover:text-purple-800 transition-all duration-200 ease-in-out
           "
-              onClick={submitSchema}>
+              onClick={checkSchema}>
               Submit Schema
             </button>
           )}
