@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import close_icon from "../../assets/icons/close_icon.svg";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { formatDataToTypeField, formatSchemaDataToTypeField, getLinkedData, setLinkedData } from "../../Utils/HelperFunctions";
 
 
 type LinkageSidebarPropType = {
@@ -20,11 +21,19 @@ export const LinkageSidebar = (props: LinkageSidebarPropType) => {
   const sideBarList: Type_SidebarState[] = useSelector(
     (state: RootState) => state.sidebar.sideBarData
   );
+  console.log(sideBarList,"sidebar:Linkage");
+
   const dispatch = useAppDispatch();
-
+  const linkedCalledByID=props.sidebar.linkedCalledByID;
   const organisationId = useAppSelector((state:RootState)=>state.auth.organisationId);
-
   
+  const getIdArray=(selectedOptions:optionsType[])=>{
+    let Ids:string[]=[];
+    for(let option of selectedOptions){
+      Ids.push(option.id);
+    }
+    return Ids;
+  }
 
   const [fetchData, setFetchData] = useState(true);
 
@@ -78,27 +87,32 @@ export const LinkageSidebar = (props: LinkageSidebarPropType) => {
 
   const [selectedOptions, setSelectedOptions] = useState<typeof options>([]);
 
-  const handleSelectChange = (selected: any) => {
+  const handleSelectChange = (selected:any) => {
+    console.log(selected,"selected");
     setSelectedOptions(selected);
+  setLinkedData(sideBarList,dispatch,linkedCalledByID!,getIdArray(selected))
   };
 
-  const formatSchemaDataToTypeField = (data: any) => {
-    let formattedData: TYPE_FIELD[] = [];
-    for (let item of data) {
-      formattedData.push(formatDataToTypeField(item));
+  const formatOptions=(allData:any,schemaData:any)=>{
+    let formattedData:optionsType[]=[];
+    for (let data of allData) {
+      let color = getColorFromSchemaData(
+        formatSchemaDataToTypeField(schemaData!["schemaData"]),
+        data["field"]
+      );
+      let title = getTitleFromSchemaData(
+        formatSchemaDataToTypeField(schemaData!["schemaData"]),
+        data["field"]
+      );
+      formattedData.push({
+        value: data["id"],
+        label: data[title],
+        id: data["id"],
+        color: color,
+        title: data[title],
+      });
     }
     return formattedData;
-  };
-
-  const formatDataToTypeField=(data:any)=>{
-    let formattedData:TYPE_FIELD={
-      name: data["name"],
-        list: data["list"],
-        icon: data["icon"],
-        linkage: data["linkage"],
-        color: data["color"],
-    };
-return formattedData;
   }
 
   const getTitleFromSchemaData = useCallback(
@@ -142,31 +156,16 @@ return formattedData;
     let field=formatDataToTypeField(await get_schema_data_field(organisationId,props.sidebar.fieldName!));
 
     let allData = await get_data_by_column_name(organisationId, "all");
+
+    let selectedData=allData.filter((data:any)=>getLinkedData(sideBarList,linkedCalledByID!)?.includes(data.id));
+
     allData = allData.filter((data: any) =>
       field.linkage.includes(data["field"])
     );
 
     const schemaData = await get_schema_data(organisationId);
-    let formattedData = [];
-    for (let data of allData) {
-      let color = getColorFromSchemaData(
-        formatSchemaDataToTypeField(schemaData!["schemaData"]),
-        data["field"]
-      );
-      let title = getTitleFromSchemaData(
-        formatSchemaDataToTypeField(schemaData!["schemaData"]),
-        data["field"]
-      );
-      formattedData.push({
-        value: data["id"],
-        label: data[title],
-        id: data["id"],
-        color: color,
-        title: data[title],
-      });
-    }
-    setOptions(formattedData);
-    
+    setOptions(formatOptions(allData,schemaData));
+    setSelectedOptions(formatOptions(selectedData,schemaData));
   };
   if (fetchData) {
     getAllData();

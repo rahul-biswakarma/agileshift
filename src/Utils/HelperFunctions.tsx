@@ -1,3 +1,6 @@
+import { setNewSidBar } from "../redux/reducers/SideBarSlice";
+
+
 export function sortObjectKeysByArrayLength(obj: any) {
   // Get an array of the object's keys
   const keys = Object.keys(obj);
@@ -37,3 +40,50 @@ export const removeDuplicates = (arr: any) => {
     return unique;
   }, []);
 };
+
+export function generateRandomId() {
+	let result = "";
+	const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	const charactersLength = characters.length;
+	for (let i = 0; i < 12; i++) {
+		result += characters.charAt(Math.floor(Math.random() * charactersLength));
+	}
+	return result;
+}
+
+export const formatSchemaDataToTypeField = (data: any) => {
+  let formattedData: TYPE_FIELD[] = [];
+  for (let item of data) {
+    formattedData.push(formatDataToTypeField(item));
+  }
+  return formattedData;
+};
+
+export const formatDataToTypeField=(data:any)=>{
+  let formattedData:TYPE_FIELD={
+    name: data["name"],
+      list: data["list"],
+      icon: data["icon"],
+      linkage: data["linkage"],
+      color: data["color"],
+  };
+return formattedData;
+}
+
+export const getLinkedData=(sideBarList:Type_SidebarState[],dataId:string)=>{
+  for(let sidebar of sideBarList){
+    if(sidebar.id===dataId)
+    return sidebar.linkedData;
+  }
+}
+
+export const setLinkedData=(sideBarList:Type_SidebarState[],dispatch:any,dataId:string,links:string[])=>{
+  let tempSidebarListString=JSON.stringify([...sideBarList]);
+  let tempSidebarList = JSON.parse(tempSidebarListString);
+
+  for(let sidebar of tempSidebarList){
+    if(sidebar.id===dataId)
+      sidebar.linkedData=links;
+  }
+  dispatch(setNewSidBar(tempSidebarList));
+}

@@ -92,11 +92,11 @@ export const GeneratorFormsContainer = () => {
   // 	setFields(tempFields);
   // }
 
-  // function changeLinkage(this: any, link: string[]) {
-  // 	let tempFields = [...fields];
-  // 	tempFields[this.id].linkage = link;
-  // 	setFields(tempFields);
-  // }
+  function changeLinkage(this: any, link: string[]) {
+  	let tempFields = [...fields];
+  	tempFields[this.id].linkage = link;
+  	setFields(tempFields);
+  }
 
   // function removeLinkage(this: any, link: string) {
   // 	let tempFields = [...fields];
@@ -118,7 +118,9 @@ export const GeneratorFormsContainer = () => {
     let tempFields = [...fields];
     let lastField = tempFields[tempFields.length - 1];
     if (lastField.name === "") {
-      toast("Please fill the name first");
+      toast.warning("Please fill the name first",{
+        className: 'toast-message'
+      });
       return;
     }
     let newSchema: TYPE_FIELD = {
@@ -190,6 +192,7 @@ export const GeneratorFormsContainer = () => {
             changeColor={changeColor.bind({ id: id })}
             icon={field.icon}
             changeIcon={changeIcon.bind({ id: id })}
+            changeLinkage={changeLinkage.bind({id:id})}
           />
         ))}
         <NewSchema addSchema={addSchema} />
