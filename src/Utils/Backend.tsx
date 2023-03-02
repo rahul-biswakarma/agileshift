@@ -315,6 +315,18 @@ export const get_background_color_from_name = (name: string) => {
 	else return "#1d4ed8";
 };
 
+export const get_dark_background_color_from_name = (name: string) => {
+	if (name === "purple") return "#242230";
+	else if (name === "slate") return "#1e293b";
+	else if (name === "red") return "#302225";
+	else if (name === "amber") return "#302b22";
+	else if (name === "lime") return "#283022";
+	else if (name === "cyan") return "#223030";
+	else if (name === "indigo") return "#222830";
+	else if (name === "pink") return "#2f2230";
+	else return "#282230";
+};
+
 // 18 get text color from name
 export const get_text_color_from_name = (name: string) => {
 	if (name === "purple") return "#d8b4fe";
