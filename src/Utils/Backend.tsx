@@ -243,6 +243,7 @@ export const create_schema = async (
           filterData[schema.name].push({
             active: true,
             data: [],
+            type: item.columnType, 
             columnName: item.columnName,
           });
         }
@@ -261,6 +262,7 @@ export const create_schema = async (
           filterData[schema.name].push({
             active: true,
             data: [],
+            type: item.columnType, 
             columnName: item.columnName,
           });
         }

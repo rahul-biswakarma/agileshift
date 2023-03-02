@@ -29,9 +29,6 @@ type TYPE_Filters = {
 
 const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 	const dispatch = useAppDispatch();
-	dispatch(setFieldColor(props.fieldData.color));
-	dispatch(setDatas(props.datas));
-	dispatch(setDataSchema(props.fieldData.list));
 
 	const organizationId = useAppSelector((state) => state.auth.organisationId);
 	const tabName = useAppSelector((state) => state.datatable.tabName);
@@ -50,7 +47,7 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 		return result;
 	}
 
-	useEffect(()=>{
+	useEffect(()=>{		
 		const getFilterSchema = async () => {
 			const filters = await get_filter_schema(organizationId);
 			if(tabName !== "All"){
@@ -67,7 +64,10 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 			}
 		}
 		getFilterSchema();
-	},[organizationId, tabName]);
+		dispatch(setFieldColor(props.fieldData.color));
+		dispatch(setDatas(props.datas));
+		dispatch(setDataSchema(props.fieldData.list));
+	},[organizationId, tabName, props, dispatch]);
 
 
 	const modifyData = (filterSchema: TYPE_Filters[]) => {
