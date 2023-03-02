@@ -21,19 +21,20 @@ require("tailwindcss-writing-mode")({
 export const OrganisationForm = () => {
 	// States
 	const [isOrgCreated, setIsOrgCreated] = useState<boolean>(false);
-	const [toolTip, setToolTip] = useState<boolean>(false);
+	// const [toolTip, setToolTip] = useState<boolean>(false);
 	const [orgNameErrorMessage, setOrgNameErrorMessage] = useState<string>("");
 	const [orgUrlErrorMessage, setOrgUrlErrorMessage] = useState<string>("");
 	const [orgNameState, setOrgNameState] = useState<string>("");
 	const [orgUrlState, setOrgUrlState] = useState<string>("");
 	// const [isSubmitDisabled, setIsSubmitDisabled] = useState<boolean>(true);
+	console.log(orgUrlErrorMessage,setOrgUrlState)
 
 
 	const organizationId = useAppSelector((state) => state.auth.organisationId);
 
 	// Refs
 	const orgName = useRef<HTMLInputElement>(null);
-	const orgURL = useRef<HTMLInputElement>(null);
+	// const orgURL = useRef<HTMLInputElement>(null);
 	const userId = useAppSelector((state: RootState) => state.auth.userId);
 
 	// doc title

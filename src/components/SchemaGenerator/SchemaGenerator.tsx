@@ -14,7 +14,7 @@ import UploadJSON from "../UploadJSON";
 import { RootState } from "../../redux/store";
 import { setActiveTab } from "../../redux/reducers/SchemaSlice";
 import SelectIconComponent from "./SelectIconComponent";
-import { get_background_color_from_name, get_dark_background_color_from_name, get_tabs_name } from "../../Utils/Backend";
+import {  get_dark_background_color_from_name } from "../../Utils/Backend";
 import { toast } from "react-toastify";
 import { useDebounceCallback } from "../../Utils/useDebounce";
 
@@ -146,7 +146,7 @@ export const SchemaGenerator = ({
   useEffect(()=>{
     if(color) setSelectedColor(color);
   }
-  , [])
+  , [color])
   
 
 	if (activeTab === id)
