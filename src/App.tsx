@@ -8,10 +8,11 @@ import { GeneratorFormsContainer } from "./components/SchemaGenerator/GeneratorF
 import { getFromSession } from "./Utils/Auth";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import { setUserId } from "./redux/reducers/AuthSlice";
-import { SidebarWrapper } from "./components/Sidebar/SidebarWrapper";
+import SideBarScreen from "./components/Sidebar";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AddOptions from "./components/Sidebar/AddOptions";
 
 const App = () => {
 	const userIdFromSession = getFromSession("userId");
@@ -27,7 +28,7 @@ const App = () => {
 			<ToastContainer />
 			{sideBarList.length !== 0 && (
 				<section className="fixed z-50">
-					<SidebarWrapper />
+					<SideBarScreen />
 				</section>
 			)}
 			<Routes>
@@ -68,6 +69,10 @@ const App = () => {
 				<Route
 					path="/organization"
 					element={<Navigate to="/organization-lists" />}
+				/>
+				<Route
+					path="/add-option"
+					element={<AddOptions/>}
 				/>
 			</Routes>
 		</BrowserRouter>

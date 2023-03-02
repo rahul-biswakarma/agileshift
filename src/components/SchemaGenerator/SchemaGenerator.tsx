@@ -213,7 +213,6 @@ export const SchemaGenerator = ({
                 value={selectedOptions}
                 onChange={handleChange}
                 renderValue={(selected) => {
-                  console.log("selected", selected);
                   return selected.join(", ");
                 }}>
                 {getAllFieldsName().map((name) => (

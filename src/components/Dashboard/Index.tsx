@@ -29,7 +29,6 @@ export default function Dashboard() {
 
   useEffect(() => {
     get_schema_data(organizationId).then((data) => {
-		console.log("data:", data);
       if (data) {setDataSchema(data.schemaData);
 		
 	  	}else{

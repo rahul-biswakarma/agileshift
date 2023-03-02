@@ -1,17 +1,4 @@
 import { db } from "../firebaseConfig";
-// import {
-// 	doc,
-// 	updateDoc,
-// 	arrayUnion,
-// 	addDoc,
-// 	collection,
-// 	query,
-// 	where,
-// 	getDocs,
-// 	getDoc,
-// 	setDoc,
-// 	onSnapshot,
-// } from "firebase/firestore";
 import {
 	doc,
 	getDoc,
@@ -71,11 +58,10 @@ const get_current_time = () => {
  17 get color from name
 19 get_title
 20 get schema using field id
-21
-22
+21 get data by ID
+22 get list by columun type
 23 add organization to user
 24 get user by id
-
 25 get user by email
 26 add && edit data (from sidebar)
 27 get data by coloumn name
@@ -83,6 +69,9 @@ const get_current_time = () => {
 30 edit table data in organization
 31 get all columns name
 32 user suggestions
+33 get active  time
+34 create filter schema
+35 get org name by id
 */
 
 // 1
@@ -286,6 +275,7 @@ export const create_schema = async (
     const schemaDetails = {
       schemaData: schemas,
     };
+
     await setDoc(doc(db, "schemas", organisationId), schemaDetails);
   }
 };
@@ -381,7 +371,7 @@ export const get_schema_data_field = async (
 	}
 	return schemaFromField;
 };
-// 21
+// 21 get data by ID
 export const get_data_byID = async (organisationId: string, dataId: string) => {
 	const docRef = doc(db, "organizations", organisationId);
 	const docSnap = await getDoc(docRef);
@@ -409,7 +399,8 @@ export const get_list_by_column_type = async (
 // 23 add organization to user
 export const add_organisation_to_user = async (
 	userId: string,
-	organisationId: string
+	organisationId: string,
+	email:string
 ) => {
 	const userRef = doc(db, "users", userId);
 	await updateDoc(userRef, {
@@ -419,6 +410,24 @@ export const add_organisation_to_user = async (
 	await updateDoc(userRef, {
 		users: arrayUnion(organisationId),
 	}); 
+
+	
+	const docRef = doc(db, "invitations", email);
+		const docSnap = await getDoc(docRef);
+		let dataDetails: any =[] 
+
+	if (docSnap.exists()) {
+		dataDetails = docSnap.data()
+		dataDetails = dataDetails["pendingList"].filter((item: any) => item !== organisationId)
+		await updateDoc(docRef, {
+			pendingList: dataDetails,
+		});
+	} else {
+	// doc.data() will be undefined in this case
+	console.log("No such document!");
+	}
+
+
 };
 // // 24 get user by id
 export const get_user_by_id = async (userId: string) => {
@@ -451,10 +460,13 @@ export const update_data_to_database = async (
 	organisationId: string,
 	data: any
 ) => {
+
+	console.log("data",data)
 	// condition for create data
 	const organizationRef = doc(db, "organizations", organisationId);
 	if (data.id === undefined || data.id === "") {
 		data["id"] = generateRandomId();
+		data["created_at"] = get_current_time();
 		await updateDoc(organizationRef, {
 			data: arrayUnion(data),
 		});
@@ -552,7 +564,7 @@ export const get_all_columns_name = async (organisationId: string) => {
 	return removeDuplicates(columns);
 };
 
-//  get user suggestions
+//32  get user suggestions
 export const get_user_suggestions = async (organisationId: string) => {
 	let userIsList: any = await get_organizations_details(organisationId);
 	userIsList = userIsList["users"];
@@ -677,7 +689,7 @@ export const send_invitation_mail = async (
 		org_name: string;
 		sender_name: string;
 	} = {
-		email: "",
+		email: email,
 		org_name: org_name,
 		sender_name: sender_name,
 	};
@@ -686,7 +698,7 @@ export const send_invitation_mail = async (
 		console.log("invalid mail");
 		return;
 	}
-
+	console.log(params)
 	emailjs
 		.send("service_0dpd4z6", "template_5ye9w1m", params, "sb5MCkizR-ZuN4LVw")
 		.then(
@@ -707,7 +719,7 @@ export const get_invitations_list = async (userID: string) => {
 	const userRef = doc(db, "invitations", userDetails['email']);
 	const docSnap = await getDoc(userRef);
 	if (docSnap.exists()) {
-		return docSnap.data()["invitations"];
+		return docSnap.data()["pendingList"];
 	} else {
 		return [];
 	}
@@ -761,6 +773,23 @@ export const get_organization_name_by_id = async (organizationId: string) => {
     return "";
   }
 };
+
+// 36 get all tabs name
+export const get_all_tabs_name = async (organisationId: string) => {
+  const docRef = doc(db, "schemas", organisationId);
+  const docSnap = await getDoc(docRef);
+  let tabs: any = [];
+
+  if (docSnap.exists()) {
+    docSnap.data()["schemaData"].forEach((item: any) => {
+      tabs.push(item.name);
+    });
+  } else {
+    console.log("No such document!");
+  }
+  return tabs;
+};
+
 export const get_filter_schema = async (organizationId: string) => {
   const filterRef = doc(db, "filterSchema", organizationId);
   console.log(organizationId)
@@ -773,3 +802,23 @@ export const get_filter_schema = async (organizationId: string) => {
     return;
   }
 }
+
+// reject invitation
+export const reject_invitation = async (organisationId: string, emailId: string) => {
+	
+	const docRef = doc(db, "invitations", emailId);
+		const docSnap = await getDoc(docRef);
+		let dataDetails: any =[] 
+
+	if (docSnap.exists()) {
+		dataDetails = docSnap.data()
+		dataDetails = dataDetails["pendingList"].filter((item: any) => item !== organisationId)
+		await updateDoc(docRef, {
+			pendingList: dataDetails,
+		});
+	} else {
+	// doc.data() will be undefined in this case
+	console.log("No such document!");
+	}
+
+};

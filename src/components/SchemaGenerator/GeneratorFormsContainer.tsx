@@ -9,14 +9,15 @@ import { SchemaGenerator } from "./SchemaGenerator";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { setActiveTab } from "../../redux/reducers/SchemaSlice";
 import SchemaGeneratorFormHeader from "./Header";
+import { toast } from "react-toastify";
+
+
 
 
 export const GeneratorFormsContainer = () => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 	const userId = useAppSelector((state:RootState) => state.auth.userId);
-
-	
 
 	useEffect(() => {
 		if(!userId){
@@ -29,7 +30,6 @@ export const GeneratorFormsContainer = () => {
 
   const defaultColumnList: TYPE_SCHEMA[] = [
     { columnName: "Name", columnType: "title" },
-    { columnName: "Created By", columnType: "user" },
     { columnName: "Tag", columnType: "tag" },
     { columnName: "Owner", columnType: "user" },
     { columnName: "Deadline", columnType: "date" },
@@ -118,7 +118,7 @@ export const GeneratorFormsContainer = () => {
     let tempFields = [...fields];
     let lastField = tempFields[tempFields.length - 1];
     if (lastField.name === "") {
-      alert("First fill the name");
+      toast("Please fill the name first");
       return;
     }
     let newSchema: TYPE_FIELD = {

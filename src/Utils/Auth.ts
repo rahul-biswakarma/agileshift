@@ -21,8 +21,7 @@ export const authWithGithub = () => {
 //Function to handle authentication from google
 export const authWithGoogle = () => {
 	const provider = new GoogleAuthProvider();
-	const navigate = signInWithPopupCall(provider);
-	console.log(navigate);
+	signInWithPopupCall(provider);
 };
 
 export const storeInSession = (itemName: string, itemData: string) => {

@@ -29,7 +29,6 @@ type TYPE_Filters = {
 
 const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 	const dispatch = useAppDispatch();
-	console.log(props.datas);
 
 	const organizationId = useAppSelector((state) => state.auth.organisationId);
 	const tabName = useAppSelector((state) => state.datatable.tabName);
@@ -53,7 +52,6 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 			const filters = await get_filter_schema(organizationId);
 			if(tabName !== "All"){
 				setFilterSchema(filters!.data[tabName]);
-				console.log(filters!.data[tabName]);
 			}else{
 				let filter:TYPE_Filters[] = [];
 				for(const tabName in filters!.data){	
@@ -63,7 +61,6 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 				}
 				filter = removeDuplicates(filter);
 				setFilterSchema(filter);
-				console.log(filter);
 			}
 		}
 		getFilterSchema();

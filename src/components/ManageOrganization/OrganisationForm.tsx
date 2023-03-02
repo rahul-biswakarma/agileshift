@@ -37,7 +37,6 @@ export const OrganisationForm = () => {
 
 	useEffect(() => {
 		get_organization_name_by_id(organizationId).then((data) => {
-			console.log(data);
 			document.title = `Schema Form | ${data}`
 		})
 	})
@@ -88,7 +87,7 @@ export const OrganisationForm = () => {
 	const addOrganisation = () => {
 		if (!isOrgCreated) {
 			create_organization(userId, orgNameState, orgUrlState).then((id) => {
-				add_organisation_to_user(userId, id);
+				add_organisation_to_user(userId, id,"");
 				dispatch(setOrganisationId(id));
 			});
 			setIsOrgCreated(true);
