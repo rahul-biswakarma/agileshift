@@ -43,6 +43,7 @@ declare global {
         color: string;
         icon: string;
         linkage: string[];
+		parentId?:string;
       };
 	type TYPE_ORGANISATION = {
 		id: string;

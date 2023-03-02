@@ -402,8 +402,8 @@ export const add_organisation_to_user = async (
 	await updateDoc(userRef, {
 		organisation: arrayUnion(organisationId),
 	});
-	// const organisationRef = doc(db, "organizations", organisationId);
-	await updateDoc(userRef, {
+	const organisationRef = doc(db, "organizations", organisationId);
+	await updateDoc(organisationRef, {
 		users: arrayUnion(organisationId),
 	}); 
 
@@ -831,7 +831,7 @@ export const get_filter_schema = async (organizationId: string) => {
   }
 }
 
-// reject invitation
+//38 reject invitation
 export const reject_invitation = async (organisationId: string, emailId: string) => {
 	
 	const docRef = doc(db, "invitations", emailId);
@@ -850,6 +850,13 @@ export const reject_invitation = async (organisationId: string, emailId: string)
 	}
 
 };
+
+// 39 link data to parent data
+export const link_data_to_parent_data = async (organizationId:string,childId:string,parentId:string)=>{
+	let parentData:any = await get_data_byID(organizationId,parentId)
+	parentData["linkedData"] = [...parentData["linkedData"],childId]
+	await update_data_to_database(organizationId,parentData,"")
+}
 
 
 

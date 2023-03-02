@@ -29,7 +29,7 @@ const App = () => {
 				position="bottom-right"
 			/>
 			{sideBarList.length !== 0 && (
-				<section className="fixed z-50">
+				<section className="fixed right-0 z-50">
 					<SideBarScreen />
 				</section>
 			)}
