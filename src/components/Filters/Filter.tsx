@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useAppSelector } from "../../redux/hooks";
 import DisplayFilters from "./DisplayFilters";
 import VistaPopup from "./VistaPopup";
 
@@ -23,6 +24,8 @@ type TYPE_FilterProps = {
 }
 
 const Filter = ({filters, modifyData}: TYPE_FilterProps) => {
+	const filterSchemaFromStore = useAppSelector((state)=> state.vista.filterSchema)
+
 	const [filterSchema, setFilterSchema] = useState<TYPE_Filters[]>(filters);
 	const [showAllFilters, setShowAllFilters] = useState<boolean>(false);
 	const [activeFiltersDropdown, setActiveFiltersDropdown] =
@@ -84,6 +87,13 @@ const Filter = ({filters, modifyData}: TYPE_FilterProps) => {
         setFilterSchema(resetFilterSchema);
 		modifyData(resetFilterSchema);
     }
+
+	useEffect(()=>{
+		if(filterSchemaFromStore.length>0){
+			setFilterSchema(filterSchemaFromStore);
+			modifyData(filterSchemaFromStore);
+		}
+	},[filterSchemaFromStore, modifyData])
 
 	return (
 		<div className="w-screen h-auto bg-[#161616] text-[#808080]">
@@ -198,7 +208,8 @@ const Filter = ({filters, modifyData}: TYPE_FilterProps) => {
 						text-[#808080] text-sm font-bold ">
 							Clear
 						</button>
-						<VistaPopup />
+						<VistaPopup filterSchema={filterSchema} />
+						
 				</div>
 			</div>
 		</div>

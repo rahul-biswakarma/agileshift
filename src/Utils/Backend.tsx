@@ -437,12 +437,6 @@ export const get_user_by_id = async (userId: string) => {
 		return docSnap.data();
 	}
 	return false;
-
-
-
-
-
-	
 };
 // // 25 get user by email
 export const get_user_by_email = async (email: string) => {
@@ -822,3 +816,51 @@ export const reject_invitation = async (organisationId: string, emailId: string)
 	}
 
 };
+
+// Add Vista to user Object
+
+
+// Add vista
+export const add_vista = (organizationId: string, userId:string, filterSchema:any, tabName: string, vistaName: string) => {
+  addDoc(collection(db, "vistas"), {
+    name: vistaName,
+    field: tabName,
+    vistaSchema: filterSchema
+  }).then((data) => {
+    console.log(data.id);
+    add_vista_to_user(organizationId, userId, data.id)
+  })
+}
+
+export const add_vista_to_user = async (organizationId: string, userId:string, vistaId:string)=>{
+  const userRef = doc(db, "users", userId);
+  const userSnap = await getDoc(userRef);
+  let userData:any = {}
+  if(userSnap.exists()){
+    userData = userSnap.data()
+    if(!userData.vistas){
+      userData["vistas"] = {}
+    }
+    if(userData.vistas[organizationId]){
+      userData.vistas[organizationId].push(vistaId)
+    }else{
+      userData.vistas[organizationId] =[vistaId]
+    }
+    await setDoc(doc(db, "users", userId), userData);
+  }else{
+    console.log("No such document!");
+  }
+}
+
+export const get_vista_from_id = async (vistaId:string) =>{
+  const vistaRef = doc(db, "vistas", vistaId);
+  const vistaSnap = await getDoc(vistaRef);
+  if(vistaSnap.exists()){
+    return vistaSnap.data()
+  }else{
+    console.log("No such data!");
+  }
+  return {};
+}
+
+
