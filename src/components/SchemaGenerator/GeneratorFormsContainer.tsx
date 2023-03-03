@@ -32,7 +32,6 @@ export const GeneratorFormsContainer = ({mode}:GeneratorContainerPropTypes) => {
   useEffect(()=>{
     if(orgId && mode === "edit"){
       get_schema_data(orgId).then((data)=> {
-        console.log(data)
         if(data) setFields(data.schemaData);
       })
     }
@@ -209,7 +208,6 @@ export const GeneratorFormsContainer = ({mode}:GeneratorContainerPropTypes) => {
     }
   }, [defaultFields, mode,dispatch]);
 
-  console.log(fields, "fields")
   return (
     <div className="flex flex-col max-h-screen">
       <SchemaGeneratorFormHeader />

@@ -197,7 +197,6 @@ export default function CreateData(props: Props) {
 
       toast.success("Data Updated Successfully");
     } catch (err) {
-      console.log(err);
       toast.error("Error in updating data");
     }
 
@@ -224,8 +223,6 @@ export default function CreateData(props: Props) {
     fetchData();
   }
 
-
-  console.log(formData,"**",selectedField)
   if (props.tabColaps ) {
     return (
       <div

@@ -75,7 +75,6 @@ export default function AddOptions(props: Props) {
     }
   };
 
-  console.log("list", list);
 
   const handleClose = () => {
     dispatch(

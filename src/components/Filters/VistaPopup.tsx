@@ -22,7 +22,6 @@ const VistaPopup = ({filterSchema}: TYPE_VistaPopupProps) => {
   const [popUpCollapse, setPopUpCollapse] = useState(false);
   const [fieldData, setFieldData] = useState<any>({});
 
-  console.log(fieldData);
   const organizationId = useAppSelector((state) => state.auth.organisationId);
   const userId = useAppSelector((state) => state.auth.userId);
   const tabName = useAppSelector((state) => state.datatable.tabName);

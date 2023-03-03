@@ -123,7 +123,6 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 
 											let tempDatas = datas;
 											tempDatas.splice(index, 1);
-											console.log([...tempDatas, currSelectedUser]);
 											setDatas([...tempDatas, currSelectedUser]);
 										}}
 										className="cursor-pointer"

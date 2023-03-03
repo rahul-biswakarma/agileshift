@@ -28,17 +28,13 @@ const VistaList = () => {
     useEffect(()=>{
         const getInfo = async() => {
             const user:any = await get_user_by_id(userId);
-            console.log(user);
             let vistaIdList = [];
             if(user.vistas[organizationId]){
                 vistaIdList = user.vistas[organizationId];
             }
-            console.log(vistaIdList);
             let visList = [];
             for(let i=0;i<vistaIdList.length;i++){
-                console.log(vistaIdList[i]);
                 const visObj =  await get_vista_from_id(vistaIdList[i]);
-                console.log(visObj);
                 visList.push(visObj);
             }
 

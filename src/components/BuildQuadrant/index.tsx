@@ -34,7 +34,6 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 	const [filterSchema, setFilterSchema] = useState<TYPE_Filters[]>([]);
 
 	const removeDuplicates = (filters: TYPE_Filters[]) => {
-		console.log(filters);
 		let uniqueValues = new Map();
 		let result = [];
 		for (let obj of filters) {

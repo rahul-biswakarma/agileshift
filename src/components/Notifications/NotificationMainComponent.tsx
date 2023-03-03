@@ -80,7 +80,6 @@ const NotificationMainComponent = (props:TYPE_NotificationProps) => {
     }
 
     const handleViewSidebar = async (notification:TYPE_ModifiedNotificationData) =>{
-        console.log(notification);
         
         dispatch(
           setSideBar({
