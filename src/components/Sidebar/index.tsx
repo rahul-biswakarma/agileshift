@@ -17,9 +17,10 @@ export default function SideBarScreen() {
     setColapsTabBar(sideBarList.length - 1);
   }, [sideBarList]);
 
+  console.log("sideBarList", sideBarList);
 
   return (
-    <div className="h-screen w-max  flex flex-row-reverse  z-20 font-dm_sans  text-white overflow-x-scroll">
+    <div className="min-h-screen w-max  flex flex-row-reverse  z-20 font-dm_sans  text-white ">
       {sideBarList.map((sidebar: Type_SidebarState, index: number) => {
         if (sidebar.sidebarType === "addOption") {
           return (

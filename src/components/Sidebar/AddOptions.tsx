@@ -12,12 +12,12 @@ import { RootState } from "../../redux/store";
 import CustomButton from "../common/Button";
 import { toast } from "react-toastify";
 
-type Props={
-  tabColaps:Boolean;
-  setColapsTabBar:Function;
-  sidebar:Type_SidebarState;
-  index:number;
-}
+type Props = {
+  tabColaps: Boolean;
+  setColapsTabBar: Function;
+  sidebar: Type_SidebarState;
+  index: number;
+};
 
 export default function AddOptions(props: Props) {
   const [sideBarList] = React.useState(
@@ -43,7 +43,7 @@ export default function AddOptions(props: Props) {
 
   const changeList = (id: number, item: string) => {
     let tempList: any = [...list];
-    tempList[id]['filterOptionName'] = item;
+    tempList[id]["filterOptionName"] = item;
     setList(tempList);
   };
   const removeItem = (id: number) => {
@@ -51,17 +51,15 @@ export default function AddOptions(props: Props) {
     tempList = tempList.slice(0, id).concat(tempList.slice(id + 1));
     setList(tempList);
   };
-  const addItem = (e:any) => {
+  const addItem = (e: any) => {
     e.preventDefault();
-    setList([...list, {filterOptionName:"",active:false}]);
+    setList([...list, { filterOptionName: "", active: false }]);
   };
 
-  
-
   const handleSubmit = async () => {
-    try{
-
-      let tempList = list.filter((item:any) => item.filterOptionName !== "");
+    try {
+      let tempList = list.filter((item: any) => item.filterOptionName !== "");
+      console.log("add options", tempList);
       await set_dropdown_options(
         organizationId,
         props.sidebar.columnName!,
@@ -69,12 +67,11 @@ export default function AddOptions(props: Props) {
         tempList
       );
       toast.success(`Options Updated in ${props.sidebar.columnName}`);
-      handleClose()
-    }catch(err){
-      toast.error("Unable to update options")
+      handleClose();
+    } catch (err) {
+      toast.error("Unable to update options");
     }
   };
-
 
   const handleClose = () => {
     dispatch(
@@ -98,7 +95,7 @@ export default function AddOptions(props: Props) {
   } else {
     return (
       <form
-      onSubmit={(e)=>addItem(e)}
+        onSubmit={(e) => addItem(e)}
         className="flex flex-col justify-start items-center w-[400px] h-screen bg-sidebar_bg backdrop-filter backdrop-blur-lg bg-opacity-60 border border-primary_font_color
     p-4
     "
@@ -147,7 +144,6 @@ export default function AddOptions(props: Props) {
             type="submit"
             className="flex w-32 justify-center items-center p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm text-highlight_font_color border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 hover:text-purple-800 transition-all duration-200 ease-in-out
           mt-4"
-           
           >
             Add {props.sidebar.columnName}
           </button>

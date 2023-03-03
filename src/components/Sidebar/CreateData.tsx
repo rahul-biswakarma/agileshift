@@ -18,14 +18,13 @@ import CustomButton from "../common/Button";
 import { toast } from "react-toastify";
 import { IdComponent } from "../DataTable/idComponent";
 
-
-type Props={
-  tabColaps:Boolean;
-  setColapsTabBar:Function;
-  sidebar:Type_SidebarState;
-  index:number;
-  createModeCalledByField?:string;
-}
+type Props = {
+  tabColaps: Boolean;
+  setColapsTabBar: Function;
+  sidebar: Type_SidebarState;
+  index: number;
+  createModeCalledByField?: string;
+};
 
 export default function CreateData(props: Props) {
   const [selectedField, setSelectedField] = React.useState<string>("");
@@ -38,6 +37,10 @@ export default function CreateData(props: Props) {
   const [isFetching, setIsFetching] = React.useState<boolean>(true);
   // stop link button from being clicked multiple times
   const [isButtonClicked, setIsButtonClicked] = React.useState<boolean>(false);
+
+  const x: Type_SidebarState[] = useSelector(
+    (state: RootState) => state.sidebar.sideBarData
+  );
 
   const [sideBarList] = React.useState(
     useSelector((state: RootState) => state.sidebar.sideBarData)
@@ -53,15 +56,15 @@ export default function CreateData(props: Props) {
       let tempFormData: any = {};
 
       schemaData.list.forEach((item: any) => {
-        if (["string", "title", "currency",'dropdown'].includes(item.columnType))
+        if (
+          ["string", "title", "currency", "dropdown"].includes(item.columnType)
+        )
           tempFormData[item.columnName] = "";
         else {
           tempFormData[item.columnName] = [];
         }
       });
-      tempFormData['field'] = selectedField;
-
-
+      tempFormData["field"] = selectedField;
 
       // only works when the sidebar is in edit mode, not in create mode
       if (props.sidebar.fieldId !== "" && props.sidebar.fieldId !== undefined) {
@@ -72,7 +75,6 @@ export default function CreateData(props: Props) {
         Object.keys(currentState).forEach((key) => {
           tempFormData[key] = currentState[key];
         });
-       
 
         setLinkedData(
           sideBarList,
@@ -83,7 +85,7 @@ export default function CreateData(props: Props) {
       }
 
       setFormData(tempFormData);
-      setFormSchema(schemaData)
+      setFormSchema(schemaData);
     };
 
     fetchData();
@@ -107,7 +109,6 @@ export default function CreateData(props: Props) {
         linkedCalledByID: props.sidebar.id,
       })
     );
-    setIsButtonClicked(true);
   };
 
   //   getting dropdown data fields
@@ -145,12 +146,10 @@ export default function CreateData(props: Props) {
     fetchSchemaDataCallback();
   }, [fetchSchemaDataCallback]);
 
-  const sideBarLists = useAppSelector((state) => state.sidebar.sideBarData);
-
   const handleClose = () => {
     dispatch(
       setNewSidBar(
-        sideBarLists.filter((sideBar, index) => index !== props.index)
+        sideBarList.filter((sideBar, index) => index !== props.index)
       )
     );
   };
@@ -223,7 +222,48 @@ export default function CreateData(props: Props) {
     fetchData();
   }
 
-  if (props.tabColaps ) {
+  const handleLinkedIdClick = (id: string) => {
+    dispatch(
+      setSideBar({
+        sidebarType: "editMode",
+        createModeCalledByField: "",
+        fieldId: id,
+        linkedData: [],
+        id: id,
+      })
+    );
+  };
+
+  console.log("rendered", sideBarList, x);
+
+  React.useEffect(() => {
+    console.log("useeffect called");
+    let flag: boolean = false;
+    x.forEach((item: any) => {
+      console.log(
+        "item**",
+        item,
+        item.sidebarType === "linkMode" && item.id === props.sidebar.id,
+        props.sidebar.id,
+        item.sidebarType === "linkMode",
+        item.linkedCalledByID === props.sidebar.id
+      );
+      if (
+        item.sidebarType === "linkMode" &&
+        item.linkedCalledByID === props.sidebar.id
+      ) {
+        setIsButtonClicked(true);
+        console.log("item**,true");
+        flag = true;
+      }
+    });
+
+    if (!flag) {
+      setIsButtonClicked(false);
+    }
+  }, [x, props.sidebar.id]);
+
+  if (props.tabColaps) {
     return (
       <div
         className="[writing-mode:vertical-rl] border-r-2 border-brown-500 h-full w-[50px] flex justify-center items-center text-xl  cursor-pointer bg-background_color py-4"
@@ -236,7 +276,7 @@ export default function CreateData(props: Props) {
     );
   } else {
     return (
-      <div className="w-[400px] p-4 flex flex-col justify-between h-screen relative bg-sidebar_bg backdrop-filter backdrop-blur-lg bg-opacity-60 border border-primary_font_color">
+      <div className="w-[400px] p-4 flex flex-col justify-between overflow-scroll h-screen relative bg-sidebar_bg backdrop-filter backdrop-blur-lg bg-opacity-60 shadow-lg border-l-2 border-primary_font_color">
         <div>
           <header className="flex justify-between items-center mb-8">
             {(props.sidebar.sidebarType === "createMode" ||
@@ -281,7 +321,6 @@ export default function CreateData(props: Props) {
             {formSchema && formSchema.list && (
               <div>
                 {formSchema.list.map((item: any, index: number) => {
-
                   return (
                     <SideBarInputs
                       key={index}
@@ -296,8 +335,23 @@ export default function CreateData(props: Props) {
               </div>
             )}
           </section>
+          <div className="text-sm font-extrabold">
+            Linked Fields:
+            <section className="flex flex-wrap gap-1 justify-center cursor-pointer mt-4 mb-4">
+              {props.sidebar.linkedData &&
+                props.sidebar.linkedData.map(
+                  (linkedDataId: string, index: number) => {
+                    return (
+                      <span onClick={() => handleLinkedIdClick(linkedDataId)}>
+                        <IdComponent itemId={linkedDataId} color={"#FFA500"} />
+                      </span>
+                    );
+                  }
+                )}
+            </section>
+          </div>
         </div>
-     
+
         <footer className=" right-0 mb-4   flex flex-row gap-2">
           <CustomButton
             onClick={handleAddLink}

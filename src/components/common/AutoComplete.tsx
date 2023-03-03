@@ -20,6 +20,7 @@ const customStyles = {
     backgroundColor: state.isSelected ? "#3B82F6" : "#1F1F1F", // Set the option background color here
     color: state.isSelected ? "#FFFFFF" : "#CCCCCC", // Set the option text color here
     cursor: "pointer", // Set the cursor
+
     "&:active": {
       backgroundColor: "#321f11", // Set the option background color here
     },
@@ -42,13 +43,13 @@ const customStyles = {
     ...provided,
     color: "#FFFFFF", // Set the selected option text color here
   }),
-  placeholder: (provided:any, state:any) => ({
+  placeholder: (provided: any, state: any) => ({
     ...provided,
     position: "absolute",
     top: state.hasValue || state.selectProps.inputValue ? -15 : "50%",
     transition: "top 0.1s, font-size 0.1s",
-    fontSize: (state.hasValue || state.selectProps.inputValue) && 13
-  })
+    fontSize: (state.hasValue || state.selectProps.inputValue) && 13,
+  }),
 };
 
 type type_props = {
@@ -92,17 +93,15 @@ const AutoComplete = (props: type_props) => {
     });
   }, [props.selectedField, organizationId, props.columnDetails.columnName]);
 
-
   const handleIdClick = () => {
     dispatch(
       setSideBar({
         sidebarType: "addOption",
         columnName: props.columnDetails.columnName,
-        fieldName:props.selectedField,
-  
+        fieldName: props.selectedField,
       })
     );
-  }
+  };
 
   return (
     <div>
@@ -114,7 +113,9 @@ const AutoComplete = (props: type_props) => {
           <Select
             placeholder="test place holder"
             styles={customStyles}
-            options={formatOptions(options.map((item: any) => item.filterOptionName))}
+            options={formatOptions(
+              options.map((item: any) => item.filterOptionName)
+            )}
             value={{
               label: props.formData[props.columnDetails.columnName],
               value: props.formData[props.columnDetails.columnName],
