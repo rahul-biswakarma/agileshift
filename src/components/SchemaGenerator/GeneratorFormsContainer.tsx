@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "../../redux/store";
 import { create_schema, get_schema_data } from "../../Utils/Backend";
@@ -12,9 +12,11 @@ import SchemaGeneratorFormHeader from "./Header";
 import { toast } from "react-toastify";
 
 
+type GeneratorContainerPropTypes={
+  mode:string;
+}
 
-
-export const GeneratorFormsContainer = () => {
+export const GeneratorFormsContainer = ({mode}:GeneratorContainerPropTypes) => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 	const userId = useAppSelector((state:RootState) => state.auth.userId);
@@ -28,24 +30,21 @@ export const GeneratorFormsContainer = () => {
   const orgId = useAppSelector((state) => state.auth.organisationId);
 
   useEffect(()=>{
-    if(orgId){
+    if(orgId && mode === "edit"){
       get_schema_data(orgId).then((data)=> {
         console.log(data)
         if(data) setFields(data.schemaData);
       })
     }
-  }, [orgId])
+  }, [orgId,mode])
 
 
   let activeTab = useAppSelector((state: RootState) => state.schema.activeTab);
 
-  const defaultColumnList: TYPE_SCHEMA[] = [
-    { columnName: "Name", columnType: "title" },
-    { columnName: "Tag", columnType: "tag" },
-    { columnName: "Owner", columnType: "user" },
-    { columnName: "Deadline", columnType: "date" },
-  ];
-
+  if(mode === "edit" && activeTab === -1){
+    dispatch(setActiveTab(0));
+  }
+  
   const makeActualCopy = (columnList: TYPE_SCHEMA[]): TYPE_SCHEMA[] => {
     let newColumnList: TYPE_SCHEMA[] = [];
     for (let column of columnList) {
@@ -53,10 +52,14 @@ export const GeneratorFormsContainer = () => {
     }
     return newColumnList;
   };
+  const defaultColumnList=useMemo<TYPE_SCHEMA[]>(()=>[
+    { columnName: "Name", columnType: "title" },
+    { columnName: "Tag", columnType: "tag" },
+    { columnName: "Owner", columnType: "user" },
+    { columnName: "Deadline", columnType: "date" },
+  ],[]);
 
-  // const [activeTab, dispatch(setActiveTab(] = useState(-1));
-
-  const [fields, setFields] = useState<any>([
+  const defaultFields = useMemo<TYPE_FIELD[]>(() => [
     {
       list: makeActualCopy(defaultColumnList),
       name: "Tickets",
@@ -71,7 +74,15 @@ export const GeneratorFormsContainer = () => {
       icon: "home",
       linkage: [],
     },
-  ]);
+  ], [defaultColumnList]);
+
+
+  // const [activeTab, dispatch(setActiveTab(] = useState(-1));
+
+
+
+
+  const [fields, setFields] = useState<TYPE_FIELD[]>(defaultFields);
 
   const organisationId = useAppSelector(
     (state: RootState) => state.auth.organisationId
@@ -153,7 +164,10 @@ export const GeneratorFormsContainer = () => {
 
   function duplicateSchema(this: any) {
     let currentField = fields[this.id];
-    if (currentField.name === "") return;
+    if (currentField.name === "") {
+      toast.error("Cannot duplicate a schema with no name!")
+      return
+    };
     let newField: TYPE_FIELD = {
       name: `${currentField.name} Duplicate`,
       list: makeActualCopy(currentField.list),
@@ -166,6 +180,7 @@ export const GeneratorFormsContainer = () => {
       .concat(newField, fields.slice(this.id + 1));
     setFields(duplicatedArray);
     dispatch(setActiveTab(activeTab + 1));
+    toast.success("Schema duplicated successfulyy")
   }
 
   function deleteSchema(this: any) {
@@ -187,11 +202,19 @@ export const GeneratorFormsContainer = () => {
     setFields(tempFields);
   }
 
+  useEffect(() => {
+    if(mode==="create"){
+      setFields(defaultFields)
+      dispatch(setActiveTab(-1))
+    }
+  }, [defaultFields, mode,dispatch]);
+
+  console.log(fields, "fields")
   return (
     <div className="flex flex-col max-h-screen">
       <SchemaGeneratorFormHeader />
       <div className="relative w-screen h-[calc(100vh-40px)] flex divide-x divide-dark_gray">
-        <OrganisationForm />
+        {mode==="create" && <OrganisationForm mode={mode} />}
         {fields.map((field:any, id:any) => (
           <SchemaGenerator
             id={id}

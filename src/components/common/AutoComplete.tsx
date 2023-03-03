@@ -114,7 +114,7 @@ const AutoComplete = (props: type_props) => {
           <Select
             placeholder="test place holder"
             styles={customStyles}
-            options={formatOptions(options)}
+            options={formatOptions(options.map((item: any) => item.filterOptionName))}
             value={{
               label: props.formData[props.columnDetails.columnName],
               value: props.formData[props.columnDetails.columnName],

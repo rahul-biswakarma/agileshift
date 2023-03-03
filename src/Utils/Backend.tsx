@@ -109,30 +109,30 @@ export const get_organizations = async (organizationIds: string[]) => {
 
 // 4
 export const create_organization = async (
-  userId: string,
-  name: string,
-  imgUrl: string
+	userId: string,
+	name: string,
+	
 ) => {
   const organizationsRef = collection(db, "organizations");
 
-  const initializeOrganization: any = {
-    id: "string",
-    name: name,
-    dateOfCreation: get_current_time(),
-    users: [userId],
-    imageUrl: imgUrl,
-    tags: [],
-    notifications: {},
-    tasks: {},
-    data: {},
-    dropdownsOptions: {},
-  };
-  const res = await addDoc(organizationsRef, initializeOrganization);
-  const orgRef = doc(db, "organizations", res.id);
-  await updateDoc(orgRef, {
-    id: res.id,
-  });
-  return res.id;
+	const initializeOrganization: any = {
+		id: "string",
+		name: name,
+		dateOfCreation: get_current_time(),
+		users: [userId],
+		
+		tags: [],
+		notifications: {},
+		tasks: {},
+		data: {},
+		dropdownsOptions: {},
+	};
+	const res = await addDoc(organizationsRef, initializeOrganization);
+	const orgRef = doc(db, "organizations", res.id);
+	await updateDoc(orgRef, {
+		id: res.id,
+	});
+	return res.id;
 };
 
 // 5
@@ -432,15 +432,17 @@ export const add_organisation_to_user = async (
     console.log("No such document!");
   }
 };
+
 // // 24 get user by id
 export const get_user_by_id = async (userId: string) => {
-  const docRef = doc(db, "users", userId);
-  const docSnap = await getDoc(docRef);
-  if (docSnap.exists()) {
-    return docSnap.data();
-  }
-  return false;
+	const docRef = doc(db, "users", userId);
+	const docSnap = await getDoc(docRef);
+	if (docSnap.exists()) {
+		return docSnap.data();
+	}
+	return false;
 };
+
 // // 25 get user by email
 export const get_user_by_email = async (email: string) => {
   const q = query(collection(db, "users"), where("email", "==", email));
@@ -863,12 +865,57 @@ export const reject_invitation = async (
   }
 };
 
+// Add vista
+export const add_vista = (organizationId: string, userId:string, filterSchema:any, tabName: string, vistaName: string) => {
+  addDoc(collection(db, "vistas"), {
+    name: vistaName,
+    field: tabName,
+    vistaSchema: filterSchema
+  }).then((data) => {
+    console.log(data.id);
+    add_vista_to_user(organizationId, userId, data.id)
+  })
+}
+
+
+// Add Vista to user Object
+export const add_vista_to_user = async (organizationId: string, userId:string, vistaId:string)=>{
+  const userRef = doc(db, "users", userId);
+  const userSnap = await getDoc(userRef);
+  let userData:any = {}
+  if(userSnap.exists()){
+    userData = userSnap.data()
+    if(!userData.vistas){
+      userData["vistas"] = {}
+    }
+    if(userData.vistas[organizationId]){
+      userData.vistas[organizationId].push(vistaId)
+    }else{
+      userData.vistas[organizationId] =[vistaId]
+    }
+    await setDoc(doc(db, "users", userId), userData);
+  }else{
+    console.log("No such document!");
+  }
+}
+
+export const get_vista_from_id = async (vistaId:string) =>{
+  const vistaRef = doc(db, "vistas", vistaId);
+  const vistaSnap = await getDoc(vistaRef);
+  if(vistaSnap.exists()){
+    return vistaSnap.data()
+  }else{
+    console.log("No such data!");
+  }
+  return {};
+}
 // 39 link data to parent data
 export const link_data_to_parent_data = async (
   organizationId: string,
   childId: string,
   parentId: string
 ) => {
+  console.log(organizationId, childId, parentId,"##")
   let parentData: any = await get_data_byID(organizationId, parentId);
   parentData["linkedData"] = [...parentData["linkedData"], childId];
   await update_data_to_database(organizationId, parentData, "");

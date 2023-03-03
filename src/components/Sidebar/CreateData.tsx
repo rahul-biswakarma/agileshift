@@ -83,7 +83,7 @@ export default function CreateData(props: Props) {
       }
 
       setFormData(tempFormData);
-      setFormSchema(schemaData);
+      setFormSchema(schemaData)
     };
 
     fetchData();

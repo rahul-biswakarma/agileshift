@@ -27,7 +27,7 @@ export default function AddOptions(props: Props) {
 
   const organizationId = useAppSelector((state) => state.auth.organisationId);
 
-  const [list, setList] = useState<string[]>([]);
+  const [list, setList] = useState<any>([]);
 
   React.useEffect(() => {
     const fetchOptions = async () => {
@@ -36,30 +36,32 @@ export default function AddOptions(props: Props) {
         props.sidebar.columnName!,
         props.sidebar.fieldName!
       );
-      setList(data);
+      setList(data.map((item: any) => item));
     };
     fetchOptions();
   }, [organizationId, props.sidebar.columnName, props.sidebar.fieldName]);
 
   const changeList = (id: number, item: string) => {
-    let tempList: string[] = [...list];
-    tempList[id] = item;
+    let tempList: any = [...list];
+    tempList[id]['filterOptionName'] = item;
     setList(tempList);
   };
   const removeItem = (id: number) => {
-    let tempList: string[] = [...list];
+    let tempList: any = [...list];
     tempList = tempList.slice(0, id).concat(tempList.slice(id + 1));
     setList(tempList);
   };
   const addItem = (e:any) => {
     e.preventDefault();
-    setList([...list, ""]);
+    setList([...list, {filterOptionName:"",active:false}]);
   };
+
+  
 
   const handleSubmit = async () => {
     try{
 
-      let tempList = list.filter((item) => item !== "");
+      let tempList = list.filter((item:any) => item.filterOptionName !== "");
       await set_dropdown_options(
         organizationId,
         props.sidebar.columnName!,
@@ -111,7 +113,7 @@ export default function AddOptions(props: Props) {
           {props.sidebar.columnName}
         </p>
         <div className="w-full max-h-[90%] flex flex-col items-center gap-6 overflow-auto">
-          {list.map((item: string, id: number) => (
+          {list.map((item: any, id: number) => (
             <div className="w-full flex items-center justify-center">
               <TextField
                 required
@@ -129,7 +131,7 @@ export default function AddOptions(props: Props) {
                 size="small"
                 id={`dropdown-${item}-input`}
                 variant="outlined"
-                value={item}
+                value={item.filterOptionName!}
                 onChange={(e) => changeList(id, e.target.value)}
               />
               <button

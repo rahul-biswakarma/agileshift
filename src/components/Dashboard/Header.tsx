@@ -19,6 +19,7 @@ const Header = (props: TYPE_HeaderProps) => {
 	const organizationId = useAppSelector((state) => state.auth.organisationId);
 	const dispatch = useAppDispatch();
 	const navigate =useNavigate();
+	const [organizationName,setOrganizationName]=useState<string>("NewOrg");
 
 	const [userData, setUserData] = useState<TYPE_USER>({
 		id: "",
@@ -31,6 +32,7 @@ const Header = (props: TYPE_HeaderProps) => {
 		useState<boolean>(false);
 	const [isInviteUserComponentOpen, setIsInviteUserComponentOpen] =
 		useState<boolean>(false);
+	const [isOrgMenuOpen, setIsOrgMenuOpen] = useState<boolean>(false);
 
 	useEffect(() => {
 		get_user_by_id(userId).then((data) => {
@@ -70,7 +72,7 @@ const Header = (props: TYPE_HeaderProps) => {
 	useEffect(() => {
 		get_organization_name_by_id(organizationId).then((data) => {
 			document.title = `${data} | Dashboard`
-
+			setOrganizationName(data);
 		})
 	},[organizationId])
 
@@ -79,14 +81,35 @@ const Header = (props: TYPE_HeaderProps) => {
 			id="header"
 			className="p-[1rem_2rem] flex gap-[3rem] justify-between border-[2px] border-Secondary_background_color"
 		>
-			<div className="flex gap-[1rem] items-center">
+			<button className="flex gap-[1rem] items-center" onClick={()=>setIsOrgMenuOpen(!isOrgMenuOpen)}>
 				<img
 					className="w-8"
 					src={logoSvg}
 					alt="logo"
 				/>
-			</div>
-
+			</button>
+			{isOrgMenuOpen && <div
+						className="top-[60px] left-8 absolute flex flex-col gap-[0.3rem] w-max bg-Secondary_background_color overflow-auto border border-white/30 rounded-md z-50 flex"
+					>
+						<div className="w-full flex items-center justify-between p-[0.5rem] border-b border-white/30 transition-all ">
+							<p className="text-white/50">{organizationName}</p>
+							<button
+								onClick={() => navigate("/edit-organization-details")}
+								className="material-symbols-outlined text-[17px] text-white/50 hover:text-yellow-500 mx-4"
+							>
+								edit
+							</button>
+							<button
+								onClick={() => setIsOrgMenuOpen(!isOrgMenuOpen)}
+								className="material-symbols-outlined text-[17px] text-white/50 hover:text-rose-500 ml-4"
+							>
+								close
+							</button>
+						</div>
+						<ul className="text-white/80 w-full">
+							<li className="p-2 hover:bg-[#262626]"><button className="w-full" onClick={()=>navigate("/organization-lists")}>Organisation List</button></li>
+						</ul>
+					</div>}
 			<SearchComponent />
 
 			<div className="flex gap-[2rem] items-center">

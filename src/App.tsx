@@ -12,6 +12,7 @@ import SideBarScreen from "./components/Sidebar";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { OrganisationForm } from "./components/ManageOrganization/OrganisationForm";
 
 const App = () => {
 	const userIdFromSession = getFromSession("userId");
@@ -57,11 +58,15 @@ const App = () => {
 				/>
 				<Route
 					path="/create-organization"
-					element={<GeneratorFormsContainer />}
+					element={<GeneratorFormsContainer mode="create" />}
 				/>
 				<Route
 					path="/edit-organization-schema"
-					element={<GeneratorFormsContainer />}
+					element={<GeneratorFormsContainer mode="edit" />}
+				/>
+				<Route
+				path="/edit-organization-details"
+				element={<OrganisationForm mode="edit" />}
 				/>
 				<Route
 					path="/organization/:id"
