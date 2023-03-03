@@ -14,7 +14,7 @@ import UploadJSON from "../UploadJSON";
 import { RootState } from "../../redux/store";
 import { setActiveTab } from "../../redux/reducers/SchemaSlice";
 import SelectIconComponent from "./SelectIconComponent";
-import {  get_dark_background_color_from_name } from "../../Utils/Backend";
+import {  get_text_color_from_name, get_dark_background_color_from_name } from "../../Utils/Backend";
 import { toast } from "react-toastify";
 import { useDebounceCallback } from "../../Utils/useDebounce";
 
@@ -227,7 +227,18 @@ export const SchemaGenerator = ({
                 {colorList.map((color, id) => {
                   return (
                     <MenuItem key={id} value={color}>
-                      {color}
+                      <span style={{ display: "inline-flex", alignItems: "center" }}>
+                        <span
+                          style={{
+                            width: "10px",
+                            height: "10px",
+                            borderRadius: "50%",
+                            marginRight: "8px",
+                            backgroundColor: get_text_color_from_name(color),
+                          }}
+                        ></span>
+                        {color}
+                      </span>
                     </MenuItem>
                   );
                 })}
