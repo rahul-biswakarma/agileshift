@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAppSelector } from "../../redux/hooks";
 import { toast } from "react-toastify";
-import { check_user_in_organizations, get_user_by_email, get_user_by_id, get_user_suggestions, send_invite  } from "../../Utils/Backend";
+import { check_user_in_organizations, get_user_by_email, send_invite  } from "../../Utils/Backend";
 
 type Type_InviteUserComponentProps = {
 	setIsInviteUserComponentOpen: React.Dispatch<React.SetStateAction<boolean>>;
