@@ -12,9 +12,11 @@ import SchemaGeneratorFormHeader from "./Header";
 import { toast } from "react-toastify";
 
 
+type GeneratorContainerPropTypes={
+  mode:string;
+}
 
-
-export const GeneratorFormsContainer = () => {
+export const GeneratorFormsContainer = ({mode}:GeneratorContainerPropTypes) => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 	const userId = useAppSelector((state:RootState) => state.auth.userId);
@@ -38,6 +40,10 @@ export const GeneratorFormsContainer = () => {
 
 
   let activeTab = useAppSelector((state: RootState) => state.schema.activeTab);
+
+  if(mode === "edit" && activeTab === -1){
+    dispatch(setActiveTab(0));
+  }
 
   const defaultColumnList: TYPE_SCHEMA[] = [
     { columnName: "Name", columnType: "title" },
@@ -153,7 +159,10 @@ export const GeneratorFormsContainer = () => {
 
   function duplicateSchema(this: any) {
     let currentField = fields[this.id];
-    if (currentField.name === "") return;
+    if (currentField.name === "") {
+      toast.error("Cannot duplicate a schema with no name!")
+      return
+    };
     let newField: TYPE_FIELD = {
       name: `${currentField.name} Duplicate`,
       list: makeActualCopy(currentField.list),
@@ -166,6 +175,7 @@ export const GeneratorFormsContainer = () => {
       .concat(newField, fields.slice(this.id + 1));
     setFields(duplicatedArray);
     dispatch(setActiveTab(activeTab + 1));
+    toast.success("Schema duplicated successfulyy")
   }
 
   function deleteSchema(this: any) {
@@ -191,7 +201,7 @@ export const GeneratorFormsContainer = () => {
     <div className="flex flex-col max-h-screen">
       <SchemaGeneratorFormHeader />
       <div className="relative w-screen h-[calc(100vh-40px)] flex divide-x divide-dark_gray">
-        <OrganisationForm />
+        {mode==="create" && <OrganisationForm mode={mode} />}
         {fields.map((field:any, id:any) => (
           <SchemaGenerator
             id={id}
