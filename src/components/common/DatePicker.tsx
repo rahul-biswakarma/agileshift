@@ -7,6 +7,7 @@ type type_props = {
   label: string;
   fieldData: any;
 };
+
 export default function DatePicker(props: type_props) {
   return (
     <div>
@@ -17,7 +18,7 @@ export default function DatePicker(props: type_props) {
         <input
           data-testid="email-input"
           value={props.defaultValue}
-          className="w-full h-[2.5rem] bg-background_color focus:outline-none rounded-r px-4 code-font font-dm_sans"
+          className="w-full h-[2.5rem] bg-background_color focus:outline-none rounded-r px-4 code-font font-dm_sans text-white"
           type="date"
           placeholder={props.label}
           onChange={(e) =>
@@ -28,6 +29,13 @@ export default function DatePicker(props: type_props) {
           }
         />
       </div>
+      <style>
+        {`
+          input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1) sepia(100%) saturate(7500%) hue-rotate(175deg);
+          }
+        `}
+      </style>
     </div>
   );
 }
