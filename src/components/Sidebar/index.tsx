@@ -9,8 +9,6 @@ export default function SideBarScreen() {
     (state: RootState) => state.sidebar.sideBarData
   );
 
-  console.log(sideBarList,'***')
-
   return (
     <div className="h-screen w-screen  flex flex-row-reverse  z-20 font-dm_sans  text-white overflow-x-scroll">
       {sideBarList.map((sidebar: Type_SidebarState, index: number) => {
@@ -20,7 +18,6 @@ export default function SideBarScreen() {
           sidebar.sidebarType === "editMode" ||
           sidebar.sidebarType === "createMode"
         ) {
-          console.log("sidebar", sidebar);
           return (
             <div key={index} className="w-[400px]">
               <CreateData sidebar={sidebar} index={index} />

@@ -137,7 +137,6 @@ return formattedData;
   };
 
   const getAllData = async () => {
-    console.log("fetching data");
 
     let field=formatDataToTypeField(await get_schema_data_field(organisationId,props.sidebar.fieldName!));
 
