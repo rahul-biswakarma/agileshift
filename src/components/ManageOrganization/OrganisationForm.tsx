@@ -27,7 +27,7 @@ export const OrganisationForm = () => {
 	const [orgNameState, setOrgNameState] = useState<string>("");
 	// const [orgUrlState, setOrgUrlState] = useState<string>("");
 	// const [isSubmitDisabled, setIsSubmitDisabled] = useState<boolean>(true);
-	console.log(orgUrlErrorMessage,setOrgUrlState)
+	// console.log(orgUrlErrorMessage,setOrgUrlState)
 
 
 	const organizationId = useAppSelector((state) => state.auth.organisationId);
