@@ -34,11 +34,11 @@ const VistaPopup = ({filterSchema}: TYPE_VistaPopupProps) => {
 
   return (
     <div className='relative'>
-      <button onClick={() => setPopUpCollapse(!popUpCollapse)} className="flex gap-1 items-center p-3 hover:bg-white/20 rounded-md">
-        Save as
-        <span className="material-symbols-outlined text-md">
-        bookmark_add
+      <button onClick={() => setPopUpCollapse(!popUpCollapse)} className="flex gap-1 items-center px-3 py-1 hover:bg-white/20 rounded-md">
+        <span className="material-symbols-outlined text-[20px]">
+          bookmark_add
         </span>
+        Save as
       </button>
       {
         popUpCollapse && (
@@ -46,7 +46,7 @@ const VistaPopup = ({filterSchema}: TYPE_VistaPopupProps) => {
             <Input fieldData={fieldData} setFunction={setFieldData} label="Vista Name" defaultValue={fieldData[""]} />
           
             <button onClick={() => handleSave()} className='self-end p-3 border border-white/20 rounded-md bg-background_color'>
-              Submit
+              Save
             </button>
           </div>
         )

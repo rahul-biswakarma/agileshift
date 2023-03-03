@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../redux/hooks";
+import { setVistaName, setVistaSchema } from "../../redux/reducers/VistaSlice";
 import DisplayFilters from "./DisplayFilters";
 import VistaPopup from "./VistaPopup";
 
@@ -25,7 +27,7 @@ type TYPE_FilterProps = {
 
 const Filter = ({filters, modifyData}: TYPE_FilterProps) => {
 	const filterSchemaFromStore = useAppSelector((state)=> state.vista.filterSchema)
-
+	const dispatch = useDispatch();
 	const [filterSchema, setFilterSchema] = useState<TYPE_Filters[]>(filters);
 	const [showAllFilters, setShowAllFilters] = useState<boolean>(false);
 	const [activeFiltersDropdown, setActiveFiltersDropdown] =
@@ -94,19 +96,22 @@ const Filter = ({filters, modifyData}: TYPE_FilterProps) => {
 		console.log(resetFilterSchema)
         setFilterSchema(resetFilterSchema);
 		modifyData(resetFilterSchema);
+		dispatch(setVistaName(""));
+		dispatch(setVistaSchema(resetFilterSchema));
     }
 
 	useEffect(()=>{
 		if(filterSchemaFromStore.length>0){
-			setFilterSchema(filterSchemaFromStore);
-			modifyData(filterSchemaFromStore);
+			const filter = [...JSON.parse(JSON.stringify(filterSchemaFromStore))]
+			setFilterSchema(filter);
+			modifyData(filter);
 		}
 	},[filterSchemaFromStore, modifyData]);
 
 	return (
 		<div className="w-screen h-auto bg-[#161616] text-[#808080]">
-			<div className="flex justify-between mb-4 mx-9 pt-4">
-				<div className="flex flex-wrap gap-3">
+			<div className="flex justify-between mb-4 mx-4 pt-4">
+				<div className="flex flex-wrap gap-3 mx-3">
 					<div className="flex text-sm">
 						<button className="mr-4">
 							<span className="material-symbols-outlined">
@@ -212,7 +217,7 @@ const Filter = ({filters, modifyData}: TYPE_FilterProps) => {
 					</div>
 				</div>
 				<div className="flex items-center gap-4">
-						<button onClick={() => resetFilters()} className="rounded-md h-7
+						<button onClick={() => resetFilters()} className="rounded-md h-5
 						text-[#808080] text-sm font-bold ">
 							Clear
 						</button>

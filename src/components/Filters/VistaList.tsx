@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { setTabName } from '../../redux/reducers/DataTableSlice';
-import { setFilterSchema } from '../../redux/reducers/VistaSlice';
+import { setVistaSchema, setVistaName } from '../../redux/reducers/VistaSlice';
 import { get_user_by_id, get_vista_from_id } from '../../Utils/Backend';
 
 type TYPE_FilterOption = {
@@ -18,6 +18,7 @@ type TYPE_Filters = {
 const VistaList = () => {
     const [vistaListCollapse, setVistaListCollapse] = useState<boolean>(false);
     const [vistaList, setVistaList] = useState<any>([]);
+    const vistaName = useAppSelector((state) => state.vista.vistaName);
 
     const organizationId = useAppSelector((state) => state.auth.organisationId);
     const userId = useAppSelector((state) => state.auth.userId);
@@ -46,25 +47,27 @@ const VistaList = () => {
         getInfo();
     },[organizationId, userId, tabName]);
 
-    const handleClick = (filterSchema: TYPE_Filters[], type:string) => {
+    const handleClick = (filterSchema: TYPE_Filters[], type:string, vistaName:string) => {
+        setVistaListCollapse(false);
+        dispatch(setVistaName(vistaName));
         dispatch(setTabName(type));
-        dispatch(setFilterSchema(filterSchema));
+        dispatch(setVistaSchema(filterSchema));
     }
 
   return (
     <div className='relative text-white'>
-        <div onClick={() => setVistaListCollapse(!vistaListCollapse)} className='flex gap-1 items-center p-3 hover:bg-white/20 rounded-md cursor-pointer'>
-            My List
+        <div onClick={() => setVistaListCollapse(!vistaListCollapse)} className='flex gap-1 items-center px-3 py-1 hover:bg-white/20 rounded-md cursor-pointer'>
             <span className="material-symbols-outlined">
                 keyboard_arrow_down
             </span>
+            {vistaName ? vistaName : "My List"}
         </div>
         {
             vistaListCollapse && (
                 <div className='absolute flex flex-col w-60 top-[105%] right-0 border border-white/20 z-10 rounded-md p-3 bg-background_color'>
                     {
                         vistaList.length > 0 ? vistaList.map((data:any, _id:number) => (
-                            <button key={_id} onClick={() => handleClick(data.vistaSchema, data.field)} className='p-3 hover:bg-Secondary_background_color'>{data.name}</button>
+                            <button key={_id} onClick={() => handleClick(data.vistaSchema, data.field, data.name)} className='p-3 hover:bg-Secondary_background_color'>{data.name}</button>
                         )) : (
                             <div>
                                 No Data
