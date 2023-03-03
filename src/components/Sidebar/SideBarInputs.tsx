@@ -1,4 +1,5 @@
 import React from "react";
+import AutoComplete from "../common/AutoComplete";
 // import { useAppSelector } from "../../redux/hooks";
 // import AutoComplete from "../common/AutoComplete";
 import DatePicker from "../common/DatePicker";
@@ -14,20 +15,21 @@ type type_props = {
   setFormData: React.Dispatch<any>;
   defaultValue?: any;
   selectedTab?: string;
+  selectedField:string
 };
 export default function SideBarInputs(props: type_props) {
+
+
   if (["dropdown"].includes(props.columnDetails.columnType)) {
     return (
       <div>
-        Autocomplete
-        {/* <AutoComplete
+        <AutoComplete
+          columnDetails={props.columnDetails}
+          formData={props.formData}
+          setFormData={props.setFormData}
           defaultValue={props.defaultValue}
-          label={props.columnDetails.columnName}
-          setFunction={props.setFormData}
-          fieldData={props.formData}
-          selectedTab={props.selectedTab === undefined ? "" : props.selectedTab}
-          sidebarIndex={0}
-        /> */}
+          selectedField={props.selectedField === undefined ? "" : props.selectedField}
+        />
       </div>
     );
   }

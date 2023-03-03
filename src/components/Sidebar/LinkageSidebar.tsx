@@ -20,12 +20,15 @@ import {
 } from "../../Utils/HelperFunctions";
 import CustomButton from "../common/Button";
 
-type LinkageSidebarPropType = {
-  sidebar: Type_SidebarState;
-  index: number;
-};
+// type LinkageSidebarPropType = {
+//   sidebar: Type_SidebarState;
+//   index: number;
+//   setIndex:React.Dispatch<React.SetStateAction<number>>;
+//   colapasable: boolean;
+//   isColaps: boolean;
+// };
 
-export const LinkageSidebar = (props: LinkageSidebarPropType) => {
+export const LinkageSidebar = (props: any) => {
   const sideBarList: Type_SidebarState[] = useSelector(
     (state: RootState) => state.sidebar.sideBarData
   );
@@ -93,6 +96,8 @@ export const LinkageSidebar = (props: LinkageSidebarPropType) => {
   };
 
   const [selectedOptions, setSelectedOptions] = useState<typeof options>([]);
+  // stop create button from being clicked multiple times
+  const [isButtonClicked, setIsButtonClicked] = useState<boolean>(false);
 
   const handleSelectChange = (selected: any) => {
     setSelectedOptions(selected);
@@ -162,7 +167,6 @@ export const LinkageSidebar = (props: LinkageSidebarPropType) => {
   };
 
   const getAllData = async () => {
-
     let field = formatDataToTypeField(
       await get_schema_data_field(organisationId, props.sidebar.fieldName!)
     );
@@ -186,82 +190,102 @@ export const LinkageSidebar = (props: LinkageSidebarPropType) => {
     setFetchData(false);
   }
 
-  const handleIdClick = (id:string)=>{
+  const handleIdClick = (id: string) => {
     dispatch(
       setSideBar({
         sidebarType: "editMode",
         createModeCalledByField: "",
         fieldId: id,
-        linkedData:[],
-        id:id,
+        linkedData: [],
+        id: id,
       })
     );
-  }
+  };
 
-  const createNewsLink = (parentId:string)=>{
-      dispatch(
-        setSideBar({
-          sidebarType: "createNewsLink",
-          parentId: parentId,
-          id:generateRandomId(),
-          linkedData:[],
-          createModeCalledByField:"all"
-        })
-      );
-  }
+  const createNewsLink = (parentId: string) => {
+    dispatch(
+      setSideBar({
+        sidebarType: "createNewsLink",
+        parentId: parentId,
+        id: generateRandomId(),
+        linkedData: [],
+        createModeCalledByField: "all",
+      })
+    );
+    setIsButtonClicked(true);
+  };
 
-  return (
-    <div
-      className="flex flex-col justify-between h-screen bg-sidebar_bg backdrop-filter backdrop-blur-lg bg-opacity-60 border border-primary_font_color 
+  if (props.tabColaps ) {
+    return (
+      <div
+        className="[writing-mode:vertical-rl] h-full w-[50px] flex  justify-center items-center text-xl  cursor-pointer bg-background_color border-r-2  py-4"
+        onClick={() => {
+          props.setColapsTabBar(props.index);
+        }}
+      >
+        {"Link Sidebar"}
+      </div>
+    );
+  } else {
+    return (
+      <div
+        className="flex w-[400px] flex-col justify-between h-screen bg-sidebar_bg backdrop-filter backdrop-blur-lg bg-opacity-60 border border-primary_font_color 
     p-4 pb-8    pt-12
     "
-    >
+      >
+        <CustomButton
+          icon={"close"}
+          onClick={handleClose}
+          className="absolute right-3 top-3 flex items-center justify-center p-1 text-white hover:text-red-400"
+        />
 
-      <CustomButton icon={"close"} onClick={handleClose} className="absolute right-3 top-3 flex items-center justify-center p-1 text-white hover:text-red-400"/>
-      
-
-      <Select
-        closeMenuOnSelect={false}
-        hideSelectedOptions={false}
-        controlShouldRenderValue={false}
-        placeholder="Search for item"
-        isMulti
-        options={options}
-        styles={customStyles}
-        getOptionLabel={(option) => option.label}
-        isOptionSelected={(option) =>
-          selectedOptions.some(
-            (selectedOption: optionsType) =>
-              selectedOption.value === option.value
-          )
-        }
-        components={{ Option: ShowItem }}
-        onChange={(value) => {
-          handleSelectChange(value);
-        }}
-      />
-  <section className="">
-      <div className=" border border-white/20 flex flex-col gap-2 p-4 text-white max-h-[90%] rounded-md mt-4 mb-2">
-        <p className="font-bold text-2xl">Linked Items</p>
-        <div className="max-h-1/5 overflow-auto">
-          {selectedOptions.length === 0 && (
-            <p className="text-white/50">No items linked</p>
-          )}
-          {selectedOptions.length > 0 &&
-            selectedOptions.map((item: optionsType, id: number) => (
-              <div
-                className="text-white bg-background_color p-3 rounded-md border border-white/10"
-                key={id}
-                onClick={()=>handleIdClick(item.value)}
-              >
-                <IdComponent itemId={item.value} color={item.color} />
-                {item.title}
-              </div>
-            ))}
-        </div>
+        <Select
+          closeMenuOnSelect={false}
+          hideSelectedOptions={false}
+          controlShouldRenderValue={false}
+          placeholder="Search for item"
+          isMulti
+          options={options}
+          styles={customStyles}
+          getOptionLabel={(option) => option.label}
+          isOptionSelected={(option) =>
+            selectedOptions.some(
+              (selectedOption: optionsType) =>
+                selectedOption.value === option.value
+            )
+          }
+          components={{ Option: ShowItem }}
+          onChange={(value) => {
+            handleSelectChange(value);
+          }}
+        />
+        <section className="">
+          <div className=" border border-white/20 flex flex-col gap-2 p-4 text-white max-h-[90%] rounded-md mt-4 mb-2">
+            <p className="font-bold text-2xl">Linked Items</p>
+            <div className="max-h-1/5 overflow-auto">
+              {selectedOptions.length === 0 && (
+                <p className="text-white/50">No items linked</p>
+              )}
+              {selectedOptions.length > 0 &&
+                selectedOptions.map((item: optionsType, id: number) => (
+                  <div
+                    className="text-white bg-background_color p-3 rounded-md border border-white/10"
+                    key={id}
+                    onClick={() => handleIdClick(item.value)}
+                  >
+                    <IdComponent itemId={item.value} color={item.color} />
+                    {item.title}
+                  </div>
+                ))}
+            </div>
+          </div>
+          <CustomButton
+            dissabled={isButtonClicked}
+            onClick={() => createNewsLink(linkedCalledByID!)}
+            label={"Create New Link"}
+          />
+        </section>
       </div>
-      <CustomButton onClick={()=>createNewsLink(linkedCalledByID!)} label={"Create New Link"} />
-      </section>
-    </div>
-  );
+    );
+  }
 };

@@ -12,6 +12,8 @@ declare global {
 		fieldName?:string;
 		id?:string;
 		linkedData?:string[];
+		columnName?:string;
+		parentId?:string;
 	  };
 	type TYPE_TAG = {
 		color: string; //hash code of color
