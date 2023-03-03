@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
 import logoSvg from "../../assets/logo.svg";
 import {  get_user_by_id, get_organization_name_by_id } from "../../Utils/Backend";
 
 import InviteUserComponent from "./InviteUserComponent";
 import { SearchComponent } from "./SearchComponent";
+import { setUserId } from "../../redux/reducers/AuthSlice";
+import { useNavigate } from "react-router-dom";
 
 interface TYPE_HeaderProps {
 	showNotification: boolean;
@@ -15,6 +17,8 @@ interface TYPE_HeaderProps {
 const Header = (props: TYPE_HeaderProps) => {
 	const userId = useAppSelector((state) => state.auth.userId);
 	const organizationId = useAppSelector((state) => state.auth.organisationId);
+	const dispatch = useAppDispatch();
+	const navigate =useNavigate();
 
 	const [userData, setUserData] = useState<TYPE_USER>({
 		id: "",
@@ -56,6 +60,12 @@ const Header = (props: TYPE_HeaderProps) => {
 	const handleInviteUerButtonClick = () => {
 		setIsInviteUserComponentOpen(!isInviteUserComponentOpen);
 	};
+
+	const handleLogout = () => {
+		sessionStorage.clear();
+		dispatch(setUserId(""));
+		navigate('/login');
+	}
 
 	useEffect(() => {
 		get_organization_name_by_id(organizationId).then((data) => {
@@ -104,7 +114,7 @@ const Header = (props: TYPE_HeaderProps) => {
 						/>
 					)}
 				</div>
-				<div className="relative text-white/20 cursor-pointer  flex flex-col item-center transition-all">
+				{/* <div className="relative text-white/20 cursor-pointer  flex flex-col item-center transition-all">
 					<span
 						className="material-symbols-outlined hover:text-white"
 						onClick={() => toggleSettingOptionMenu()}
@@ -126,12 +136,36 @@ const Header = (props: TYPE_HeaderProps) => {
 							</span>
 						</div>
 					</div>
+				</div> */}
+				<div className="relative cursor-pointer  flex flex-col item-center transition-all">
+					<button
+						onClick={() => toggleSettingOptionMenu()}
+					>
+						<img
+							className="max-w-[35px] max-h-[35px] min-w-[35px] min-h-[35px]  rounded-full cursor-pointer transition-all"
+							src={`${userData.avatar}`}
+							alt={`${userData.name}`}
+						/>	
+					</button>
+					<div
+						className={`top-[36px] right-0 absolute flex flex-col gap-[0.3rem] w-[200px] bg-Secondary_background_color overflow-auto border border-white/30 rounded-md z-50 ${
+							isSettingOptionMenuOpen ? "flex" : "hidden"
+						}`}
+					>
+						<div className="w-full flex items-center justify-between p-[0.5rem] border-b border-white/30 transition-all ">
+							<p className="text-white/50">{userData.name}</p>
+							<span
+								onClick={() => toggleSettingOptionMenu()}
+								className="material-symbols-outlined text-[17px] text-white/50 hover:text-rose-500"
+							>
+								close
+							</span>
+						</div>
+						<ul className="text-white/80 w-full">
+							<li className="p-2 hover:bg-[#262626]"><button className="w-full" onClick={()=>handleLogout()}>Log Out</button></li>
+						</ul>
+					</div>
 				</div>
-				<img
-					className="max-w-[35px] max-h-[35px] min-w-[35px] min-h-[35px]  rounded-full cursor-pointer transition-all"
-					src={`${userData.avatar}`}
-					alt={`${userData.name}`}
-				/>
 			</div>
 		</div>
 	);

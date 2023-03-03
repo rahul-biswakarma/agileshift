@@ -60,6 +60,8 @@ const DataTable = () => {
           sidebarType: "editMode",
           createModeCalledByField: "",
           fieldId: rowData.id,
+          linkedData:[],
+          id:rowData.id,
         })
       );
     },

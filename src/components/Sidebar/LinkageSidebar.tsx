@@ -1,34 +1,50 @@
 import Select from "react-select";
 import { useCallback, useState } from "react";
 import { ShowItem } from "./ShowItem";
-import { get_data_by_column_name, get_schema_data, get_schema_data_field } from "../../Utils/Backend";
+import {
+  get_data_by_column_name,
+  get_schema_data,
+  get_schema_data_field,
+} from "../../Utils/Backend";
 import { IdComponent } from "../DataTable/idComponent";
-import { setNewSidBar } from "../../redux/reducers/SideBarSlice";
+import { setNewSidBar, setSideBar } from "../../redux/reducers/SideBarSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import close_icon from "../../assets/icons/close_icon.svg";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-
+import {
+  formatDataToTypeField,
+  formatSchemaDataToTypeField,
+  generateRandomId,
+  getLinkedData,
+  setLinkedData,
+} from "../../Utils/HelperFunctions";
+import CustomButton from "../common/Button";
 
 type LinkageSidebarPropType = {
   sidebar: Type_SidebarState;
-  index:number;
+  index: number;
 };
 
 export const LinkageSidebar = (props: LinkageSidebarPropType) => {
-
   const sideBarList: Type_SidebarState[] = useSelector(
     (state: RootState) => state.sidebar.sideBarData
   );
+
   const dispatch = useAppDispatch();
+  const linkedCalledByID = props.sidebar.linkedCalledByID;
+  const organisationId = useAppSelector(
+    (state: RootState) => state.auth.organisationId
+  );
 
-  const organisationId = useAppSelector((state:RootState)=>state.auth.organisationId);
-
-  
+  const getIdArray = (selectedOptions: optionsType[]) => {
+    let Ids: string[] = [];
+    for (let option of selectedOptions) {
+      Ids.push(option.id);
+    }
+    return Ids;
+  };
 
   const [fetchData, setFetchData] = useState(true);
-
-
 
   type optionsType = {
     value: string;
@@ -80,26 +96,35 @@ export const LinkageSidebar = (props: LinkageSidebarPropType) => {
 
   const handleSelectChange = (selected: any) => {
     setSelectedOptions(selected);
+    setLinkedData(
+      sideBarList,
+      dispatch,
+      linkedCalledByID!,
+      getIdArray(selected)
+    );
   };
 
-  const formatSchemaDataToTypeField = (data: any) => {
-    let formattedData: TYPE_FIELD[] = [];
-    for (let item of data) {
-      formattedData.push(formatDataToTypeField(item));
+  const formatOptions = (allData: any, schemaData: any) => {
+    let formattedData: optionsType[] = [];
+    for (let data of allData) {
+      let color = getColorFromSchemaData(
+        formatSchemaDataToTypeField(schemaData!["schemaData"]),
+        data["field"]
+      );
+      let title = getTitleFromSchemaData(
+        formatSchemaDataToTypeField(schemaData!["schemaData"]),
+        data["field"]
+      );
+      formattedData.push({
+        value: data["id"],
+        label: data[title],
+        id: data["id"],
+        color: color,
+        title: data[title],
+      });
     }
     return formattedData;
   };
-
-  const formatDataToTypeField=(data:any)=>{
-    let formattedData:TYPE_FIELD={
-      name: data["name"],
-        list: data["list"],
-        icon: data["icon"],
-        linkage: data["linkage"],
-        color: data["color"],
-    };
-return formattedData;
-  }
 
   const getTitleFromSchemaData = useCallback(
     (schemaData: TYPE_FIELD[], name: string) => {
@@ -137,57 +162,64 @@ return formattedData;
   };
 
   const getAllData = async () => {
-    console.log("fetching data");
 
-    let field=formatDataToTypeField(await get_schema_data_field(organisationId,props.sidebar.fieldName!));
+    let field = formatDataToTypeField(
+      await get_schema_data_field(organisationId, props.sidebar.fieldName!)
+    );
 
     let allData = await get_data_by_column_name(organisationId, "all");
+
+    let selectedData = allData.filter((data: any) =>
+      getLinkedData(sideBarList, linkedCalledByID!)?.includes(data.id)
+    );
+
     allData = allData.filter((data: any) =>
       field.linkage.includes(data["field"])
     );
 
     const schemaData = await get_schema_data(organisationId);
-    let formattedData = [];
-    for (let data of allData) {
-      let color = getColorFromSchemaData(
-        formatSchemaDataToTypeField(schemaData!["schemaData"]),
-        data["field"]
-      );
-      let title = getTitleFromSchemaData(
-        formatSchemaDataToTypeField(schemaData!["schemaData"]),
-        data["field"]
-      );
-      formattedData.push({
-        value: data["id"],
-        label: data[title],
-        id: data["id"],
-        color: color,
-        title: data[title],
-      });
-    }
-    setOptions(formattedData);
-    
+    setOptions(formatOptions(allData, schemaData));
+    setSelectedOptions(formatOptions(selectedData, schemaData));
   };
   if (fetchData) {
     getAllData();
     setFetchData(false);
   }
+
+  const handleIdClick = (id:string)=>{
+    dispatch(
+      setSideBar({
+        sidebarType: "editMode",
+        createModeCalledByField: "",
+        fieldId: id,
+        linkedData:[],
+        id:id,
+      })
+    );
+  }
+
+  const createNewsLink = (parentId:string)=>{
+      dispatch(
+        setSideBar({
+          sidebarType: "createNewsLink",
+          parentId: parentId,
+          id:generateRandomId(),
+          linkedData:[],
+          createModeCalledByField:"all"
+        })
+      );
+  }
+
   return (
     <div
-      className="flex flex-col justify-between h-screen bg-sidebar_bg backdrop-filter backdrop-blur-lg bg-opacity-60 border border-primary_font_color
-    p-4
-    pt-12
-    ">
-      <button
-            onClick={handleClose}
-            className="absolute right-3 top-3 rounded-full w-8 h-8 hover:border-2 active:bg-slate-800 flex items-center justify-center p-1 hover:bg-primary_font_color cursor-pointer"
-          >
-            <img
-              src={close_icon}
-              alt="close Icon"
-              className="w-4 h-4 text-white"
-            />
-          </button>
+      className="flex flex-col justify-between h-screen bg-sidebar_bg backdrop-filter backdrop-blur-lg bg-opacity-60 border border-primary_font_color 
+    p-4 pb-8    pt-12
+    "
+    >
+
+      <CustomButton icon={"close"} onClick={handleClose} className="absolute right-3 top-3 flex items-center justify-center p-1 text-white hover:text-red-400"/>
+      
+
       <Select
         closeMenuOnSelect={false}
         hideSelectedOptions={false}
@@ -208,8 +240,8 @@ return formattedData;
           handleSelectChange(value);
         }}
       />
-
-      <div className=" border border-white/20 flex flex-col gap-2 p-4 text-white max-h-[90%] rounded-md mt-4">
+  <section className="">
+      <div className=" border border-white/20 flex flex-col gap-2 p-4 text-white max-h-[90%] rounded-md mt-4 mb-2">
         <p className="font-bold text-2xl">Linked Items</p>
         <div className="max-h-1/5 overflow-auto">
           {selectedOptions.length === 0 && (
@@ -219,14 +251,17 @@ return formattedData;
             selectedOptions.map((item: optionsType, id: number) => (
               <div
                 className="text-white bg-background_color p-3 rounded-md border border-white/10"
-                key={id}>
+                key={id}
+                onClick={()=>handleIdClick(item.value)}
+              >
                 <IdComponent itemId={item.value} color={item.color} />
                 {item.title}
               </div>
             ))}
         </div>
       </div>
+      <CustomButton onClick={()=>createNewsLink(linkedCalledByID!)} label={"Create New Link"} />
+      </section>
     </div>
   );
 };
-

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "../../redux/store";
-import { create_schema } from "../../Utils/Backend";
+import { create_schema, get_schema_data } from "../../Utils/Backend";
 import { OrganisationForm } from "../ManageOrganization/OrganisationForm";
 import { NewSchema } from "./NewSchema";
 import { SchemaGenerator } from "./SchemaGenerator";
@@ -25,6 +25,17 @@ export const GeneratorFormsContainer = () => {
 		}
 	}, [navigate, userId]);	
 
+  const orgId = useAppSelector((state) => state.auth.organisationId);
+
+  useEffect(()=>{
+    if(orgId){
+      get_schema_data(orgId).then((data)=> {
+        console.log(data)
+        if(data) setFields(data.schemaData);
+      })
+    }
+  }, [orgId])
+
 
   let activeTab = useAppSelector((state: RootState) => state.schema.activeTab);
 
@@ -45,7 +56,7 @@ export const GeneratorFormsContainer = () => {
 
   // const [activeTab, dispatch(setActiveTab(] = useState(-1));
 
-  const [fields, setFields] = useState<TYPE_FIELD[]>([
+  const [fields, setFields] = useState<any>([
     {
       list: makeActualCopy(defaultColumnList),
       name: "Tickets",
@@ -92,11 +103,11 @@ export const GeneratorFormsContainer = () => {
   // 	setFields(tempFields);
   // }
 
-  // function changeLinkage(this: any, link: string[]) {
-  // 	let tempFields = [...fields];
-  // 	tempFields[this.id].linkage = link;
-  // 	setFields(tempFields);
-  // }
+  function changeLinkage(this: any, link: string[]) {
+  	let tempFields = [...fields];
+  	tempFields[this.id].linkage = link;
+  	setFields(tempFields);
+  }
 
   // function removeLinkage(this: any, link: string) {
   // 	let tempFields = [...fields];
@@ -111,7 +122,12 @@ export const GeneratorFormsContainer = () => {
 
   const submitSchema = () => {
     create_schema(organisationId, fields, false);
-    navigate(`/organization/${organisationId}`);
+    toast("Creating Schema");
+    setTimeout(() => {
+      toast("Schema Created Successfully");
+      navigate(`/organization/${organisationId}`);
+    }, 1000);
+    
   };
 
   const addSchema = () => {
@@ -139,7 +155,7 @@ export const GeneratorFormsContainer = () => {
     let currentField = fields[this.id];
     if (currentField.name === "") return;
     let newField: TYPE_FIELD = {
-      name: "",
+      name: `${currentField.name} Duplicate`,
       list: makeActualCopy(currentField.list),
       color: currentField.color,
       icon: currentField.icon,
@@ -176,7 +192,7 @@ export const GeneratorFormsContainer = () => {
       <SchemaGeneratorFormHeader />
       <div className="relative w-screen h-[calc(100vh-40px)] flex divide-x divide-dark_gray">
         <OrganisationForm />
-        {fields.map((field, id) => (
+        {fields.map((field:any, id:any) => (
           <SchemaGenerator
             id={id}
             name={field.name}
@@ -192,6 +208,7 @@ export const GeneratorFormsContainer = () => {
             changeColor={changeColor.bind({ id: id })}
             icon={field.icon}
             changeIcon={changeIcon.bind({ id: id })}
+            changeLinkage={changeLinkage.bind({id:id})}
           />
         ))}
         <NewSchema addSchema={addSchema} />

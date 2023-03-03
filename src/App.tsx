@@ -26,14 +26,10 @@ const App = () => {
 	return (
 		<BrowserRouter>
 			<ToastContainer 
-				toastStyle={{ backgroundColor: "#1F1F1F", border:"1px solid #80808050", color: "white!important" }}
-				className="font-dm_sans"
-				toastClassName={()=>"rounded-md !bg-[#1F1F1F] !text-white font-dm_sans"}
-				bodyClassName={()=>"bg-[#1F1F1F] !text-white w-full font-dm_sans"}
 				position="bottom-right"
 			/>
 			{sideBarList.length !== 0 && (
-				<section className="fixed z-50">
+				<section className="fixed right-0 z-50">
 					<SideBarScreen />
 				</section>
 			)}
