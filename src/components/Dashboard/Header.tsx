@@ -8,11 +8,13 @@ import InviteUserComponent from "./InviteUserComponent";
 import { SearchComponent } from "./SearchComponent";
 import { setUserId } from "../../redux/reducers/AuthSlice";
 import { useNavigate } from "react-router-dom";
+import { Tooltip } from "@mui/material";
 
 interface TYPE_HeaderProps {
 	showNotification: boolean;
 	setShowNotification: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
 
 const Header = (props: TYPE_HeaderProps) => {
 	const userId = useAppSelector((state) => state.auth.userId);
@@ -113,30 +115,36 @@ const Header = (props: TYPE_HeaderProps) => {
 			<SearchComponent />
 
 			<div className="flex gap-[2rem] items-center">
-				<button
-					className={`${props.showNotification ? "text-white": "text-white/20" } material-symbols-outlined cursor-pointer hover:text-white transition-all`}
-					onClick={() => handleNotificationToggle()}
-				>
-					notifications
-				</button>
-				<div className="flex gap-[1rem] items-center transition-all">
+				<Tooltip title="Notifications" placement="top">
 					<button
-						style={{
-							color: `${
-								isInviteUserComponentOpen ? "white" : "rgba(255, 255, 255, 0.2)"
-							}`,
-						}}
-						onClick={() => handleInviteUerButtonClick()}
-						className="material-symbols-outlined text-white/20 hover:text-white transition-all"
+						className={`${props.showNotification ? "text-white": "text-white/20" } material-symbols-outlined cursor-pointer hover:text-white transition-all`}
+						onClick={() => handleNotificationToggle()}
 					>
-						person_add
+						notifications
 					</button>
+				</Tooltip>
+				
+				<Tooltip title="Invite Member" placement="top">
+				<div className="flex gap-[1rem] items-center transition-all hover:text-white">
+						<button
+							style={{
+								color: `${
+									isInviteUserComponentOpen ? "white" : "rgba(255, 255, 255, 0.2)"
+								}`,
+							}}
+							onClick={() => handleInviteUerButtonClick()}
+							className="material-symbols-outlined transition-all"
+						>
+							person_add
+						</button>
 					{isInviteUserComponentOpen && (
 						<InviteUserComponent
 							setIsInviteUserComponentOpen={setIsInviteUserComponentOpen}
 						/>
 					)}
+					
 				</div>
+				</Tooltip>
 				{/* <div className="relative text-white/20 cursor-pointer  flex flex-col item-center transition-all">
 					<span
 						className="material-symbols-outlined hover:text-white"

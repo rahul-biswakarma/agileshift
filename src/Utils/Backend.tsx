@@ -413,7 +413,7 @@ export const add_organisation_to_user = async (
     users: arrayUnion(userId),
   });
 
-  if (page === "invitations") {
+  if (page === "invitations ") {
     const docRef = doc(db, "invitations", email);
     const docSnap = await getDoc(docRef);
     let dataDetails: any = [];
@@ -945,23 +945,31 @@ export const get_dark_background_color_from_name = (name: string) => {
 };
 
 // check if user is present in organizations
-export const check_user_in_organizations = async (
-  email: string,
-  organisationId: string
-) => {
-  const q = query(collection(db, "users"), where("email", "==", email));
-  const querySnapshot = await getDocs(q);
-  let isUserExit = false;
-  let userData: any = {};
-  querySnapshot.forEach((doc) => {
-    userData = doc.data();
-  });
-  try {
-    isUserExit = userData["organisation"].includes(organisationId);
-  } catch {
-    isUserExit = false;
-  }
-  return isUserExit;
+export const check_user_in_organizations = async (email: string,organisationId:string) => {
+	const q = query(collection(db, "users"), where("email", "==", email));
+	const querySnapshot = await getDocs(q);
+	let isUserExit = false;
+	let userData:any={}; 
+	querySnapshot.forEach((doc) => {
+		userData = doc.data(); 
+		if(userData["organisation"].includes(organisationId))
+			isUserExit = true
+		userData = doc.id
+	});
+	// try{
+	// 	isUserExit=userData["organisation"].includes(organisationId)
+	// }
+	// catch{
+	// 	// isUserExit=false
+	// 	console.log("No Document found");
+		
+	// }
+	console.log(isUserExit);
+	
+	return {
+		isUser:isUserExit,
+		userId:userData
+	}; 
 };
 
 //32  get user suggestions

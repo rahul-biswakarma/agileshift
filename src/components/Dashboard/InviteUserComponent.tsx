@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAppSelector } from "../../redux/hooks";
 import { toast } from "react-toastify";
-import { check_user_in_organizations, get_user_by_email, send_invite  } from "../../Utils/Backend";
+import { check_user_in_organizations, get_user_by_email, send_invite, set_notification  } from "../../Utils/Backend";
 
 type Type_InviteUserComponentProps = {
 	setIsInviteUserComponentOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -27,6 +27,30 @@ const InviteUserComponent = (props: Type_InviteUserComponentProps) => {
 		setError(!emailRegex.test(event.target.value));
 	};
 
+	// const sendInivitation = async (email: string) => {
+	// 	if (email === "") {
+	// 	  toast.warning("Enter email first");
+	// 	  setError(true);
+	// 	  return;
+	// 	}
+	  
+	// 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	// 	setError(!emailRegex.test(email));
+	// 	if (!emailRegex.test(email)) {
+	// 	  toast.error("Invalid Email");
+	// 	  return;
+	// 	}
+	// 	let userData = await check_user_in_organizations(email,organizationId);
+	// 	if(userData === false) {
+	// 		toast.success("Invitation sent");
+	// 	props.setIsInviteUserComponentOpen(false);
+	// 	send_invite(userId, email, organizationId);
+	// 	}else{
+	// 		console.log(get_user_by_email(email)); toast("User already exists!");
+	// 	}
+		
+	// }
+
 	const sendInivitation = async (email: string) => {
 		if (email === "") {
 		  toast.warning("Enter email first");
@@ -40,14 +64,22 @@ const InviteUserComponent = (props: Type_InviteUserComponentProps) => {
 		  toast.error("Invalid Email");
 		  return;
 		}
-			let userData = await check_user_in_organizations(email,organizationId);
-		if(userData === false) {toast.success("Invitation sent");
-		props.setIsInviteUserComponentOpen(false);
-		send_invite(userId, email, organizationId);
-	}else{
-			console.log(get_user_by_email(email)); toast("User already exists!");}
-		
+	  
+		const userData = await check_user_in_organizations(email, organizationId);
+		if (!userData.isUser) {
+		  toast.success("Invitation sent");
+		  props.setIsInviteUserComponentOpen(false);
+		  send_invite(userId, email, organizationId);
+	  
+		  // Send notification to invited user
+		  const notificationData = `You have been invited to join organization ${organizationId}.`;
+		  if(userData.userId)
+		  	await set_notification(organizationId, [userData.userId], [notificationData]);
+		} else {
+		  toast.error("User already exists!");
 		}
+	  };
+	  
 	  
 		
 	  
