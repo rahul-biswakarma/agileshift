@@ -4,7 +4,11 @@ import SchemaSlice from "./reducers/SchemaSlice";
 import SideBarSlice from "./reducers/SideBarSlice";
 import DataTableSlice from "./reducers/DataTableSlice";
 import IconsSlice from "./reducers/IconsSlice";
+<<<<<<< HEAD
 import ColorSlice from "./reducers/ColorSlice";
+=======
+import VistaSlice from "./reducers/VistaSlice";
+>>>>>>> 4e50886db577935d07fa0922c7f500b386342f6d
 
 export const store = configureStore({
 	reducer: {
@@ -13,7 +17,11 @@ export const store = configureStore({
 		sidebar: SideBarSlice,
 		datatable: DataTableSlice,
 		icons: IconsSlice,
+<<<<<<< HEAD
 		colors: ColorSlice,
+=======
+		vista:VistaSlice
+>>>>>>> 4e50886db577935d07fa0922c7f500b386342f6d
 	},
 });
 
