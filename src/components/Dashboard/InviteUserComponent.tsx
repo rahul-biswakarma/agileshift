@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAppSelector } from "../../redux/hooks";
 import { toast } from "react-toastify";
-import { send_invite } from "../../Utils/Backend";
+import { check_user_in_organizations, get_user_by_email, get_user_by_id, get_user_suggestions, send_invite  } from "../../Utils/Backend";
 
 type Type_InviteUserComponentProps = {
 	setIsInviteUserComponentOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -13,6 +13,9 @@ const InviteUserComponent = (props: Type_InviteUserComponentProps) => {
 
 	const organizationId = useAppSelector((state) => state.auth.organisationId);
 	const userId = useAppSelector((state) => state.auth.userId);
+	get_user_by_email(email).then((data) => console.log(data))
+	// get_user_by_id(userId).then((data) => console.log(data));
+	// get_user_suggestions(organizationId).then((data) => console.log(data))
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setEmail(event.target.value);
@@ -24,23 +27,31 @@ const InviteUserComponent = (props: Type_InviteUserComponentProps) => {
 		setError(!emailRegex.test(event.target.value));
 	};
 
-	const sendInivitation = (email: string) => {
+	const sendInivitation = async (email: string) => {
 		if (email === "") {
-			toast.warning("Enter email first");
-			setError(true);
-			return;
+		  toast.warning("Enter email first");
+		  setError(true);
+		  return;
 		}
+	  
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 		setError(!emailRegex.test(email));
 		if (!emailRegex.test(email)) {
-		toast.error("Invalid Email");
-			return;
+		  toast.error("Invalid Email");
+		  return;
 		}
-		toast.success("Invitation sent");
+			let userData = await check_user_in_organizations(email,organizationId);
+		if(userData === false) {toast.success("Invitation sent");
 		props.setIsInviteUserComponentOpen(false);
-
 		send_invite(userId, email, organizationId);
-	};
+	}else{
+			console.log(get_user_by_email(email)); toast("User already exists!");}
+		
+		}
+	  
+		
+	  
+	  
 
 	return (
 		<div className="p-[2px] relative min-w-[250px] flex justify-between items-center border-[1.5px] border-white/10 rounded-md bg-Secondary_background_color transition-all">

@@ -917,4 +917,21 @@ export const get_dark_background_color_from_name = (name: string) => {
 	else return "#282230";
 };
 
+// check if user is present in organizations
+export const check_user_in_organizations = async (email: string,organisationId:string) => {
+	const q = query(collection(db, "users"), where("email", "==", email));
+	const querySnapshot = await getDocs(q);
+	let isUserExit = false
+	let userData:any={}; 
+	querySnapshot.forEach((doc) => {
+		userData = doc.data(); 
+	});
+	try{
+		isUserExit=userData["organisation"].includes(organisationId)
+	}
+	catch{
+		isUserExit=false
+	}
+	return isUserExit; 
+};
 
