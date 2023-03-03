@@ -55,16 +55,7 @@ export const SchemaGenerator = ({
   changeIcon,
   changeLinkage,
 }: GeneratorPropTypes) => {
-  const colorList = [
-    "purple",
-    "slate",
-    "red",
-    "amber",
-    "lime",
-    "cyan",
-    "indigo",
-    "pink",
-  ];
+  const colorList = useAppSelector((state)=> state.colors.colors)
   const [selectedOptions, setSelectedOptions] = useState([]);
 
 	const [showModal , setShowModal] = useState(false);

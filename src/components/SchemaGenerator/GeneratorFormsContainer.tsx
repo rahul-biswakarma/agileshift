@@ -153,7 +153,10 @@ export const GeneratorFormsContainer = () => {
 
   function duplicateSchema(this: any) {
     let currentField = fields[this.id];
-    if (currentField.name === "") return;
+    if (currentField.name === "") {
+      toast.error("Cannot duplicate a schema with no name!")
+      return
+    };
     let newField: TYPE_FIELD = {
       name: `${currentField.name} Duplicate`,
       list: makeActualCopy(currentField.list),
@@ -166,6 +169,7 @@ export const GeneratorFormsContainer = () => {
       .concat(newField, fields.slice(this.id + 1));
     setFields(duplicatedArray);
     dispatch(setActiveTab(activeTab + 1));
+    toast.success("Schema duplicated successfulyy")
   }
 
   function deleteSchema(this: any) {
