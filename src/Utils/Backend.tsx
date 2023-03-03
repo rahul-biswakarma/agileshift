@@ -898,6 +898,7 @@ export const get_vista_from_id = async (vistaId:string) =>{
   }
   return {};
 }
+
 // 39 link data to parent data
 export const link_data_to_parent_data = async (organizationId:string,childId:string,parentId:string)=>{
 	let parentData:any = await get_data_byID(organizationId,parentId)

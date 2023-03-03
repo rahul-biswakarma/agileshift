@@ -78,12 +78,20 @@ const Filter = ({filters, modifyData}: TYPE_FilterProps) => {
 	};
 
     const resetFilters = () => {
-        const resetFilterSchema = [...filterSchema];
-        resetFilterSchema.forEach((filterObj) => {
+        const resetFilterSchema:TYPE_Filters[] = [];
+        filterSchema.forEach((filterObj) => {
+			const filterObjs = {...filterObj};
+			const filterObjsData:TYPE_FilterOption[] = [];
             filterObj.data.forEach((filterOptionObj) => {
-                filterOptionObj.active = false;
+				let filterOptionObjs = {...filterOptionObj}
+                filterOptionObjs.active = false;
+				filterObjsData.push(filterOptionObjs);
             });
+			filterObjs.data = filterObjsData;
+			resetFilterSchema.push(filterObjs);
         });
+
+		console.log(resetFilterSchema)
         setFilterSchema(resetFilterSchema);
 		modifyData(resetFilterSchema);
     }
@@ -93,7 +101,7 @@ const Filter = ({filters, modifyData}: TYPE_FilterProps) => {
 			setFilterSchema(filterSchemaFromStore);
 			modifyData(filterSchemaFromStore);
 		}
-	},[filterSchemaFromStore, modifyData])
+	},[filterSchemaFromStore, modifyData]);
 
 	return (
 		<div className="w-screen h-auto bg-[#161616] text-[#808080]">
@@ -209,7 +217,6 @@ const Filter = ({filters, modifyData}: TYPE_FilterProps) => {
 							Clear
 						</button>
 						<VistaPopup filterSchema={filterSchema} />
-						
 				</div>
 			</div>
 		</div>

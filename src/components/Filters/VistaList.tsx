@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { setTabName } from '../../redux/reducers/DataTableSlice';
 import { setFilterSchema } from '../../redux/reducers/VistaSlice';
 import { get_user_by_id, get_vista_from_id } from '../../Utils/Backend';
 
@@ -39,13 +40,14 @@ const VistaList = () => {
                 console.log(visObj);
                 visList.push(visObj);
             }
-            
+
             setVistaList(visList);
         }
         getInfo();
     },[organizationId, userId, tabName]);
 
     const handleClick = (filterSchema: TYPE_Filters[], type:string) => {
+        dispatch(setTabName(type));
         dispatch(setFilterSchema(filterSchema));
     }
 
