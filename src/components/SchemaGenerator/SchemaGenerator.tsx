@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {  useState, useEffect } from "react";
 import {
 	FormControl,
 	InputLabel,
@@ -14,6 +14,9 @@ import UploadJSON from "../UploadJSON";
 import { RootState } from "../../redux/store";
 import { setActiveTab } from "../../redux/reducers/SchemaSlice";
 import SelectIconComponent from "./SelectIconComponent";
+import {  get_dark_background_color_from_name } from "../../Utils/Backend";
+import { toast } from "react-toastify";
+import { useDebounceCallback } from "../../Utils/useDebounce";
 
 require("tailwindcss-writing-mode")({
   variants: ["responsive", "hover"],
@@ -33,6 +36,7 @@ type GeneratorPropTypes = {
   changeColor: (this: any, color: string) => void;
   icon: string;
   changeIcon: (this: any, icon: string) => void;
+  changeLinkage:(this: any, link: string[])=> void
 };
 
 export const SchemaGenerator = ({
@@ -49,20 +53,15 @@ export const SchemaGenerator = ({
   changeColor,
   icon,
   changeIcon,
+  changeLinkage,
 }: GeneratorPropTypes) => {
-  const colorList = [
-    "purple",
-    "slate",
-    "red",
-    "amber",
-    "lime",
-    "cyan",
-    "indigo",
-    "pink",
-  ];
+  const colorList = useAppSelector((state)=> state.colors.colors)
   const [selectedOptions, setSelectedOptions] = useState([]);
 
 	const [showModal , setShowModal] = useState(false);
+  const [selectedColor, setSelectedColor]=  useState("");
+
+  // const organizationId = useAppSelector((state) => state.auth.organisationId);
 
 	const handleDeleteClick = () => {
 	  setShowModal(true);
@@ -82,13 +81,64 @@ export const SchemaGenerator = ({
 		const {
 			target: { value },
 		} = event;
+    changeLinkage(value);
 		setSelectedOptions(typeof value === "string" ? value.split(",") : value);
+
 	};
 
   const activeTab = useAppSelector(
     (state: RootState) => state.schema.activeTab
   );
   const dispatch = useAppDispatch();
+
+  
+
+  const handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+    const fieldName = getAllFieldsName();
+    
+    console.log(fieldName); // log the fieldName array to the console
+
+    let similarNameCount = 0;
+    fieldName.forEach(name => {
+      if(name.toLowerCase() === e.target.value.toLowerCase()) similarNameCount++;
+    });
+                
+    if (similarNameCount>=2) {
+        // perform validation logic here
+        toast.error(`${e.target.value} already exists`)
+    } 
+    
+
+  }
+
+  const dummyFunction = (e:React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+    debouncedCallback(e)
+  }
+  
+  const debouncedCallback = useDebounceCallback(handleInputChange, 200);
+
+  const checkSchema = () => {
+    const fieldName = getAllFieldsName();
+    console.log(fieldName);
+  
+    for (let i = 0; i < fieldName.length; i++) {
+      for (let j = i + 1; j < fieldName.length; j++) {
+        if (fieldName[i].toLowerCase() === fieldName[j].toLowerCase()) {
+          toast.error(`Duplicate field name detected: ${fieldName[i]}`);
+          return;
+        }
+      }
+    }
+  
+    submitSchema();
+  };
+
+  useEffect(()=>{
+    if(color) setSelectedColor(color);
+  }
+  , [color])
+  
 
 	if (activeTab === id)
 		return (
@@ -102,12 +152,13 @@ export const SchemaGenerator = ({
 							Case Name
 						</label>
 						<input
-							type="text"
-							value={name}
-							onChange={(e) => setName(e.target.value)}
-							placeholder="Case Name"
-							className="flex-1 font-fira_code text-[1rem] rounded-r-lg px-4 bg-Secondary_background_color h-10 outline-none placeholder:text-white/30 text-white/70"
-						/>
+              type="text"
+              value={name}
+              onChange={(e) => {dummyFunction(e)}}
+              placeholder="Case Name"
+              className="flex-1 font-fira_code text-[1rem] rounded-r-lg px-4 bg-Secondary_background_color h-10 outline-none placeholder:text-white/30 text-white/70"
+            />
+
 					</div>
 					<div className="absolute right-[1rem] flex gap-[1rem]">
 						<button
@@ -172,7 +223,7 @@ export const SchemaGenerator = ({
                 labelId="color-label-id"
                 label="Color"
                 value={color}
-                onChange={(e) => changeColor(e.target.value)}>
+                onChange={(e) => {setSelectedColor(e.target.value); changeColor(e.target.value)}}>
                 {colorList.map((color, id) => {
                   return (
                     <MenuItem key={id} value={color}>
@@ -211,10 +262,7 @@ export const SchemaGenerator = ({
                 labelId="associate-label-id"
                 label="Associates"
                 value={selectedOptions}
-                onChange={handleChange}
-                renderValue={(selected) => {
-                  return selected.join(", ");
-                }}>
+                onChange={handleChange}>
                 {getAllFieldsName().map((name) => (
                   <MenuItem key={name} value={name}>
                     {name}
@@ -240,7 +288,7 @@ export const SchemaGenerator = ({
             <button
               className="flex justify-center items-center p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm text-highlight_font_color border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 hover:text-purple-800 transition-all duration-200 ease-in-out
           "
-              onClick={submitSchema}>
+              onClick={checkSchema}>
               Submit Schema
             </button>
           )}
@@ -259,7 +307,9 @@ export const SchemaGenerator = ({
     );
   else
     return (
-      <div className="h-screen w-12 flex flex-wrap text-primary_font_color bg-Secondary_background_color">
+      <div style={{
+        background: selectedColor===""? "#1F1F1F" : get_dark_background_color_from_name(selectedColor),
+      }} className={`h-screen w-12 flex flex-wrap text-primary_font_color`}>
         <button
           className="h-full w-full"
           onClick={() => dispatch(setActiveTab(id))}>

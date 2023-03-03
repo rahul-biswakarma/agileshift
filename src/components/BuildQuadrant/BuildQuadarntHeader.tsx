@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
 import { setSideBar } from "../../redux/reducers/SideBarSlice";
 import { get_text_color_from_name } from "../../Utils/Backend";
+import { generateRandomId } from "../../Utils/HelperFunctions";
 
 const BuildQuadarntHeader = () => {
   const [hoveredButtonIndex, setHoveredButtonIndex] = useState(-1);
@@ -20,11 +21,9 @@ const BuildQuadarntHeader = () => {
   const dispatch = useAppDispatch();
 
   return (
-    <div className="relative bg-Secondary_background_color flex justify-between p-[1rem_2rem]">
-      <div className="font-fira_code text-[0.9rem] font-[600] text-white">
-        <div>
+    <div className="relative bg-Secondary_background_color flex items-center justify-between p-[1rem_2rem]">
+      <div className="font-fira_code text-[0.9rem] items-center font-[600] text-white">
           <span className="text-white/50">BUILD /</span> {tabName}
-        </div>
       </div>
       <button
         onClick={() => {
@@ -32,11 +31,13 @@ const BuildQuadarntHeader = () => {
             setSideBar({
               sidebarType: "createMode",
               createModeCalledByField: tabName,
+              id:generateRandomId(),
+              linkedData:[],
             })
           );
         }}
         style={buttonStyle}
-        className={` font-dm_sans text-[1rem] flex gap-[0.2rem] text-white/30 cursor-pointer rounded-sm hover:bg-Secondary_background_color`}
+        className={` font-dm_sans text-[1rem] flex items-center gap-[0.2rem] text-white/30 cursor-pointer rounded-sm hover:bg-Secondary_background_color`}
         onMouseOver={() => setHoveredButtonIndex(0)}
         onMouseOut={() => setHoveredButtonIndex(-1)}
       >

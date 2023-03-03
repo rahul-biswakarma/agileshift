@@ -15,6 +15,7 @@ import {
 	get_data_by_column_name,
 	get_text_color_from_name,
 } from "../../Utils/Backend";
+import VistaList from "../Filters/VistaList";
 
 interface Type_TabHeaderProps {
 	fieldsData: Array<TYPE_FIELD>;
@@ -95,6 +96,7 @@ const TabHeader = (props: Type_TabHeaderProps) => {
 					</button>
 				);
 			})}
+			<VistaList/>
 			<button
 				onClick={() => openSchemaEditForm()}
 				className={`p-[0.5rem_1.5rem] font-dm_sans text-[1rem] flex gap-[0.5rem] text-white/30 cursor-pointer rounded-sm absolute right-[0.5rem] hover:bg-Secondary_background_color flex items-center gap-[0.5rem]`}

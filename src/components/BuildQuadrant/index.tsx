@@ -29,21 +29,34 @@ type TYPE_Filters = {
 
 const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 	const dispatch = useAppDispatch();
-
 	const organizationId = useAppSelector((state) => state.auth.organisationId);
 	const tabName = useAppSelector((state) => state.datatable.tabName);
 	const [filterSchema, setFilterSchema] = useState<TYPE_Filters[]>([]);
 
 	const removeDuplicates = (filters: TYPE_Filters[]) => {
-		let uniqueValues = new Set();
+		console.log(filters);
+		let uniqueValues = new Map();
 		let result = [];
 		for (let obj of filters) {
 			let value = obj.columnName;
-			if (!uniqueValues.has(value)) {
-				uniqueValues.add(value);
-				result.push(obj);
+			if (!uniqueValues.get(value)) {
+				uniqueValues.set(value, obj);
+			}else{
+				let newObj = obj;
+				newObj.data = [...obj.data, ...uniqueValues.get(value).data];
+				let uniqueOptionsName = new Set();
+				let uniqueOptions:TYPE_FilterOption[] = [];
+				newObj.data.forEach((objData)=>{
+					if(!uniqueOptionsName.has(objData.filterOptionName)){
+						uniqueOptionsName.add(objData.filterOptionName)
+						uniqueOptions.push(objData);
+					}
+				})
+				newObj.data = uniqueOptions;
+				uniqueValues.set(value, newObj);
 			}
 		}
+		result = Array.from(uniqueValues, ([name, value]) => value);
 		return result;
 	}
 
@@ -68,7 +81,6 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 		dispatch(setDatas(props.datas));
 		dispatch(setDataSchema(props.fieldData.list));
 	},[organizationId, tabName, props, dispatch]);
-
 
 	const modifyData = (filterSchema: TYPE_Filters[]) => {
 		let newData = [...props.datas];

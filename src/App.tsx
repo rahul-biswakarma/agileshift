@@ -12,7 +12,7 @@ import SideBarScreen from "./components/Sidebar";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import AddOptions from "./components/Sidebar/AddOptions";
+import { OrganisationForm } from "./components/ManageOrganization/OrganisationForm";
 
 const App = () => {
 	const userIdFromSession = getFromSession("userId");
@@ -26,14 +26,10 @@ const App = () => {
 	return (
 		<BrowserRouter>
 			<ToastContainer 
-				toastStyle={{ backgroundColor: "#1F1F1F", border:"1px solid #80808050", color: "white!important" }}
-				className="font-dm_sans"
-				toastClassName={()=>"rounded-md !bg-[#1F1F1F] !text-white font-dm_sans"}
-				bodyClassName={()=>"bg-[#1F1F1F] !text-white w-full font-dm_sans"}
 				position="bottom-right"
 			/>
 			{sideBarList.length !== 0 && (
-				<section className="fixed z-50">
+				<section className="fixed right-0 z-50">
 					<SideBarScreen />
 				</section>
 			)}
@@ -62,11 +58,15 @@ const App = () => {
 				/>
 				<Route
 					path="/create-organization"
-					element={<GeneratorFormsContainer />}
+					element={<GeneratorFormsContainer mode="create" />}
 				/>
 				<Route
 					path="/edit-organization-schema"
-					element={<GeneratorFormsContainer />}
+					element={<GeneratorFormsContainer mode="edit" />}
+				/>
+				<Route
+				path="/edit-organization-details"
+				element={<OrganisationForm mode="edit" />}
 				/>
 				<Route
 					path="/organization/:id"
@@ -76,10 +76,7 @@ const App = () => {
 					path="/organization"
 					element={<Navigate to="/organization-lists" />}
 				/>
-				<Route
-					path="/add-option"
-					element={<AddOptions/>}
-				/>
+				
 			</Routes>
 		</BrowserRouter>
 	);

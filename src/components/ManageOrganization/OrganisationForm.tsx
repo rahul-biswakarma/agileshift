@@ -5,45 +5,55 @@ import { RootState } from "../../redux/store";
 import {
 	add_organisation_to_user,
 	create_organization,
-	get_organization_name_by_id
+	get_organization_name_by_id,
 } from "../../Utils/Backend";
-import { setActiveTab } from "../../redux/reducers/SchemaSlice";
+import { setActiveTab, setIsEdit } from "../../redux/reducers/SchemaSlice";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 require("tailwindcss-writing-mode")({
 	variants: ["responsive", "hover"],
 });
 
+type OrganisationFormPropTypes = {
+	mode: string;
+};
 
-
-export const OrganisationForm = () => {
+export const OrganisationForm = ({ mode }: OrganisationFormPropTypes) => {
 	// States
 	const [isOrgCreated, setIsOrgCreated] = useState<boolean>(false);
-	const [toolTip, setToolTip] = useState<boolean>(false);
+	// const [toolTip, setToolTip] = useState<boolean>(false);
 	const [orgNameErrorMessage, setOrgNameErrorMessage] = useState<string>("");
-	const [orgUrlErrorMessage, setOrgUrlErrorMessage] = useState<string>("");
+	// const [orgUrlErrorMessage, setOrgUrlErrorMessage] = useState<string>("");
 	const [orgNameState, setOrgNameState] = useState<string>("");
-	const [orgUrlState, setOrgUrlState] = useState<string>("");
-	const [isSubmitDisabled, setIsSubmitDisabled] = useState<boolean>(true);
+	// const [orgUrlState, setOrgUrlState] = useState<string>("");
+	// const [isSubmitDisabled, setIsSubmitDisabled] = useState<boolean>(true);
+	// console.log(orgUrlErrorMessage,setOrgUrlState)
 
+	const organisationId = useAppSelector((state) => state.auth.organisationId);
 
-	const organizationId = useAppSelector((state) => state.auth.organisationId);
+	const navigate = useNavigate();
 
+	function navigateToDashboard() {
+		dispatch(setIsEdit(false));
+		navigate(`/organization/${organisationId}`);
+	}
 	// Refs
 	const orgName = useRef<HTMLInputElement>(null);
-	const orgURL = useRef<HTMLInputElement>(null);
+	// const orgURL = useRef<HTMLInputElement>(null);
 	const userId = useAppSelector((state: RootState) => state.auth.userId);
 
 	// doc title
 
 	useEffect(() => {
-		get_organization_name_by_id(organizationId).then((data) => {
-			document.title = `Schema Form | ${data}`
-		})
-	})
+		get_organization_name_by_id(organisationId).then((data) => {
+			document.title = `Schema Form | ${data}`;
+		});
+	});
 
-	useEffect(() => {
-		setIsSubmitDisabled(!orgNameState || !orgUrlState);
-	  }, [orgNameState, orgUrlState]);
+	// useEffect(() => {
+	// 	setIsSubmitDisabled(!orgNameState || !orgUrlState);
+	//   }, [orgNameState, orgUrlState]);
 
 	// Redux
 	const activeTab = useAppSelector(
@@ -64,30 +74,28 @@ export const OrganisationForm = () => {
 					setOrgNameErrorMessage("");
 				}
 				break;
-			case "org-url":
-				if (value.length < 3) {
-					setOrgUrlErrorMessage("AgileOrg URL requires a minimum length of 3.");
-				} else if (value.startsWith("-") || value.endsWith("-")) {
-					setOrgUrlErrorMessage(
-						"AgileOrg URL should not start or end with hyphen"
-					);
-				} else if (value.includes("--")) {
-					setOrgUrlErrorMessage(
-						"AgileOrg URL cannot have two consecutive hyphens"
-					);
-				} else {
-					setOrgUrlErrorMessage("");
-				}
-				break;
+			// case "org-url":
+			// 	const urlRegExp = /^(ftp|http|https):\/\/[^ "]+$/;
+			// 	if (!urlRegExp.test(value)) {
+			// 		setOrgUrlErrorMessage("Please enter a valid URL.");
+			// 	} else {
+			// 		setOrgUrlErrorMessage("");
+			// 	}
+			// 	break;
 		}
 	};
 
-	
-
 	const addOrganisation = () => {
+		const name = orgName.current?.value;
+
+		if (!name) {
+			toast.error("Please provide Name");
+			return;
+		}
+
 		if (!isOrgCreated) {
-			create_organization(userId, orgNameState, orgUrlState).then((id) => {
-				add_organisation_to_user(userId, id,"","");
+			create_organization(userId, orgNameState).then((id) => {
+				add_organisation_to_user(userId, id, "", "");
 				dispatch(setOrganisationId(id));
 			});
 			setIsOrgCreated(true);
@@ -95,16 +103,30 @@ export const OrganisationForm = () => {
 		}
 	};
 
+	if (mode === "edit") {
+		dispatch(setActiveTab(-1));
+	}
+
 	if (activeTab === -1)
 		return (
 			<div className="bg-background_color h-screen w-screen flex items-center justify-center font-dm_sans">
+				{mode === "edit" && (
+					<button
+						onClick={() => navigateToDashboard()}
+						className="material-symbols-outlined hover:text-rose-400 cursor-pointer text-3xl font-bold absolute top-10 right-10 text-white/50"
+					>
+						close
+					</button>
+				)}
 				<div className="h-3/5 max-w-[550px] w-full flex flex-col gap-5 p-[0_2rem]">
 					<div className="text-highlight_font_color mb-5">
 						<h3 className="flex gap-4 text-[20px] mb-4 items-center">
 							<span className="material-symbols-outlined text-white text-[15px]">
 								arrow_back
 							</span>
-							Create a new AgileShift Organisation
+							{mode === "create"
+								? "Create a new AgileShift Organisation"
+								: "Edit your AgileShift Organisation"}
 						</h3>
 						{/* Change this to dynamic username */}
 						<p className="text-primary_font_color text-lg">
@@ -137,7 +159,7 @@ export const OrganisationForm = () => {
 								</p>
 							)}
 						</div>
-						<div className="relative flex flex-col gap-1">
+						{/* <div className="relative flex flex-col gap-1">
 							<label
 								htmlFor=""
 								className="font-lg text-dark_gray font-[500]"
@@ -176,7 +198,7 @@ export const OrganisationForm = () => {
 									</ul>
 								</div>
 							)}
-						</div>
+						</div> */}
 					</div>
 					<button
 						className={`flex gap-4 items-center justify-center py-2 rounded-lg border-[2px] border-Secondary_background_color text-white/40 stroke-white/40 ${
@@ -185,10 +207,10 @@ export const OrganisationForm = () => {
 								: "cursor-not-allowed"
 						} transition-all`}
 						onClick={addOrganisation}
-						disabled={isSubmitDisabled}
+						// disabled={isSubmitDisabled}
 					>
 						<span className="material-symbols-outlined">add</span>
-						Create new AgileOrg
+						{mode === "create" ? "Create new AgileOrg" : "Update AgileOrg"}
 					</button>
 				</div>
 			</div>

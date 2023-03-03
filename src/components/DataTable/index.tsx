@@ -49,21 +49,23 @@ const DataTable = () => {
 
 	const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
 
-	const gridOptions: CustomGridOptions = {
-		detailRowAutoHeight: true,
-		rowSelection: "single",
-		suppressDragLeaveHidesColumns: true,
-		onRowClicked: function (event) {
-			let rowData = event.data;
-			dispatch(
-				setSideBar({
-					sidebarType: "editMode",
-					createModeCalledByField: "",
-					fieldId: rowData.id,
-				})
-			);
-		},
-	};
+  const gridOptions: CustomGridOptions = {
+    detailRowAutoHeight: true,
+    rowSelection: "single",
+    suppressDragLeaveHidesColumns: true,
+    onRowClicked: function (event) {
+      let rowData = event.data;
+      dispatch(
+        setSideBar({
+          sidebarType: "editMode",
+          createModeCalledByField: "",
+          fieldId: rowData.id,
+          linkedData:[],
+          id:rowData.id,
+        })
+      );
+    },
+  };
 
 	const [rowData, setRowData] = useState<any>();
 	const [columnDefs, setColumnDefs] = useState<Type_AgGridColsDefs>([]);

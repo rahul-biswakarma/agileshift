@@ -26,24 +26,17 @@ const InviteUserComponent = (props: Type_InviteUserComponentProps) => {
 
 	const sendInivitation = (email: string) => {
 		if (email === "") {
-			toast.warning("Enter email first", {
-				// position: toast.POSITION.BOTTOM_RIGHT,
-				className: 'toast-message'
-			});
+			toast.warning("Enter email first");
 			setError(true);
 			return;
 		}
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 		setError(!emailRegex.test(email));
 		if (!emailRegex.test(email)) {
-		toast.error("Invalid Email",{
-			className: 'toast-message'
-		});
+		toast.error("Invalid Email");
 			return;
 		}
-		toast.success("Invitation sent", {
-			className: 'toast-message'
-		});
+		toast.success("Invitation sent");
 		props.setIsInviteUserComponentOpen(false);
 
 		send_invite(userId, email, organizationId);
