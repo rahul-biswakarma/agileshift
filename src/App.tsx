@@ -12,7 +12,6 @@ import SideBarScreen from "./components/Sidebar";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import AddOptions from "./components/Sidebar/AddOptions";
 
 const App = () => {
 	const userIdFromSession = getFromSession("userId");
@@ -72,10 +71,7 @@ const App = () => {
 					path="/organization"
 					element={<Navigate to="/organization-lists" />}
 				/>
-				<Route
-					path="/add-option"
-					element={<AddOptions/>}
-				/>
+				
 			</Routes>
 		</BrowserRouter>
 	);

@@ -10,6 +10,8 @@ const UsersType = (props: Type_UsersTypeProps) => {
 	const [name, setName] = React.useState<any>();
 
 	const getUser = useCallback(async () => {
+		console.log(props.value);
+		
 		if (props.value !== undefined && props.value !== null && props.value !== "")
 			get_user_by_id(props.value).then((res) => {
 				if (res && res.name && res.avatar) {

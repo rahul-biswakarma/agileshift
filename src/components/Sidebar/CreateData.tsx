@@ -18,7 +18,16 @@ import CustomButton from "../common/Button";
 import { toast } from "react-toastify";
 import { IdComponent } from "../DataTable/idComponent";
 
-export default function CreateData(props: any) {
+
+type Props={
+  tabColaps:Boolean;
+  setColapsTabBar:Function;
+  sidebar:Type_SidebarState;
+  index:number;
+  createModeCalledByField?:string;
+}
+
+export default function CreateData(props: Props) {
   const [selectedField, setSelectedField] = React.useState<string>("");
   const [filedList, setFieldList] = React.useState<any>([]);
   const [formData, setFormData] = React.useState<any>();
@@ -44,12 +53,15 @@ export default function CreateData(props: any) {
       let tempFormData: any = {};
 
       schemaData.list.forEach((item: any) => {
-        if (["string", "title", "currency"].includes(item.columnType))
+        if (["string", "title", "currency",'dropdown'].includes(item.columnType))
           tempFormData[item.columnName] = "";
         else {
           tempFormData[item.columnName] = [];
         }
       });
+      tempFormData['field'] = selectedField;
+
+
 
       // only works when the sidebar is in edit mode, not in create mode
       if (props.sidebar.fieldId !== "" && props.sidebar.fieldId !== undefined) {
@@ -60,6 +72,7 @@ export default function CreateData(props: any) {
         Object.keys(currentState).forEach((key) => {
           tempFormData[key] = currentState[key];
         });
+       
 
         setLinkedData(
           sideBarList,
@@ -107,14 +120,14 @@ export default function CreateData(props: any) {
         props.sidebar.sidebarType === "createNewsLink"
       )
         setSelectedField(
-          props.sidebar.createModeCalledByField.toLowerCase() !== "all"
-            ? props.sidebar.createModeCalledByField
+          props.sidebar.createModeCalledByField!.toLowerCase() !== "all"
+            ? props.sidebar.createModeCalledByField!
             : fieldList[0]
         );
       else {
         let currentState: any = await get_data_byID(
           organizationId,
-          props.sidebar.fieldId
+          props.sidebar.fieldId!
         );
 
         setSelectedField(currentState.field);
@@ -192,8 +205,8 @@ export default function CreateData(props: any) {
     if (props.sidebar.sidebarType === "createNewsLink") {
       link_data_to_parent_data(
         organizationId,
-        props.sidebar.id,
-        props.sidebar.parentId
+        props.sidebar.id!,
+        props.sidebar.parentId!
       );
     }
     handleClose();
@@ -211,6 +224,8 @@ export default function CreateData(props: any) {
     fetchData();
   }
 
+
+  console.log(formData,"**",selectedField)
   if (props.tabColaps ) {
     return (
       <div
@@ -253,7 +268,7 @@ export default function CreateData(props: any) {
             {props.sidebar.sidebarType === "editMode" && (
               // <div className="border-2 p-2 rounded font-bold text-sm" >{props.sidebar.fieldId}</div>
               <IdComponent
-                itemId={props.sidebar.fieldId}
+                itemId={props.sidebar.fieldId!}
                 color={formData ? formData.color : ""}
               />
               // <div>{props.sideBar}</div>
@@ -269,12 +284,15 @@ export default function CreateData(props: any) {
             {formSchema && formSchema.list && (
               <div>
                 {formSchema.list.map((item: any, index: number) => {
+
                   return (
                     <SideBarInputs
+                      key={index}
                       columnDetails={item}
                       formData={formData}
                       setFormData={setFormData}
                       defaultValue={formData[item.columnName]}
+                      selectedField={selectedField}
                     />
                   );
                 })}
@@ -282,12 +300,7 @@ export default function CreateData(props: any) {
             )}
           </section>
         </div>
-        {/* <section>
-        {props.sidebar.linkedData &&
-          props.sidebar.linkedData.map((item: any, index: number) => (
-            <span key={index}>{item}</span>
-          ))}
-      </section> */}
+     
         <footer className=" right-0 mb-4   flex flex-row gap-2">
           <CustomButton
             onClick={handleAddLink}

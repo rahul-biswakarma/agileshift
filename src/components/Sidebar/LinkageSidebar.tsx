@@ -218,7 +218,7 @@ export const LinkageSidebar = (props: any) => {
   if (props.tabColaps ) {
     return (
       <div
-        className="[writing-mode:vertical-rl] h-full w-[50px] flex  justify-center items-center text-xl  cursor-pointer bg-background_color border-r-2 py-4"
+        className="[writing-mode:vertical-rl] h-full w-[50px] flex  justify-center items-center text-xl  cursor-pointer bg-background_color border-r-2  py-4"
         onClick={() => {
           props.setColapsTabBar(props.index);
         }}

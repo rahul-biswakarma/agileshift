@@ -12,6 +12,7 @@ export default function CustomButton(props: Props) {
 
   return (
     <button
+    type="button"
       onClick={props.dissabled?()=>{}:props.onClick}
       className={
         props.className

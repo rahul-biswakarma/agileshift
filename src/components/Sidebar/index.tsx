@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import AddOptions from "./AddOptions";
 import CreateData from "./CreateData";
 import { LinkageSidebar } from "./LinkageSidebar";
 
@@ -22,14 +23,28 @@ export default function SideBarScreen() {
     <div className="h-screen w-max  flex flex-row-reverse  z-20 font-dm_sans  text-white overflow-x-scroll">
       {sideBarList.map((sidebar: Type_SidebarState, index: number) => {
         if (sidebar.sidebarType === "addOption") {
-          return <div key={index}>addOptionsToDropDown</div>;
+          return (
+            <div key={index}>
+              <AddOptions
+                tabColaps={
+                  sideBarList.length <= 3
+                    ? false
+                    : index === colapsTabBar
+                    ? false
+                    : true
+                }
+                setColapsTabBar={setColapsTabBar}
+                sidebar={sidebar}
+                index={index}
+              />
+            </div>
+          );
         } else if (
           sidebar.sidebarType === "editMode" ||
           sidebar.sidebarType === "createMode"
         ) {
-          console.log("sidebar", sidebar);
           return (
-            <div key={index} >
+            <div key={index}>
               <CreateData
                 tabColaps={
                   sideBarList.length <= 3
@@ -46,7 +61,7 @@ export default function SideBarScreen() {
           );
         } else if (sidebar.sidebarType === "linkMode") {
           return (
-            <div  key={index}>
+            <div key={index}>
               <LinkageSidebar
                 tabColaps={
                   sideBarList.length <= 3
@@ -63,7 +78,7 @@ export default function SideBarScreen() {
           );
         } else if (sidebar.sidebarType === "createNewsLink") {
           return (
-            <div key={index} >
+            <div key={index}>
               <CreateData
                 tabColaps={
                   sideBarList.length <= 3
