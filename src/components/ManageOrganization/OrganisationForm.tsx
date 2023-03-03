@@ -26,11 +26,11 @@ export const OrganisationForm = ({mode}:OrganisationFormPropTypes) => {
 	const [isOrgCreated, setIsOrgCreated] = useState<boolean>(false);
 	// const [toolTip, setToolTip] = useState<boolean>(false);
 	const [orgNameErrorMessage, setOrgNameErrorMessage] = useState<string>("");
-	const [orgUrlErrorMessage, setOrgUrlErrorMessage] = useState<string>("");
+	// const [orgUrlErrorMessage, setOrgUrlErrorMessage] = useState<string>("");
 	const [orgNameState, setOrgNameState] = useState<string>("");
-	const [orgUrlState, setOrgUrlState] = useState<string>("");
+	// const [orgUrlState, setOrgUrlState] = useState<string>("");
 	// const [isSubmitDisabled, setIsSubmitDisabled] = useState<boolean>(true);
-	console.log(orgUrlErrorMessage,setOrgUrlState)
+	// console.log(orgUrlErrorMessage,setOrgUrlState)
 
 
 	const organisationId = useAppSelector((state) => state.auth.organisationId);
@@ -77,14 +77,14 @@ export const OrganisationForm = ({mode}:OrganisationFormPropTypes) => {
 					setOrgNameErrorMessage("");
 				}
 				break;
-			case "org-url":
-				const urlRegExp = /^(ftp|http|https):\/\/[^ "]+$/;
-				if (!urlRegExp.test(value)) {
-					setOrgUrlErrorMessage("Please enter a valid URL.");
-				} else {
-					setOrgUrlErrorMessage("");
-				}
-				break;
+			// case "org-url":
+			// 	const urlRegExp = /^(ftp|http|https):\/\/[^ "]+$/;
+			// 	if (!urlRegExp.test(value)) {
+			// 		setOrgUrlErrorMessage("Please enter a valid URL.");
+			// 	} else {
+			// 		setOrgUrlErrorMessage("");
+			// 	}
+			// 	break;
 		}
 	};
 
@@ -103,7 +103,7 @@ export const OrganisationForm = ({mode}:OrganisationFormPropTypes) => {
 
   
 		if (!isOrgCreated) {
-			create_organization(userId, orgNameState, orgUrlState).then((id) => {
+			create_organization(userId, orgNameState).then((id) => {
 				add_organisation_to_user(userId, id,"");
 				dispatch(setOrganisationId(id));
 			});
