@@ -112,7 +112,7 @@ export const get_organizations = async (organizationIds: string[]) => {
 export const create_organization = async (
 	userId: string,
 	name: string,
-	imgUrl: string
+	
 ) => {
 	const organizationsRef = collection(db, "organizations");
 
@@ -121,7 +121,7 @@ export const create_organization = async (
 		name: name,
 		dateOfCreation: get_current_time(),
 		users: [userId],
-		imageUrl: imgUrl,
+		
 		tags: [],
 		notifications: {},
 		tasks: {},

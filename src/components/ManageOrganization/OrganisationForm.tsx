@@ -21,11 +21,11 @@ require("tailwindcss-writing-mode")({
 export const OrganisationForm = () => {
 	// States
 	const [isOrgCreated, setIsOrgCreated] = useState<boolean>(false);
-	const [toolTip, setToolTip] = useState<boolean>(false);
+	// const [toolTip, setToolTip] = useState<boolean>(false);
 	const [orgNameErrorMessage, setOrgNameErrorMessage] = useState<string>("");
-	const [orgUrlErrorMessage, setOrgUrlErrorMessage] = useState<string>("");
+	// const [orgUrlErrorMessage, setOrgUrlErrorMessage] = useState<string>("");
 	const [orgNameState, setOrgNameState] = useState<string>("");
-	const [orgUrlState, setOrgUrlState] = useState<string>("");
+	// const [orgUrlState, setOrgUrlState] = useState<string>("");
 	// const [isSubmitDisabled, setIsSubmitDisabled] = useState<boolean>(true);
 
 
@@ -33,7 +33,7 @@ export const OrganisationForm = () => {
 
 	// Refs
 	const orgName = useRef<HTMLInputElement>(null);
-	const orgURL = useRef<HTMLInputElement>(null);
+	// const orgURL = useRef<HTMLInputElement>(null);
 	const userId = useAppSelector((state: RootState) => state.auth.userId);
 
 	// doc title
@@ -67,14 +67,14 @@ export const OrganisationForm = () => {
 					setOrgNameErrorMessage("");
 				}
 				break;
-			case "org-url":
-				const urlRegExp = /^(ftp|http|https):\/\/[^ "]+$/;
-				if (!urlRegExp.test(value)) {
-					setOrgUrlErrorMessage("Please enter a valid URL.");
-				} else {
-					setOrgUrlErrorMessage("");
-				}
-				break;
+			// case "org-url":
+			// 	const urlRegExp = /^(ftp|http|https):\/\/[^ "]+$/;
+			// 	if (!urlRegExp.test(value)) {
+			// 		setOrgUrlErrorMessage("Please enter a valid URL.");
+			// 	} else {
+			// 		setOrgUrlErrorMessage("");
+			// 	}
+			// 	break;
 		}
 	};
 
@@ -93,7 +93,7 @@ export const OrganisationForm = () => {
 
   
 		if (!isOrgCreated) {
-			create_organization(userId, orgNameState, orgUrlState).then((id) => {
+			create_organization(userId, orgNameState).then((id) => {
 				add_organisation_to_user(userId, id,"");
 				dispatch(setOrganisationId(id));
 			});
