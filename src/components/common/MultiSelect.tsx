@@ -1,103 +1,169 @@
-import React from "react";
-import Select from "react-select";
+import { doc, onSnapshot } from "firebase/firestore";
+import React, { useEffect } from "react";
 import { useAppSelector } from "../../redux/hooks";
-import { get_user_suggestions } from "../../Utils/Backend";
+import { get_userIds_in_organizations } from "../../Utils/Backend";
+import TagComponent from "../DataTable/tagComponent";
+import UserComponent from "../DataTable/userComponent";
 
-const customStyles = {
-  control: (provided: any) => ({
-    ...provided,
-    backgroundColor: "#161616", // Set the background color here
-    border: "0px",
-  }),
-  option: (provided: any, state: any) => ({
-    ...provided,
-    backgroundColor: state.isSelected ? "#3B82F6" : "#1F1F1F", // Set the option background color here
-    color: state.isSelected ? "#FFFFFF" : "#CCCCCC", // Set the option text color here
-    cursor: "pointer", // Set the cursor
-  }),
-  multiValue: (provided: any) => ({
-    ...provided,
-    backgroundColor: "#3B82F6", // Set the background color of the selected option here
-  }),
-  multiValueLabel: (provided: any) => ({
-    ...provided,
-    color: "#FFFFFF", // Set the text color of the selected option here
-  }),
-  menuList: (provided: any) => ({
-    ...provided,
-    padding: 0, // remove padding
-    marginTop: 0, // remove margin top
-    marginBottom: 0, // remove margin bottom
-    backgroundColor: "#1F1F1F",
-  }),
-  input: (provided: any) => ({
-    ...provided,
-    color: "#FFFFFF", // Set the input text color here
-  }),
+import { db } from "../../firebaseConfig";
+
+type Type_MultiSelectProps = {
+	dataType: string;
+	columnName: string;
+	setFormData: React.Dispatch<any>;
+	fieldData: any;
+	selectedTab?: string;
+	defaultValue?: any;
 };
 
-type type_props = {
-  defaultValue: any;
-  setFunction: any;
-  label: string;
-  fieldData: any;
-  selectedTab: string;
+const MultiSelect = (props: Type_MultiSelectProps) => {
+	const [datas, setDatas] = React.useState<any>([]);
+	const [selected, setSelected] = React.useState<any>([]);
+
+	const organisationId = useAppSelector((state) => state.auth.organisationId);
+
+	useEffect(() => {
+		if (props.defaultValue && props.dataType === "tag") {
+			setSelected(props.defaultValue);
+		} else if (props.defaultValue && props.dataType === "user") {
+			setSelected(props.defaultValue);
+		}
+	}, [props.defaultValue, props.dataType]);
+
+	useEffect(() => {
+		const get_dropdown_options = async (
+			organisationId: string,
+			columnName: string
+		) => {
+			onSnapshot(doc(db, "filterSchema", organisationId), (doc) => {
+				let filterSchemaDetails: any = doc.data();
+				let selectedColumn = filterSchemaDetails[props.selectedTab!].filter(
+					(item: any) => item.columnName === columnName
+				);
+				setDatas(selectedColumn[0]["data"]);
+			});
+		};
+
+		if (props.dataType === "user") {
+			get_userIds_in_organizations(organisationId).then((res) => setDatas(res));
+		} else {
+			get_dropdown_options(organisationId, props.columnName);
+		}
+	}, [organisationId, props.columnName, props.dataType, props.selectedTab]);
+
+	return (
+		<div className="border border-white/20 rounded-md">
+			<div className="flex gap-[0.5rem] p-[0.5rem] border-b border-white/20">
+				{selected && selected.length > 0 && props.dataType === "user" ? (
+					<div
+						key={`multi-selected-user`}
+						className="relative flex bg-black/40 gap-[5px] rounded-full p-[3px] items-center"
+					>
+						<UserComponent
+							value={selected}
+							showName={false}
+						/>
+						<button
+							onClick={() => {
+								let currUser = selected;
+								setSelected(null);
+								if (currUser !== null) setDatas([...datas, currUser]);
+							}}
+							className="hover:text-red-400 text-sm transition-all flex items-center"
+						>
+							<span className="material-symbols-outlined">close</span>
+						</button>
+					</div>
+				) : selected && selected.length > 0 && props.dataType === "tag" ? (
+					selected.map((tag: TYPE_TAG, index: number) => {
+						return (
+							<div
+								key={`${index}-multi-selected-tag`}
+								className="relative flex bg-black/40 gap-[5px] rounded-full p-[3px] items-center"
+							>
+								<TagComponent value={[tag]} />
+								<button
+									onClick={() => {
+										let currTag = selected[index];
+										setSelected([
+											...selected.filter(
+												(item: string, currIndex: number) => currIndex !== index
+											),
+										]);
+										setDatas([...datas, currTag]);
+									}}
+									className="hover:text-red-400 text-sm transition-all flex items-center"
+								>
+									<span className="material-symbols-outlined">close</span>
+								</button>
+							</div>
+						);
+					})
+				) : (
+					<></>
+				)}
+			</div>
+			<div className="flex flex-col gap-[0.5rem] p-[0.5rem] border-b border-white/20">
+				{props.dataType === "user"
+					? datas &&
+					  datas.length > 0 &&
+					  datas.map((userId: string, index: number) => {
+							return (
+								userId !== null && (
+									<button
+										key={`${index}-multi-select-user`}
+										onClick={() => {
+											let currSelectedUser = selected;
+											setSelected(datas[index]);
+
+											props.setFormData({
+												...props.fieldData,
+												[props.columnName]: datas[index],
+											});
+
+											let tempDatas = datas;
+											tempDatas.splice(index, 1);
+											setDatas([...tempDatas, currSelectedUser]);
+										}}
+										className="cursor-pointer"
+									>
+										<UserComponent
+											key={`${index}-user-multiselect`}
+											value={userId}
+											showName={true}
+										/>
+									</button>
+								)
+							);
+					  })
+					: datas &&
+					  datas.map((data: TYPE_TAG, index: number) => {
+							return (
+								<button
+									key={`${index}-multi-select-tag`}
+									onClick={() => {
+										setSelected([...selected, datas[index]]);
+										props.setFormData({
+											...props.fieldData,
+											[props.columnName]: selected,
+										});
+
+										let tempDatas = datas;
+										tempDatas.splice(index, 1);
+										setDatas(tempDatas);
+									}}
+									className="cursor-pointer"
+								>
+									<TagComponent
+										key={`${index}-tag-multiselect`}
+										value={[data]}
+									/>
+								</button>
+							);
+					  })}
+			</div>
+		</div>
+	);
 };
-const MultiSelect = (props: type_props) => {
-  const [options, setOption] = React.useState<any>([{ value: "", label: "" }]);
-  const organizationId = useAppSelector((state) => state.auth.organisationId);
 
-  React.useEffect(() => {
-    if (props.selectedTab === "user") {
-      let optionsData: any;
-      const get_suggestions = async () => {
-        const res = await get_user_suggestions(organizationId);
-        optionsData = res;
-        if (optionsData) {
-          optionsData.forEach((item: any) => {
-            item.value = item.id;
-            item.label = item.name;
-          });
-        }
-
-        setOption(optionsData);
-      };
-      get_suggestions();
-    } else {
-      setOption([{ value: "", label: "" }]);
-    }
-  }, [props.selectedTab, organizationId]);
-  //TODO:
-  //both users and tags getting manipulated at the same time
-  //Only one user in every org, no way to add user.
-  //adding multiple users in select, makes it look weird
-
-  const formatOutputVlue = (value: any) => {
-    return value.map((item: any) => item["value"]);
-  };
-  return (
-    <div>
-      <div className="flex mt-[0.3rem] bg-background_color items-center">
-        <span className="min-w-fit p h-[2.5rem] flex justify-center items-center rounded-l font-dm_sans px-2">
-          {props.label} :
-        </span>
-        <span className=" w-[100%]">
-          <Select
-            closeMenuOnSelect={false}
-            isMulti
-            placeholder={props.label}
-            options={options}
-            styles={customStyles}
-            onChange={(value) =>
-              props.setFunction({
-                ...props.fieldData,
-                [props.label]: formatOutputVlue(value),
-              })
-            }
-          />
-        </span>
-      </div>
-    </div>
-  );
-};
 export default MultiSelect;

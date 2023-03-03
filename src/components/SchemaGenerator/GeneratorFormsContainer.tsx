@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "../../redux/store";
 import { create_schema, get_schema_data } from "../../Utils/Backend";
@@ -30,13 +30,12 @@ export const GeneratorFormsContainer = ({mode}:GeneratorContainerPropTypes) => {
   const orgId = useAppSelector((state) => state.auth.organisationId);
 
   useEffect(()=>{
-    if(orgId){
+    if(orgId && mode === "edit"){
       get_schema_data(orgId).then((data)=> {
-        console.log(data)
         if(data) setFields(data.schemaData);
       })
     }
-  }, [orgId])
+  }, [orgId,mode])
 
 
   let activeTab = useAppSelector((state: RootState) => state.schema.activeTab);
@@ -44,14 +43,7 @@ export const GeneratorFormsContainer = ({mode}:GeneratorContainerPropTypes) => {
   if(mode === "edit" && activeTab === -1){
     dispatch(setActiveTab(0));
   }
-
-  const defaultColumnList: TYPE_SCHEMA[] = [
-    { columnName: "Name", columnType: "title" },
-    { columnName: "Tag", columnType: "tag" },
-    { columnName: "Owner", columnType: "user" },
-    { columnName: "Deadline", columnType: "date" },
-  ];
-
+  
   const makeActualCopy = (columnList: TYPE_SCHEMA[]): TYPE_SCHEMA[] => {
     let newColumnList: TYPE_SCHEMA[] = [];
     for (let column of columnList) {
@@ -59,10 +51,14 @@ export const GeneratorFormsContainer = ({mode}:GeneratorContainerPropTypes) => {
     }
     return newColumnList;
   };
+  const defaultColumnList=useMemo<TYPE_SCHEMA[]>(()=>[
+    { columnName: "Name", columnType: "title" },
+    { columnName: "Tag", columnType: "tag" },
+    { columnName: "Owner", columnType: "user" },
+    { columnName: "Deadline", columnType: "date" },
+  ],[]);
 
-  // const [activeTab, dispatch(setActiveTab(] = useState(-1));
-
-  const [fields, setFields] = useState<any>([
+  const defaultFields = useMemo<TYPE_FIELD[]>(() => [
     {
       list: makeActualCopy(defaultColumnList),
       name: "Tickets",
@@ -77,7 +73,15 @@ export const GeneratorFormsContainer = ({mode}:GeneratorContainerPropTypes) => {
       icon: "home",
       linkage: [],
     },
-  ]);
+  ], [defaultColumnList]);
+
+
+  // const [activeTab, dispatch(setActiveTab(] = useState(-1));
+
+
+
+
+  const [fields, setFields] = useState<TYPE_FIELD[]>(defaultFields);
 
   const organisationId = useAppSelector(
     (state: RootState) => state.auth.organisationId
@@ -196,6 +200,13 @@ export const GeneratorFormsContainer = ({mode}:GeneratorContainerPropTypes) => {
     tempFields[this.id].icon = icon;
     setFields(tempFields);
   }
+
+  useEffect(() => {
+    if(mode==="create"){
+      setFields(defaultFields)
+      dispatch(setActiveTab(-1))
+    }
+  }, [defaultFields, mode,dispatch]);
 
   return (
     <div className="flex flex-col max-h-screen">

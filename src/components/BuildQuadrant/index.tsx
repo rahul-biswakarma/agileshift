@@ -34,7 +34,6 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 	const [filterSchema, setFilterSchema] = useState<TYPE_Filters[]>([]);
 
 	const removeDuplicates = (filters: TYPE_Filters[]) => {
-		console.log(filters);
 		let uniqueValues = new Map();
 		let result = [];
 		for (let obj of filters) {
@@ -61,9 +60,6 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 	}
 
 	useEffect(()=>{		
-		dispatch(setFieldColor(props.fieldData.color));
-		dispatch(setDatas(props.datas));
-		dispatch(setDataSchema(props.fieldData.list));
 		const getFilterSchema = async () => {
 			const filters = await get_filter_schema(organizationId);
 			if(tabName !== "All"){
@@ -80,6 +76,9 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 			}
 		}
 		getFilterSchema();
+		dispatch(setFieldColor(props.fieldData.color));
+		dispatch(setDatas(props.datas));
+		dispatch(setDataSchema(props.fieldData.list));
 	},[organizationId, tabName, props, dispatch]);
 
 	const modifyData = (filterSchema: TYPE_Filters[]) => {

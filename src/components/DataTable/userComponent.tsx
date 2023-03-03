@@ -1,15 +1,17 @@
 import React, { useEffect, useCallback } from "react";
 import { get_user_by_id } from "../../Utils/Backend";
 
-type Type_UsersTypeProps = {
-	value: any;
+type Type_UserComponentProps = {
+	value: string;
+	showName?: boolean;
 };
 
-const UsersType = (props: Type_UsersTypeProps) => {
+const UserComponent = (props: Type_UserComponentProps) => {
 	const [avatar, setAvatar] = React.useState<any>();
 	const [name, setName] = React.useState<any>();
 
 	const getUser = useCallback(async () => {
+		
 		if (props.value !== undefined && props.value !== null && props.value !== "")
 			get_user_by_id(props.value).then((res) => {
 				if (res && res.name && res.avatar) {
@@ -24,13 +26,18 @@ const UsersType = (props: Type_UsersTypeProps) => {
 	}, [getUser]);
 
 	return (
-		<div className="flex items-center">
+		<div className="flex items-center gap-[0.5rem]">
 			{avatar !== undefined && avatar !== null && avatar !== "" ? (
-				<img
-					className="w-8 h-8 rounded-full"
-					src={`${avatar}`}
-					alt={`${name}`}
-				/>
+				<>
+					<img
+						className="w-8 h-8 rounded-full"
+						src={`${avatar}`}
+						alt={`${name}`}
+					/>
+					{props.showName && (
+						<span className="font-dm_sans text-[15px]">{name}</span>
+					)}
+				</>
 			) : avatar !== undefined && avatar !== null && avatar !== "" ? (
 				<span className="font-dm_sans text-[15px]">{name}</span>
 			) : (
@@ -40,4 +47,4 @@ const UsersType = (props: Type_UsersTypeProps) => {
 	);
 };
 
-export default UsersType;
+export default UserComponent;

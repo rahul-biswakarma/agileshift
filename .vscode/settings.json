@@ -1,10 +1,6 @@
 {
-<<<<<<< HEAD
-	"editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
-=======
-    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
-    "[typescriptreact]": {
-        "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
-    }
->>>>>>> 88be0337030e8535d872db83d32de91839db541a
+	"editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
+	"[typescriptreact]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	}
 }

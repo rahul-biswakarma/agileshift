@@ -1,11 +1,10 @@
+import { doc, onSnapshot } from "firebase/firestore";
 import React from "react";
-// import { useSelector } from "react-redux";
 import Select from "react-select";
-// import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-// import { setNewSidBar } from "../../redux/reducers/SideBarSlice";
-// import { RootState } from "../../redux/store";
-// import { get_user_suggestions } from "../../Utils/Backend";
-// import { RootState } from "../../redux/store";
+import { db } from "../../firebaseConfig";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { setSideBar } from "../../redux/reducers/SideBarSlice";
+
 const customStyles = {
   control: (provided: any) => ({
     ...provided,
@@ -13,130 +12,123 @@ const customStyles = {
     flexGrow: 1,
     display: "flex",
     border: "0px solid ",
+    outline: "none",
+    boxShadow: "none",
   }),
   option: (provided: any, state: any) => ({
     ...provided,
     backgroundColor: state.isSelected ? "#3B82F6" : "#1F1F1F", // Set the option background color here
     color: state.isSelected ? "#FFFFFF" : "#CCCCCC", // Set the option text color here
     cursor: "pointer", // Set the cursor
+    "&:active": {
+      backgroundColor: "#321f11", // Set the option background color here
+    },
   }),
   input: (provided: any) => ({
     ...provided,
     color: "#FFFFFF", // Set the input text color here
+    "&:focus": {
+      outline: "none", // Remove blue focus
+    },
   }),
   menuList: (provided: any) => ({
     ...provided,
     padding: 0, // remove padding
     marginTop: 0, // remove margin top
     marginBottom: 0, // remove margin bottom
-    backgroundColor: "#1F1F1F",
+    backgroundColor: "#1F1F1G",
   }),
   singleValue: (provided: any) => ({
     ...provided,
     color: "#FFFFFF", // Set the selected option text color here
   }),
+  placeholder: (provided:any, state:any) => ({
+    ...provided,
+    position: "absolute",
+    top: state.hasValue || state.selectProps.inputValue ? -15 : "50%",
+    transition: "top 0.1s, font-size 0.1s",
+    fontSize: (state.hasValue || state.selectProps.inputValue) && 13
+  })
 };
-// type Type_SidebarState = {
-//   field: string;
-//   data: any;
-//   color: string;
-//   schema?: any;
-//   sidebarType?: string;
-// };
 
 type type_props = {
+  columnDetails: any;
+  formData: any;
+  setFormData: any;
   defaultValue: any;
-  setFunction: any;
-  label: string;
-  fieldData: any;
-  sidebarIndex: number;
-  selectedTab: string;
+  selectedField: string;
 };
-// const formatOptions = (value: Array<string>) => {
-//   let data: {
-//     value: string;
-//     label: string;
-//   }[] = [];
 
-//   console.log("value*", value);
+const formatOptions = (value: Array<string>) => {
+  let data: {
+    value: string;
+    label: string;
+  }[] = [];
 
-//   if (value) {
-//     value.forEach((item) => {
-//       data.push({
-//         value: item,
-//         label: item,
-//       });
-//     });
-//   }
-//   return data;
-// };
-// const formatOutputVlue = (value: any) => {
-//   return value.map((item: any) => item["value"]);
-// };
+  if (value) {
+    value.forEach((item) => {
+      data.push({
+        value: item,
+        label: item,
+      });
+    });
+  }
+  return data;
+};
+
 const AutoComplete = (props: type_props) => {
-  // const [options, setOption] = React.useState<any>([{ value: "", label: "" }]);
-  // const organizationId = useAppSelector((state) => state.auth.organisationId);
+  const [options, setOptions] = React.useState<any>([]);
+  const organizationId = useAppSelector((state) => state.auth.organisationId);
+  const dispatch = useAppDispatch();
 
-  // React.useEffect(() => {
-  //   if (props.selectedTab === "user") {
-  //     console.log("multiselect call");
-  //     let optionsData: any;
-  //     const get_suggestions = async () => {
-  //       const res = await get_user_suggestions(organizationId);
-  //       optionsData = res;
-  //       if (optionsData) {
-  //         optionsData.forEach((item: any) => {
-  //           item.value = item.id;
-  //           item.label = item.name;
-  //         });
-  //       }
+  React.useEffect(() => {
+    onSnapshot(doc(db, "filterSchema", organizationId), (doc) => {
+      let filterSchemaDetails: any = doc.data();
+      filterSchemaDetails = filterSchemaDetails["data"];
+      let selectedColumn = filterSchemaDetails[props.selectedField].filter(
+        (item: any) => item.columnName === props.columnDetails.columnName
+      );
+      setOptions(selectedColumn.length > 0 ? selectedColumn[0]["data"] : []);
+    });
+  }, [props.selectedField, organizationId, props.columnDetails.columnName]);
 
-  //       setOption(optionsData);
-  //     };
-  //     get_suggestions();
-  //   } else {
-  //     setOption([{ value: "", label: "" }]);
-  //   }
-  // }, [props.selectedTab, organizationId]);
-  // const dispatch = useAppDispatch();
-  // // let sideBarList: Type_SidebarState[] = useSelector(
-  // //   (state: RootState) => state.sidebar.sideBarData
-  // // );
 
-  // const handleAddOptions = () => {
-  //   let element: any = {
-  //     sidebarType: "addOptions",
-  //     columnName: "",
-  //     field: "",
-  //     color: "",
-  //     schema: {},
-  //   };
-  //   // let newSidebarList: any = sideBarList.splice(1, 0, element);
-  //   let newSidebarList: any = [element, ...sideBarList];
+  const handleIdClick = () => {
+    dispatch(
+      setSideBar({
+        sidebarType: "addOption",
+        columnName: props.columnDetails.columnName,
+        fieldName:props.selectedField,
+  
+      })
+    );
+  }
 
-  //   console.log(newSidebarList, "888");
-  //   dispatch(setNewSidBar(newSidebarList));
-  // };
   return (
     <div>
       <div className="flex mt-[0.3rem] bg-background_color">
         <span className="min-w-fit pl-2 h-[2.5rem] flex justify-center items-center   rounded-l font-dm_sans">
-          {/* {props.label} */}
+          {props.columnDetails.columnName} :
         </span>
         <span className=" w-[100%]">
           <Select
+            placeholder="test place holder"
             styles={customStyles}
-            // options={formatOptions(props.defaultValue)}
-            // onChange={(value) =>
-            //   props.setFunction({
-            //     ...props.fieldData,
-            //     [props.label]: formatOutputVlue(value),
-            //   })
-            // }
+            options={formatOptions(options.map((item: any) => item.filterOptionName))}
+            value={{
+              label: props.formData[props.columnDetails.columnName],
+              value: props.formData[props.columnDetails.columnName],
+            }}
+            onChange={(item) =>
+              props.setFormData({
+                ...props.formData,
+                [props.columnDetails.columnName]: item!.value,
+              })
+            }
           />
         </span>
         <button
-          // onClick={() => handleAddOptions()}
+          onClick={() => handleIdClick()}
           type="button"
           className="font-bold text-2xl pr-2 flex justify-center active:text-blue-900 cursor-pointer"
         >

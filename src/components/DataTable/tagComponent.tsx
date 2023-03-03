@@ -1,6 +1,10 @@
 import React from "react";
 
-const tagComponent = (props: any) => {
+type Type_TagComponentProps = {
+	value: TYPE_TAG[];
+};
+
+const TagComponent = (props: Type_TagComponentProps) => {
 	return (
 		<div className="flex gap-[10px] flex-wrap">
 			{props.value !== undefined && props.value.length > 0
@@ -23,4 +27,4 @@ const tagComponent = (props: any) => {
 	);
 };
 
-export default tagComponent;
+export default TagComponent;

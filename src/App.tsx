@@ -12,7 +12,6 @@ import SideBarScreen from "./components/Sidebar";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import AddOptions from "./components/Sidebar/AddOptions";
 import { OrganisationForm } from "./components/ManageOrganization/OrganisationForm";
 
 const App = () => {
@@ -77,10 +76,7 @@ const App = () => {
 					path="/organization"
 					element={<Navigate to="/organization-lists" />}
 				/>
-				<Route
-					path="/add-option"
-					element={<AddOptions/>}
-				/>
+				
 			</Routes>
 		</BrowserRouter>
 	);

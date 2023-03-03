@@ -23,7 +23,7 @@ const InviteUserComponent = (props: Type_InviteUserComponentProps) => {
 			setError(false);
 			return;
 		}
-		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
 		setError(!emailRegex.test(event.target.value));
 	};
 

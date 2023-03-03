@@ -12,24 +12,29 @@ type TYPE_Filters = {
 };
 
 interface VistaState {
-  filterSchema: TYPE_Filters[]
+  filterSchema: TYPE_Filters[],
+  vistaName: string,
 }
 
 const initialState: VistaState = {
-  filterSchema:[]
+  filterSchema: [],
+  vistaName: ""
 };
 
 export const VistaSlice = createSlice({
   name: "vista",
   initialState,
   reducers: {
-    setFilterSchema: (state, action: PayloadAction<TYPE_Filters[]>) => {
+    setVistaSchema: (state, action: PayloadAction<TYPE_Filters[]>) => {
       state.filterSchema = action.payload;
+    },
+    setVistaName: (state, action:PayloadAction<string>) => {
+      state.vistaName = action.payload;
     }
   },
 });
 
-export const { setFilterSchema } =
+export const {setVistaSchema, setVistaName } =
 VistaSlice.actions;
 
 export default VistaSlice.reducer;
