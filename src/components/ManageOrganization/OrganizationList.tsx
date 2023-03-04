@@ -2,18 +2,19 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../redux/hooks";
 import { get_user_by_id, user_active_time } from "../../Utils/Backend";
-import { OrganizationCard } from "./OrganizationCard";
+
 import { get_organizations_details } from "../../Utils/Backend";
 import { RootState } from "../../redux/store";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
+import OrganizationListModal from "./OrganizationListModal";
 
 const OrganizationList: React.FunctionComponent = () => {
 	const [user, setUser] = useState<any>();
 	const [organization, setOrganizations] = useState<TYPE_ORGANISATION[]>([]);
 	const [pendingInvitations, setPendingInvitations] = useState<string[]>([]);
-	const [pendingInvitationsOrgData, setPendingInvitationsOrgData] =
-		useState<any>([]);
+	// const [pendingInvitationsOrgData, setPendingInvitationsOrgData] =
+	// 	useState<any>([]);
 	const userId = useAppSelector((state: RootState) => state.auth.userId);
 	const navigate = useNavigate();
 
@@ -50,7 +51,7 @@ const OrganizationList: React.FunctionComponent = () => {
 						return orgObject;
 					})
 				);
-				setPendingInvitationsOrgData(organizations);
+				// setPendingInvitationsOrgData(organizations);
 			}
 		};
 		getPendingInvitationsOrgData();
@@ -100,31 +101,8 @@ const OrganizationList: React.FunctionComponent = () => {
 							{organization?.length}
 						</p>
 					</div>
-					<div className="flex flex-col gap-[1rem] max-h-[40vh] overflow-auto px-[0.3rem]">
-						{pendingInvitationsOrgData.map((orgData: any, index: number) => {
-							return (
-								<OrganizationCard
-									key={`oraganization-${index}`}
-									name={orgData?.name}
-									orgId={orgData?.id}
-									pendingInvitation={true}
-									user={user}
-								/>
-							);
-						})}
-						<div className="flex flex-col-reverse">
-							{organization.map((orgData: any, index: number) => {
-								return (
-									<OrganizationCard
-										key={`oraganization-${index}`}
-										name={orgData?.name}
-										orgId={orgData?.id}
-										user={user}
-									/>
-								);
-							})}
-						</div>
-					</div>
+					
+					<OrganizationListModal userId={userId} />
 				</div>
 				<button
 					onClick={() => navigate("/create-organization")}

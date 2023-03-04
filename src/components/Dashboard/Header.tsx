@@ -8,7 +8,11 @@ import InviteUserComponent from "./InviteUserComponent";
 import { SearchComponent } from "./SearchComponent";
 import { setUserId } from "../../redux/reducers/AuthSlice";
 import { useNavigate } from "react-router-dom";
-import { Tooltip } from "@mui/material";
+import {Modal , Tooltip } from "@mui/material";
+import OrganizationListModal from "../ManageOrganization/OrganizationListModal";
+
+	
+
 
 interface TYPE_HeaderProps {
 	showNotification: boolean;
@@ -22,6 +26,19 @@ const Header = (props: TYPE_HeaderProps) => {
 	const dispatch = useAppDispatch();
 	const navigate =useNavigate();
 	const [organizationName,setOrganizationName]=useState<string>("NewOrg");
+	const [open, setOpen] = useState(false);
+
+	
+
+	const handleClickOpen = () => {
+		setOpen(true);
+	  };
+	
+	  const handleClose = () => {
+		setOpen(false);
+	  };
+
+	
 
 	const [userData, setUserData] = useState<TYPE_USER>({
 		id: "",
@@ -78,6 +95,8 @@ const Header = (props: TYPE_HeaderProps) => {
 		})
 	},[organizationId])
 
+	
+
 	return (
 		<div
 			id="header"
@@ -112,6 +131,20 @@ const Header = (props: TYPE_HeaderProps) => {
 							<li className="p-2 hover:bg-[#262626]"><button className="w-full" onClick={()=>navigate("/organization-lists")}>Organisation List</button></li>
 						</ul>
 					</div>}
+					<button className="material-symbols-outlined text-white/20 cursor-pointer hover:text-white transition-all"
+							onClick={() => {
+								console.log(userId)
+								handleClickOpen()}}
+					>
+						menu
+					</button>
+					<Modal open={open} onClose={handleClose}>
+						<div className="absolute top-[19%] left-[22%] transform -translate-x-1/2 -translate-y-1/2 
+								rounded-lg font-dm_sans bg-background_color shadow-lg p-4 flex items-center justify-center text-primary_font_color">
+						<OrganizationListModal userId = {userId}/>
+						</div>
+					</Modal>
+					
 			<SearchComponent />
 
 			<div className="flex gap-[2rem] items-center">
