@@ -303,12 +303,10 @@ export default function CreateData(props: Props) {
               </Select>
             )}
             {props.sidebar.sidebarType === "editMode" && (
-              // <div className="border-2 p-2 rounded font-bold text-sm" >{props.sidebar.fieldId}</div>
               <IdComponent
                 itemId={props.sidebar.fieldId!}
                 color={formData ? formData.color : ""}
               />
-              // <div>{props.sideBar}</div>
             )}
 
             <CustomButton
