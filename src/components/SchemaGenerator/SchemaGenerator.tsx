@@ -14,7 +14,7 @@ import UploadJSON from "../UploadJSON";
 import { RootState } from "../../redux/store";
 import { setActiveTab } from "../../redux/reducers/SchemaSlice";
 import SelectIconComponent from "./SelectIconComponent";
-import {  get_text_color_from_name, get_dark_background_color_from_name } from "../../Utils/Backend";
+import {  get_background_color_from_name } from "../../Utils/Backend";
 import { toast } from "react-toastify";
 import { useDebounceCallback } from "../../Utils/useDebounce";
 
@@ -36,7 +36,9 @@ type GeneratorPropTypes = {
   changeColor: (this: any, color: string) => void;
   icon: string;
   changeIcon: (this: any, icon: string) => void;
-  changeLinkage:(this: any, link: string[])=> void
+  linkage: string[];
+  changeLinkage:(this: any, link: string[])=> void;
+  mode:string;
 };
 
 export const SchemaGenerator = ({
@@ -53,13 +55,15 @@ export const SchemaGenerator = ({
   changeColor,
   icon,
   changeIcon,
+  linkage,
   changeLinkage,
+  mode
 }: GeneratorPropTypes) => {
   const colorList = useAppSelector((state)=> state.colors.colors)
-  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState(linkage);
 
 	const [showModal , setShowModal] = useState(false);
-  const [selectedColor, setSelectedColor]=  useState("");
+  const [, setSelectedColor]=  useState("");
 
   // const organizationId = useAppSelector((state) => state.auth.organisationId);
 
@@ -123,6 +127,10 @@ export const SchemaGenerator = ({
     console.log(fieldName);
   
     for (let i = 0; i < fieldName.length; i++) {
+      if(fieldName[i].length === 0) {
+        toast.error(`Field name cannot be empty`);
+        return;
+      }
       for (let j = i + 1; j < fieldName.length; j++) {
         if (fieldName[i].toLowerCase() === fieldName[j].toLowerCase()) {
           toast.error(`Duplicate field name detected: ${fieldName[i]}`);
@@ -234,7 +242,7 @@ export const SchemaGenerator = ({
                             height: "10px",
                             borderRadius: "50%",
                             marginRight: "8px",
-                            backgroundColor: get_text_color_from_name(color),
+                            backgroundColor: get_background_color_from_name(color),
                           }}
                         ></span>
                         {color}
@@ -288,12 +296,14 @@ export const SchemaGenerator = ({
         <hr className="w-full h-[1px] border-t-[2px] border-t-white/10" />
 
         <SchemaGeneratorForm list={list} setList={setList} />
+        {((mode==="edit"&&id!==0)||(mode==="create")) &&
         <button
           className="absolute bottom-[4rem] left-[1rem] flex justify-center items-center p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm text-dark_gray border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 hover:text-purple-800 transition-all duration-200 ease-in-out
 		"
           onClick={() => dispatch(setActiveTab(id - 1))}>
           <span className="material-symbols-outlined">arrow_back</span>
         </button>
+}
         <div className="absolute bottom-[4rem] right-[1rem] flex items-center justify-end bg-background_color z-10">
           {getAllFieldsName().length - 1 === id && (
             <button
@@ -316,18 +326,22 @@ export const SchemaGenerator = ({
         </div>
       </section>
     );
-  else
-    return (
-      <div style={{
-        background: selectedColor===""? "#1F1F1F" : get_dark_background_color_from_name(selectedColor),
-      }} className={`h-screen w-12 flex flex-wrap text-primary_font_color`}>
-        <button
-          className="h-full w-full"
-          onClick={() => dispatch(setActiveTab(id))}>
-          <span className="[writing-mode:vertical-rl] text-sm font-[600] uppercase font-fira_code">
-            {name} Schema Form
-          </span>
-        </button>
-      </div>
-    );
+    else
+    return(
+      <div></div>
+    )
+  // else
+  //   return (
+  //     <div style={{
+  //       background: selectedColor===""? "#1F1F1F" : get_dark_background_color_from_name(selectedColor),
+  //     }} className={`h-screen w-12 flex flex-wrap text-primary_font_color`}>
+  //       <button
+  //         className="h-full w-full"
+  //         onClick={() => dispatch(setActiveTab(id))}>
+  //         <span className="[writing-mode:vertical-rl] text-sm font-[600] uppercase font-fira_code">
+  //           {name} Schema Form
+  //         </span>
+  //       </button>
+  //     </div>
+  //   );
 };

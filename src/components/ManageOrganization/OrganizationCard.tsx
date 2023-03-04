@@ -26,6 +26,7 @@ export const OrganizationCard = ({
 
 	return (
 		<div
+			data-testid="organization-card"
 			ref={cardRef}
 			className="w-full flex justify-between items-center text-highlight_font_color border border-background_color hover:border-white/5 hover:bg-white/5 rounded-lg p-[5px]"
 		>
@@ -39,6 +40,7 @@ export const OrganizationCard = ({
 			</div>
 			{!pendingInvitation ? (
 				<button
+					data-testId="goto-organization-btn"
 					onClick={() => {
 						dispatch(setOrganisationId(orgId));
 						navigate(`/organization/${orgId}`);

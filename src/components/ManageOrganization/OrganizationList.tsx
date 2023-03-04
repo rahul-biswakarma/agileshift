@@ -127,6 +127,7 @@ const OrganizationList: React.FunctionComponent = () => {
 					</div>
 				</div>
 				<button
+					data-testId="create-new-org"
 					onClick={() => navigate("/create-organization")}
 					className="flex gap-4 items-center justify-center py-4 rounded-lg text-highlight_font_color bg-Secondary_background_color hover:bg-purple-300 hover:text-purple-800 transition-all"
 				>
