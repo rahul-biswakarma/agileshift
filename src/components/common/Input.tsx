@@ -9,14 +9,17 @@ type type_props = {
 export default function Input(props: type_props) {
   return (
     <div>
-      <div className="flex mt-[0.3rem] bg-background_color">
-        <span className="min-w-fit pl-2 h-[2.5rem] flex justify-center items-center rounded-l font-dm_sans">
+      <div className="flex my-[0.3rem] bg-background_color text-sm rounded-lg">
+        <span 
+          className="w-[7em] p-3 h-[2.5rem] text-center rounded-l font-dm_sans text-primary_font_color font-bold truncate"
+          title={props.label}
+        >
           {props.label}
         </span>
         <input
           data-testid="email-input"
           value={props.defaultValue}
-          className="w-full h-[2.5rem] bg-background_color focus:outline-none rounded-r px-4 code-font font-dm_sans"
+          className="grow h-[2.5rem] bg-Secondary_background_color focus:outline-none rounded-r px-4 code-font font-dm_sans border-2 border-background_color"
           type="text"
           placeholder={props.label}
           onChange={(e) =>

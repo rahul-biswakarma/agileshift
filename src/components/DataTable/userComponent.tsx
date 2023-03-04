@@ -39,11 +39,11 @@ const UserComponent = (props: Type_UserComponentProps) => {
             alt={`${name}`}
           />
           {props.showName && (
-            <span className="font-dm_sans text-[15px]">{name}</span>
+            <span className="font-dm_sans text-sm">{name}</span>
           )}
         </>
       ) : avatar !== undefined && avatar !== null && avatar !== "" ? (
-        <span className="font-dm_sans text-[15px]">{name}</span>
+        <span className="font-dm_sans text-sm">{name}</span>
       ) : (
         "-"
       )}

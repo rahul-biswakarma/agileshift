@@ -62,9 +62,14 @@ export const LinkageSidebar = (props: any) => {
   const customStyles = {
     control: (provided: any) => ({
       ...provided,
-      backgroundColor: "#161616", // Set the background color here
+      backgroundColor: "#1F1F1F", // Set the background color here
       border: "1px solid rgba(255, 255, 255, 0.30)",
       borderRadius: "0.375rem",
+      boxShadow:"0 0 0 0px rgba(255, 255, 255, 0.30)",
+
+      "&:hover": {
+        borderColor: "rgba(255, 255, 255, 0.30)",
+      },
     }),
     option: (provided: any, state: any) => ({
       ...provided,
@@ -85,9 +90,9 @@ export const LinkageSidebar = (props: any) => {
       padding: 0, // remove padding
       marginTop: 0, // remove margin top
       marginBottom: 0, // remove margin bottom
-      backgroundColor: "#1F1F1F",
-      border: "1px solid rgba(255, 255, 255, 0.20)",
-      borderRadius: "0.375rem",
+      backgroundColor: "#161616",
+      border: "1px solid rgba(255, 255, 255, 0.30)",
+      borderRadius: "0.25rem",
     }),
     input: (provided: any) => ({
       ...provided,
@@ -229,7 +234,7 @@ export const LinkageSidebar = (props: any) => {
   } else {
     return (
       <div
-        className="flex w-[400px] flex-col justify-between h-screen bg-sidebar_bg backdrop-filter backdrop-blur-lg bg-opacity-60 border-l-2 border-primary_font_color 
+        className="flex w-[400px] flex-col justify-between h-screen bg-sidebar_bg backdrop-filter backdrop-blur-md bg-opacity-10  border-l border-[#444444]
     p-4 pb-8 pt-12
     "
       >
@@ -240,6 +245,7 @@ export const LinkageSidebar = (props: any) => {
         />
 
         <Select
+          className="text-sm"
           closeMenuOnSelect={false}
           hideSelectedOptions={false}
           controlShouldRenderValue={false}
@@ -259,30 +265,35 @@ export const LinkageSidebar = (props: any) => {
             handleSelectChange(value);
           }}
         />
-        <section className="">
-          <div className=" border border-white/20 flex flex-col gap-2 p-4 text-white max-h-[90%] rounded-md mt-4 mb-2">
-            <p className="font-bold text-2xl">Linked Items</p>
-            <div className="max-h-1/5 overflow-auto">
+        <section className="grow overflow-y-auto flex flex-col justify-end">
+          <div className="bg-black/60 flex flex-col gap-2 p-4 text-white max-h-[90%] rounded-md mt-4 mb-2">
+            <p className="font-bold text-xl">Linked Items</p>
+            <div className="max-h-1/5 overflow-auto flex flex-col justify-center items-center gap-2">
               {selectedOptions.length === 0 && (
                 <p className="text-white/50">No items linked</p>
               )}
               {selectedOptions.length > 0 &&
                 selectedOptions.map((item: optionsType, id: number) => (
-                  <div
-                    className="text-white bg-background_color p-3 rounded-md border border-white/10"
+                  <button
+                    type="button"
+                    className="w-full text-white bg-background_color p-3 rounded-md flex items-center gap-2 text-sm"
                     key={id}
                     onClick={() => handleIdClick(item.value)}
                   >
                     <IdComponent itemId={item.value} color={item.color} />
-                    {item.title}
-                  </div>
+                    <p className="grow truncate text-left">{item.title}</p>
+                  </button>
                 ))}
             </div>
           </div>
           <CustomButton
-            dissabled={isButtonClicked}
+            disabled={isButtonClicked}
             onClick={() => createNewsLink(linkedCalledByID!)}
             label={"Create New Link"}
+            icon="add_link"
+            className="flex justify-center items-center gap-2 p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm 
+            text-highlight_font_color border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 
+            hover:text-purple-800 transition-all duration-200 ease-in-out"
           />
         </section>
       </div>
