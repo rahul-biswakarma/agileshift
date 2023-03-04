@@ -53,11 +53,19 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 		};
 
 		if (props.dataType === "user") {
-			get_userIds_in_organizations(organisationId).then((res) => setDatas(res));
+			get_userIds_in_organizations(organisationId).then((res) => {
+				setDatas(res.filter((userId: string) => userId !== selected));
+			});
 		} else {
 			get_dropdown_options(organisationId, props.columnName);
 		}
-	}, [organisationId, props.columnName, props.dataType, props.selectedTab]);
+	}, [
+		organisationId,
+		props.columnName,
+		props.dataType,
+		props.selectedTab,
+		selected,
+	]);
 
 	return (
 		<div className="border border-white/20 rounded-md">
@@ -76,7 +84,7 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 						>
 							<UserComponent
 								value={selected}
-								showName={false}
+								showName={true}
 							/>
 							<button
 								onClick={() => {

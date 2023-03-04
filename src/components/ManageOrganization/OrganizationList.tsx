@@ -28,7 +28,7 @@ const OrganizationList: React.FunctionComponent = () => {
 
 	const fetchPendingInvitations = useCallback(() => {
 		if (user && user.email)
-			onSnapshot(doc(db, "invitations", user.email), (doc) => {
+			onSnapshot(doc(db, "invitation", user.email), (doc) => {
 				if (doc.exists()) {
 					let data = doc.data();
 					let orgIds = data;
