@@ -20,6 +20,7 @@ export default function Dashboard() {
 	const organizationId = useAppSelector((state) => state.auth.organisationId);
 	const [showNotification, setShowNotification] = useState(false);
 	const [fieldsData, setFieldsData] = useState<TYPE_FIELD[]>();
+	const [isInitialDataFetched, setIsInitialDataFetched] = useState(false);
 
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
@@ -49,12 +50,13 @@ export default function Dashboard() {
 	}, [organizationId, dispatch, navigate]);
 
 	const getDataByFeildName = useCallback(() => {
-		if (dataSchema) {
+		if (dataSchema && !isInitialDataFetched) {
 			get_data_by_column_name(organizationId, "all").then((data) => {
 				dispatch(setDatas(data));
+				setIsInitialDataFetched(true);
 			});
 		}
-	}, [dataSchema, dispatch, organizationId]);
+	}, [dataSchema, dispatch, organizationId, isInitialDataFetched]);
 
 	useEffect(() => {
 		getDataByFeildName();

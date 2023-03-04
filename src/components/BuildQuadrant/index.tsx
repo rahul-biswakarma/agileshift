@@ -2,9 +2,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
 import DataTable from "../DataTable";
 import BuildQuadarntHeader from "./BuildQuadarntHeader";
-import {
-	setDatas,
-} from "../../redux/reducers/DataTableSlice";
+import { setDatas } from "../../redux/reducers/DataTableSlice";
 import Filter from "../Filters/Filter";
 import { useEffect, useState } from "react";
 import { get_filter_schema } from "../../Utils/Backend";
@@ -73,10 +71,7 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 			}
 		};
 		getFilterSchema();
-		// dispatch(setFieldColor(props.fieldData.color));
-		// dispatch(setDatas(props.datas));
-		// dispatch(setDataSchema(props.fieldData.list));
-	}, [organizationId, tabName, props, dispatch]);
+	}, [organizationId, tabName]);
 
 	const modifyData = (filterSchema: TYPE_Filters[]) => {
 		let newData = [...datas];

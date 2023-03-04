@@ -79,7 +79,6 @@ const TabHeader = (props: Type_TabHeaderProps) => {
 									dispatch(setDatas(res));
 								}
 							);
-							console.log("Field List", field.list);
 							dispatch(setDataSchema(field.list));
 							dispatch(setTabName(field.name));
 						}}
