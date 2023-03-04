@@ -5,7 +5,8 @@ import {
 	Select,
 	SelectChangeEvent,
 	MenuItem,
-	Modal
+	Modal,
+  Tooltip,
 } from "@mui/material";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 
@@ -169,18 +170,25 @@ export const SchemaGenerator = ({
 
 					</div>
 					<div className="absolute right-[1rem] flex gap-[1rem]">
-						<button
-							className="material-symbols-outlined text-white/30 hover:text-yellow-400 cursor-pointer"
-							onClick={duplicateSchema}
-						>
-							content_copy
-						</button>
-						<button
-							className="material-symbols-outlined text-white/30 hover:text-rose-400 cursor-pointer"
-							onClick={handleDeleteClick}
-						>
-							delete
-						</button>
+            <Tooltip title="Duplicate schema" placement="top">
+              <button
+                className="material-symbols-outlined text-white/30 hover:text-yellow-400 cursor-pointer"
+                onClick={duplicateSchema}
+              >
+                content_copy
+              </button>
+            </Tooltip>
+            <Tooltip title="Delete Schema" placement="top" >
+              <button
+                className="material-symbols-outlined text-white/30 hover:text-rose-400 cursor-pointer"
+                onClick={handleDeleteClick}
+              >
+                delete
+              </button>
+            </Tooltip>
+            
+						
+            
 
 						<Modal
 							open={showModal}

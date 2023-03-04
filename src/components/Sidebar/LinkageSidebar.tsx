@@ -215,7 +215,7 @@ export const LinkageSidebar = (props: any) => {
     setIsButtonClicked(true);
   };
 
-  if (props.tabColaps ) {
+  if (props.tabColaps) {
     return (
       <div
         className="[writing-mode:vertical-rl] h-full w-[50px] flex  justify-center items-center text-xl  cursor-pointer bg-background_color border-r-2  py-4"
@@ -229,8 +229,8 @@ export const LinkageSidebar = (props: any) => {
   } else {
     return (
       <div
-        className="flex w-[400px] flex-col justify-between h-screen bg-sidebar_bg backdrop-filter backdrop-blur-lg bg-opacity-60 border border-primary_font_color 
-    p-4 pb-8    pt-12
+        className="flex w-[400px] flex-col justify-between h-screen bg-sidebar_bg backdrop-filter backdrop-blur-lg bg-opacity-60 border-l-2 border-primary_font_color 
+    p-4 pb-8 pt-12
     "
       >
         <CustomButton

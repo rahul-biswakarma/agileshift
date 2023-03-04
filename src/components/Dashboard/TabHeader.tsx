@@ -18,7 +18,7 @@ import {
 import VistaList from "../Filters/VistaList";
 
 interface Type_TabHeaderProps {
-	fieldsData: Array<TYPE_FIELD>;
+	fieldsData: TYPE_FIELD[];
 }
 
 const TabHeader = (props: Type_TabHeaderProps) => {
@@ -38,7 +38,8 @@ const TabHeader = (props: Type_TabHeaderProps) => {
 	const tabName = useAppSelector((state) => state.datatable.tabName);
 
 	return (
-		<div className="relative flex gap-[3vw] px-[2rem] items-center border-b-[1px] justify-center border-Secondary_background_color py-[0.5rem]">
+		<div className="relative flex  px-[2rem] items-center border-b-[1px] justify-between border-Secondary_background_color py-[0.5rem]">
+			<div className="flex gap-[0.5rem] items-center overflow-x-auto flex-nowrap w-3/4">
 			<button
 				style={{
 					color:
@@ -96,14 +97,27 @@ const TabHeader = (props: Type_TabHeaderProps) => {
 					</button>
 				);
 			})}
-			<VistaList/>
-			<button
-				onClick={() => openSchemaEditForm()}
-				className={`p-[0.5rem_1.5rem] font-dm_sans text-[1rem] flex gap-[0.5rem] text-white/30 cursor-pointer rounded-sm absolute right-[0.5rem] hover:bg-Secondary_background_color flex items-center gap-[0.5rem]`}
-			>
-				<span className="material-symbols-outlined text-inherit">edit_note</span>
-				<p className="text-inherit font-dm_sans">Schema</p>
-			</button>
+
+			</div>
+			<div className="flex items-center"	>
+				<div>
+					<VistaList />
+				</div>			
+				<div className="right-[0.5rem] w-24 h-10">
+					<button
+						onClick={() => openSchemaEditForm()}
+						className={`p-[0.5rem_1rem] font-dm_sans text-[1rem] flex gap-[0.5rem] text-white/30 cursor-pointer rounded-sm absolute right-[0.5rem] hover:bg-Secondary_background_color flex items-center gap-[0.5rem]`}
+					>
+						<span className="material-symbols-outlined text-inherit">
+							edit_note
+						</span>
+						<p className="text-inherit font-dm_sans">Schema</p>
+					</button>
+				</div>
+
+			</div>
+			
+			
 		</div>
 	);
 };

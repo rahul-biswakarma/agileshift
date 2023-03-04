@@ -19,8 +19,14 @@ type Type_MultiSelectProps = {
 const MultiSelect = (props: Type_MultiSelectProps) => {
 	const [datas, setDatas] = React.useState<any>([]);
 	const [selected, setSelected] = React.useState<any>([]);
+	const [isDropdownVisible, setIsDropdownVisible] =
+		React.useState<boolean>(false);
 
 	const organisationId = useAppSelector((state) => state.auth.organisationId);
+
+	function toggleDropdownOption() {
+		setIsDropdownVisible(!isDropdownVisible);
+	}
 
 	useEffect(() => {
 		if (props.defaultValue && props.dataType === "tag") {
@@ -37,73 +43,96 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 		) => {
 			onSnapshot(doc(db, "filterSchema", organisationId), (doc) => {
 				let filterSchemaDetails: any = doc.data();
-				let selectedColumn = filterSchemaDetails[props.selectedTab!].filter(
-					(item: any) => item.columnName === columnName
-				);
-				setDatas(selectedColumn[0]["data"]);
+				if (filterSchemaDetails[props.selectedTab!] !== undefined) {
+					let selectedColumn = filterSchemaDetails[props.selectedTab!].filter(
+						(item: any) => item.columnName === columnName
+					);
+					setDatas(selectedColumn[0]["data"]);
+				}
 			});
 		};
 
 		if (props.dataType === "user") {
-			get_userIds_in_organizations(organisationId).then((res) => setDatas(res));
+			get_userIds_in_organizations(organisationId).then((res) => {
+				setDatas(res.filter((userId: string) => userId !== selected));
+			});
 		} else {
 			get_dropdown_options(organisationId, props.columnName);
 		}
-	}, [organisationId, props.columnName, props.dataType, props.selectedTab]);
+	}, [
+		organisationId,
+		props.columnName,
+		props.dataType,
+		props.selectedTab,
+		selected,
+	]);
 
 	return (
 		<div className="border border-white/20 rounded-md">
-			<div className="flex gap-[0.5rem] p-[0.5rem] border-b border-white/20">
-				{selected && selected.length > 0 && props.dataType === "user" ? (
-					<div
-						key={`multi-selected-user`}
-						className="relative flex bg-black/40 gap-[5px] rounded-full p-[3px] items-center"
-					>
-						<UserComponent
-							value={selected}
-							showName={false}
-						/>
-						<button
-							onClick={() => {
-								let currUser = selected;
-								setSelected(null);
-								if (currUser !== null) setDatas([...datas, currUser]);
-							}}
-							className="hover:text-red-400 text-sm transition-all flex items-center"
+			<div
+				onClick={() => toggleDropdownOption()}
+				className="flex gap-[0.5rem] border-b border-white/20"
+			>
+				<span className="capitalize bg-black/30 p-[0.5rem_1rem] text-sm flex items-center rounded-tl-md font-fira_code">
+					{props.columnName}
+				</span>
+				<div className="p-[3px]">
+					{selected && selected.length > 0 && props.dataType === "user" ? (
+						<div
+							key={`multi-selected-user`}
+							className="relative flex bg-black/40 gap-[5px] rounded-full p-[3px] items-center"
 						>
-							<span className="material-symbols-outlined">close</span>
-						</button>
-					</div>
-				) : selected && selected.length > 0 && props.dataType === "tag" ? (
-					selected.map((tag: TYPE_TAG, index: number) => {
-						return (
-							<div
-								key={`${index}-multi-selected-tag`}
-								className="relative flex bg-black/40 gap-[5px] rounded-full p-[3px] items-center"
+							<UserComponent
+								value={selected}
+								showName={true}
+							/>
+							<button
+								onClick={() => {
+									let currUser = selected;
+									setSelected(null);
+									if (currUser !== null) setDatas([...datas, currUser]);
+								}}
+								className="hover:text-red-400 text-sm transition-all flex items-center"
 							>
-								<TagComponent value={[tag]} />
-								<button
-									onClick={() => {
-										let currTag = selected[index];
-										setSelected([
-											...selected.filter(
-												(item: string, currIndex: number) => currIndex !== index
-											),
-										]);
-										setDatas([...datas, currTag]);
-									}}
-									className="hover:text-red-400 text-sm transition-all flex items-center"
+								<span className="material-symbols-outlined">close</span>
+							</button>
+						</div>
+					) : selected && selected.length > 0 && props.dataType === "tag" ? (
+						selected.map((tag: TYPE_TAG, index: number) => {
+							return (
+								<div
+									key={`${index}-multi-selected-tag`}
+									className="relative flex bg-black/40 gap-[5px] rounded-full p-[3px] items-center"
 								>
-									<span className="material-symbols-outlined">close</span>
-								</button>
-							</div>
-						);
-					})
-				) : (
-					<></>
-				)}
+									<TagComponent value={[tag]} />
+									<button
+										onClick={() => {
+											let currTag = selected[index];
+											setSelected([
+												...selected.filter(
+													(item: string, currIndex: number) =>
+														currIndex !== index
+												),
+											]);
+											if (currTag !== null) setDatas([...datas, currTag]);
+										}}
+										className="hover:text-red-400 text-sm transition-all flex items-center"
+									>
+										<span className="material-symbols-outlined">close</span>
+									</button>
+								</div>
+							);
+						})
+					) : (
+						<></>
+					)}
+				</div>
 			</div>
-			<div className="flex flex-col gap-[0.5rem] p-[0.5rem] border-b border-white/20">
+			<div
+				className={`flex-col gap-[0.5rem] p-[0.5rem] border-b border-white/20 ${
+					isDropdownVisible ? "flex" : "hidden"
+				}`}
+			>
 				{props.dataType === "user"
 					? datas &&
 					  datas.length > 0 &&

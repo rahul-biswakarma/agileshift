@@ -2,18 +2,19 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../redux/hooks";
 import { get_user_by_id, user_active_time } from "../../Utils/Backend";
-import { OrganizationCard } from "./OrganizationCard";
+
 import { get_organizations_details } from "../../Utils/Backend";
 import { RootState } from "../../redux/store";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
+import OrganizationListModal from "./OrganizationListModal";
 
 const OrganizationList: React.FunctionComponent = () => {
 	const [user, setUser] = useState<any>();
 	const [organization, setOrganizations] = useState<TYPE_ORGANISATION[]>([]);
-	const [pendingInvitations, setPendingInvitations] = useState<string[]>([]);
-	const [pendingInvitationsOrgData, setPendingInvitationsOrgData] =
-		useState<any>([]);
+	// const [pendingInvitations, setPendingInvitations] = useState<string[]>([]);
+	// const [pendingInvitationsOrgData, setPendingInvitationsOrgData] =
+	// 	useState<any>([]);
 	const userId = useAppSelector((state: RootState) => state.auth.userId);
 	const navigate = useNavigate();
 
@@ -28,11 +29,11 @@ const OrganizationList: React.FunctionComponent = () => {
 
 	const fetchPendingInvitations = useCallback(() => {
 		if (user && user.email)
-			onSnapshot(doc(db, "invitations", user.email), (doc) => {
+			onSnapshot(doc(db, "invitation", user.email), (doc) => {
 				if (doc.exists()) {
-					let data = doc.data();
-					let orgIds = data;
-					setPendingInvitations(orgIds["pendingList"]);
+					// let data = doc.data();
+					// let orgIds = data;
+					// setPendingInvitations(orgIds["pendingList"]);
 				}
 			});
 	}, [user]);
@@ -41,20 +42,20 @@ const OrganizationList: React.FunctionComponent = () => {
 		fetchPendingInvitations();
 	}, [fetchPendingInvitations]);
 
-	useEffect(() => {
-		const getPendingInvitationsOrgData = async () => {
-			if (pendingInvitations.length > 0) {
-				const organizations = await Promise.all(
-					pendingInvitations.map(async (orgId: string) => {
-						const orgObject = await get_organizations_details(orgId);
-						return orgObject;
-					})
-				);
-				setPendingInvitationsOrgData(organizations);
-			}
-		};
-		getPendingInvitationsOrgData();
-	}, [pendingInvitations]);
+	// useEffect(() => {
+	// 	const getPendingInvitationsOrgData = async () => {
+	// 		if (pendingInvitations.length > 0) {
+	// 			const organizations = await Promise.all(
+	// 				pendingInvitations.map(async (orgId: string) => {
+	// 					const orgObject = await get_organizations_details(orgId);
+	// 					return orgObject;
+	// 				})
+	// 			);
+	// 			// setPendingInvitationsOrgData(organizations);
+	// 		}
+	// 	};
+	// 	getPendingInvitationsOrgData();
+	// }, [pendingInvitations]);
 
 	useEffect(() => {
 		const getOrganizationsDetails = async () => {
@@ -100,31 +101,8 @@ const OrganizationList: React.FunctionComponent = () => {
 							{organization?.length}
 						</p>
 					</div>
-					<div className="flex flex-col gap-[1rem] max-h-[40vh] overflow-auto px-[0.3rem]">
-						{pendingInvitationsOrgData.map((orgData: any, index: number) => {
-							return (
-								<OrganizationCard
-									key={`oraganization-${index}`}
-									name={orgData?.name}
-									orgId={orgData?.id}
-									pendingInvitation={true}
-									user={user}
-								/>
-							);
-						})}
-						<div className="flex flex-col-reverse">
-							{organization.map((orgData: any, index: number) => {
-								return (
-									<OrganizationCard
-										key={`oraganization-${index}`}
-										name={orgData?.name}
-										orgId={orgData?.id}
-										user={user}
-									/>
-								);
-							})}
-						</div>
-					</div>
+					
+					<OrganizationListModal userId={userId} />
 				</div>
 				<button
 					data-testId="create-new-org"

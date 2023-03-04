@@ -403,6 +403,7 @@ export const add_organisation_to_user = async (
 	email: string,
 	page: string
 ) => {
+	console.log("function called");
 	const userRef = doc(db, "users", userId);
 	await updateDoc(userRef, {
 		organisation: arrayUnion(organisationId),
@@ -412,7 +413,7 @@ export const add_organisation_to_user = async (
 		users: arrayUnion(userId),
 	});
 
-	if (page === "invitation") {
+	if (page === "invitations ") {
 		const docRef = doc(db, "invitations", email);
 		const docSnap = await getDoc(docRef);
 		let dataDetails: any = [];
@@ -548,7 +549,6 @@ export const set_dropdown_options = async (
 		// doc.data() will be undefined in this case
 		console.log("No such document!");
 	}
-	console.log("dataDetails", dataDetails);
 
 	await updateDoc(filterSchemaRef, {
 		data: dataDetails,
@@ -831,10 +831,8 @@ export const get_all_tabs_name = async (organisationId: string) => {
 // 37 get filter schema
 export const get_filter_schema = async (organizationId: string) => {
 	const filterRef = doc(db, "filterSchema", organizationId);
-	console.log(organizationId);
 	const filterSnap = await getDoc(filterRef);
 	if (filterSnap.exists()) {
-		console.log(filterSnap.data());
 		return filterSnap.data();
 	} else {
 		console.log("No such document!");
@@ -944,21 +942,33 @@ export const get_dark_background_color_from_name = (name: string) => {
 };
 
 // check if user is present in organizations
-export const check_user_in_organizations = async (email: string,organisationId:string) => {
+export const check_user_in_organizations = async (
+	email: string,
+	organisationId: string
+) => {
 	const q = query(collection(db, "users"), where("email", "==", email));
 	const querySnapshot = await getDocs(q);
-	let isUserExit = false
-	let userData:any={}; 
+	let isUserExit = false;
+	let userData: any = {};
 	querySnapshot.forEach((doc) => {
-		userData = doc.data(); 
+		userData = doc.data();
+		if (userData["organisation"].includes(organisationId)) isUserExit = true;
+		userData = doc.id;
 	});
-	try{
-		isUserExit=userData["organisation"].includes(organisationId)
-	}
-	catch{
-		isUserExit=false
-	}
-	return isUserExit; 
+	// try{
+	// 	isUserExit=userData["organisation"].includes(organisationId)
+	// }
+	// catch{
+	// 	// isUserExit=false
+	// 	console.log("No Document found");
+
+	// }
+	console.log(isUserExit);
+
+	return {
+		isUser: isUserExit,
+		userId: userData,
+	};
 };
 
 //32  get user suggestions
