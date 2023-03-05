@@ -109,7 +109,7 @@ export const OrganisationForm = ({ mode }: OrganisationFormPropTypes) => {
 
 	if (activeTab === -1)
 		return (
-			<div className="bg-background_color h-screen w-screen flex items-center justify-center font-dm_sans">
+			<div className="relative bg-background_color h-screen w-screen flex items-center justify-center font-dm_sans">
 				{mode === "edit" && (
 					<button
 						onClick={() => navigateToDashboard()}
@@ -142,6 +142,7 @@ export const OrganisationForm = ({ mode }: OrganisationFormPropTypes) => {
 								Name
 							</label>
 							<input
+								data-testId="org-name-input"
 								ref={orgName}
 								onChange={(e) => {
 									handleChange(e);
@@ -211,21 +212,32 @@ export const OrganisationForm = ({ mode }: OrganisationFormPropTypes) => {
 					>
 						<span className="material-symbols-outlined">add</span>
 						{mode === "create" ? "Create new AgileOrg" : "Update AgileOrg"}
-					</button>
+					</button> 
+            <div className="absolute right-4 bottom-16">
+              <button
+                className="flex justify-center items-center p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm text-dark_gray border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 hover:text-purple-800 transition-all duration-200 ease-in-out
+		"
+                onClick={() => dispatch(setActiveTab(activeTab + 1))}>
+                <span className="material-symbols-outlined">arrow_forward</span>
+              </button>
+            </div>
 				</div>
 			</div>
 		);
 	else
-		return (
-			<div className="h-screen w-12 flex flex-wrap text-primary_font_color  bg-Secondary_background_color">
-				<button
-					className="h-full w-full"
-					onClick={() => dispatch(setActiveTab(-1))}
-				>
-					<span className="[writing-mode:vertical-rl] text-sm font-[600] uppercase font-fira_code">
-						Organisation Form
-					</span>
-				</button>
-			</div>
-		);
+	return(
+		<div></div>
+	)
+		// return (
+		// 	<div className="h-screen w-12 flex flex-wrap text-primary_font_color  bg-Secondary_background_color">
+		// 		<button
+		// 			className="h-full w-full"
+		// 			onClick={() => dispatch(setActiveTab(-1))}
+		// 		>
+		// 			<span className="[writing-mode:vertical-rl] text-sm font-[600] uppercase font-fira_code">
+		// 				Organisation Form
+		// 			</span>
+		// 		</button>
+		// 	</div>
+		// );
 };

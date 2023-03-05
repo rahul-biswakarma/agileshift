@@ -3,13 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { RootState } from "../../redux/store";
 import { create_schema, get_schema_data } from "../../Utils/Backend";
 import { OrganisationForm } from "../ManageOrganization/OrganisationForm";
-import { NewSchema } from "./NewSchema";
 import { SchemaGenerator } from "./SchemaGenerator";
 
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { setActiveTab } from "../../redux/reducers/SchemaSlice";
 import SchemaGeneratorFormHeader from "./Header";
 import { toast } from "react-toastify";
+import TabsContainer from "./TabsContainer";
 
 
 type GeneratorContainerPropTypes={
@@ -18,7 +18,7 @@ type GeneratorContainerPropTypes={
 
 export const GeneratorFormsContainer = ({mode}:GeneratorContainerPropTypes) => {
 	const navigate = useNavigate();
-	const dispatch = useAppDispatch();
+	const dispatch:any = useAppDispatch();
 	const userId = useAppSelector((state:RootState) => state.auth.userId);
 
 	useEffect(() => {
@@ -32,7 +32,7 @@ export const GeneratorFormsContainer = ({mode}:GeneratorContainerPropTypes) => {
   useEffect(()=>{
     if(orgId && mode === "edit"){
       get_schema_data(orgId).then((data)=> {
-        if(data) setFields(data.schemaData);
+        if(data){console.log(data.schemaData); setFields(data.schemaData)};
       })
     }
   }, [orgId,mode])
@@ -64,14 +64,14 @@ export const GeneratorFormsContainer = ({mode}:GeneratorContainerPropTypes) => {
       name: "Tickets",
       color: "purple",
       icon: "home",
-      linkage: [],
+      linkage: ["Tickets"],
     },
     {
       list: makeActualCopy(defaultColumnList),
       name: "Issues",
       color: "cyan",
       icon: "home",
-      linkage: [],
+      linkage: ["Tickets","Issues"],
     },
   ], [defaultColumnList]);
 
@@ -152,13 +152,13 @@ export const GeneratorFormsContainer = ({mode}:GeneratorContainerPropTypes) => {
     let newSchema: TYPE_FIELD = {
       list: makeActualCopy(defaultColumnList),
       name: "",
-      color: "",
-      icon: "",
+      color: "cyan",
+      icon: "home",
       linkage: [],
     };
     tempFields.push(newSchema);
     setFields(tempFields);
-    dispatch(setActiveTab(activeTab + 1));
+    dispatch(setActiveTab(tempFields.length - 1));
   };
 
   function duplicateSchema(this: any) {
@@ -211,9 +211,10 @@ export const GeneratorFormsContainer = ({mode}:GeneratorContainerPropTypes) => {
   return (
     <div className="flex flex-col max-h-screen">
       <SchemaGeneratorFormHeader />
-      <div className="relative w-screen h-[calc(100vh-40px)] flex divide-x divide-dark_gray">
+      <div className="relative w-screen h-[calc(100vh-40px)] flex">
+        <TabsContainer fields={fields} addSchema={addSchema} mode={mode}/>
         {mode==="create" && <OrganisationForm mode={mode} />}
-        {fields.map((field:any, id:any) => (
+        {fields.map((field:TYPE_FIELD, id:number) => (
           <SchemaGenerator
             id={id}
             name={field.name}
@@ -229,10 +230,11 @@ export const GeneratorFormsContainer = ({mode}:GeneratorContainerPropTypes) => {
             changeColor={changeColor.bind({ id: id })}
             icon={field.icon}
             changeIcon={changeIcon.bind({ id: id })}
+            linkage={field.linkage}
             changeLinkage={changeLinkage.bind({id:id})}
+            mode={mode}
           />
         ))}
-        <NewSchema addSchema={addSchema} />
       </div>
     </div>
   );
