@@ -8,6 +8,7 @@ import { db } from "../../firebaseConfig";
 
 interface TYPE_TEST {
 	userId: string;
+	boxSize?: string;
 }
 
 const OrganizationListModal = (props: TYPE_TEST) => {
@@ -75,15 +76,16 @@ const OrganizationListModal = (props: TYPE_TEST) => {
 	}, [user]);
 
 	return (
-		<div className="flex flex-col gap-[1rem] max-h-[40vh] overflow-auto px-[0.3rem]">
+		<div className="flex flex-col w-full gap-[1rem] max-h-[40vh] overflow-auto px-[0.3rem]">
 			{pendingInvitationsOrgData.map((orgData: any, index: number) => {
 				return (
 					<OrganizationCard
 						key={`oraganization-${index}`}
 						name={orgData?.name}
 						orgId={orgData?.id}
-						pendingInvitation={true}
 						user={user}
+						pendingInvitation={true}
+						boxSize={props.boxSize ? props.boxSize : "normal"}
 					/>
 				);
 			})}
@@ -95,6 +97,7 @@ const OrganizationListModal = (props: TYPE_TEST) => {
 							name={orgData?.name}
 							orgId={orgData?.id}
 							user={user}
+							boxSize={props.boxSize ? props.boxSize : "normal"}
 						/>
 					);
 				})}
