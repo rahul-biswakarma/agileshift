@@ -29,7 +29,7 @@ const VistaList = () => {
         const getInfo = async() => {
             const user:any = await get_user_by_id(userId);
             let vistaIdList = [];
-            if(user.vistas[organizationId]){
+            if(user.vistas && user.vistas.length>0 && user.vistas[organizationId]){
                 vistaIdList = user.vistas[organizationId];
             }
             let visList = [];
