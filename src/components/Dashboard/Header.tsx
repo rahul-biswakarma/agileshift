@@ -100,7 +100,7 @@ const Header = (props: TYPE_HeaderProps) => {
 	return (
 		<div
 			id="header"
-			className="p-[0_2rem] h-full min-h-[60px] max-h-[61px] flex items-center gap-[3rem] justify-between border-[2px] border-Secondary_background_color"
+			className="p-[0_2rem] h-full min-h-[60px] max-h-[61px] flex items-center justify-between border-[2px] border-Secondary_background_color"
 		>
 			<button className="flex gap-[1rem] items-center" onClick={()=>setIsOrgMenuOpen(!isOrgMenuOpen)}>
 				<img
@@ -109,6 +109,7 @@ const Header = (props: TYPE_HeaderProps) => {
 					alt="logo"
 				/>
 			</button>
+			<SearchComponent />
 			{isOrgMenuOpen && <div
 						className="top-[60px] left-8 absolute flex flex-col gap-[0.3rem] w-max bg-Secondary_background_color overflow-auto border border-white/30 rounded-md z-50"
 					>
@@ -145,7 +146,6 @@ const Header = (props: TYPE_HeaderProps) => {
 						</div>
 					</Modal>
 					
-			<SearchComponent />
 
 			<div className="flex gap-[2rem] items-center">
 				<Tooltip title="Notifications" placement="top">
