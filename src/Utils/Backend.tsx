@@ -435,7 +435,7 @@ export const add_organisation_to_user = async (
     users: arrayUnion(userId),
   });
 
-  if (page === "invitations ") {
+  if (page === "invitations") {
     const docRef = doc(db, "invitations", email);
     const docSnap = await getDoc(docRef);
     let dataDetails: any = [];
@@ -445,9 +445,11 @@ export const add_organisation_to_user = async (
       dataDetails = dataDetails["pendingList"].filter(
         (item: any) => item !== organisationId
       );
+      console.log(dataDetails)
       await updateDoc(docRef, {
         pendingList: dataDetails,
       });
+
     } else {
       // doc.data() will be undefined in this case
       console.log("No such document!");
@@ -713,8 +715,6 @@ export const send_invite = async (
 ) => {
   const invitatonRef = doc(db, "invitations", receiverEmail);
 
-  console.log("senderId", receiverEmail);
-
   const docSnap = await getDoc(invitatonRef);
 
   if (docSnap.exists()) {
@@ -751,8 +751,6 @@ export const send_invitation_mail = async (
 ) => {
   //   e.preventDefault(); // prevents the page from reloading when you hit “Send”
 
-  console.log("sending mail", email);
-
   let params: {
     email: string;
     org_name: string;
@@ -767,7 +765,6 @@ export const send_invitation_mail = async (
     console.log("invalid mail");
     return;
   }
-  console.log(params);
   emailjs
     .send("service_0dpd4z6", "template_5ye9w1m", params, "sb5MCkizR-ZuN4LVw")
     .then(
@@ -781,6 +778,7 @@ export const send_invitation_mail = async (
       }
     );
 };
+
 
 // 39 get invitations list
 export const get_invitations_list = async (userID: string) => {
