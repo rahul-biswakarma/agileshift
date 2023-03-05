@@ -5,7 +5,7 @@ import BuildQuadarntHeader from "./BuildQuadarntHeader";
 import { setDatas } from "../../redux/reducers/DataTableSlice";
 import Filter from "../Filters/Filter";
 import { useCallback, useEffect, useState } from "react";
-import { get_data_by_column_name, get_filter_schema } from "../../Utils/Backend";
+import { get_data_by_column_name, get_filter_schema, get_userIds_in_organizations, get_user_by_id } from "../../Utils/Backend";
 import { setVistaName } from "../../redux/reducers/VistaSlice";
 
 type Type_BuildQuadarntProps = {};
@@ -13,12 +13,14 @@ type Type_BuildQuadarntProps = {};
 type TYPE_FilterOption = {
 	filterOptionName: string;
 	active: boolean;
+	userId: string;
 };
 
 type TYPE_Filters = {
 	columnName: string;
 	active: boolean;
 	data: TYPE_FilterOption[];
+	type: string;
 };
 
 const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
@@ -26,7 +28,6 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 	const organizationId = useAppSelector((state) => state.auth.organisationId);
 	const tabName = useAppSelector((state) => state.datatable.tabName);
 	const [filterSchema, setFilterSchema] = useState<TYPE_Filters[]>([]);
-
 
 	const removeDuplicates = (filters: TYPE_Filters[]) => {
 		let uniqueValues = new Map();
@@ -54,25 +55,54 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 		return result;
 	};
 
-	useEffect(() => {
-		const getFilterSchema = async () => {
-			const filters = await get_filter_schema(organizationId);
-			if (tabName !== "All") {
-				setFilterSchema(filters!.data[tabName]);
-			} else {
-				let filter: TYPE_Filters[] = [];
-				for (const tabName in filters!.data) {
-					for (let index = 0; index < filters!.data[tabName].length; index++) {
-						filter.push(filters!.data[tabName][index]);
-					}
-				}
-				filter = removeDuplicates(filter);
-				setFilterSchema(filter);
+	const addUsersToSchema =  useCallback( async (filters: TYPE_Filters[]) => {
+		console.log(filters);
+		const users = await get_userIds_in_organizations(organizationId);
+		const filter = [...filters];
+		const listUser:any = [];
+		users.map(async (user: string) => {
+			const userObj:any = await get_user_by_id(user);
+			console.log(userObj.name);
+			listUser.push({
+				filterOptionName: userObj.name,
+				active: false,
+				userId: user
+			})
+			return;
+		})
+
+		filter.map((filterObj) => {
+			if(filterObj.type === "user"){
+				filterObj.data = listUser;
+				return {};
 			}
-		};
+			return {};
+		})
+
+		return filter;
+	}, [organizationId]);
+
+	const getFilterSchema = useCallback(async () => {
+		const filters = await get_filter_schema(organizationId);
+		if (tabName !== "All") {
+			setFilterSchema(filters!.data[tabName]);
+		} else {
+			let filter: TYPE_Filters[] = [];
+			for (const tabName in filters!.data) {
+				for (let index = 0; index < filters!.data[tabName].length; index++) {
+					filter.push(filters!.data[tabName][index]);
+				}
+			}
+			filter = removeDuplicates(filter);
+			filter = await addUsersToSchema(filter);
+			setFilterSchema(filter);
+		}
+	}, [tabName, organizationId, addUsersToSchema]);
+
+	useEffect(() => {
 		getFilterSchema();
 		dispatch(setVistaName(""));
-	}, [organizationId, tabName, dispatch]);
+	}, [dispatch, getFilterSchema]);
 
 	const modifyData = useCallback(async (filterSchema: TYPE_Filters[]) => {
 		let rowData;
@@ -88,10 +118,18 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 
 		filters.forEach((filterData) => {
 			let filterValues: any = [];
-			filterData.data.forEach((filterOptionData) => {
-				if (filterOptionData.active)
-					filterValues.push(filterOptionData.filterOptionName);
-			});
+			if(filterData.type === "user") {
+				filterData.data.forEach((filterOptionData) => {
+					if (filterOptionData.active)
+						filterValues.push(filterOptionData.userId);
+				});
+			}else{
+				filterData.data.forEach((filterOptionData) => {
+					if (filterOptionData.active)
+						filterValues.push(filterOptionData.filterOptionName);
+				});
+			}
+			
 			if (filterValues.length > 0)
 				filterObject[filterData.columnName] = filterValues;
 		});
@@ -102,6 +140,15 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 				let dataFromFilter: any;
 				Object.keys(propsData).forEach((key) => {
 					if(!dataFromFilter){
+						if(key === "Owner"){
+							if (filterObject[key] && filterObject[key].length > 0) {
+								if (propsData[key].length > 0) {
+									if (filterObject[key].includes(propsData[key])) {
+										dataFromFilter = propsData;
+									}
+								}
+							}
+						}
 						if (key === "Tag") {
 							if (filterObject[key] && filterObject[key].length > 0) {
 								if (propsData[key].length > 0) {
