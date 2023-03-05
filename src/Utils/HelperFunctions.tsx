@@ -105,3 +105,15 @@ export const get_current_time = () => {
     .toString()
     .padStart(2, "0")}.${date.getMilliseconds().toString().padStart(3, "0")}`;
 };
+
+export const get_current_date = () => {
+  const today: Date = new Date();
+  const options: Intl.DateTimeFormatOptions = {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  };
+  const formattedDate: string = today.toLocaleDateString("en-US", options);
+  return formattedDate.replace(",", "");
+};

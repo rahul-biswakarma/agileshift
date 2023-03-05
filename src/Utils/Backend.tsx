@@ -17,6 +17,7 @@ import {
   generateRandomId,
   removeDuplicates,
   get_current_time,
+  get_current_date,
 } from "./HelperFunctions";
 
 // funcitons list
@@ -72,6 +73,8 @@ import {
 51 check if user is present in organizations
 52  get user Ids in organizations
 53 get previous filter data
+54 start conversations
+55 get field display id
 */
 // 1
 export const check_users_database = async (userId: string) => {
@@ -476,6 +479,10 @@ export const update_data_to_database = async (
   const organizationRef = doc(db, "organizations", organisationId);
   if (mode === "createMode") {
     data["created_at"] = get_current_time();
+    data["displayId"] = await get_field_display_id(
+      organisationId,
+      data["field"]
+    );
     await updateDoc(organizationRef, {
       data: arrayUnion(data),
     });
@@ -1021,20 +1028,61 @@ export const send_message_in_fields = async (
   message: string
 ) => {
   // check if conversation is present
-  const conversationRef = doc(db, "conversations", fieldId);
+  let conversationRef = doc(db, "conversations", fieldId);
   const conversationSnap = await getDoc(conversationRef);
-  let messageData: { message: string; senderId: string; timeStamp: string } = {
+  const userDetails: any = await get_user_by_id(senderId);
+  let messageData: {
+    message: string;
+    senderId: string;
+    timeStamp: string;
+    senderImg: string;
+    name: string;
+    email: string;
+  } = {
     message: message,
     senderId: senderId,
     timeStamp: get_current_time(),
+    senderImg: userDetails["avatar"],
+    name: userDetails["name"],
+    email: userDetails["email"],
   };
+  console.log(userDetails);
+
   if (conversationSnap.exists()) {
     // conversation is present
     await updateDoc(conversationRef, {
-      conversationsData: arrayUnion(messageData),
+      [get_current_date()]: arrayUnion(messageData),
     });
   } else {
     // conversation is not present
-    await setDoc(conversationRef, { conversationsData: [messageData] });
+    let x = get_current_date();
+    await setDoc(conversationRef, { [x]: [messageData] });
+  }
+};
+
+// 55 get field display id
+export const get_field_display_id = async (
+  organisationId: string,
+  fieldName: string
+) => {
+  const fieldsCountRef = doc(db, "fieldsCount", organisationId);
+  const fieldsCountSnap = await getDoc(fieldsCountRef);
+
+  // check if fields data is present
+  if (fieldsCountSnap.exists()) {
+    let fieldsCountData = fieldsCountSnap.data();
+    // check if field is present
+    if (Object.keys(fieldsCountData).includes(fieldName)) {
+      fieldsCountData[fieldName] = fieldsCountData[fieldName] + 1;
+      await updateDoc(fieldsCountRef, fieldsCountData);
+      return fieldsCountData[fieldName];
+    } else {
+      fieldsCountData[fieldName] = 1;
+      await updateDoc(fieldsCountRef, fieldsCountData);
+      return 1;
+    }
+  } else {
+    await setDoc(fieldsCountRef, { [fieldName]: 1 });
+    return 1;
   }
 };

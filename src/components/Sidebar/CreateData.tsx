@@ -21,6 +21,8 @@ import { toast } from "react-toastify";
 import { IdComponent } from "../DataTable/idComponent";
 
 import { setDatas } from "../../redux/reducers/DataTableSlice";
+// import Editor from "./TextEditor";
+// import ChatModule from "../common/ChatModule";
 
 type Props = {
   tabColaps: Boolean;
@@ -244,6 +246,14 @@ export default function CreateData(props: Props) {
       })
     );
   };
+  const handleConversations = (id: string) => {
+    dispatch(
+      setSideBar({
+        sidebarType: "conversationTab",
+        fieldId: id,
+      })
+    );
+  };
 
   React.useEffect(() => {
     let flag: boolean = false;
@@ -387,7 +397,13 @@ export default function CreateData(props: Props) {
           </div>
         </div>
 
-        <footer className=" right-0 mb-4 flex flex-row justify-end gap-2">
+        <footer className=" right-0 mb-4 flex flex-row justify-between gap-2 items-center">
+          <span
+            className="material-symbols-outlined cursor-pointer active:opacity-50"
+            onClick={() => handleConversations(props.sidebar.id!)}
+          >
+            forum
+          </span>
           <CustomButton
             onClick={handleSubmit}
             label={
