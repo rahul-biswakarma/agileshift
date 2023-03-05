@@ -106,7 +106,7 @@ const Filter = ({filters, modifyData}: TYPE_FilterProps) => {
 			setFilterSchema(filter);
 			modifyData(filter);
 		}
-	},[filterSchemaFromStore, modifyData]);
+	},[filterSchemaFromStore]);
 
 	return (
 		<div className="w-screen h-auto bg-[#161616] text-[#808080]">

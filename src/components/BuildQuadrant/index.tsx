@@ -4,8 +4,8 @@ import DataTable from "../DataTable";
 import BuildQuadarntHeader from "./BuildQuadarntHeader";
 import { setDatas } from "../../redux/reducers/DataTableSlice";
 import Filter from "../Filters/Filter";
-import { useEffect, useState } from "react";
-import { get_filter_schema } from "../../Utils/Backend";
+import { useCallback, useEffect, useState } from "react";
+import { get_data_by_column_name, get_filter_schema } from "../../Utils/Backend";
 
 type Type_BuildQuadarntProps = {};
 
@@ -26,7 +26,6 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 	const tabName = useAppSelector((state) => state.datatable.tabName);
 	const [filterSchema, setFilterSchema] = useState<TYPE_Filters[]>([]);
 
-	const datas = useAppSelector((state) => state.datatable.datas);
 
 	const removeDuplicates = (filters: TYPE_Filters[]) => {
 		let uniqueValues = new Map();
@@ -73,10 +72,12 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 		getFilterSchema();
 	}, [organizationId, tabName]);
 
-	const modifyData = (filterSchema: TYPE_Filters[]) => {
-		let newData = [...datas];
+	const modifyData = useCallback(async (filterSchema: TYPE_Filters[]) => {
+		const rowData = await get_data_by_column_name(organizationId, tabName);
+		let newData = [...rowData];
 		const filters = [...filterSchema];
 		const filterObject: any = {};
+
 		filters.forEach((filterData) => {
 			let filterValues: any = [];
 			filterData.data.forEach((filterOptionData) => {
@@ -87,12 +88,14 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 				filterObject[filterData.columnName] = filterValues;
 		});
 
+		console.log(filterObject);
+
 		if (Object.keys(filterObject).length > 0) {
 			let dataList: any = [];
 			newData.forEach((propsData) => {
 				let dataFromFilter: any;
 				Object.keys(propsData).forEach((key) => {
-					if (!dataFromFilter) {
+					if(!dataFromFilter){
 						if (key === "Tag") {
 							if (filterObject[key] && filterObject[key].length > 0) {
 								if (propsData[key].length > 0) {
@@ -118,7 +121,7 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 		} else {
 			dispatch(setDatas(newData));
 		}
-	};
+	},[dispatch, tabName, organizationId]); 
 
 	return (
 		<div>
