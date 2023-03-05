@@ -47,7 +47,7 @@ const TabHeader = (props: Type_TabHeaderProps) => {
 							? `${get_text_color_from_name("purple")}`
 							: "rgba(255, 255, 255, 0.3)",
 				}}
-				className={`p-[0.5rem_1.5rem] font-dm_sans text-[1rem] flex gap-[0.5rem] items-center text-white/30 cursor-pointer rounded-sm hover:text-purple-500`}
+				className={`py-[0.5rem] pr-[1.5rem] font-dm_sans text-[1rem] flex gap-[0.5rem] items-center text-white/30 cursor-pointer rounded-sm hover:text-purple-500`}
 				onClick={() => {
 					dispatch(setFieldColor("purple"));
 					get_data_by_column_name(organizationId, "all").then((res) => {
@@ -85,7 +85,7 @@ const TabHeader = (props: Type_TabHeaderProps) => {
 						}}
 						ref={tabButtonRef}
 						key={index}
-						className={`p-[0.5rem_1.5rem] font-dm_sans text-[1rem] flex items-center gap-[0.5rem] text-white/30 cursor-pointer rounded-sm`}
+						className={`py-[0.5rem] pr-[1.5rem] font-dm_sans text-[1rem] flex items-center gap-[0.5rem] text-white/30 cursor-pointer rounded-sm`}
 						style={buttonStyle}
 						onMouseOver={() => setHoveredButtonIndex(index)}
 						onMouseOut={() => setHoveredButtonIndex(-1)}
