@@ -9,15 +9,15 @@ import { AgGridReact } from "ag-grid-react/lib/agGridReact";
 import type { GridOptions, GridReadyEvent } from "ag-grid-community";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
-import { IdComponent } from "./idComponent";
 import TagComponent from "./tagComponent";
 import UserComponent from "./userComponent";
 import stringComponent from "./stringComponent";
+import { DisplayIdComponent } from "./displayIdComponent";
 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { setSideBar } from "../../redux/reducers/SideBarSlice";
-import {DateComponent} from "./dateComponent";
+import { DateComponent } from "./dateComponent";
 
 interface CustomGridOptions extends GridOptions {
 	autoHeight?: boolean;
@@ -45,27 +45,29 @@ const DataTable = () => {
 	}, []);
 
 	const dataSchema = useAppSelector((state) => state.datatable.dataSchema);
-	const fieldColor = useAppSelector((state) => state.datatable.fieldColor);
-	const datas = useAppSelector((state) => state.datatable.datas);
+	console.log("dataSchema", dataSchema);
 
-  const gridOptions: CustomGridOptions = {
-    detailRowAutoHeight: true,
-    rowSelection: "single",
-    suppressDragLeaveHidesColumns: true,
-	headerHeight: 40,
-    onRowClicked: function (event) {
-      let rowData = event.data;
-      dispatch(
-        setSideBar({
-          sidebarType: "editMode",
-          createModeCalledByField: "",
-          fieldId: rowData.id,
-          linkedData:[],
-          id:rowData.id,
-        })
-      );
-    },
-  };
+	const datas = useAppSelector((state) => state.datatable.datas);
+	const fieldColor = useAppSelector((state) => state.datatable.fieldColor);
+
+	const gridOptions: CustomGridOptions = {
+		detailRowAutoHeight: true,
+		rowSelection: "single",
+		suppressDragLeaveHidesColumns: true,
+		headerHeight: 40,
+		onRowClicked: function (event) {
+			let rowData = event.data;
+			dispatch(
+				setSideBar({
+					sidebarType: "editMode",
+					createModeCalledByField: "",
+					fieldId: rowData.id,
+					linkedData: [],
+					id: rowData.id,
+				})
+			);
+		},
+	};
 
 	const [rowData, setRowData] = useState<any>();
 	const [columnDefs, setColumnDefs] = useState<Type_AgGridColsDefs>([]);
@@ -77,42 +79,53 @@ const DataTable = () => {
 
 	const setDataForAgGrid = useCallback(() => {
 		let tempColumnDefs: Type_AgGridColsDefs = [];
-		dataSchema.map((schema: TYPE_SCHEMA) => {
-			function idComponentWrapper(params: any) {
-				return (
-					<IdComponent
-						color={fieldColor}
-						itemId={params.value}
-					/>
-				);
-			}
+
+		const updateDataSchema = [
+			{ columnType: "id", columnName: "displayId" },
+			...dataSchema,
+		];
+
+		updateDataSchema.map((schema: TYPE_SCHEMA) => {
 			function dateComponentWrapper(params: any) {
+				return <DateComponent date={params.value} />;
+			}
+
+			function displayIdComponentWrapper(params: any) {
+				console.log("params", params);
 				return (
-					<DateComponent
-						date={params.value}
+					<DisplayIdComponent
+						color={fieldColor}
+						displayId={params.data.displayId}
+						field={params.data.field}
 					/>
 				);
 			}
-			if (schema.columnType === "id")
+			if (schema.columnType === "id") {
 				tempColumnDefs.push({
-					field: schema.columnName,
+					field: "Id",
 					maxWidth: 200,
 					minWidth: 200,
-					cellRenderer: idComponentWrapper,
+					cellRenderer: displayIdComponentWrapper,
 					cellClass: ["flex", "items-center", "cell-style-class"],
 					headerClass: ["header-style-class"],
 					wrapText: true,
 				});
-			else if (schema.columnType === "date") {
+			} else if (schema.columnType === "date") {
 				tempColumnDefs.push({
 					field: schema.columnName,
 					minWidth: 200,
 					cellRenderer: dateComponentWrapper,
-					cellClass: ["flex", "items-center", "cell-style-class", "gap-[5px]", "font-dm_sans"],
+					cellClass: [
+						"flex",
+						"items-center",
+						"cell-style-class",
+						"gap-[5px]",
+						"font-dm_sans",
+					],
 					headerClass: ["header-style-class"],
 					wrapText: true,
 				});
-			}else if (schema.columnType === "tag") {
+			} else if (schema.columnType === "tag") {
 				tempColumnDefs.push({
 					field: schema.columnName,
 					minWidth: 250,
@@ -164,10 +177,7 @@ const DataTable = () => {
 	}, [setDataForAgGrid]);
 
 	return (
-		<div
-			className="ag-theme-alpine"
-			
-		>
+		<div className="ag-theme-alpine">
 			{rowData && rowData.length > 0 ? (
 				<AgGridReact
 					ref={gridRef}
