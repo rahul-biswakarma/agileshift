@@ -21,7 +21,7 @@ import { toast } from "react-toastify";
 import { IdComponent } from "../DataTable/idComponent";
 
 import { setDatas } from "../../redux/reducers/DataTableSlice";
-import { DisplayIdComponent } from "../DataTable/displayIdComponent";
+import { DisplayIdComponent } from "../DataTable/displayIdComponentContainer";
 // import Editor from "./TextEditor";
 // import ChatModule from "../common/ChatModule";
 

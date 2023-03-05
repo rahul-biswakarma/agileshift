@@ -12,7 +12,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import TagComponent from "./tagComponent";
 import UserComponent from "./userComponent";
 import stringComponent from "./stringComponent";
-import { DisplayIdComponent } from "./displayIdComponent";
+import { DisplayIdComponent } from "./displayIdComponentContainer";
 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";

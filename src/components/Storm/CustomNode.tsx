@@ -10,7 +10,7 @@ import {
 import TagComponent from "../DataTable/tagComponent";
 import UserComponent from "../DataTable/userComponent";
 import { setSideBar } from "../../redux/reducers/SideBarSlice";
-import { DisplayIdComponent } from "../DataTable/displayIdComponent";
+import { DisplayIdComponent } from "../DataTable/displayIdComponentContainer";
 
 type Type_IdNodeProps = {
 	data: {
