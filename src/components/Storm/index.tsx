@@ -1,12 +1,15 @@
 import { useMemo, useEffect, useState } from "react";
-import ReactFlow, { Background, Controls} from "reactflow";
+import ReactFlow from "reactflow";
 import { v4 as uuidv4 } from "uuid";
 
-
-import { IdNode} from "./CustomNode";
+import { IdNode, FieldNameNode, OrgNameNode } from "./CustomNode";
 
 import "reactflow/dist/style.css";
-import { get_data_by_column_name, get_schema_data } from "../../Utils/Backend";
+import {
+	get_data_by_column_name,
+	get_organizations_details,
+	get_schema_data,
+} from "../../Utils/Backend";
 
 type Type_StormProps = {
 	organizationId: string;
@@ -16,12 +19,15 @@ const Storm = (props: Type_StormProps) => {
 	const nodeTypes = useMemo(
 		() => ({
 			idNode: IdNode,
+			FieldNameNode: FieldNameNode,
+			OrgNameNode: OrgNameNode,
 		}),
 		[]
 	);
 
 	// State
 	const [data, setData] = useState<any>(null);
+	const [orgName, setOrgName] = useState<any>(null);
 	const [nodes, setNodes] = useState<any>(null);
 	const [edges, setEdges] = useState<any>(null);
 	const [schemaData, setSchemaData] = useState<any>(null);
@@ -29,13 +35,19 @@ const Storm = (props: Type_StormProps) => {
 		[key: string]: { x: number; y: number };
 	}>({});
 
-	const [feildNameColorMap, setFeildNameColorMap] = useState<any>(null);
+	const [fieldNameColorMap, setFieldNameColorMap] = useState<any>(null);
+	const [fieldIconMap, setFieldIconMap] = useState<any>(null);
 
 	// Effects
 	useEffect(() => {
 		get_schema_data(props.organizationId).then((res) => {
 			if (res) {
 				setSchemaData(res.schemaData);
+			}
+		});
+		get_organizations_details(props.organizationId).then((res) => {
+			if (res) {
+				setOrgName(res.name);
 			}
 		});
 	}, [props.organizationId]);
@@ -58,7 +70,12 @@ const Storm = (props: Type_StormProps) => {
 					schemaData.map((schema: any) => {
 						return (tempFeildNameColorMap[schema.name] = schema.color);
 					});
-					setFeildNameColorMap(tempFeildNameColorMap);
+					let tempFieldIconMap: any = {};
+					schemaData.map((schema: any) => {
+						return (tempFieldIconMap[schema.name] = schema.icon);
+					});
+					setFieldIconMap(tempFieldIconMap);
+					setFieldNameColorMap(tempFeildNameColorMap);
 					setData(tempData);
 				})
 				.catch((error) => {
@@ -72,18 +89,38 @@ const Storm = (props: Type_StormProps) => {
 			y = 0;
 		let tempNode: any = [];
 		let tempEdge: any = [];
+
+		// Org Name
+		tempNode.push({
+			id: "orgName",
+			position: { x: -500, y: 100 },
+			data: {
+				name: orgName,
+			},
+			type: "OrgNameNode",
+		});
+
 		if (data && data.length > 0)
 			data.map((field: any) => {
 				tempNode.push({
 					id: field.name,
 					position: { x: x, y: y },
 					data: {
-						id: field.name,
-						color: feildNameColorMap[field.name] || "#fff",
+						name: field.name,
+						icon: fieldIconMap[field.name] || "home",
+						color: fieldNameColorMap[field.name] || "#fff",
 					},
-					type: "idNode",
+					type: "FieldNameNode",
 				});
-				y += 100;
+				tempEdge.push({
+					id: `${uuidv4()}-a`,
+					source: "orgName",
+					target: field.name,
+					type: "smoothstep",
+					animated: true,
+					style: { stroke: "#fff" },
+				});
+				y += 200;
 
 				field.data.map((data: any) => {
 					tempNode.push({
@@ -91,7 +128,7 @@ const Storm = (props: Type_StormProps) => {
 						position: { x: x, y: y },
 						data: {
 							id: data.id,
-							color: feildNameColorMap[field.name] || "#fff",
+							color: fieldNameColorMap[field.name] || "#fff",
 							schemaData: schemaData,
 							data: data,
 							fieldName: field.name,
@@ -128,7 +165,7 @@ const Storm = (props: Type_StormProps) => {
 			});
 		setNodes(tempNode);
 		setEdges(tempEdge);
-	}, [feildNameColorMap, data, schemaData]);
+	}, [fieldNameColorMap, data, schemaData, fieldIconMap, orgName]);
 
 	const handleNodeDrag = (event: any, node: any) => {
 		setNodePositions((prevNodePositions) => ({
@@ -151,10 +188,7 @@ const Storm = (props: Type_StormProps) => {
 					}))}
 					edges={edges}
 					nodeTypes={nodeTypes}
-				>
-					<Background />
-					<Controls />
-				</ReactFlow>
+				></ReactFlow>
 			)}
 		</div>
 	);
