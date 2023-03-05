@@ -13,6 +13,7 @@ declare global {
 		id?:string;
 		linkedData?:string[];
 		columnName?:string;
+		columnType?:string;
 		parentId?:string;
 	  };
 	type TYPE_TAG = {

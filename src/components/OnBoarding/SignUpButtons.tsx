@@ -48,7 +48,7 @@ function SignUpButtons() {
 					alt="Info Icon"
 					className="w-5 h-5"
 				/>
-				<p className="text-sm text-black/40">
+				<p className="text-sm text-white/40">
 					We recommend using your work email
 				</p>
 			</div>

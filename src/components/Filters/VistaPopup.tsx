@@ -33,7 +33,7 @@ const VistaPopup = ({filterSchema}: TYPE_VistaPopupProps) => {
 
   return (
     <div className='relative'>
-      <button onClick={() => setPopUpCollapse(!popUpCollapse)} className="flex gap-1 items-center px-3 py-1 hover:bg-white/20 rounded-md">
+      <button onClick={() => setPopUpCollapse(!popUpCollapse)} className="flex gap-1 items-center px-3 py-2 hover:bg-white/5 rounded-sm">
         <span className="material-symbols-outlined text-[20px]">
           bookmark_add
         </span>

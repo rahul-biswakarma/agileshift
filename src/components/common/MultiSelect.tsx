@@ -57,7 +57,7 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 				setDatas(res.filter((userId: string) => userId !== selected));
 			});
 		} else {
-			get_dropdown_options(organisationId, props.columnName);
+			get_dropdown_options(organisationId, props.columnName).then((res) => {});
 		}
 	}, [
 		organisationId,

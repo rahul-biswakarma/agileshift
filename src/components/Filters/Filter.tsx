@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../redux/hooks";
 import { setVistaName, setVistaSchema } from "../../redux/reducers/VistaSlice";
@@ -8,12 +8,14 @@ import VistaPopup from "./VistaPopup";
 type TYPE_FilterOption = {
 	filterOptionName: string;
 	active: boolean;
+	userId: string;
 };
 
 type TYPE_Filters = {
 	columnName: string;
 	active: boolean;
 	data: TYPE_FilterOption[];
+	type: string;
 };
 
 type TYPE_ActiveFiltersDropdown = {
@@ -21,12 +23,14 @@ type TYPE_ActiveFiltersDropdown = {
 };
 
 type TYPE_FilterProps = {
-	filters: TYPE_Filters[],
-	modifyData: (filterSchema: TYPE_Filters[]) => void
-}
+	filters: TYPE_Filters[];
+	modifyData: (filterSchema: TYPE_Filters[]) => void;
+};
 
-const Filter = ({filters, modifyData}: TYPE_FilterProps) => {
-	const filterSchemaFromStore = useAppSelector((state)=> state.vista.filterSchema)
+const Filter = ({ filters, modifyData }: TYPE_FilterProps) => {
+	const filterSchemaFromStore = useAppSelector(
+		(state) => state.vista.filterSchema
+	);
 	const dispatch = useDispatch();
 	const [filterSchema, setFilterSchema] = useState<TYPE_Filters[]>(filters);
 	const [showAllFilters, setShowAllFilters] = useState<boolean>(false);
@@ -35,7 +39,7 @@ const Filter = ({filters, modifyData}: TYPE_FilterProps) => {
 
 	useEffect(() => {
 		setFilterSchema(filters);
-	}, [filters])
+	}, [filters]);
 
 	const handleColumnClick = (columnTitle: string) => {
 		const newFilters = { ...activeFiltersDropdown };
@@ -64,9 +68,10 @@ const Filter = ({filters, modifyData}: TYPE_FilterProps) => {
 		} else {
 			filterObj.data[filterOptionIndex].active = true;
 		}
-        setFilterSchema(newFilterSchema);
+
+		setFilterSchema(newFilterSchema);
 		modifyData(newFilterSchema);
-    }
+	};
 
 	const modifyActiveState = (index: number) => {
 		const newArray = [...filterSchema];
@@ -79,40 +84,44 @@ const Filter = ({filters, modifyData}: TYPE_FilterProps) => {
 		modifyData(newArray);
 	};
 
-    const resetFilters = () => {
-        const resetFilterSchema:TYPE_Filters[] = [];
-        filterSchema.forEach((filterObj) => {
-			const filterObjs = {...filterObj};
-			const filterObjsData:TYPE_FilterOption[] = [];
-            filterObj.data.forEach((filterOptionObj) => {
-				let filterOptionObjs = {...filterOptionObj}
-                filterOptionObjs.active = false;
+	const resetFilters = () => {
+		const resetFilterSchema: TYPE_Filters[] = [];
+		filterSchema.forEach((filterObj) => {
+			const filterObjs = { ...filterObj };
+			const filterObjsData: TYPE_FilterOption[] = [];
+			filterObj.data.forEach((filterOptionObj) => {
+				let filterOptionObjs = { ...filterOptionObj };
+				filterOptionObjs.active = false;
 				filterObjsData.push(filterOptionObjs);
-            });
+			});
 			filterObjs.data = filterObjsData;
 			resetFilterSchema.push(filterObjs);
-        });
-
-		console.log(resetFilterSchema)
-        setFilterSchema(resetFilterSchema);
+		});
+		setFilterSchema(resetFilterSchema);
 		modifyData(resetFilterSchema);
 		dispatch(setVistaName(""));
 		dispatch(setVistaSchema(resetFilterSchema));
-    }
+	};
 
-	useEffect(()=>{
-		if(filterSchemaFromStore.length>0){
-			const filter = [...JSON.parse(JSON.stringify(filterSchemaFromStore))]
-			setFilterSchema(filter);
-			modifyData(filter);
+	const updateVistaData = useCallback(() => {
+		if (filterSchemaFromStore.length > 0) {
+			const filter = [...JSON.parse(JSON.stringify(filterSchemaFromStore))];
+			setTimeout(() => {
+				setFilterSchema(filter);
+				modifyData(filter);
+			}, 500);
 		}
-	},[filterSchemaFromStore, modifyData]);
+	}, [filterSchemaFromStore, modifyData]);
+
+	useEffect(() => {
+		updateVistaData();
+	}, [updateVistaData]);
 
 	return (
-		<div className="w-screen h-auto bg-[#161616] text-[#808080]">
-			<div className="flex justify-between mb-4 mx-4 pt-4">
+		<div className="w-screen h-[60px] bg-[#161616] text-[#808080] flex border-b-[1px] border-white/10">
+			<div className="flex w-screen justify-between mb-4 mx-4 pt-4 items-center">
 				<div className="flex flex-wrap gap-3 mx-3">
-					<div className="flex text-sm">
+					{/* <div className="flex text-sm">
 						<button className="mr-4">
 							<span className="material-symbols-outlined">
 								alternate_email
@@ -126,7 +135,7 @@ const Filter = ({filters, modifyData}: TYPE_FilterProps) => {
 						<div className="h-4 bg-[#808080] self-center mr-4">
 							<hr className="border-default w-px h-full"></hr>
 						</div>
-					</div>
+					</div> */}
 
 					<div className="relative flex items-center gap-2">
 						{filterSchema
@@ -169,9 +178,7 @@ const Filter = ({filters, modifyData}: TYPE_FilterProps) => {
 							onClick={() => setShowAllFilters(!showAllFilters)}
 							className="flex items-center justify-center rounded-md w-6 h-6 text-sm mr-4"
 						>
-							<span className="material-symbols-outlined">
-								add
-							</span>
+							<span className="material-symbols-outlined">add</span>
 						</button>
 						{showAllFilters && (
 							<div className="absolute top-[110%] left-0 bg-background_color w-48 rounded-xl p-1 border border-white/20 text-highlight_font_color z-10">
@@ -217,11 +224,15 @@ const Filter = ({filters, modifyData}: TYPE_FilterProps) => {
 					</div>
 				</div>
 				<div className="flex items-center gap-4">
-						<button onClick={() => resetFilters()} className="rounded-md h-5
-						text-[#808080] text-sm font-bold ">
-							Clear
-						</button>
+					<button
+						onClick={() => resetFilters()}
+						className="rounded-sm h-5 flex items-center text-[#808080] text-md font-[500]"
+					>
+						Clear
+					</button>
+					<div>
 						<VistaPopup filterSchema={filterSchema} />
+					</div>
 				</div>
 			</div>
 		</div>
