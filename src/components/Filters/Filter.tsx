@@ -8,12 +8,14 @@ import VistaPopup from "./VistaPopup";
 type TYPE_FilterOption = {
 	filterOptionName: string;
 	active: boolean;
+	userId: string;
 };
 
 type TYPE_Filters = {
 	columnName: string;
 	active: boolean;
 	data: TYPE_FilterOption[];
+	type: string;
 };
 
 type TYPE_ActiveFiltersDropdown = {
