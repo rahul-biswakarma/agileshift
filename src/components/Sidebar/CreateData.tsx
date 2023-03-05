@@ -193,11 +193,15 @@ export default function CreateData(props: Props) {
         };
       }
 
-      await update_data_to_database(
+      const newDataId = await update_data_to_database(
         organizationId,
         tempFormData,
         props.sidebar.sidebarType
       );
+
+      // await set_notification(organizationId, [creatorOfData], [`You created a ${selectedField}`], "")
+      console.log(newDataId);
+      
 
       toast.success("Data Updated Successfully");
     } catch (err) {

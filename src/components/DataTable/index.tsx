@@ -17,6 +17,7 @@ import stringComponent from "./stringComponent";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { setSideBar } from "../../redux/reducers/SideBarSlice";
+import {DateComponent} from "./dateComponent";
 
 interface CustomGridOptions extends GridOptions {
 	autoHeight?: boolean;
@@ -85,6 +86,13 @@ const DataTable = () => {
 					/>
 				);
 			}
+			function dateComponentWrapper(params: any) {
+				return (
+					<DateComponent
+						date={params.value}
+					/>
+				);
+			}
 			if (schema.columnType === "id")
 				tempColumnDefs.push({
 					field: schema.columnName,
@@ -95,7 +103,16 @@ const DataTable = () => {
 					headerClass: ["header-style-class"],
 					wrapText: true,
 				});
-			else if (schema.columnType === "tag") {
+			else if (schema.columnType === "date") {
+				tempColumnDefs.push({
+					field: schema.columnName,
+					minWidth: 200,
+					cellRenderer: dateComponentWrapper,
+					cellClass: ["flex", "items-center", "cell-style-class", "gap-[5px]", "font-dm_sans"],
+					headerClass: ["header-style-class"],
+					wrapText: true,
+				});
+			}else if (schema.columnType === "tag") {
 				tempColumnDefs.push({
 					field: schema.columnName,
 					minWidth: 250,

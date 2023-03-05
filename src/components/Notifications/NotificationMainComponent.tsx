@@ -82,7 +82,8 @@ const NotificationMainComponent = (props: TYPE_NotificationProps) => {
               }
             )
           );
-
+        console.log(notificationListWithData);
+        
         setNotificationList(notificationListWithData);
       }
     });
