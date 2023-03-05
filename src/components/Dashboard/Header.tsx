@@ -143,7 +143,7 @@ const Header = (props: TYPE_HeaderProps) => {
 							{openOrgList ? "close" : "list"}
 						</button>
 						{openOrgList && (
-							<div className="absolute ml-[-50%] min-w-[300px] top-[60px] rounded-lg font-dm_sans bg-background_color shadow-lg p-4 flex items-center justify-center text-primary_font_color z-50">
+							<div className="absolute min-w-[300px] top-[40px] right-[-10%] rounded-lg font-dm_sans bg-background_color border border-[#444444] shadow-lg p-2 flex items-center justify-center text-primary_font_color z-50">
 								<OrganizationListModal userId={userId} />
 							</div>
 						)}

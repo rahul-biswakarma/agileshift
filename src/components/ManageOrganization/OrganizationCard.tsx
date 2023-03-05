@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import React, { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setOrganisationId } from "../../redux/reducers/AuthSlice";
@@ -47,9 +47,9 @@ export const OrganizationCard = ({
 					className="p-[0.5rem_1rem] flex items-center bg-Secondary_background_color border border-inherit text-center text-lg rounded-lg"
 				>
 					<span className="material-symbols-outlined">arrow_forward</span>
-				</button>
+				</button>	
 			) : (
-				<>
+				<React.Fragment>
 					<p className="text-[12px] font-fira_code">Invited</p>
 					<div className="flex gap-[1rem] border-transparent">
 						<button
@@ -60,7 +60,7 @@ export const OrganizationCard = ({
 									orgId,
 									user.email,
 									"invitations"
-								);
+								);			
 								cardRef.current!.style.display = "none";
 								dispatch(setOrganisationId(orgId));
 								navigate(`/organization/${orgId}`);
@@ -78,7 +78,7 @@ export const OrganizationCard = ({
 							<span className="material-symbols-outlined">close</span>
 						</button>
 					</div>
-				</>
+				</React.Fragment>
 			)}
 		</div>
 	);

@@ -264,7 +264,7 @@ code {
 /* .jodit-ui-separator {
 	display: none !important;
 } */
-*/ .jodit-popup__content {
+.jodit-popup__content {
   background: #222529 !important;
 }
 

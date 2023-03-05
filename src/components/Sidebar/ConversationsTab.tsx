@@ -106,7 +106,7 @@ export default function ConversationsTab(props: Props) {
           onClick={handleClose}
           className="absolute right-3 top-3 flex items-center justify-center p-1 text-white hover:text-red-400"
         />
-        <p className="pl-4">Conversesations</p>
+        <p className="pl-4">Conversations</p>
 
         <section
           ref={chatRef}
@@ -124,14 +124,14 @@ export default function ConversationsTab(props: Props) {
                         : "Today"}
                     </span>
                   </section>
-                  {chat[day].map((message: any, index: number) => {
+                  {chat[day].map((message: any, index: number) => { 
                     return <SingleMessage key={index} {...message} />;
                   })}
                 </div>
               );
             })}
         </section>
-        <div className="fixed bottom-0 w-[100%]  h-[20vh]">
+        <div className="fixed bottom-0 w-[100%] h-[20vh]">
           <Editor id={props.sidebar.fieldId!} />
         </div>
       </div>

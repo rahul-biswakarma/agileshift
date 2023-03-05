@@ -41,8 +41,12 @@ const TabHeader = (props: Type_TabHeaderProps) => {
 	const handleViewStorm = () => {
 		let viewStorm = props.showStorm;
 		props.setShowStorm(!viewStorm);
-		setHoveredButtonIndex(-1);
-		dispatch(setTabName(""));
+		if(viewStorm) {
+			dispatch(setTabName("All"));
+		}else{
+			setHoveredButtonIndex(-1);
+			dispatch(setTabName(""));
+		}
 	};
 
 	const tabName = useAppSelector((state) => state.datatable.tabName);
