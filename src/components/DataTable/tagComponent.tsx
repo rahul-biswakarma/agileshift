@@ -5,7 +5,6 @@ type Type_TagComponentProps = {
 };
 
 const TagComponent = (props: Type_TagComponentProps) => {
-	console.log("props", props.value);
 	return (
 		<div className="flex gap-[10px] flex-wrap">
 			{props.value !== undefined && props.value.length > 0

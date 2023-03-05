@@ -86,7 +86,7 @@ const LoginForm = () => {
 			<div>
 				<label
 					ref={emailLabelRef}
-					className=" text-black/60 text-sm font-dm_sans"
+					className=" text-white text-sm font-dm_sans"
 					htmlFor="email"
 				>
 					Email
