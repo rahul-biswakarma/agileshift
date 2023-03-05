@@ -1,3 +1,4 @@
+import { Tooltip } from "@mui/material";
 import React, { useEffect, useCallback } from "react";
 import { get_user_by_id } from "../../Utils/Backend";
 
@@ -30,7 +31,8 @@ const UserComponent = (props: Type_UserComponentProps) => {
   }, [getUser]);
 
   return (
-    <div className="flex items-center gap-[0.5rem]">
+    <Tooltip title = {`${name}`} placement = "top">
+       <div className="flex items-center gap-[0.5rem] cursor-pointer">
       {avatar !== undefined && avatar !== null && avatar !== "" ? (
         <>
           <img
@@ -39,15 +41,18 @@ const UserComponent = (props: Type_UserComponentProps) => {
             alt={`${name}`}
           />
           {props.showName && (
-            <span className="font-dm_sans text-[15px]">{name}</span>
+            <span className="font-dm_sans text-sm">{name}</span>
           )}
         </>
       ) : avatar !== undefined && avatar !== null && avatar !== "" ? (
-        <span className="font-dm_sans text-[15px]">{name}</span>
+        <span className="font-dm_sans text-sm">{name}</span>
       ) : (
         "-"
       )}
     </div>
+
+    </Tooltip>
+   
   );
 };
 

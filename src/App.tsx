@@ -14,6 +14,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { OrganisationForm } from "./components/ManageOrganization/OrganisationForm";
 
+
 const App = () => {
 	const userIdFromSession = getFromSession("userId");
 	const dispatch = useAppDispatch();
@@ -29,7 +30,7 @@ const App = () => {
 				position="bottom-right"
 			/>
 			{sideBarList.length !== 0 && (
-				<section className="fixed right-0 z-50">
+				<section className="fixed right-0 z-50 shadow-[0_35px_40px_5px_rgba(0,0,0,0.3)] shadow-black">
 					<SideBarScreen />
 				</section>
 			)}
@@ -76,6 +77,8 @@ const App = () => {
 					path="/organization"
 					element={<Navigate to="/organization-lists" />}
 				/>
+				
+				
 				
 			</Routes>
 		</BrowserRouter>

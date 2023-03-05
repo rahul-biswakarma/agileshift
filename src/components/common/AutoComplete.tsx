@@ -1,14 +1,16 @@
 import { doc, onSnapshot } from "firebase/firestore";
 import React from "react";
+import { useSelector } from "react-redux";
 import Select from "react-select";
 import { db } from "../../firebaseConfig";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setSideBar } from "../../redux/reducers/SideBarSlice";
+import { RootState } from "../../redux/store";
 
 const customStyles = {
   control: (provided: any) => ({
     ...provided,
-    backgroundColor: "#161616", // Set the background color here,
+    backgroundColor: "#1F1F1F", // Set the background color here,
     flexGrow: 1,
     display: "flex",
     border: "0px solid ",
@@ -17,10 +19,13 @@ const customStyles = {
   }),
   option: (provided: any, state: any) => ({
     ...provided,
-    backgroundColor: state.isSelected ? "#3B82F6" : "#1F1F1F", // Set the option background color here
+    backgroundColor: state.isSelected ? "#262626" : "#1F1F1F", // Set the option background color here
     color: state.isSelected ? "#FFFFFF" : "#CCCCCC", // Set the option text color here
     cursor: "pointer", // Set the cursor
 
+    "&:hover": {
+      backgroundColor: "#1F1F1F",
+    },
     "&:active": {
       backgroundColor: "#321f11", // Set the option background color here
     },
@@ -81,6 +86,29 @@ const AutoComplete = (props: type_props) => {
   const [options, setOptions] = React.useState<any>([]);
   const organizationId = useAppSelector((state) => state.auth.organisationId);
   const dispatch = useAppDispatch();
+  const sidebarList: Type_SidebarState[] = useSelector(
+    (state: RootState) => state.sidebar.sideBarData
+  );
+  const [isButtonClicked, setIsButtonClicked] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    let flag: boolean = false;
+    sidebarList.forEach((item: any) => {
+      if (
+        item.sidebarType === "addOption" &&
+        item.fieldName === props.selectedField &&
+        item.columnName === props.columnDetails.columnName
+      ) {
+        setIsButtonClicked(true);
+        console.log("item**,true");
+        flag = true;
+      }
+    });
+
+    if (!flag) {
+      setIsButtonClicked(false);
+    }
+  }, [sidebarList, props.selectedField, props.columnDetails.columnName]);
 
   React.useEffect(() => {
     onSnapshot(doc(db, "filterSchema", organizationId), (doc) => {
@@ -105,12 +133,13 @@ const AutoComplete = (props: type_props) => {
 
   return (
     <div>
-      <div className="flex mt-[0.3rem] bg-background_color">
-        <span className="min-w-fit pl-2 h-[2.5rem] flex justify-center items-center   rounded-l font-dm_sans">
-          {props.columnDetails.columnName} :
+      <div className="flex my-[0.3rem] bg-background_color text-sm rounded-lg">
+        <span className="w-[7em] p-3 h-[2.5rem] text-center rounded-l font-dm_sans text-primary_font_color font-bold truncate">
+          {props.columnDetails.columnName}
         </span>
-        <span className=" w-[100%]">
+        <span className="grow bg-Secondary_background_color focus:outline-none rounded-r pl-4 code-font font-dm_sans border-2 border-background_color flex">
           <Select
+            className="grow"
             placeholder="test place holder"
             styles={customStyles}
             options={formatOptions(
@@ -131,7 +160,8 @@ const AutoComplete = (props: type_props) => {
         <button
           onClick={() => handleIdClick()}
           type="button"
-          className="font-bold text-2xl pr-2 flex justify-center active:text-blue-900 cursor-pointer"
+          disabled={isButtonClicked}
+          className="text-2xl px-2 flex justify-center items-center text-primary_font_color active:text-blue-900 hover:text-highlight_icon_color cursor-pointer"
         >
           +
         </button>
