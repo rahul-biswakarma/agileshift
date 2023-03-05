@@ -1,6 +1,5 @@
 import { setNewSidBar } from "../redux/reducers/SideBarSlice";
 
-
 export function sortObjectKeysByArrayLength(obj: any) {
   // Get an array of the object's keys
   const keys = Object.keys(obj);
@@ -16,15 +15,15 @@ export function sortObjectKeysByArrayLength(obj: any) {
   return keys;
 }
 
-export const getNoOfDays = (dateOfCreation:Date):number=>{
-  const creationDate = new Date(dateOfCreation)
+export const getNoOfDays = (dateOfCreation: Date): number => {
+  const creationDate = new Date(dateOfCreation);
   let today = new Date();
   let diff = Math.abs(today.getTime() - creationDate.getTime());
-  
+
   let diffDays = Math.floor(diff / (1000 * 3600 * 24));
-  
+
   return diffDays;
-}
+};
 
 export const removeDuplicates = (arr: any) => {
   return arr.reduce((unique: any, item: any) => {
@@ -42,13 +41,13 @@ export const removeDuplicates = (arr: any) => {
 };
 
 export function generateRandomId() {
-	let result = "";
-	const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	const charactersLength = characters.length;
-	for (let i = 0; i < 12; i++) {
-		result += characters.charAt(Math.floor(Math.random() * charactersLength));
-	}
-	return result;
+  let result = "";
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const charactersLength = characters.length;
+  for (let i = 0; i < 12; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
 }
 
 export const formatSchemaDataToTypeField = (data: any) => {
@@ -59,31 +58,50 @@ export const formatSchemaDataToTypeField = (data: any) => {
   return formattedData;
 };
 
-export const formatDataToTypeField=(data:any)=>{
-  let formattedData:TYPE_FIELD={
+export const formatDataToTypeField = (data: any) => {
+  let formattedData: TYPE_FIELD = {
     name: data["name"],
-      list: data["list"],
-      icon: data["icon"],
-      linkage: data["linkage"],
-      color: data["color"],
+    list: data["list"],
+    icon: data["icon"],
+    linkage: data["linkage"],
+    color: data["color"],
   };
-return formattedData;
-}
+  return formattedData;
+};
 
-export const getLinkedData=(sideBarList:Type_SidebarState[],dataId:string)=>{
-  for(let sidebar of sideBarList){
-    if(sidebar.id===dataId)
-    return sidebar.linkedData;
+export const getLinkedData = (
+  sideBarList: Type_SidebarState[],
+  dataId: string
+) => {
+  for (let sidebar of sideBarList) {
+    if (sidebar.id === dataId) return sidebar.linkedData;
   }
-}
+};
 
-export const setLinkedData=(sideBarList:Type_SidebarState[],dispatch:any,dataId:string,links:string[])=>{
-  let tempSidebarListString=JSON.stringify([...sideBarList]);
+export const setLinkedData = (
+  sideBarList: Type_SidebarState[],
+  dispatch: any,
+  dataId: string,
+  links: string[]
+) => {
+  let tempSidebarListString = JSON.stringify([...sideBarList]);
   let tempSidebarList = JSON.parse(tempSidebarListString);
 
-  for(let sidebar of tempSidebarList){
-    if(sidebar.id===dataId)
-      sidebar.linkedData=links;
+  for (let sidebar of tempSidebarList) {
+    if (sidebar.id === dataId) sidebar.linkedData = links;
   }
   dispatch(setNewSidBar(tempSidebarList));
-}
+};
+
+export const get_current_time = () => {
+  let date = new Date();
+  return `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")} ${date
+    .getHours()
+    .toString()
+    .padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}:${date
+    .getSeconds()
+    .toString()
+    .padStart(2, "0")}.${date.getMilliseconds().toString().padStart(3, "0")}`;
+};
