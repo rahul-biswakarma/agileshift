@@ -19,21 +19,21 @@ type type_props = {
 	selectedField: string;
 };
 export default function SideBarInputs(props: type_props) {
-	if (["dropdown"].includes(props.columnDetails.columnType)) {
-		return (
-			<div>
-				<AutoComplete
-					columnDetails={props.columnDetails}
-					formData={props.formData}
-					setFormData={props.setFormData}
-					defaultValue={props.defaultValue}
-					selectedField={
-						props.selectedField === undefined ? "" : props.selectedField
-					}
-				/>
-			</div>
-		);
-	}
+	if (["tag", "dropdown"].includes(props.columnDetails.columnType)) {
+    return (
+      <div>
+        <AutoComplete
+          columnDetails={props.columnDetails}
+          formData={props.formData}
+          setFormData={props.setFormData}
+          defaultValue={props.defaultValue}
+          selectedField={
+            props.selectedField === undefined ? "" : props.selectedField
+          }
+        />
+      </div>
+    );
+  }
 	if (["tag", "user"].includes(props.columnDetails.columnType)) {
 		return (
 			<MultiSelect
