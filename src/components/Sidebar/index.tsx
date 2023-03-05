@@ -18,8 +18,6 @@ export default function SideBarScreen() {
     setColapsTabBar(sideBarList.length - 1);
   }, [sideBarList]);
 
-  console.log("sideBarList", sideBarList);
-
   return (
     <div className="min-h-screen w-max  flex flex-row-reverse  z-20 font-dm_sans  text-white ">
       {sideBarList.map((sidebar: Type_SidebarState, index: number) => {

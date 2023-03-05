@@ -44,11 +44,11 @@ const DataTable = () => {
 		};
 	}, []);
 
+	// State
+
 	const dataSchema = useAppSelector((state) => state.datatable.dataSchema);
-	console.log("dataSchema", dataSchema);
 
 	const datas = useAppSelector((state) => state.datatable.datas);
-	const fieldColor = useAppSelector((state) => state.datatable.fieldColor);
 
 	const gridOptions: CustomGridOptions = {
 		detailRowAutoHeight: true,
@@ -64,6 +64,7 @@ const DataTable = () => {
 					fieldId: rowData.id,
 					linkedData: [],
 					id: rowData.id,
+					displayId: rowData.displayId,
 				})
 			);
 		},
@@ -71,6 +72,10 @@ const DataTable = () => {
 
 	const [rowData, setRowData] = useState<any>();
 	const [columnDefs, setColumnDefs] = useState<Type_AgGridColsDefs>([]);
+
+	const fieldColorMap = useAppSelector(
+		(state) => state.datatable.fieldColorMap
+	);
 
 	const onGridReady = (params: GridReadyEvent) => {
 		const { api } = params;
@@ -91,10 +96,9 @@ const DataTable = () => {
 			}
 
 			function displayIdComponentWrapper(params: any) {
-				console.log("params", params);
 				return (
 					<DisplayIdComponent
-						color={fieldColor}
+						color={fieldColorMap[params.data.field]}
 						displayId={params.data.displayId}
 						field={params.data.field}
 					/>
@@ -169,7 +173,7 @@ const DataTable = () => {
 		});
 
 		setRowData(datas);
-	}, [dataSchema, datas, fieldColor]);
+	}, [dataSchema, datas, fieldColorMap]);
 
 	useEffect(() => {
 		// Setting AgGridColumnsDefitions

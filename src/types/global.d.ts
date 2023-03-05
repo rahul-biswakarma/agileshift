@@ -5,27 +5,29 @@ declare global {
 		[key: string]: string;
 	};
 	type Type_SidebarState = {
+		displayId: string;
 		fieldId?: string;
 		sidebarType: string;
 		createModeCalledByField?: string; // this is the field that called the create mode
 		linkedCalledByID?: string; // this is the id of the field that called the link
-		fieldName?:string;
-		id?:string;
-		linkedData?:string[];
-		columnName?:string;
-		columnType?:string;
-		parentId?:string;
-	  };
+		fieldName?: string;
+		id?: string;
+		linkedData?: string[];
+		columnName?: string;
+		columnType?: string;
+		parentId?: string;
+		displayId?: string;
+	};
 	type TYPE_TAG = {
 		color: string; //hash code of color
 		tagName: string;
 	};
 	type TYPE_NOTIFICATION = {
-		dataId:string,
-		dateOfCreation:Date,
-		isSeen:boolean,
-		notificationData:string,
-		notificationId:string
+		dataId: string;
+		dateOfCreation: Date;
+		isSeen: boolean;
+		notificationData: string;
+		notificationId: string;
 	};
 	type TYPE_VISTA = {
 		[key: string]: string;
@@ -40,14 +42,14 @@ declare global {
 	type TYPE_TASKS = {
 		[key: string]: TYPE_TASK[];
 	};
-    type TYPE_FIELD = {
-        name: string;
-        list: TYPE_SCHEMA[];
-        color: string;
-        icon: string;
-        linkage: string[];
-		parentId?:string;
-      };
+	type TYPE_FIELD = {
+		name: string;
+		list: TYPE_SCHEMA[];
+		color: string;
+		icon: string;
+		linkage: string[];
+		parentId?: string;
+	};
 	type TYPE_ORGANISATION = {
 		id: string;
 		name: string;
