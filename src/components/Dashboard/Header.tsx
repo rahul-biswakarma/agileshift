@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
-import logoSvg from "../../assets/logo.svg";
 import {
 	get_user_by_id,
 	get_organization_name_by_id,
