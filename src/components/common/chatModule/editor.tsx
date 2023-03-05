@@ -1,6 +1,7 @@
 import React from "react";
 import JoditEditor from "jodit-react";
 import { send_message_in_fields } from "../../../Utils/Backend";
+import { useAppSelector } from "../../../redux/hooks";
 
 interface EditorProps {
   id: string;
@@ -8,10 +9,11 @@ interface EditorProps {
 
 const Editor: React.FC<EditorProps> = ({ id }) => {
   var messageValue = "";
+  const userId = useAppSelector((state) => state.auth.userId);
 
   function setMessage() {
     console.log(id, messageValue);
-    send_message_in_fields(id, "Ahy7xiQg8cftHwRpF4CUHdenIy02", messageValue);
+    send_message_in_fields(id, userId, messageValue);
   }
 
   const handleContentChange = (newContent: string) => {
@@ -33,8 +35,7 @@ const Editor: React.FC<EditorProps> = ({ id }) => {
         className="absolute right-[1.5rem] bottom-[1.5rem]"
         onClick={() => {
           setMessage();
-        }}
-      >
+        }}>
         <span className="material-symbols-outlined">send</span>
       </button>
     </div>

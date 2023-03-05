@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { useAppSelector } from "../../redux/hooks";
 import { send_message_in_fields } from "../../Utils/Backend";
 
 type Props = {
@@ -8,6 +9,9 @@ type Props = {
 };
 const Editor = (props: Props) => {
   const [value, setValue] = useState("");
+  const userId = useAppSelector((state) => state.auth.userId);
+
+  console.log(userId, "satyam");
 
   const modules = {
     toolbar: [
@@ -31,14 +35,9 @@ const Editor = (props: Props) => {
       <button
         className=" bottom-0 right-0 mr-4 mb-3 absolute"
         onClick={() => {
-          send_message_in_fields(
-            props.id,
-            "Ahy7xiQg8cftHwRpF4CUHdenIy02",
-            value
-          );
+          send_message_in_fields(props.id, userId, value);
           setValue("");
-        }}
-      >
+        }}>
         send
       </button>
     </>
