@@ -10,6 +10,7 @@ import {
   query,
   where,
   getDocs,
+  arrayRemove,
 } from "firebase/firestore";
 import emailjs from "@emailjs/browser";
 import { isValidEmail } from "email-js";
@@ -75,6 +76,13 @@ import {
 53 get previous filter data
 54 start conversations
 55 get field display id
+56 get vistas details
+57 send vista invitation
+58 send vista invitation on mail
+59 get invitations list
+60 get users vista's list
+61 accept vista invitation
+62 reject vista invitation
 */
 // 1
 export const check_users_database = async (userId: string) => {
@@ -1085,4 +1093,150 @@ export const get_field_display_id = async (
     await setDoc(fieldsCountRef, { [fieldName]: 1 });
     return 1;
   }
+};
+
+// 56 get vistas details
+export const get_vistas_details = async (vistasId: string) => {
+  const vistasRef = doc(db, "vistas", vistasId);
+  const vistasSnap = await getDoc(vistasRef);
+  return vistasSnap.data();
+};
+
+//57  send vista invitation
+export const send_vista_invitations = async (
+  senderId: string,
+  receiverEmail: string,
+  vistasId: string
+) => {
+  const invitatonRef = doc(db, "vistaInvitations", receiverEmail);
+  const docSnap = await getDoc(invitatonRef);
+
+  if (docSnap.exists()) {
+    const data = docSnap.data();
+    if (data["pendingList"].includes(vistasId)) {
+      return;
+    } else {
+      await updateDoc(invitatonRef, {
+        pendingList: arrayUnion(vistasId),
+      });
+    }
+  } else {
+    await setDoc(invitatonRef, {
+      pendingList: [vistasId],
+    });
+  }
+
+  const senderDetails: any = await get_user_by_id(senderId);
+  const organizationDetails: any = await get_vistas_details(vistasId);
+
+  send_vista_invitation_mail(
+    receiverEmail,
+    senderDetails["name"],
+    organizationDetails["name"]
+  );
+};
+// 58 send vista invitation on mail
+export const send_vista_invitation_mail = async (
+  email: string,
+  sender_name: string,
+  vista_name: string
+) => {
+  //   e.preventDefault(); // prevents the page from reloading when you hit “Send”
+
+  console.log("sending mail", email);
+
+  let params: {
+    email: string;
+    org_name: string;
+    sender_name: string;
+  } = {
+    email: email,
+    org_name: vista_name,
+    sender_name: sender_name,
+  };
+
+  if (!isValidEmail(email)) {
+    console.log("invalid mail");
+    return;
+  }
+  console.log(params);
+  emailjs
+    .send("service_0dpd4z6", "template_5ye9w1m", params, "sb5MCkizR-ZuN4LVw")
+    .then(
+      (res) => {
+        console.log("emailjs", res);
+        // show the user a success message
+      },
+      (error: string) => {
+        // show the user an error
+        console.error("error in sending otp");
+      }
+    );
+};
+
+// 59 get invitations list
+export const get_vista_invitations_list = async (userID: string) => {
+  const userDetails: any = await get_user_by_id(userID);
+  const userRef = doc(db, "vistaInvitations", userDetails["email"]);
+  const docSnap = await getDoc(userRef);
+  if (docSnap.exists()) {
+    return docSnap.data()["pendingList"];
+  } else {
+    return [];
+  }
+};
+
+// 60 get users vista's list
+export const get_users_vistas_list = async (userID: string) => {
+  const userDetails: any = await get_user_by_id(userID);
+  try {
+    return userDetails["vistasList"];
+  } catch {
+    return [];
+  }
+};
+
+// 61 accept vista invitation
+//  accept vista invitation
+export const accept_vista_invitation = async (
+  userId: string,
+  vistaId: string
+) => {
+  const userDetails: any = await get_user_by_id(userId);
+  const userRef = doc(db, "users", userId);
+
+  const vistasInvitationsRef = doc(
+    db,
+    "vistaInvitations",
+    userDetails["email"]
+  );
+  await updateDoc(vistasInvitationsRef, {
+    pendingList: arrayRemove(vistaId),
+  });
+
+  if (Object.keys(userDetails).includes("vistasList")) {
+    await updateDoc(userRef, {
+      vistasList: arrayUnion(vistaId),
+    });
+  } else {
+    await setDoc(userRef, {
+      vistasList: [vistaId],
+    });
+  }
+};
+
+// 62 reject vista invitation
+export const reject_vista_invitation = async (
+  userId: string,
+  vistaId: string
+) => {
+  const userDetails: any = await get_user_by_id(userId);
+  const vistasInvitationsRef = doc(
+    db,
+    "vistaInvitations",
+    userDetails["email"]
+  );
+  await updateDoc(vistasInvitationsRef, {
+    pendingList: arrayRemove(vistaId),
+  });
 };
