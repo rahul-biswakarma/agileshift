@@ -21,6 +21,7 @@
     "ag-grid-community": "^29.1.0",
     "ag-grid-react": "^29.1.0",
     "cypress": "^12.7.0",
+    "cypress-slow-down": "^1.2.1",
     "email-js": "^2.0.2",
     "emailjs-com": "^3.2.0",
     "eslint": "^8.35.0",

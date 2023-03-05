@@ -220,6 +220,7 @@ export const create_schema = async (
   schemas: TYPE_FIELD[],
   isEdit: boolean
 ) => {
+  const previousFilterSchema = await get_filter_schema(organisationId);
   if (isEdit) {
     const schemaDetails = {
       schemaData: schemas,
@@ -237,7 +238,12 @@ export const create_schema = async (
         ) {
           filterData[schema.name].push({
             active: true,
-            data: [],
+            data: get_previous_filter_data(
+              previousFilterSchema,
+              schema.name,
+              item.columnName,
+              item.columnType
+            ),
             type: item.columnType,
             columnName: item.columnName,
           });
@@ -549,7 +555,6 @@ export const set_dropdown_options = async (
     // doc.data() will be undefined in this case
     console.log("No such document!");
   }
-  console.log("dataDetails", dataDetails);
 
   await updateDoc(filterSchemaRef, {
     data: dataDetails,
@@ -832,10 +837,8 @@ export const get_all_tabs_name = async (organisationId: string) => {
 // 37 get filter schema
 export const get_filter_schema = async (organizationId: string) => {
   const filterRef = doc(db, "filterSchema", organizationId);
-  console.log(organizationId);
   const filterSnap = await getDoc(filterRef);
   if (filterSnap.exists()) {
-    console.log(filterSnap.data());
     return filterSnap.data();
   } else {
     console.log("No such document!");
@@ -945,31 +948,33 @@ export const get_dark_background_color_from_name = (name: string) => {
 };
 
 // check if user is present in organizations
-export const check_user_in_organizations = async (email: string,organisationId:string) => {
-	const q = query(collection(db, "users"), where("email", "==", email));
-	const querySnapshot = await getDocs(q);
-	let isUserExit = false;
-	let userData:any={}; 
-	querySnapshot.forEach((doc) => {
-		userData = doc.data(); 
-		if(userData["organisation"].includes(organisationId))
-			isUserExit = true
-		userData = doc.id
-	});
-	// try{
-	// 	isUserExit=userData["organisation"].includes(organisationId)
-	// }
-	// catch{
-	// 	// isUserExit=false
-	// 	console.log("No Document found");
-		
-	// }
-	console.log(isUserExit);
-	
-	return {
-		isUser:isUserExit,
-		userId:userData
-	}; 
+export const check_user_in_organizations = async (
+  email: string,
+  organisationId: string
+) => {
+  const q = query(collection(db, "users"), where("email", "==", email));
+  const querySnapshot = await getDocs(q);
+  let isUserExit = false;
+  let userData: any = {};
+  querySnapshot.forEach((doc) => {
+    userData = doc.data();
+    if (userData["organisation"].includes(organisationId)) isUserExit = true;
+    userData = doc.id;
+  });
+  // try{
+  // 	isUserExit=userData["organisation"].includes(organisationId)
+  // }
+  // catch{
+  // 	// isUserExit=false
+  // 	console.log("No Document found");
+
+  // }
+  console.log(isUserExit);
+
+  return {
+    isUser: isUserExit,
+    userId: userData,
+  };
 };
 
 //32  get user suggestions
@@ -977,4 +982,25 @@ export const get_userIds_in_organizations = async (organisationId: string) => {
   let userIsList: any = [];
   userIsList = await get_organizations_details(organisationId);
   return userIsList["users"];
+};
+
+export const get_previous_filter_data = (
+  filterSchema: any,
+  field: string,
+  columnName: string,
+  columnType: string
+) => {
+  let value: any = [];
+
+  let filterSchemaData = filterSchema["data"];
+  Object.keys(filterSchemaData).forEach((item: any) => {
+    if (item === field) {
+      filterSchemaData[item].forEach((item: any) => {
+        if (item["columnName"] === columnName && item["type"] === columnType) {
+          value = item["data"];
+        }
+      });
+    }
+  });
+  return value;
 };

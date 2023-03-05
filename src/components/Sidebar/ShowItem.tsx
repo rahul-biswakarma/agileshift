@@ -19,12 +19,12 @@ export const ShowItem = (props: OptionProps<ShowItemPropType>) => {
     <div
       ref={innerRef}
       {...innerProps}
-      className="w-full flex items-center gap-4 p-4 hover:bg-background_color">
-      <input type="checkbox" checked={isSelected} onChange={() => null} />
-      <div className="flex flex-col">
+      className="w-full flex items-center gap-4 p-4 hover:bg-Secondary_background_color text-sm">
+      <input className="accent-highlight_icon_color" type="checkbox" checked={isSelected} onChange={() => null} />
+      <div className="flex items-center gap-2">
         <IdComponent itemId={data.id} color={data.color} />
         {data.title && (
-          <span className="text-highlight_font_color">{data.title}</span>
+          <span className="text-highlight_font_color grow truncate">{data.title}</span>
         )}
       </div>
     </div>

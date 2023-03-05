@@ -19,8 +19,14 @@ type Type_MultiSelectProps = {
 const MultiSelect = (props: Type_MultiSelectProps) => {
 	const [datas, setDatas] = React.useState<any>([]);
 	const [selected, setSelected] = React.useState<any>([]);
+	const [isDropdownVisible, setIsDropdownVisible] =
+		React.useState<boolean>(false);
 
 	const organisationId = useAppSelector((state) => state.auth.organisationId);
+
+	function toggleDropdownOption() {
+		setIsDropdownVisible(!isDropdownVisible);
+	}
 
 	useEffect(() => {
 		if (props.defaultValue && props.dataType === "tag") {
@@ -37,73 +43,96 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 		) => {
 			onSnapshot(doc(db, "filterSchema", organisationId), (doc) => {
 				let filterSchemaDetails: any = doc.data();
-				let selectedColumn = filterSchemaDetails[props.selectedTab!].filter(
-					(item: any) => item.columnName === columnName
-				);
-				setDatas(selectedColumn[0]["data"]);
+				if (filterSchemaDetails[props.selectedTab!] !== undefined) {
+					let selectedColumn = filterSchemaDetails[props.selectedTab!].filter(
+						(item: any) => item.columnName === columnName
+					);
+					setDatas(selectedColumn[0]["data"]);
+				}
 			});
 		};
 
 		if (props.dataType === "user") {
-			get_userIds_in_organizations(organisationId).then((res) => setDatas(res));
+			get_userIds_in_organizations(organisationId).then((res) => {
+				setDatas(res.filter((userId: string) => userId !== selected));
+			});
 		} else {
 			get_dropdown_options(organisationId, props.columnName);
 		}
-	}, [organisationId, props.columnName, props.dataType, props.selectedTab]);
+	}, [
+		organisationId,
+		props.columnName,
+		props.dataType,
+		props.selectedTab,
+		selected,
+	]);
 
 	return (
-		<div className="border border-white/20 rounded-md">
-			<div className="flex gap-[0.5rem] p-[0.5rem] border-b border-white/20">
-				{selected && selected.length > 0 && props.dataType === "user" ? (
-					<div
-						key={`multi-selected-user`}
-						className="relative flex bg-black/40 gap-[5px] rounded-full p-[3px] items-center"
-					>
-						<UserComponent
-							value={selected}
-							showName={false}
-						/>
-						<button
-							onClick={() => {
-								let currUser = selected;
-								setSelected(null);
-								if (currUser !== null) setDatas([...datas, currUser]);
-							}}
-							className="hover:text-red-400 text-sm transition-all flex items-center"
+		<div className="rounded-lg my-[0.3rem] bg-background_color text-sm">
+			<div
+				onClick={() => toggleDropdownOption()}
+				className="flex"
+			>
+				<span className="capitalize w-[7em] p-3 text-center rounded-l font-dm_sans text-primary_font_color font-bold truncate" title={props.columnName}>
+					{props.columnName}
+				</span>
+				<div className="grow flex items-center bg-Secondary_background_color px-4 rounded-r font-dm_sans border-2 border-background_color">
+					{selected && selected.length > 0 && props.dataType === "user" ? (
+						<div
+							key={`multi-selected-user`}
+							className="relative flex bg-black/40 gap-[5px] rounded-full p-[3px] items-center"
 						>
-							<span className="material-symbols-outlined">close</span>
-						</button>
-					</div>
-				) : selected && selected.length > 0 && props.dataType === "tag" ? (
-					selected.map((tag: TYPE_TAG, index: number) => {
-						return (
-							<div
-								key={`${index}-multi-selected-tag`}
-								className="relative flex bg-black/40 gap-[5px] rounded-full p-[3px] items-center"
+							<UserComponent
+								value={selected}
+								showName={true}
+							/>
+							<button
+								onClick={() => {
+									let currUser = selected;
+									setSelected(null);
+									if (currUser !== null) setDatas([...datas, currUser]);
+								}}
+								className="hover:text-red-400 text-base transition-all flex items-center material-symbols-outlined"
 							>
-								<TagComponent value={[tag]} />
-								<button
-									onClick={() => {
-										let currTag = selected[index];
-										setSelected([
-											...selected.filter(
-												(item: string, currIndex: number) => currIndex !== index
-											),
-										]);
-										setDatas([...datas, currTag]);
-									}}
-									className="hover:text-red-400 text-sm transition-all flex items-center"
+								close
+							</button>
+						</div>
+					) : selected && selected.length > 0 && props.dataType === "tag" ? (
+						selected.map((tag: TYPE_TAG, index: number) => {
+							return (
+								<div
+									key={`${index}-multi-selected-tag`}
+									className="relative flex bg-black/40 gap-[5px] rounded-full p-[3px] items-center"
 								>
-									<span className="material-symbols-outlined">close</span>
-								</button>
-							</div>
-						);
-					})
-				) : (
-					<></>
-				)}
+									<TagComponent value={[tag]} />
+									<button
+										onClick={() => {
+											let currTag = selected[index];
+											setSelected([
+												...selected.filter(
+													(item: string, currIndex: number) =>
+														currIndex !== index
+												),
+											]);
+											if (currTag !== null) setDatas([...datas, currTag]);
+										}}
+										className="hover:text-red-400 text-base transition-all flex items-center"
+									>
+										<span className="material-symbols-outlined">close</span>
+									</button>
+								</div>
+							);
+						})
+					) : (
+						<></>
+					)}
+				</div>
 			</div>
-			<div className="flex flex-col gap-[0.5rem] p-[0.5rem] border-b border-white/20">
+			<div
+				className={`flex-col ${
+					isDropdownVisible ? "flex" : "hidden"
+				}`}
+			>
 				{props.dataType === "user"
 					? datas &&
 					  datas.length > 0 &&
@@ -125,7 +154,7 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 											tempDatas.splice(index, 1);
 											setDatas([...tempDatas, currSelectedUser]);
 										}}
-										className="cursor-pointer"
+										className="cursor-pointer hover:bg-Secondary_background_color px-3 py-1"
 									>
 										<UserComponent
 											key={`${index}-user-multiselect`}
@@ -152,7 +181,7 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 										tempDatas.splice(index, 1);
 										setDatas(tempDatas);
 									}}
-									className="cursor-pointer"
+									className="cursor-pointer hover:bg-Secondary_background_color px-3 py-1"
 								>
 									<TagComponent
 										key={`${index}-tag-multiselect`}

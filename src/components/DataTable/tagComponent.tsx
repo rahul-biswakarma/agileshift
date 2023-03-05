@@ -8,7 +8,7 @@ const TagComponent = (props: Type_TagComponentProps) => {
 	return (
 		<div className="flex gap-[10px] flex-wrap">
 			{props.value !== undefined && props.value.length > 0
-				? props.value.map((tag: TYPE_TAG, index: number) => {
+				? Array.from(props.value).map((tag: TYPE_TAG, index: number) => {
 						return (
 							<div
 								key={`tag-component-id-${index}`}
