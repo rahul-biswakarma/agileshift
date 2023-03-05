@@ -1,0 +1,7 @@
+{
+  "Name": "title",
+  "Tag": "tag",
+  "Owner": "user",
+  "Deadline": "date",
+  "Priority": "priority"
+}

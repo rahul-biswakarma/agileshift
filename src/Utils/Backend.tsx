@@ -1036,6 +1036,8 @@ export const send_message_in_fields = async (
   message: string
 ) => {
   // check if conversation is present
+
+  console.log(fieldId, senderId, message, "##");
   let conversationRef = doc(db, "conversations", fieldId);
   const conversationSnap = await getDoc(conversationRef);
   const userDetails: any = await get_user_by_id(senderId);
@@ -1127,12 +1129,12 @@ export const send_vista_invitations = async (
   }
 
   const senderDetails: any = await get_user_by_id(senderId);
-  const organizationDetails: any = await get_vistas_details(vistasId);
+  const vistasDetail: any = await get_vistas_details(vistasId);
 
   send_vista_invitation_mail(
     receiverEmail,
     senderDetails["name"],
-    organizationDetails["name"]
+    vistasDetail["name"]
   );
 };
 // 58 send vista invitation on mail
