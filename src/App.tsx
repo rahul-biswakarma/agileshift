@@ -9,11 +9,11 @@ import { getFromSession } from "./Utils/Auth";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import { setUserId } from "./redux/reducers/AuthSlice";
 import SideBarScreen from "./components/Sidebar";
+import Storm from "./components/Storm";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { OrganisationForm } from "./components/ManageOrganization/OrganisationForm";
-
 
 const App = () => {
 	const userIdFromSession = getFromSession("userId");
@@ -26,11 +26,9 @@ const App = () => {
 	const sideBarList = useAppSelector((state) => state.sidebar.sideBarData);
 	return (
 		<BrowserRouter>
-			<ToastContainer 
-				position="bottom-right"
-			/>
+			<ToastContainer position="bottom-right" />
 			{sideBarList.length !== 0 && (
-				<section className="fixed right-0 z-50">
+				<section className="fixed right-0 z-50 shadow-[0_35px_40px_5px_rgba(0,0,0,0.3)] shadow-black">
 					<SideBarScreen />
 				</section>
 			)}
@@ -66,8 +64,8 @@ const App = () => {
 					element={<GeneratorFormsContainer mode="edit" />}
 				/>
 				<Route
-				path="/edit-organization-details"
-				element={<OrganisationForm mode="edit" />}
+					path="/edit-organization-details"
+					element={<OrganisationForm mode="edit" />}
 				/>
 				<Route
 					path="/organization/:id"
@@ -77,9 +75,10 @@ const App = () => {
 					path="/organization"
 					element={<Navigate to="/organization-lists" />}
 				/>
-				
-				
-				
+				<Route
+					path="/storm"
+					element={<Storm organizationId="oTkstJOfcWoo1sHTOCLo" />}
+				/>
 			</Routes>
 		</BrowserRouter>
 	);

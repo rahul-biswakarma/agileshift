@@ -92,7 +92,7 @@ const SearchComponent = () => {
 	}
 
 	return (
-		<div className="relative flex flex-col w-full max-w-[800px]">
+		<div className="relative grow flex flex-col w-full max-w-[800px]">
 			<div className="w-full rounded-md flex gap-[10px] bg-Secondary_background_color p-[2px]">
 				<div className="flex rounded-md bg-background_color items-center px-4">
 					<span className="material-symbols-outlined text-white/30">

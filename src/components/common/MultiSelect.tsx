@@ -57,7 +57,7 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 				setDatas(res.filter((userId: string) => userId !== selected));
 			});
 		} else {
-			get_dropdown_options(organisationId, props.columnName);
+			get_dropdown_options(organisationId, props.columnName).then((res) => {});
 		}
 	}, [
 		organisationId,
@@ -68,15 +68,15 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 	]);
 
 	return (
-		<div className="border border-white/20 rounded-md">
+		<div className="rounded-lg my-[0.3rem] bg-background_color text-sm">
 			<div
 				onClick={() => toggleDropdownOption()}
-				className="flex gap-[0.5rem] border-b border-white/20"
+				className="flex"
 			>
-				<span className="capitalize bg-black/30 p-[0.5rem_1rem] text-sm flex items-center rounded-tl-md font-fira_code">
+				<span className="capitalize w-[7em] p-3 text-center rounded-l font-dm_sans text-primary_font_color font-bold truncate" title={props.columnName}>
 					{props.columnName}
 				</span>
-				<div className="p-[3px]">
+				<div className="grow flex items-center bg-Secondary_background_color px-4 rounded-r font-dm_sans border-2 border-background_color">
 					{selected && selected.length > 0 && props.dataType === "user" ? (
 						<div
 							key={`multi-selected-user`}
@@ -92,9 +92,9 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 									setSelected(null);
 									if (currUser !== null) setDatas([...datas, currUser]);
 								}}
-								className="hover:text-red-400 text-sm transition-all flex items-center"
+								className="hover:text-red-400 text-base transition-all flex items-center material-symbols-outlined"
 							>
-								<span className="material-symbols-outlined">close</span>
+								close
 							</button>
 						</div>
 					) : selected && selected.length > 0 && props.dataType === "tag" ? (
@@ -116,7 +116,7 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 											]);
 											if (currTag !== null) setDatas([...datas, currTag]);
 										}}
-										className="hover:text-red-400 text-sm transition-all flex items-center"
+										className="hover:text-red-400 text-base transition-all flex items-center"
 									>
 										<span className="material-symbols-outlined">close</span>
 									</button>
@@ -129,7 +129,7 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 				</div>
 			</div>
 			<div
-				className={`flex-col gap-[0.5rem] p-[0.5rem] border-b border-white/20 ${
+				className={`flex-col ${
 					isDropdownVisible ? "flex" : "hidden"
 				}`}
 			>
@@ -154,7 +154,7 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 											tempDatas.splice(index, 1);
 											setDatas([...tempDatas, currSelectedUser]);
 										}}
-										className="cursor-pointer"
+										className="cursor-pointer hover:bg-Secondary_background_color px-3 py-1"
 									>
 										<UserComponent
 											key={`${index}-user-multiselect`}
@@ -181,7 +181,7 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 										tempDatas.splice(index, 1);
 										setDatas(tempDatas);
 									}}
-									className="cursor-pointer"
+									className="cursor-pointer hover:bg-Secondary_background_color px-3 py-1"
 								>
 									<TagComponent
 										key={`${index}-tag-multiselect`}

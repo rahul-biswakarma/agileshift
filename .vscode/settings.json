@@ -2,5 +2,6 @@
 	"editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
 	"[typescriptreact]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
-	}
+	},
+	"liveServer.settings.port": 3001
 }
