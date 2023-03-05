@@ -20,8 +20,8 @@ import VistaList from "../Filters/VistaList";
 
 interface Type_TabHeaderProps {
 	fieldsData: TYPE_FIELD[];
-	showStorm:boolean;
-	setShowStorm:React.Dispatch<React.SetStateAction<boolean>>;
+	showStorm: boolean;
+	setShowStorm: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const TabHeader = (props: Type_TabHeaderProps) => {
@@ -41,15 +41,15 @@ const TabHeader = (props: Type_TabHeaderProps) => {
 	const handleViewStorm = () => {
 		let viewStorm = props.showStorm;
 		props.setShowStorm(!viewStorm);
-		setHoveredButtonIndex(-1)
+		setHoveredButtonIndex(-1);
 		dispatch(setTabName(""));
-	}
+	};
 
 	const tabName = useAppSelector((state) => state.datatable.tabName);
 
 	return (
-		<div className="relative flex h-[50px] px-[1rem] items-center border-b-[1px] justify-between border-Secondary_background_color">
-			<div className="flex items-center overflow-x-auto flex-nowrap w-3/4 gap-2">
+		<div className="relative flex h-[60px] px-[1rem] items-center border-b-[1px] justify-between border-Secondary_background_color">
+			<div className="flex items-center overflow-x-auto flex-nowrap w-3/4 gap-[1rem]">
 				<button
 					style={{
 						color:
@@ -79,7 +79,7 @@ const TabHeader = (props: Type_TabHeaderProps) => {
 							dispatch(setDataSchema(res));
 						});
 						dispatch(setTabName("All"));
-						props.setShowStorm(false)
+						props.setShowStorm(false);
 					}}
 					onMouseOver={() => setHoveredButtonIndex(-10)}
 					onMouseOut={() => setHoveredButtonIndex(-1)}
@@ -97,9 +97,7 @@ const TabHeader = (props: Type_TabHeaderProps) => {
 								? `${textColor}`
 								: `rgba(255, 255, 255, 0.3)`,
 						backgroundColor:
-							isHovered || tabName === field.name
-								? `${backgroundColor}30`
-								: ``,
+							isHovered || tabName === field.name ? `${backgroundColor}30` : ``,
 						// borderTop:
 						// 	isHovered || tabName === field.name
 						// 		? `2px solid ${textColor}`
@@ -108,7 +106,6 @@ const TabHeader = (props: Type_TabHeaderProps) => {
 						// 	isHovered || tabName === field.name
 						// 		? `2px solid ${textColor}`
 						// 		: `2px solid #161616`,
-						
 					};
 					return (
 						<button
@@ -121,7 +118,7 @@ const TabHeader = (props: Type_TabHeaderProps) => {
 								);
 								dispatch(setDataSchema(field.list));
 								dispatch(setTabName(field.name));
-								props.setShowStorm(false)
+								props.setShowStorm(false);
 							}}
 							ref={tabButtonRef}
 							key={index}
@@ -137,24 +134,23 @@ const TabHeader = (props: Type_TabHeaderProps) => {
 						</button>
 					);
 				})}
-
 			</div>
-			<div className="flex flex-row items-center h-full">
+			<div className="flex flex-row items-center h-full gap-[1rem]">
 				<button
 					onClick={() => handleViewStorm()}
-					className={
-						`${props.showStorm? "text-highlight_icon_color":"text-white/30"} 
-						p-[0.5rem_1rem] font-dm_sans text-[1rem] cursor-pointer rounded-sm hover:bg-Secondary_background_color flex items-center gap-[0.5rem]`
-					}
+					className={`${
+						props.showStorm ? "text-highlight_icon_color" : "text-white/30"
+					} 
+						p-[0.5rem_1rem] font-dm_sans text-[1rem] cursor-pointer rounded-sm hover:bg-Secondary_background_color flex items-center gap-[0.5rem]`}
 				>
 					<span className="material-symbols-outlined text-inherit">
-						{props.showStorm?"flash_on":"flash_off"}
+						{props.showStorm ? "flash_on" : "flash_off"}
 					</span>
 					<p className="text-inherit font-dm_sans">Storm</p>
 				</button>
 				<div>
 					<VistaList />
-				</div>			
+				</div>
 				<div className="">
 					<button
 						onClick={() => openSchemaEditForm()}
@@ -167,8 +163,6 @@ const TabHeader = (props: Type_TabHeaderProps) => {
 					</button>
 				</div>
 			</div>
-			
-			
 		</div>
 	);
 };
