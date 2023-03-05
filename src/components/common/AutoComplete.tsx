@@ -126,6 +126,7 @@ const AutoComplete = (props: type_props) => {
       setSideBar({
         sidebarType: "addOption",
         columnName: props.columnDetails.columnName,
+        columnType: props.columnDetails.columnType,
         fieldName: props.selectedField,
       })
     );
