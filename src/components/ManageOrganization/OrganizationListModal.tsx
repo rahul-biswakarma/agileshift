@@ -20,8 +20,6 @@ const OrganizationListModal = (props: TYPE_TEST) => {
 
 	const userId = props.userId;
 
-    
-
 	useEffect(() => {
 		const getUserObj = async () => {
 			const data = await get_user_by_id(userId);
@@ -33,7 +31,7 @@ const OrganizationListModal = (props: TYPE_TEST) => {
 
 	const fetchPendingInvitations = useCallback(() => {
 		if (user && user.email)
-			onSnapshot(doc(db, "invitation", user.email), (doc) => {
+			onSnapshot(doc(db, "invitations", user.email), (doc) => {
 				if (doc.exists()) {
 					let data = doc.data();
 					let orgIds = data;
@@ -77,33 +75,31 @@ const OrganizationListModal = (props: TYPE_TEST) => {
 	}, [user]);
 
 	return (
-		
-			<div className="flex flex-col gap-[1rem] max-h-[40vh] overflow-auto px-[0.3rem]">
-				{pendingInvitationsOrgData.map((orgData: any, index: number) => {
+		<div className="flex flex-col gap-[1rem] max-h-[40vh] overflow-auto px-[0.3rem]">
+			{pendingInvitationsOrgData.map((orgData: any, index: number) => {
+				return (
+					<OrganizationCard
+						key={`oraganization-${index}`}
+						name={orgData?.name}
+						orgId={orgData?.id}
+						pendingInvitation={true}
+						user={user}
+					/>
+				);
+			})}
+			<div className="flex flex-col-reverse">
+				{organization.map((orgData: any, index: number) => {
 					return (
 						<OrganizationCard
 							key={`oraganization-${index}`}
 							name={orgData?.name}
 							orgId={orgData?.id}
-							pendingInvitation={true}
 							user={user}
 						/>
 					);
 				})}
-				<div className="flex flex-col-reverse">
-					{organization.map((orgData: any, index: number) => {
-						return (
-							<OrganizationCard
-								key={`oraganization-${index}`}
-								name={orgData?.name}
-								orgId={orgData?.id}
-								user={user}
-							/>
-						);
-					})}
-				</div>
 			</div>
-		
+		</div>
 	);
 };
 
