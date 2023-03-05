@@ -1,8 +1,9 @@
 import { useMemo, useEffect, useState } from "react";
-import ReactFlow, { Background, Controls } from "reactflow";
+import ReactFlow, { Background, Controls} from "reactflow";
 import { v4 as uuidv4 } from "uuid";
 
-import { IdNode, FullDataNode } from "./CustomNode";
+
+import { IdNode} from "./CustomNode";
 
 import "reactflow/dist/style.css";
 import { get_data_by_column_name, get_schema_data } from "../../Utils/Backend";
@@ -15,7 +16,6 @@ const Storm = (props: Type_StormProps) => {
 	const nodeTypes = useMemo(
 		() => ({
 			idNode: IdNode,
-			fullDataNode: FullDataNode,
 		}),
 		[]
 	);
@@ -25,7 +25,10 @@ const Storm = (props: Type_StormProps) => {
 	const [nodes, setNodes] = useState<any>(null);
 	const [edges, setEdges] = useState<any>(null);
 	const [schemaData, setSchemaData] = useState<any>(null);
-	const [selectedNode, setSelectedNode] = useState<string | null>(null);
+	const [nodePositions, setNodePositions] = useState<{
+		[key: string]: { x: number; y: number };
+	}>({});
+
 	const [feildNameColorMap, setFeildNameColorMap] = useState<any>(null);
 
 	// Effects
@@ -89,12 +92,11 @@ const Storm = (props: Type_StormProps) => {
 						data: {
 							id: data.id,
 							color: feildNameColorMap[field.name] || "#fff",
+							schemaData: schemaData,
+							data: data,
+							fieldName: field.name,
 						},
-						type: selectedNode === field.name ? "fullDataNode" : "idNode",
-						onClick: () => {
-							setSelectedNode(data.id);
-							console.log("Clicked");
-						},
+						type: "idNode",
 					});
 
 					data.linkedData.map((link: any) => {
@@ -126,36 +128,27 @@ const Storm = (props: Type_StormProps) => {
 			});
 		setNodes(tempNode);
 		setEdges(tempEdge);
-	}, [feildNameColorMap, data, selectedNode]);
+	}, [feildNameColorMap, data, schemaData]);
 
-	useEffect(() => {
-		if (selectedNode) {
-			get_data_by_column_name(props.organizationId, selectedNode).then(
-				(res) => {
-					if (res) {
-						console.log(res);
-						let tempNode = nodes.map((node: any) => {
-							if (node.id === selectedNode) {
-								return {
-									...node,
-									data: res,
-									type: "fullDataNode",
-								};
-							}
-							return node;
-						});
-						setNodes(tempNode);
-					}
-				}
-			);
-		}
-	}, [selectedNode, props.organizationId, nodes]);
+	const handleNodeDrag = (event: any, node: any) => {
+		setNodePositions((prevNodePositions) => ({
+			...prevNodePositions,
+			[node.id]: node.position,
+		}));
+	};
 
 	return (
 		<div className="w-sceen h-screen text-white">
 			{nodes && nodes.length > 0 && edges && (
 				<ReactFlow
-					nodes={nodes}
+					onNodeDrag={handleNodeDrag}
+					draggable={true}
+					nodesDraggable={true}
+					snapToGrid={true}
+					nodes={nodes.map((node: any) => ({
+						...node,
+						position: nodePositions[node.id] || node.position,
+					}))}
 					edges={edges}
 					nodeTypes={nodeTypes}
 				>
