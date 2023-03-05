@@ -89,17 +89,14 @@ const Header = (props: TYPE_HeaderProps) => {
 	return (
 		<div
 			id="header"
-			className="p-[0_2rem] h-full min-h-[60px] max-h-[61px] flex items-center justify-between border-[2px] border-Secondary_background_color"
+			className="p-[0_2rem] h-full min-h-[60px] max-h-[61px] flex items-center justify-between border-[2px] border-Secondary_background_color text-white/30 hover:text-purple-500"
 		>
 			<button
-				className="flex gap-[1rem] items-center"
+				className="flex gap-[0.5rem] items-center"
 				onClick={() => setIsOrgMenuOpen(!isOrgMenuOpen)}
 			>
-				<img
-					className="w-8"
-					src={logoSvg}
-					alt="logo"
-				/>
+				<span className="material-symbols-outlined ">cyclone</span>
+				<p className="uppercase font-fira_code font-[500]">AgileShift</p>
 			</button>
 			{isOrgMenuOpen && (
 				<div className="top-[60px] left-8 absolute flex flex-col gap-[0.3rem] w-max bg-Secondary_background_color overflow-auto border border-white/30 rounded-md z-50">
