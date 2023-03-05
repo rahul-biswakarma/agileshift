@@ -13,40 +13,31 @@ import {
 } from "firebase/firestore";
 import emailjs from "@emailjs/browser";
 import { isValidEmail } from "email-js";
-import { generateRandomId, removeDuplicates } from "./HelperFunctions";
-
-const get_current_time = () => {
-  let date = new Date();
-  return `${date.getFullYear()}-${(date.getMonth() + 1)
-    .toString()
-    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")} ${date
-    .getHours()
-    .toString()
-    .padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}:${date
-    .getSeconds()
-    .toString()
-    .padStart(2, "0")}.${date.getMilliseconds().toString().padStart(3, "0")}`;
-};
+import {
+  generateRandomId,
+  removeDuplicates,
+  get_current_time,
+} from "./HelperFunctions";
 
 // funcitons list
 /*
- 1.check_users_database
- 2.get_users_organization
- 3.create_user
- 4.create_organization
- 5.update_organization
- 6.create_ticket
- 7.create_issue
- 8.update_ticket
- 9.update_issue
- 10.create_tags
- 11.sendEmail
- 12 get all types list
- 13 get organization details
- 14 create  schema
- 15 get  schema
- 16 get tabs 	name
- 17 get color from name
+1.check_users_database
+2.get_users_organization
+3.create_user
+4.create_organization
+5.update_organization
+6.create_ticket
+7.create_issue
+8.update_ticket
+9.update_issue
+10.create_tags
+11.sendEmail
+12 get all types list
+13 get organization details
+14 create  schema
+15 get  schema
+16 get tabs 	name
+17 get color from name
 19 get_title
 20 get schema using field id
 21 get data by ID
@@ -59,14 +50,28 @@ const get_current_time = () => {
 29 st dropdoewn options
 30 edit table data in organization
 31 get all columns name
- 32 mark notification seen
-33 get active  time
-34 main search function
-35 get organization name by id
-36 get all tabs name
-37 get filter schema
-38 get dropdown options
-39 get dark background color from name
+32 get user suggestions
+33 set notification
+34 update notification
+35 mark notification seen
+36 user active time
+37 send invite (updates database)
+38 send invitation mail
+39 get invitations list
+40 main search function
+41 will_include
+42 get organization name by id
+43 get all tabs name
+44 get filter schema
+45 reject invitation
+46 Add vista
+47 Add Vista to user Object
+48 get vistas from Id
+49 link data to parent data
+50 get dark background color from name
+51 check if user is present in organizations
+52  get user Ids in organizations
+53 get previous filter data
 */
 // 1
 export const check_users_database = async (userId: string) => {
@@ -611,7 +616,7 @@ export const get_user_suggestions = async (organisationId: string) => {
   return userDetails;
 };
 
-//30 set notification
+//33 set notification
 export const set_notification = async (
   organisationId: string,
   userId: string[],
@@ -639,7 +644,7 @@ export const set_notification = async (
   });
 };
 
-// 31 update notification
+// 34 update notification
 export const update_notification = async (
   organisationId: string,
   userId: string,
@@ -659,7 +664,7 @@ export const update_notification = async (
   });
 };
 
-// 32 mark notification seen
+// 35 mark notification seen
 export const mark_notification_seen = async (
   organisationId: string,
   userId: string,
@@ -674,7 +679,7 @@ export const mark_notification_seen = async (
   });
 };
 
-// 33 user active time
+// 36 user active time
 export const user_active_time = async (userId: string) => {
   const userRef = doc(db, "users", userId);
   const currentData = get_current_time();
@@ -683,7 +688,7 @@ export const user_active_time = async (userId: string) => {
   });
 };
 
-//34  send invite
+//37  send invite
 export const send_invite = async (
   senderId: string,
   receiverEmail: string,
@@ -721,7 +726,7 @@ export const send_invite = async (
     organizationDetails["name"]
   );
 };
-
+// 38 send invitation mail
 export const send_invitation_mail = async (
   email: string,
   sender_name: string,
@@ -760,6 +765,7 @@ export const send_invitation_mail = async (
     );
 };
 
+// 39 get invitations list
 export const get_invitations_list = async (userID: string) => {
   const userDetails: any = await get_user_by_id(userID);
   const userRef = doc(db, "invitations", userDetails["email"]);
@@ -771,7 +777,7 @@ export const get_invitations_list = async (userID: string) => {
   }
 };
 
-// 34 main search function
+// 40 main search function
 export const main_search_function = async (
   organizationId: string,
   searchText: string
@@ -794,6 +800,7 @@ export const main_search_function = async (
   return results;
 };
 
+// 41 will_include
 export const wil_include = (item: any, searchText: string) => {
   let flag = false;
   Object.keys(item).forEach((field: any) => {
@@ -808,7 +815,7 @@ export const wil_include = (item: any, searchText: string) => {
   return flag;
 };
 
-// 35 get organization name by id
+// 42 get organization name by id
 export const get_organization_name_by_id = async (organizationId: string) => {
   const organizationRef = doc(db, "organizations", organizationId);
   const docSnap = await getDoc(organizationRef);
@@ -819,7 +826,7 @@ export const get_organization_name_by_id = async (organizationId: string) => {
   }
 };
 
-// 36 get all tabs name
+// 43 get all tabs name
 export const get_all_tabs_name = async (organisationId: string) => {
   const docRef = doc(db, "schemas", organisationId);
   const docSnap = await getDoc(docRef);
@@ -834,7 +841,7 @@ export const get_all_tabs_name = async (organisationId: string) => {
   }
   return tabs;
 };
-// 37 get filter schema
+// 44 get filter schema
 export const get_filter_schema = async (organizationId: string) => {
   const filterRef = doc(db, "filterSchema", organizationId);
   const filterSnap = await getDoc(filterRef);
@@ -846,7 +853,7 @@ export const get_filter_schema = async (organizationId: string) => {
   }
 };
 
-//38 reject invitation
+//45 reject invitation
 export const reject_invitation = async (
   organisationId: string,
   emailId: string
@@ -869,7 +876,7 @@ export const reject_invitation = async (
   }
 };
 
-// Add vista
+//46 Add vista
 export const add_vista = (
   organizationId: string,
   userId: string,
@@ -887,7 +894,7 @@ export const add_vista = (
   });
 };
 
-// Add Vista to user Object
+// 47 Add Vista to user Object
 export const add_vista_to_user = async (
   organizationId: string,
   userId: string,
@@ -912,6 +919,7 @@ export const add_vista_to_user = async (
   }
 };
 
+// 48 get vistas from Id
 export const get_vista_from_id = async (vistaId: string) => {
   const vistaRef = doc(db, "vistas", vistaId);
   const vistaSnap = await getDoc(vistaRef);
@@ -923,7 +931,7 @@ export const get_vista_from_id = async (vistaId: string) => {
   return {};
 };
 
-// 39 link data to parent data
+// 49 link data to parent data
 export const link_data_to_parent_data = async (
   organizationId: string,
   childId: string,
@@ -934,7 +942,7 @@ export const link_data_to_parent_data = async (
   parentData["linkedData"] = [...parentData["linkedData"], childId];
   await update_data_to_database(organizationId, parentData, "");
 };
-// 39 get dark background color from name
+// 50 get dark background color from name
 export const get_dark_background_color_from_name = (name: string) => {
   if (name === "purple") return "#242230";
   else if (name === "slate") return "#1e293b";
@@ -947,7 +955,7 @@ export const get_dark_background_color_from_name = (name: string) => {
   else return "#282230";
 };
 
-// check if user is present in organizations
+//51 check if user is present in organizations
 export const check_user_in_organizations = async (
   email: string,
   organisationId: string
@@ -977,13 +985,14 @@ export const check_user_in_organizations = async (
   };
 };
 
-//32  get user suggestions
+//52  get user Ids in organizations
 export const get_userIds_in_organizations = async (organisationId: string) => {
   let userIsList: any = [];
   userIsList = await get_organizations_details(organisationId);
   return userIsList["users"];
 };
 
+// 53 get previous filter data
 export const get_previous_filter_data = (
   filterSchema: any,
   field: string,
@@ -1003,4 +1012,29 @@ export const get_previous_filter_data = (
     }
   });
   return value;
+};
+
+// 54 start conversations
+export const send_message_in_fields = async (
+  fieldId: string,
+  senderId: string,
+  message: string
+) => {
+  // check if conversation is present
+  const conversationRef = doc(db, "conversations", fieldId);
+  const conversationSnap = await getDoc(conversationRef);
+  let messageData: { message: string; senderId: string; timeStamp: string } = {
+    message: message,
+    senderId: senderId,
+    timeStamp: get_current_time(),
+  };
+  if (conversationSnap.exists()) {
+    // conversation is present
+    await updateDoc(conversationRef, {
+      conversationsData: arrayUnion(messageData),
+    });
+  } else {
+    // conversation is not present
+    await setDoc(conversationRef, { conversationsData: [messageData] });
+  }
 };
