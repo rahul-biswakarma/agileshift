@@ -52,7 +52,7 @@ const VistaList = () => {
 
   return (
     <div className='relative text-white'>
-        <div onClick={() => setVistaListCollapse(!vistaListCollapse)} className='flex gap-1 items-center px-3 py-1 hover:bg-white/20 rounded-md cursor-pointer'>
+        <div onClick={() => setVistaListCollapse(!vistaListCollapse)} className='flex gap-1 items-center px-3 py-2 text-white/30 hover:bg-white/5 rounded-sm cursor-pointer'>
             <span className="material-symbols-outlined">
                 keyboard_arrow_down
             </span>

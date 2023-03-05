@@ -21,7 +21,7 @@ const BuildQuadarntHeader = () => {
   const dispatch = useAppDispatch();
 
   return (
-    <div className="relative bg-Secondary_background_color flex items-center justify-between p-[1rem_2rem]">
+    <div className="relative bg-Secondary_background_color flex items-center justify-between p-[0_2rem] h-[50px]">
       <div className="font-fira_code text-[0.9rem] items-center font-[600] text-white">
           <span className="text-white/50">BUILD /</span> {tabName}
       </div>

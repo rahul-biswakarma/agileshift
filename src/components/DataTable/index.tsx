@@ -47,12 +47,11 @@ const DataTable = () => {
 	const fieldColor = useAppSelector((state) => state.datatable.fieldColor);
 	const datas = useAppSelector((state) => state.datatable.datas);
 
-	const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
-
   const gridOptions: CustomGridOptions = {
     detailRowAutoHeight: true,
     rowSelection: "single",
     suppressDragLeaveHidesColumns: true,
+	headerHeight: 40,
     onRowClicked: function (event) {
       let rowData = event.data;
       dispatch(
@@ -150,7 +149,7 @@ const DataTable = () => {
 	return (
 		<div
 			className="ag-theme-alpine"
-			style={gridStyle}
+			
 		>
 			{rowData && rowData.length > 0 ? (
 				<AgGridReact

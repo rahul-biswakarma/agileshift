@@ -67,17 +67,23 @@ code {
 	font-weight: 500;
 }
 
-/* #header .MuiInputBase-input {
-	padding: 5px;
+.ag-root{
+	position: relative!important;
 }
 
-#header .MuiFormLabel-root {
-	margin-top: -10px;
-} */
+.ag-body{
+	height: calc(100vh - 270px) !important;
+}
+
+.ag-ltr .ag-body, .ag-ltr .ag-floating-top, .ag-ltr .ag-floating-bottom, .ag-ltr .ag-header, .ag-ltr .ag-body-viewport, .ag-ltr .ag-body-horizontal-scroll {
+    overflow-y: scroll !important;
+
+}
 
 #header .MuiFormHelperText-root {
 	position: absolute;
 }
+
 
 * {
 	--ag-alpine-active-color: #3b82f6;

@@ -6,6 +6,7 @@ import { setDatas } from "../../redux/reducers/DataTableSlice";
 import Filter from "../Filters/Filter";
 import { useCallback, useEffect, useState } from "react";
 import { get_data_by_column_name, get_filter_schema } from "../../Utils/Backend";
+import { setVistaName } from "../../redux/reducers/VistaSlice";
 
 type Type_BuildQuadarntProps = {};
 
@@ -70,10 +71,17 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 			}
 		};
 		getFilterSchema();
-	}, [organizationId, tabName]);
+		dispatch(setVistaName(""));
+	}, [organizationId, tabName, dispatch]);
 
 	const modifyData = useCallback(async (filterSchema: TYPE_Filters[]) => {
-		const rowData = await get_data_by_column_name(organizationId, tabName);
+		let rowData;
+		if(tabName === "All"){
+			rowData = await get_data_by_column_name(organizationId, "all");
+		}else {
+			rowData = await get_data_by_column_name(organizationId, tabName);
+		}
+		
 		let newData = [...rowData];
 		const filters = [...filterSchema];
 		const filterObject: any = {};
@@ -87,8 +95,6 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 			if (filterValues.length > 0)
 				filterObject[filterData.columnName] = filterValues;
 		});
-
-		console.log(filterObject);
 
 		if (Object.keys(filterObject).length > 0) {
 			let dataList: any = [];

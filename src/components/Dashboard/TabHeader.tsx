@@ -38,7 +38,7 @@ const TabHeader = (props: Type_TabHeaderProps) => {
 	const tabName = useAppSelector((state) => state.datatable.tabName);
 
 	return (
-		<div className="relative flex  px-[2rem] items-center border-b-[1px] justify-between border-Secondary_background_color py-[0.5rem]">
+		<div className="relative flex h-[50px] px-[1rem] items-center border-b-[1px] justify-between border-Secondary_background_color py-[0.5rem]">
 			<div className="flex gap-[0.5rem] items-center overflow-x-auto flex-nowrap w-3/4">
 			<button
 				style={{
@@ -47,7 +47,7 @@ const TabHeader = (props: Type_TabHeaderProps) => {
 							? `${get_text_color_from_name("purple")}`
 							: "rgba(255, 255, 255, 0.3)",
 				}}
-				className={`p-[0.5rem_1.5rem] font-dm_sans text-[1rem] flex gap-[0.5rem] items-center text-white/30 cursor-pointer rounded-sm hover:text-purple-500`}
+				className={`p-[0.5rem_0.8rem] font-dm_sans text-[1rem] flex gap-[0.5rem] items-center text-white/30 cursor-pointer rounded-sm hover:text-purple-500`}
 				onClick={() => {
 					dispatch(setFieldColor("purple"));
 					get_data_by_column_name(organizationId, "all").then((res) => {
@@ -99,14 +99,14 @@ const TabHeader = (props: Type_TabHeaderProps) => {
 			})}
 
 			</div>
-			<div className="flex items-center"	>
+			<div className="flex flex-row items-center h-full">
 				<div>
 					<VistaList />
 				</div>			
-				<div className="right-[0.5rem] w-24 h-10">
+				<div className="">
 					<button
 						onClick={() => openSchemaEditForm()}
-						className={`p-[0.5rem_1rem] font-dm_sans text-[1rem] flex gap-[0.5rem] text-white/30 cursor-pointer rounded-sm absolute right-[0.5rem] hover:bg-Secondary_background_color flex items-center gap-[0.5rem]`}
+						className={`p-[0.5rem_1rem] font-dm_sans text-[1rem] text-white/30 cursor-pointer rounded-sm hover:bg-Secondary_background_color flex items-center gap-[0.5rem]`}
 					>
 						<span className="material-symbols-outlined text-inherit">
 							edit_note
@@ -114,7 +114,6 @@ const TabHeader = (props: Type_TabHeaderProps) => {
 						<p className="text-inherit font-dm_sans">Schema</p>
 					</button>
 				</div>
-
 			</div>
 			
 			
