@@ -20,11 +20,10 @@ type Props = {
 
 export default function AddOptions(props: Props) {
 
-  console.log("props", props);
-
   const [sideBarList] = React.useState(
     useSelector((state: RootState) => state.sidebar.sideBarData)
   );
+
   const dispatch = useAppDispatch();
 
   const organizationId = useAppSelector((state) => state.auth.organisationId);
@@ -64,8 +63,6 @@ export default function AddOptions(props: Props) {
     tempList[id]["color"] = color;
     setList(tempList);
   };
-
-  console.log(list, "hello");
 
   const handleSubmit = async () => {
     try {
@@ -128,7 +125,7 @@ export default function AddOptions(props: Props) {
         </header>
         <div className="w-full grow max-h-[90%] flex flex-col items-center gap-2 overflow-y-auto rounded-lg bg-black/60 p-3 text-sm">
           {list.map((item: any, id: number) => (
-            <div className="w-full flex items-center justify-center bg-Secondary_background_color rounded-md">
+            <div key={id} className="w-full flex items-center justify-center bg-Secondary_background_color rounded-md">
               {props.sidebar.columnType === "tag" && (
                 <label className="inline-block relative w-4 h-4 ml-4">
                   <input

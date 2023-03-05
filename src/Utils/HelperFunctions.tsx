@@ -117,3 +117,29 @@ export const get_current_date = () => {
   const formattedDate: string = today.toLocaleDateString("en-US", options);
   return formattedDate.replace(",", "");
 };
+
+export const formatDateToFullDate = (date: string) => {
+  if(date && (typeof date === "string")){
+    const dateFormatted = new Date(date)
+  
+    // const shortDate = new Intl.DateTimeFormat("en-GB", {
+    //   dateStyle: "long",
+    // });
+    // console.log(shortDate.format(dateFormatted)); // "5 March 2023"
+    const suffixes:TYPE_SCHEMA = {
+        one:"st",
+        two:"nd",
+        few:"rd",
+        other:"th"
+    }
+    const pr = new Intl.PluralRules("en-US", {
+        type:"ordinal"
+    })
+    const formatOrdinals = (n:number) => `${n}${suffixes[pr.select(n)]}`
+    var day = formatOrdinals(dateFormatted.getDate())
+    var month = dateFormatted.toLocaleString("en-us", { month: "long" });
+    return (day+' '+month+' '+dateFormatted.getFullYear())
+  }else{
+    return "-"
+  }
+}
