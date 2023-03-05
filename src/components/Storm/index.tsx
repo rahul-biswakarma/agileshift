@@ -175,7 +175,7 @@ const Storm = (props: Type_StormProps) => {
 	};
 
 	return (
-		<div className="w-sceen h-screen text-white">
+		<div className="w-screen h-screen text-white">
 			{nodes && nodes.length > 0 && edges && (
 				<ReactFlow
 					onNodeDrag={handleNodeDrag}

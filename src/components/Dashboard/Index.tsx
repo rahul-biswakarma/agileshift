@@ -15,10 +15,12 @@ import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { NotificationMainComponent } from "../Notifications/NotificationMainComponent";
 
 import { setDataSchema, setDatas } from "../../redux/reducers/DataTableSlice";
+import Storm from "../Storm";
 
 export default function Dashboard() {
 	const organizationId = useAppSelector((state) => state.auth.organisationId);
 	const [showNotification, setShowNotification] = useState(false);
+	const [showStorm, setShowStorm] = useState(false);
 	const [fieldsData, setFieldsData] = useState<TYPE_FIELD[]>();
 	const [isInitialDataFetched, setIsInitialDataFetched] = useState(false);
 
@@ -75,8 +77,23 @@ export default function Dashboard() {
 				/>
 			) : (
 				<React.Fragment>
-					{fieldsData && <TabHeader fieldsData={fieldsData} />}
-					{dataSchema && datas && <BuildQuadarnt />}
+					{fieldsData && 
+						<TabHeader 
+							fieldsData={fieldsData}
+							showStorm={showStorm}
+							setShowStorm={setShowStorm}
+						/>
+					}
+					{showStorm?
+						<div>
+							<div className="relative bg-Secondary_background_color text-white ont-fira_code text-[0.9rem] 
+								flex items-center p-[0_2rem] h-[50px] font-bold">
+								<span className="text-white/50">STORM / </span>&nbsp;Visualize linkage
+							</div>
+							<Storm organizationId={organizationId} />
+						</div>:
+						dataSchema && datas && <BuildQuadarnt />
+					}
 				</React.Fragment>
 			)}
 		</div>

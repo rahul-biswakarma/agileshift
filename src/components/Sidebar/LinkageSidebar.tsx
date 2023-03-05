@@ -226,8 +226,7 @@ export const LinkageSidebar = (props: any) => {
         className="[writing-mode:vertical-rl] h-full w-[50px] flex  justify-center items-center text-xl  cursor-pointer bg-background_color border-r-2  py-4"
         onClick={() => {
           props.setColapsTabBar(props.index);
-        }}
-      >
+        }}>
         {"Link Sidebar"}
       </div>
     );
@@ -236,8 +235,7 @@ export const LinkageSidebar = (props: any) => {
       <div
         className="flex w-[400px] flex-col justify-between h-screen bg-sidebar_bg backdrop-filter backdrop-blur-md bg-opacity-10  border-l border-[#444444]
     p-4 pb-8 pt-12
-    "
-      >
+    ">
         <CustomButton
           icon={"close"}
           onClick={handleClose}
@@ -254,6 +252,7 @@ export const LinkageSidebar = (props: any) => {
           options={options}
           styles={customStyles}
           getOptionLabel={(option) => option.label}
+          value={selectedOptions}
           isOptionSelected={(option) =>
             selectedOptions.some(
               (selectedOption: optionsType) =>
@@ -278,8 +277,7 @@ export const LinkageSidebar = (props: any) => {
                     type="button"
                     className="w-full text-white bg-background_color p-3 rounded-md flex items-center gap-2 text-sm"
                     key={id}
-                    onClick={() => handleIdClick(item.value)}
-                  >
+                    onClick={() => handleIdClick(item.value)}>
                     <IdComponent itemId={item.value} color={item.color} />
                     <p className="grow truncate text-left">{item.title}</p>
                   </button>
