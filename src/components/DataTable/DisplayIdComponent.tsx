@@ -1,4 +1,3 @@
-import React from "react";
 import {
 	get_background_color_from_name,
 	get_text_color_from_name,
