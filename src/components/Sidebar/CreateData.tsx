@@ -379,7 +379,7 @@ export default function CreateData(props: Props) {
                 {formSchema.list.map((item: any, index: number) => {
                 
                 if(item.columnType === "user") {
-                  trackUserType = [... trackUserType,item.columnName]
+                  trackUserType = [...trackUserType,item.columnName]
                 }
                   return (
                     <SideBarInputs
