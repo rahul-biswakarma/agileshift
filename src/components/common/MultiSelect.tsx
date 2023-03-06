@@ -203,7 +203,7 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 								</button>
 							);
 					  })}
-				{props.dataType === "tag" && selected && selected.length > 0 && (
+				{props.dataType === "tag"  && (
 					<button className="w-full p-[0.5rem_0] flex items-center justify-center text-white/40 border-[1px] border-white/20 rounded-md hover:text-amber-400 hover:border-amber-400"
 					onClick={handleAddTags}
 					>
