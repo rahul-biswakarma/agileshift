@@ -131,12 +131,12 @@ const VistaList = () => {
     toast.error(`${vistaList[index].name} has been rejected!`);
   };
   return (
-    <div className="relative text-white">
+    <div className="">
       <div
         onClick={() => setVistaListCollapse(!vistaListCollapse)}
-        className="flex gap-1 items-center px-3 py-2 text-white/30 hover:bg-white/5 rounded-sm cursor-pointer">
+        className="flex gap-[0.5rem] items-center px-3 py-2 text-white/30 hover:bg-white/5 rounded-sm cursor-pointer">
         <span className="material-symbols-outlined">keyboard_arrow_down</span>
-        {vistaName ? vistaName : "My List"}
+        {vistaName ? vistaName : <p className="w-full">Vista</p>}
       </div>
       {vistaListCollapse && (
         <div className="absolute flex flex-col w-max top-[105%] right-0 border border-white/20 z-10 rounded-md p-3 bg-background_color">

@@ -73,7 +73,8 @@ const LoginForm = () => {
 			if (sentOtp) setState({ ...state, onOtp: true, otp: sentOtp });
 			else {
 				emailInputRef.current!.style.borderColor = "red";
-				emailLabelRef.current!.innerText = "Unable to send OTP";
+				emailLabelRef.current!.style.color = "red";
+				emailLabelRef.current!.innerText = "User does not exists. Please Signup";
 			}
 		} else {
 			emailInputRef.current!.style.borderColor = "red";
