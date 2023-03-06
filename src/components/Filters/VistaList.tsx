@@ -1,5 +1,7 @@
+import { doc, onSnapshot } from "@firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { db } from "../../firebaseConfig";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setTabName } from "../../redux/reducers/DataTableSlice";
 import { setVistaSchema, setVistaName } from "../../redux/reducers/VistaSlice";
@@ -30,13 +32,44 @@ const VistaList = () => {
   const [vistaListCollapse, setVistaListCollapse] = useState<boolean>(false);
   const [vistaList, setVistaList] = useState<any>([]);
   const vistaName = useAppSelector((state) => state.vista.vistaName);
+  const [snapShotDone,setSnapShotDone]=useState<boolean>(false);
   const [vistaInvitation, setVistaInvitation] = useState<TypeVistaInvitation[]>(
     []
   );
+  const [updateInvitation, setUpdateInvitation] = useState({});
+  const [updateVistas, setUpdateVistas] = useState([]);
   const organizationId = useAppSelector((state) => state.auth.organisationId);
   const userId = useAppSelector((state) => state.auth.userId);
   const tabName = useAppSelector((state) => state.datatable.tabName);
   const dispatch = useAppDispatch();
+
+    useEffect(()=>{
+        const takeSnapShot=async()=>{
+        if(!snapShotDone){
+            console.log("Taking snapshot");
+            const user: any = await get_user_by_id(userId);
+
+            onSnapshot(doc(db, "vistaInvitations", user.email!), (doc:any) => {
+                const source = doc.metadata.hasPendingWrites ? "Local" : "Server";
+                console.log(source, " data: ", doc.data());
+                setUpdateInvitation(doc.data()['pendingList'])
+            });
+    
+            onSnapshot(doc(db, "users", user.id!), (doc:any) => {
+                const source = doc.metadata.hasPendingWrites ? "Local" : "Server";
+                console.log(source, " data: ", doc.data());
+                let data:any = doc.data();
+    
+                setUpdateVistas(data['vistas'][organizationId])
+            });
+
+            setSnapShotDone(true);
+        }
+        }
+        
+        takeSnapShot();
+    },[snapShotDone, userId, organizationId])
+
   useEffect(() => {
     const getInfo = async () => {
       const user: any = await get_user_by_id(userId);
@@ -45,9 +78,14 @@ const VistaList = () => {
       if (user.vistas && user.vistas[organizationId]) {
         vistaIdList = user.vistas[organizationId];
       }
-      let visList = [];
-      const pendingVistas = await get_vista_invitations_list(userId);
-      console.log(pendingVistas, "pendingVistas");
+        
+        
+        console.log(updateInvitation,"updateInvitation");
+        let visList = [];
+        const pendingVistas = await get_vista_invitations_list(userId);
+
+        console.log(pendingVistas, "pendingVistas");
+
       if (
         pendingVistas[organizationId] &&
         pendingVistas[organizationId].length
@@ -66,11 +104,10 @@ const VistaList = () => {
       }
       setVistaList(visList);
       setVistaInvitation(vistaInvitation);
-      const invites = await get_vista_invitations_list(userId);
-      console.log(invites);
     };
     getInfo();
-  }, [organizationId, userId, tabName]);
+  }, [organizationId, userId, tabName,updateVistas,updateInvitation]);
+
   const handleClick = (
     filterSchema: TYPE_Filters[],
     type: string,

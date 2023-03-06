@@ -8,7 +8,9 @@ import {
   get_data_by_column_name,
   get_schema_data_field,
   get_text_color_from_name,
+  get_user_by_id,
   link_data_to_parent_data,
+  set_notification,
   update_data_to_database,
 } from "../../Utils/Backend";
 import SideBarInputs from "./SideBarInputs";
@@ -45,8 +47,12 @@ export default function CreateData(props: Props) {
   //   const [isFetching, setIsFetching] = React.useState<boolean>(true);
   // stop link button from being clicked multiple times
   const [isButtonClicked, setIsButtonClicked] = React.useState<boolean>(false);
+  let trackUserType:string[] = []
 
   const orgId = useAppSelector((state) => state.auth.organisationId);
+  const userId = useAppSelector((state) => state.auth.userId);
+
+  
   const tabName = useAppSelector((state) => state.datatable.tabName);
 
   const x: Type_SidebarState[] = useSelector(
@@ -66,7 +72,7 @@ export default function CreateData(props: Props) {
 
       let tempFormData: any = {};
 
-      schemaData.list.forEach((item: any) => {
+      schemaData.list && schemaData.list.forEach((item: any) => {
         if (
           ["string", "title", "currency", "dropdown"].includes(item.columnType)
         )
@@ -163,6 +169,18 @@ export default function CreateData(props: Props) {
 
   const handleSubmit = async () => {
     let tempFormData: any = {};
+    let userNotification:string[] = []
+    let notificationMessages:string[] =[]
+    let userValue:any = await get_user_by_id(userId)
+    Object.keys(formData).forEach((item)=>{
+
+      if(trackUserType.includes(item)){
+        userNotification.push(formData[item])
+        notificationMessages.push(`You are assigned as ${item} by ${userValue.name}`)
+      }
+    })
+    console.log(formData,'at the time of submit',userNotification)   
+
     try {
       if (
         props.sidebar.sidebarType === "createMode" ||
@@ -201,7 +219,7 @@ export default function CreateData(props: Props) {
         props.sidebar.sidebarType
       );
 
-      // await set_notification(organizationId, [creatorOfData], [`You created a ${selectedField}`], "")
+      await set_notification(organizationId, userNotification, notificationMessages,newDataId)
       console.log(newDataId);
 
       toast.success("Data Updated Successfully");
@@ -359,6 +377,10 @@ export default function CreateData(props: Props) {
             {formSchema && formSchema.list && (
               <div>
                 {formSchema.list.map((item: any, index: number) => {
+                
+                if(item.columnType === "user") {
+                  trackUserType = [...trackUserType,item.columnName]
+                }
                   return (
                     <SideBarInputs
                       key={index}
@@ -390,7 +412,7 @@ export default function CreateData(props: Props) {
                 props.sidebar.linkedData.map(
                   (linkedDataId: string, index: number) => {
                     return (
-                      <span onClick={() => handleLinkedIdClick(linkedDataId)}>
+                      <span key={`linked-${index}`} onClick={() => handleLinkedIdClick(linkedDataId)}>
                         <IdComponent itemId={linkedDataId} color={"#FFA500"} />
                       </span>
                     );

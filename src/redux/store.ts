@@ -6,6 +6,7 @@ import DataTableSlice from "./reducers/DataTableSlice";
 import IconsSlice from "./reducers/IconsSlice";
 import ColorSlice from "./reducers/ColorSlice";
 import VistaSlice from "./reducers/VistaSlice";
+import NotificationSlice from "./reducers/NotificationSlice";
 
 export const store = configureStore({
 	reducer: {
@@ -15,7 +16,8 @@ export const store = configureStore({
 		datatable: DataTableSlice,
 		icons: IconsSlice,
 		colors: ColorSlice,
-		vista:VistaSlice
+		vista:VistaSlice,
+		notification:NotificationSlice
 	},
 });
 
