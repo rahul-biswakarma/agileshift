@@ -3,9 +3,11 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { setTabName } from '../../redux/reducers/DataTableSlice';
 import { setVistaSchema, setVistaName } from '../../redux/reducers/VistaSlice';
 import {
+  accept_vista_invitation,
   get_user_by_id,
   get_vista_from_id,
   get_vista_invitations_list,
+  reject_vista_invitation,
   send_vista_invitations,
 } from "../../Utils/Backend";
 import EmailInput from "../common/EmailInput";
@@ -48,7 +50,13 @@ const VistaList = () => {
       if (user.vistas[organizationId]) {
         vistaIdList = user.vistas[organizationId];
       }
+      const pendingVistaIdList = await get_vista_invitations_list(userId);
       let visList = [];
+      for (let i = 0; i < pendingVistaIdList.length; i++) {
+        const visObj = await get_vista_from_id(pendingVistaIdList[i]);
+        visList.push({ ...visObj, id: pendingVistaIdList[i], pending: true });
+        vistaInvitation.push({ mail: "", error: false, visible: false });
+      }
       for (let i = 0; i < vistaIdList.length; i++) {
         const visObj = await get_vista_from_id(vistaIdList[i]);
         visList.push({ ...visObj, id: vistaIdList[i] });
@@ -105,6 +113,16 @@ const VistaList = () => {
     }
   };
 
+  const acceptVista = async (index: number) => {
+    const vistaId = vistaList[index].id;
+    accept_vista_invitation(userId, vistaId);
+  };
+
+  const rejectVista = async (index: number) => {
+    const vistaId = vistaList[index].id;
+    reject_vista_invitation(userId, vistaId);
+  };
+
   return (
     <div className="relative text-white">
       <div
@@ -127,12 +145,17 @@ const VistaList = () => {
                     className="px-3 py-1 hover:bg-Secondary_background_color rounded-md mr-2">
                     {data.name}
                   </button>
-                  {!data.invited ? (
+                  {data.invited ? (
                     <div className="flex">
-                      <button className="flex items-center bg-Secondary_background_color border border-inherit text-center text-lg rounded-lg text-sm font-fira_code hover:text-green-800 hover:bg-green-400 hover:border-green-500 transition-all">
+                      <button
+                        className="flex items-center bg-Secondary_background_color border border-inherit text-center text-lg rounded-lg text-sm 
+                        font-fira_code hover:text-green-800 hover:bg-green-400 hover:border-green-500 transition-all mr-2"
+                        onClick={() => acceptVista(_id)}>
                         <span className="material-symbols-outlined">check</span>
                       </button>
-                      <button className="flex items-center bg-Secondary_background_color border border-inherit text-center text-lg rounded-lg text-sm font-fira_code hover:text-green-800 hover:bg-green-400 hover:border-green-500 transition-all">
+                      <button
+                        className="flex items-center bg-Secondary_background_color border border-inherit text-center text-lg rounded-lg text-sm font-fira_code hover:text-rose-800 hover:bg-rose-400 hover:border-rose-500 transition-all"
+                        onClick={() => rejectVista(_id)}>
                         <span className="material-symbols-outlined">close</span>
                       </button>
                     </div>
