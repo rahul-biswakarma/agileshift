@@ -12,7 +12,7 @@ import InviteUserComponent from "./InviteUserComponent";
 import { SearchComponent } from "./SearchComponent";
 import { setUserId } from "../../redux/reducers/AuthSlice";
 import { useNavigate } from "react-router-dom";
-import { Tooltip } from "@mui/material";
+import { Modal, Tooltip} from "@mui/material";
 import OrganizationListModal from "../ManageOrganization/OrganizationListModal";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
@@ -45,9 +45,7 @@ const Header = (props: TYPE_HeaderProps) => {
 	const [openOrgList, setOpenOrgList] = useState(false);
 	const unReadNotificationCountFromStore = useAppSelector((state) => state.notification.unreadNotificationCount);
 
-	const handleOrgListIconClick = () => {
-		setOpenOrgList(!openOrgList);
-	};
+	
 
 	const [userData, setUserData] = useState<TYPE_USER>({
 		id: "",
@@ -57,10 +55,37 @@ const Header = (props: TYPE_HeaderProps) => {
 		organisation: [""],
 	});
 	const [isSettingOptionMenuOpen, setIsSettingOptionMenuOpen] =
-		useState<boolean>(false);
+		useState(false);
 	const [isInviteUserComponentOpen, setIsInviteUserComponentOpen] =
 		useState<boolean>(false);
-	const [isOrgMenuOpen, setIsOrgMenuOpen] = useState<boolean>(false);
+	// const [isOrgMenuOpen, setIsOrgMenuOpen] = useState<boolean>(false);
+	const [isOrgMenuOpen , setIsOrgMenuOpen] = useState(false);
+
+	const handleOpenOrgMenu = () => {
+		setIsOrgMenuOpen(true);
+	  };
+	
+	  const handleCloseOrgMenu = () => {
+		setIsOrgMenuOpen(false);
+	  };
+
+	  const handleOpenOrgList = () => {
+		setOpenOrgList(true);
+	  };
+	
+	  const handleCloseOrgList = () => {
+		setOpenOrgList(false);
+	  };
+
+	  const handleOpenSettingOption = () => {
+		setIsSettingOptionMenuOpen(true);
+	  }
+
+	  const handleCloseSettingOption = () => {
+		setIsSettingOptionMenuOpen(false);
+	  }
+
+
 
 	const [isNotificationFetched, setIsNotificationFetched] =
     React.useState(false);
@@ -117,16 +142,12 @@ const Header = (props: TYPE_HeaderProps) => {
 									schema: {},
 								}
 							}
-							console.log(data, "**");
 							
 							return data;
 						}
 					)
 				);
-				console.log(notificationListWithData);
 				dispatch(setUnreadNotificationCount(unReadNotificationCount));
-				console.log(unReadNotificationCount);
-				
 				dispatch(setNotificationList(notificationListWithData));
 			}
 		});
@@ -186,11 +207,16 @@ const Header = (props: TYPE_HeaderProps) => {
 		>
 			<button
 				className="flex gap-[0.5rem] items-center"
-				onClick={() => setIsOrgMenuOpen(!isOrgMenuOpen)}
+				onClick={handleOpenOrgMenu}
 			>
 				<span className="material-symbols-outlined ">cyclone</span>
 				<p className="uppercase font-fira_code font-[500]">{organizationName}</p>
 			</button>
+			<Modal
+				open={isOrgMenuOpen}
+				onClose={handleCloseOrgMenu}
+			>
+			<div>		
 			{isOrgMenuOpen && (
 				<div className="top-[60px] left-8 absolute flex flex-col gap-[0.3rem] w-max bg-background_color overflow-auto border border-[#444444] rounded-lg z-50">
 					<div className="w-full flex items-center justify-between p-[0.5rem] border-b border-white/30 transition-all ">
@@ -220,30 +246,40 @@ const Header = (props: TYPE_HeaderProps) => {
 					</ul>
 				</div>
 			)}
+			</div>
+			
+			</Modal>
 			<SearchComponent />
 
 			<div className="flex gap-[2rem] items-center">
-				<Tooltip
+				
+					<div className="relative flex items-center">
+					<Tooltip
 					title="Organisation Lists"
 					placement="top"
 				>
-					<div className="relative flex items-center">
 						<button
 							className={`${openOrgList?"text-white":"text-white/20"} material-symbols-outlined cursor-pointer hover:text-white transition-all`}
-							onClick={() => {
-								handleOrgListIconClick();
-							}}
+							onClick={handleOpenOrgList}
 						>
 							{openOrgList ? "close" : "list"}
 						</button>
+						</Tooltip>
+						<Modal
+							open={openOrgList}
+							onClose={handleCloseOrgList}
+						>
+						<div>
 						{openOrgList && (
-							<div className="absolute min-w-[300px] top-[40px] right-[-10%] rounded-lg font-dm_sans bg-background_color border border-[#444444] 
+							<div className="absolute min-w-[300px] top-[40px] right-52 rounded-lg font-dm_sans bg-background_color border border-[#444444] 
 								shadow-lg p-2 flex items-center justify-center text-primary_font_color z-50">
 								<OrganizationListModal userId={userId} boxSize="small"/>
 							</div>
 						)}
+						</div>
+						</Modal>
 					</div>
-				</Tooltip>
+							
 
 				<Tooltip
 					title="Notifications"
@@ -267,11 +303,12 @@ const Header = (props: TYPE_HeaderProps) => {
 					</div>
 				</Tooltip>
 
-				<Tooltip
+				
+					<div className="flex gap-[1rem] items-center transition-all hover:text-white">
+					<Tooltip
 					title="Invite Member"
 					placement="top"
-				>
-					<div className="flex gap-[1rem] items-center transition-all hover:text-white">
+					>
 						<button
 							style={{
 								color: `${
@@ -285,13 +322,14 @@ const Header = (props: TYPE_HeaderProps) => {
 						>
 							person_add
 						</button>
+					</Tooltip>
 						{isInviteUserComponentOpen && (
 							<InviteUserComponent
 								setIsInviteUserComponentOpen={setIsInviteUserComponentOpen}
 							/>
 						)}
 					</div>
-				</Tooltip>
+				
 				{/* <div className="relative text-white/20 cursor-pointer  flex flex-col item-center transition-all">
 					<span
 						className="material-symbols-outlined hover:text-white"
@@ -316,13 +354,18 @@ const Header = (props: TYPE_HeaderProps) => {
 					</div>
 				</div> */}
 				<div className="relative cursor-pointer  flex flex-col item-center transition-all">
-					<button onClick={() => toggleSettingOptionMenu()}>
+					<button onClick={handleOpenSettingOption}>
 						<img
 							className="max-w-[35px] max-h-[35px] min-w-[35px] min-h-[35px]  rounded-full cursor-pointer transition-all"
 							src={`${userData.avatar}`}
 							alt={`${userData.name}`}
 						/>
 					</button>
+					<Modal
+						open={isSettingOptionMenuOpen}
+						onClose={handleCloseSettingOption}
+					>
+						
 					<div
 						className={`top-[45px] right-0 absolute flex flex-col gap-[0.3rem] w-[200px] bg-background_color overflow-auto border border-[#444444] rounded-lg z-50 ${
 							isSettingOptionMenuOpen ? "flex" : "hidden"
@@ -347,7 +390,8 @@ const Header = (props: TYPE_HeaderProps) => {
 								</button>
 							</li>
 						</ul>
-					</div>
+					</div>					
+					</Modal>
 				</div>
 			</div>
 		</div>

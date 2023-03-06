@@ -44,7 +44,7 @@ type Type_FullDataNodeProps = {
 };
 
 const IdNode = (props: Type_IdNodeProps) => {
-	const [showFullData, setShowFullData] = useState(false);
+	const [showFullData, setShowFullData] = useState(true);
 	return (
 		<div
 			className="transition-all"
@@ -88,7 +88,7 @@ const FullDataNode = (props: Type_FullDataNodeProps) => {
 			style={{
 				borderColor: get_background_color_from_name(props.color),
 			}}
-			className="bg-background_color p-[0.5rem] transition-all rounded-md border-2 flex flex-col gap-[0.5rem]"
+			className="relative bg-background_color p-[0.5rem] transition-all rounded-md border-2 flex flex-col gap-[0.5rem] min-w-[200px] w-full"
 		>
 			<button
 				onClick={() =>
@@ -117,7 +117,7 @@ const FullDataNode = (props: Type_FullDataNodeProps) => {
 						return (
 							<div
 								key={cols.columnName}
-								className="flex gap-[0.5rem] items-center text-[14px]"
+								className="flex gap-[0.5rem] items-center text-[14px] w-full"
 							>
 								<p className="font-fira_code text-white/30 text-[14px]">
 									{cols.columnName}
@@ -125,11 +125,11 @@ const FullDataNode = (props: Type_FullDataNodeProps) => {
 								<UserComponent value={props.data[cols.columnName]} />
 							</div>
 						);
-					} else if (cols.columnType === "tags") {
+					} else if (cols.columnType === "tag") {
 						return (
 							<div
 								key={cols.columnName}
-								className="flex gap-[0.5rem] items-center text-[14px]"
+								className="flex gap-[0.5rem] items-center text-[14px] w-full"
 							>
 								<p className="font-fira_code text-white/30 text-[14px]">
 									{cols.columnName}
@@ -141,7 +141,7 @@ const FullDataNode = (props: Type_FullDataNodeProps) => {
 						return (
 							<div
 								key={cols.columnName}
-								className="flex gap-[0.5rem] items-center text-[14px]"
+								className="flex gap-[0.5rem] items-center text-[14px] w-full"
 							>
 								<p className="font-fira_code text-white/30 text-[14px]">
 									{cols.columnName}
@@ -184,12 +184,14 @@ const FieldNameNode = (props: Type_FieldNameNode) => {
 
 const OrgNameNode = (props: Type_OrgNameNode) => {
 	return (
-		<div className="transition-all rotate-[-90deg] p-[0.5rem_2rem] border-[2px] border-white/20 rounded-md">
+		<div className="transition-all p-[0.5rem_2rem] border-[2px] border-white/20 rounded-md">
 			<Handle
 				type="target"
 				position={Position.Top}
 			/>
-			<div className="text-white font-fira_code">{props.data.name}</div>
+			<div className="text-white font-fira_code uppercase">
+				{props.data.name}
+			</div>
 			<Handle
 				type="source"
 				position={Position.Bottom}
