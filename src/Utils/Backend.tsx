@@ -1220,7 +1220,7 @@ export const accept_vista_invitation = async (
 		[`vistas.${orgId}`]: arrayUnion(vistaId)
     });
   } else {
-    await setDoc(userRef, {
+    await updateDoc(userRef, {
 		[`vistas.${orgId}`]: [vistaId]
     });
   }
