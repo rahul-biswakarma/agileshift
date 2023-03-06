@@ -128,6 +128,16 @@ const VistaList = () => {
     tempInvitations[index].visible = !tempInvitations[index].visible;
     setVistaInvitation(tempInvitations);
   };
+
+  const toggleVistaList = () => {
+    let tempInvitations = [...vistaInvitation];
+    for (let i = 0; i < tempInvitations.length; i++) {
+      tempInvitations[i].visible = false;
+    }
+    setVistaInvitation(tempInvitations);
+    setVistaListCollapse(!vistaListCollapse);
+  };
+
   const handleShareVista = (index: number) => {
     let tempInvitations = [...vistaInvitation];
     if (tempInvitations[index].mail === "") {
@@ -149,6 +159,7 @@ const VistaList = () => {
     console.log(user);
     if (user) {
       send_vista_invitations(userId, mail, vistaList[index].id, organizationId);
+      toast.success(`${mail} has been invited to ${vistaList[index].name}!`);
     }
   };
   const acceptVista = async (index: number) => {
@@ -170,7 +181,7 @@ const VistaList = () => {
   return (
     <div className="relative text-white">
       <div
-        onClick={() => setVistaListCollapse(!vistaListCollapse)}
+        onClick={toggleVistaList}
         className="flex gap-1 items-center px-3 py-2 text-white/30 hover:bg-white/5 rounded-sm cursor-pointer">
         <span className="material-symbols-outlined">keyboard_arrow_down</span>
         {vistaName ? vistaName : "My List"}
@@ -180,7 +191,7 @@ const VistaList = () => {
           {vistaList.length > 0 ? (
             vistaList.map((data: any, _id: number) => (
               <div className="flex flex-col mt-2" key={_id}>
-                <div className="w-full flex items-center">
+                <div className="w-full flex items-center justify-between">
                   <button
                     onClick={() =>
                       handleClick(data.vistaSchema, data.field, data.name)
