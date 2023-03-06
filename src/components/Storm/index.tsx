@@ -1,5 +1,5 @@
 import { useMemo, useEffect, useState } from "react";
-import ReactFlow, { MarkerType, Background } from "reactflow";
+import ReactFlow, { MarkerType, Background, MiniMap } from "reactflow";
 import { v4 as uuidv4 } from "uuid";
 
 import { IdNode, FieldNameNode, OrgNameNode } from "./CustomNode";
@@ -45,9 +45,8 @@ const Storm = (props: Type_StormProps) => {
 	const [fieldNameColorMap, setFieldNameColorMap] = useState<any>(null);
 	const [fieldIconMap, setFieldIconMap] = useState<any>(null);
 	const [totalNodes, setTotalNodes] = useState<any>(null);
-
-	count_data_in_organisation(props.organizationId).then((data: number) => {
-		setTotalNodes(data);
+	count_data_in_organisation(props.organizationId).then((data: any) => {
+		setTotalNodes(data["total"]);
 	});
 
 	// Effects
@@ -100,21 +99,14 @@ const Storm = (props: Type_StormProps) => {
 		let totoalArea = 0;
 		let x = 0,
 			y = 600,
-			fieldNameX = 0,
-			fieldNameY = 300,
-			areaOfFieldNameNode = 0;
+			fieldNameY = 300;
 		let tempNode: any = [];
 		let tempEdge: any = [];
 
 		if (totalNodes && fieldNameColorMap) {
 			totoalArea =
-				totalNodes * 250 + Object.keys(fieldNameColorMap).length * 300;
-			x = -1 * Math.floor(totoalArea / 2);
-
-			areaOfFieldNameNode = Math.floor(
-				totoalArea / Object.keys(fieldNameColorMap).length
-			);
-			fieldNameX = x + Math.floor(areaOfFieldNameNode / 2);
+				totalNodes * 250 + Object.keys(fieldNameColorMap).length - 1 * 300;
+			x = -1 * Math.floor(totoalArea / Object.keys(fieldNameColorMap).length);
 		}
 
 		// Org Name
@@ -126,21 +118,10 @@ const Storm = (props: Type_StormProps) => {
 			},
 			type: "OrgNameNode",
 		});
-		x += 300;
 
-		if (data && data.length > 0)
+		if (data && data.length > 0) {
 			data.map((field: any, index: number) => {
-				tempNode.push({
-					id: field.name,
-					position: { x: fieldNameX, y: fieldNameY },
-					data: {
-						name: field.name,
-						icon: fieldIconMap[field.name] || "home",
-						color: fieldNameColorMap[field.name] || "#fff",
-					},
-					type: "FieldNameNode",
-				});
-				fieldNameX += areaOfFieldNameNode;
+				let count = 0;
 				tempEdge.push({
 					id: `${uuidv4()}-a`,
 					source: "orgName",
@@ -159,6 +140,7 @@ const Storm = (props: Type_StormProps) => {
 				});
 
 				field.data.map((data: any) => {
+					count += 1;
 					tempNode.push({
 						id: data.id,
 						position: { x: x, y: y },
@@ -188,9 +170,6 @@ const Storm = (props: Type_StormProps) => {
 									fieldNameColorMap[field.name]
 								),
 							},
-							pathOptions: {
-								smoothstep: { offset: 300, borderRadius: 400 },
-							},
 						});
 						return "";
 					});
@@ -210,17 +189,27 @@ const Storm = (props: Type_StormProps) => {
 								fieldNameColorMap[field.name]
 							),
 						},
-						pathOptions: {
-							smoothstep: { offset: 300, borderRadius: 400 },
-						},
 					});
-					x += 200;
+					x += 250;
 					return "";
 				});
-				y += 200;
-				fieldNameY += 200;
+
+				tempNode.push({
+					id: field.name,
+					position: { x: x - (count * 250) / 2, y: fieldNameY },
+					data: {
+						name: field.name,
+						icon: fieldIconMap[field.name] || "home",
+						color: fieldNameColorMap[field.name] || "#fff",
+					},
+					type: "FieldNameNode",
+				});
+				x += 300;
+				y += 300;
+				fieldNameY += 300;
 				return "";
 			});
+		}
 		setNodes(tempNode);
 		setEdges(tempEdge);
 	}, [fieldNameColorMap, data, schemaData, fieldIconMap, orgName, totalNodes]);
@@ -231,6 +220,8 @@ const Storm = (props: Type_StormProps) => {
 			[node.id]: node.position,
 		}));
 	};
+
+	const defaultViewport = { x: 0, y: 0, zoom: 1 };
 
 	return (
 		<div className="w-screen h-screen text-white">
@@ -247,8 +238,10 @@ const Storm = (props: Type_StormProps) => {
 					}))}
 					edges={edges}
 					nodeTypes={nodeTypes}
-					fitView
+					defaultViewport={defaultViewport}
+					fitView={true}
 				>
+					<MiniMap />
 					<Background />
 				</ReactFlow>
 			)}

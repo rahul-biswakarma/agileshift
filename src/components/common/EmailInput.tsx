@@ -15,7 +15,7 @@ const EmailInput = ({
 }: EmailInputPropTypes) => {
   return (
     <div className="p-[2px] relative min-w-[250px] flex justify-between items-center border-[1.5px] border-white/10 rounded-md bg-Secondary_background_color transition-all">
-      <div>
+      <div className="w-full">
         <input
           type="text"
           value={value}

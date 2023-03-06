@@ -72,7 +72,7 @@ export default function CreateData(props: Props) {
 
       let tempFormData: any = {};
 
-      schemaData.list.forEach((item: any) => {
+      schemaData.list && schemaData.list.forEach((item: any) => {
         if (
           ["string", "title", "currency", "dropdown"].includes(item.columnType)
         )
@@ -412,7 +412,7 @@ export default function CreateData(props: Props) {
                 props.sidebar.linkedData.map(
                   (linkedDataId: string, index: number) => {
                     return (
-                      <span onClick={() => handleLinkedIdClick(linkedDataId)}>
+                      <span key={`linked-${index}`} onClick={() => handleLinkedIdClick(linkedDataId)}>
                         <IdComponent itemId={linkedDataId} color={"#FFA500"} />
                       </span>
                     );

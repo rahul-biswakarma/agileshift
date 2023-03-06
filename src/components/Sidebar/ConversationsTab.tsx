@@ -100,21 +100,21 @@ export default function ConversationsTab(props: Props) {
   } else {
     return (
       <div
-        className="flex flex-col  w-[400px] h-full max-h-full bg-sidebar_bg backdrop-filter backdrop-blur-md bg-opacity-10 
-              border-l border-[#444444] pt-4 "
+        className="flex flex-col w-[400px] h-full max-h-full bg-sidebar_bg backdrop-filter backdrop-blur-md bg-opacity-10 
+              border-l border-[#444444]"
       >
         <CustomButton
           icon={"close"}
           onClick={handleClose}
-          className="absolute right-3 top-3 flex items-center justify-center p-1 text-white hover:text-red-400"
+          className="absolute right-0 top-0 flex items-center justify-center p-3 text-white hover:text-red-400"
         />
-        <p className="pl-4">Conversations</p>
+        <p className="pl-4 py-3">Conversations</p>
 
 
-        <div className="flex h-[90vh] items-end">
+        <div className="flex flex-1 items-end">
           <section
             ref={chatRef}
-            className="max-h-[90vh] px-4 h-auto overflow-y-auto w-full"
+            className="max-h-[calc(100vh-50px-36px)] px-4 h-auto overflow-y-auto w-full"
           >
             {chat &&
               Object.keys(chat).map((day: any, index: number) => {
@@ -138,7 +138,8 @@ export default function ConversationsTab(props: Props) {
               })}
           </section>
         </div>
-        <div className="fixed bottom-0 w-[100%] h-[5vh] p-4 mb-4 ">
+
+        <div className="sticky bottom-0 h-30 w-[100%] p-4 mb-4">
           <Editor id={props.sidebar.fieldId!} />
         </div>
       </div>
