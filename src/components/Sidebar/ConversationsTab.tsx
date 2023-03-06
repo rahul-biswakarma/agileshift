@@ -7,7 +7,7 @@ import { useAppDispatch } from "../../redux/hooks";
 import { setNewSidBar } from "../../redux/reducers/SideBarSlice";
 import { RootState } from "../../redux/store";
 import CustomButton from "../common/Button";
-import Editor from "../common/chatModule/editor";
+import Editor from "../common/editor";
 
 type Props = {
   tabColaps: Boolean;
@@ -110,28 +110,28 @@ export default function ConversationsTab(props: Props) {
 
         <section
           ref={chatRef}
-          className="max-h-[calc(100vh-25vh)] overflow-y-scroll pl-4 pr-4 h-[75vh]  "
+          className="max-h-[95vh] overflow-y-scroll pl-4 pr-4 h-[85vh] flex  items-end "
         >
           {chat &&
             Object.keys(chat).map((day: any, index: number) => {
               return (
-                <div key={index}>
-                  <section className="flex justify-between items-center gap-2">
-                    <span className="border border-[#444444] flex flex-1 h-0"></span>
+                <div key={index} className=" w-full">
+                  <section className="flex justify-between items-center gap-2 w-full ">
+                    <span className="border border-[#444444] flex flex-1 h-0 w-full "></span>
                     <span className="text-sm">
                       {Object.keys(chat).length - 1 === index - 1
                         ? day
                         : "Today"}
                     </span>
                   </section>
-                  {chat[day].map((message: any, index: number) => { 
+                  {chat[day].map((message: any, index: number) => {
                     return <SingleMessage key={index} {...message} />;
                   })}
                 </div>
               );
             })}
         </section>
-        <div className="fixed bottom-0 w-[100%] h-[20vh]">
+        <div className="fixed bottom-0 w-[100%] h-[5vh] p-4 mb-4 ">
           <Editor id={props.sidebar.fieldId!} />
         </div>
       </div>
