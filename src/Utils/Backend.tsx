@@ -1104,36 +1104,38 @@ export const get_vistas_details = async (vistasId: string) => {
 
 //57  send vista invitation
 export const send_vista_invitations = async (
-	senderId: string,
-	receiverEmail: string,
-	vistasId: string
+  senderId: string,
+  receiverEmail: string,
+  vistasId: string,
+  orgId: string,
 ) => {
-	const invitatonRef = doc(db, "vistaInvitations", receiverEmail);
-	const docSnap = await getDoc(invitatonRef);
-
-	if (docSnap.exists()) {
-		const data = docSnap.data();
-		if (data["pendingList"].includes(vistasId)) {
-			return;
-		} else {
-			await updateDoc(invitatonRef, {
-				pendingList: arrayUnion(vistasId),
-			});
+  const invitatonRef = doc(db, "vistaInvitations", receiverEmail);
+  const docSnap = await getDoc(invitatonRef);
+  if (docSnap.exists()) {
+    const data = docSnap.data();
+    if (data.pendingList[orgId] && data.pendingList[orgId].includes(vistasId)) {
+      return;
+    } else {
+      await updateDoc(invitatonRef, {
+        pendingList: {
+			[orgId]: arrayUnion(vistasId),
 		}
-	} else {
-		await setDoc(invitatonRef, {
-			pendingList: [vistasId],
-		});
-	}
-
-	const senderDetails: any = await get_user_by_id(senderId);
-	const vistasDetail: any = await get_vistas_details(vistasId);
-
-	send_vista_invitation_mail(
-		receiverEmail,
-		senderDetails["name"],
-		vistasDetail["name"]
-	);
+      });
+    }
+  } else {
+    await setDoc(invitatonRef, {
+      pendingList: {
+		[orgId] : [vistasId],
+	  } 
+    });
+  }
+  const senderDetails: any = await get_user_by_id(senderId);
+  const vistasDetail: any = await get_vistas_details(vistasId);
+  send_vista_invitation_mail(
+    receiverEmail,
+    senderDetails["name"],
+    vistasDetail["name"]
+  );
 };
 // 58 send vista invitation on mail
 export const send_vista_invitation_mail = async (
@@ -1176,14 +1178,14 @@ export const send_vista_invitation_mail = async (
 
 // 59 get invitations list
 export const get_vista_invitations_list = async (userID: string) => {
-	const userDetails: any = await get_user_by_id(userID);
-	const userRef = doc(db, "vistaInvitations", userDetails["email"]);
-	const docSnap = await getDoc(userRef);
-	if (docSnap.exists()) {
-		return docSnap.data()["pendingList"];
-	} else {
-		return [];
-	}
+  const userDetails: any = await get_user_by_id(userID);
+  const userRef = doc(db, "vistaInvitations", userDetails["email"]);
+  const docSnap = await getDoc(userRef);
+  if (docSnap.exists()) {
+    return docSnap.data()["pendingList"];
+  } else {
+    return {};
+  }
 };
 
 // 60 get users vista's list
@@ -1199,50 +1201,49 @@ export const get_users_vistas_list = async (userID: string) => {
 // 61 accept vista invitation
 //  accept vista invitation
 export const accept_vista_invitation = async (
-	userId: string,
-	vistaId: string
+  userId: string,
+  vistaId: string,
+  orgId: string,
 ) => {
-	const userDetails: any = await get_user_by_id(userId);
-	const userRef = doc(db, "users", userId);
-
-	const vistasInvitationsRef = doc(
-		db,
-		"vistaInvitations",
-		userDetails["email"]
-	);
-	await updateDoc(vistasInvitationsRef, {
-		pendingList: arrayRemove(vistaId),
-	});
-
-	if (Object.keys(userDetails).includes("vistasList")) {
-		await updateDoc(userRef, {
-			vistasList: arrayUnion(vistaId),
-		});
-	} else {
-		await setDoc(userRef, {
-			vistasList: [vistaId],
-		});
-	}
+  const userDetails: any = await get_user_by_id(userId);
+  const userRef = doc(db, "users", userId);
+  const vistasInvitationsRef = doc(
+    db,
+    "vistaInvitations",
+    userDetails["email"]
+  );
+  await updateDoc(vistasInvitationsRef, {
+	[`pendingList.${orgId}`] : arrayRemove(vistaId),
+  });
+  if (Object.keys(userDetails).includes("vistas")) {
+    await updateDoc(userRef, {
+		[`vistas.${orgId}`]: arrayUnion(vistaId)
+    });
+  } else {
+    await setDoc(userRef, {
+		[`vistas.${orgId}`]: [vistaId]
+    });
+  }
 };
 
 // 62 reject vista invitation
 export const reject_vista_invitation = async (
-	userId: string,
-	vistaId: string
+  userId: string,
+  vistaId: string,
+  orgId: string,
 ) => {
-	const userDetails: any = await get_user_by_id(userId);
-	const vistasInvitationsRef = doc(
-		db,
-		"vistaInvitations",
-		userDetails["email"]
-	);
-	await updateDoc(vistasInvitationsRef, {
-		pendingList: arrayRemove(vistaId),
-	});
+  const userDetails: any = await get_user_by_id(userId);
+  const vistasInvitationsRef = doc(
+    db,
+    "vistaInvitations",
+    userDetails["email"]
+  );
+  await updateDoc(vistasInvitationsRef, {
+    [`pendingList.${orgId}`] : arrayRemove(vistaId),
+  });
 };
 
 // 63 count data in organisation
-
 export const count_data_in_organisation = async (organisationId: string) => {
 	const organisationDetails = await get_organizations_details(organisationId);
 	if (organisationDetails) {
