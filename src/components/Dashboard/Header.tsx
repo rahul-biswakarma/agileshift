@@ -4,6 +4,8 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import {
 	get_user_by_id,
 	get_organization_name_by_id,
+	get_data_byID,
+	get_schema_data_field,
 } from "../../Utils/Backend";
 
 import InviteUserComponent from "./InviteUserComponent";
@@ -12,7 +14,23 @@ import { setUserId } from "../../redux/reducers/AuthSlice";
 import { useNavigate } from "react-router-dom";
 import { Tooltip } from "@mui/material";
 import OrganizationListModal from "../ManageOrganization/OrganizationListModal";
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "../../firebaseConfig";
+import { setNotificationList, setUnreadNotificationCount } from "../../redux/reducers/NotificationSlice";
 
+interface TYPE_NotificationData {
+	dataId: string;
+	dateOfCreation: Date;
+	notificationId: string;
+	notificationData: string;
+	isSeen: boolean;
+}
+interface TYPE_ModifiedNotificationData extends TYPE_NotificationData {
+	field: string;
+	color: string;
+	data: any;
+	schema: any;
+}
 interface TYPE_HeaderProps {
 	showNotification: boolean;
 	setShowNotification: React.Dispatch<React.SetStateAction<boolean>>;
@@ -25,6 +43,7 @@ const Header = (props: TYPE_HeaderProps) => {
 	const navigate = useNavigate();
 	const [organizationName, setOrganizationName] = useState<string>("NewOrg");
 	const [openOrgList, setOpenOrgList] = useState(false);
+	const unReadNotificationCountFromStore = useAppSelector((state) => state.notification.unreadNotificationCount);
 
 	const handleOrgListIconClick = () => {
 		setOpenOrgList(!openOrgList);
@@ -42,6 +61,81 @@ const Header = (props: TYPE_HeaderProps) => {
 	const [isInviteUserComponentOpen, setIsInviteUserComponentOpen] =
 		useState<boolean>(false);
 	const [isOrgMenuOpen, setIsOrgMenuOpen] = useState<boolean>(false);
+
+	const [isNotificationFetched, setIsNotificationFetched] =
+    React.useState(false);
+
+	const fetchNotificationList = async () => {
+		onSnapshot(doc(db, "organizations", organizationId), async (doc) => {
+			if (doc.data()) {
+				let unReadNotificationCount = 0;
+				const notificationListFromBackend = doc.data()!.notifications[userId];
+				notificationListFromBackend.forEach((notification: TYPE_NotificationData) => {
+				if (notification.isSeen === false) {
+					unReadNotificationCount++;
+				}
+				});
+				const updatedNotificationList = notificationListFromBackend.sort(
+				(notificationA: TYPE_NotificationData, notificationB: TYPE_NotificationData) => {
+					if (notificationA.isSeen && !notificationB.isSeen) {
+					return 1;
+					}
+					if (!notificationA.isSeen && notificationB.isSeen) {
+					return -1;
+					}
+					return 0;
+				}
+				);
+				const notificationListWithData: TYPE_ModifiedNotificationData[] =
+				await Promise.all(
+					updatedNotificationList.map(
+						async (notification: TYPE_NotificationData) => {
+							let data = {}
+							if(notification.dataId.length>0){
+								const dataFromDatabase = await get_data_byID(
+									organizationId,
+									notification.dataId
+								);
+								const field = dataFromDatabase.field;
+								const schemaFromDatabase: any = await get_schema_data_field(
+									organizationId,
+									field
+								);
+								data = {
+									...notification,
+									field: field,
+									color: schemaFromDatabase.color,
+									data: dataFromDatabase,
+									schema: schemaFromDatabase.list,
+								};
+							}else{
+								data = {
+									...notification,
+									field: "",
+									color: "#FFFFFF",
+									data: {},
+									schema: {},
+								}
+							}
+							console.log(data, "**");
+							
+							return data;
+						}
+					)
+				);
+				console.log(notificationListWithData);
+				dispatch(setUnreadNotificationCount(unReadNotificationCount));
+				console.log(unReadNotificationCount);
+				
+				dispatch(setNotificationList(notificationListWithData));
+			}
+		});
+	};
+
+	if (isNotificationFetched === false) {
+		fetchNotificationList();
+		setIsNotificationFetched(true);
+	}
 
 	useEffect(() => {
 		get_user_by_id(userId).then((data) => {
@@ -98,7 +192,7 @@ const Header = (props: TYPE_HeaderProps) => {
 				<p className="uppercase font-fira_code font-[500]">{organizationName}</p>
 			</button>
 			{isOrgMenuOpen && (
-				<div className="top-[60px] left-8 absolute flex flex-col gap-[0.3rem] w-max bg-Secondary_background_color overflow-auto border border-white/30 rounded-md z-50">
+				<div className="top-[60px] left-8 absolute flex flex-col gap-[0.3rem] w-max bg-background_color overflow-auto border border-[#444444] rounded-lg z-50">
 					<div className="w-full flex items-center justify-between p-[0.5rem] border-b border-white/30 transition-all ">
 						<p className="text-white/50">{organizationName}</p>
 						<button
@@ -120,7 +214,7 @@ const Header = (props: TYPE_HeaderProps) => {
 								className="w-full"
 								onClick={() => navigate("/organization-lists")}
 							>
-								Organisation List
+								Organization List
 							</button>
 						</li>
 					</ul>
@@ -155,14 +249,22 @@ const Header = (props: TYPE_HeaderProps) => {
 					title="Notifications"
 					placement="top"
 				>
-					<button
-						className={`${
-							props.showNotification ? "text-white" : "text-white/20"
-						} material-symbols-outlined cursor-pointer hover:text-white transition-all`}
-						onClick={() => handleNotificationToggle()}
-					>
-						notifications
-					</button>
+					<div className="relative flex items-center">
+						<button
+							className={`${
+								props.showNotification ? "text-white" : "text-white/20"
+							} material-symbols-outlined cursor-pointer hover:text-white transition-all`}
+							onClick={() => handleNotificationToggle()}
+						>
+							notifications
+						</button>
+						{unReadNotificationCountFromStore>0 && (
+							<div className="absolute w-[15px] h-[15px] top-[-4px] left-[14px] rounded-full font-fira_code bg-highlight_icon_color p-1 flex items-center justify-center text-white text-[8px] font-bold">
+								{unReadNotificationCountFromStore}
+							</div>
+						)}
+
+					</div>
 				</Tooltip>
 
 				<Tooltip
@@ -222,7 +324,7 @@ const Header = (props: TYPE_HeaderProps) => {
 						/>
 					</button>
 					<div
-						className={`top-[36px] right-0 absolute flex flex-col gap-[0.3rem] w-[200px] bg-Secondary_background_color overflow-auto border border-white/30 rounded-md z-50 ${
+						className={`top-[45px] right-0 absolute flex flex-col gap-[0.3rem] w-[200px] bg-background_color overflow-auto border border-[#444444] rounded-lg z-50 ${
 							isSettingOptionMenuOpen ? "flex" : "hidden"
 						}`}
 					>

@@ -496,7 +496,6 @@ export const update_data_to_database = async (
     await updateDoc(organizationRef, {
       data: arrayUnion(data),
     });
-    return data["displayId"]
   } else {
     //  condition for update data
     let docSnap: any = await getDoc(organizationRef);
@@ -507,8 +506,8 @@ export const update_data_to_database = async (
     await updateDoc(organizationRef, {
       data: updatedData,
     });
-    return data.id
   }
+  return data.id
 };
 // 27 get data by coloumn name
 

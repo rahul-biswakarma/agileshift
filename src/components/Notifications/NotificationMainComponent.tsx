@@ -1,16 +1,13 @@
-import { doc, onSnapshot } from "firebase/firestore";
 import React from "react";
-import { db } from "../../firebaseConfig";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { setNotificationList } from "../../redux/reducers/NotificationSlice";
 import { setSideBar } from "../../redux/reducers/SideBarSlice";
 import {
-  get_data_byID,
-  get_schema_data_field,
   mark_notification_seen,
   update_notification,
 } from "../../Utils/Backend";
 import { getNoOfDays } from "../../Utils/HelperFunctions";
-import { IdComponent } from "../DataTable/idComponent";
+import { DisplayIdComponent } from "../DataTable/displayIdComponentContainer";
 import { DateComponent } from "./DateComponent";
 
 interface TYPE_NotificationData {
@@ -36,81 +33,44 @@ interface TYPE_NotificationProps {
 const NotificationMainComponent = (props: TYPE_NotificationProps) => {
   const userId = useAppSelector((state) => state.auth.userId);
   const organizationId = useAppSelector((state) => state.auth.organisationId);
+  const notificationList = useAppSelector((state) => state.notification.notificationList);
 
   const dispatch = useAppDispatch();
-
-  const [notificationList, setNotificationList] = React.useState<any[]>([]);
-  const [isNotificationFetched, setIsNotificationFetched] =
-    React.useState(false);
-
-  const fetchNotificationList = async () => {
-    onSnapshot(doc(db, "organizations", organizationId), async (doc) => {
-      if (doc.data()) {
-        const notificationListFromBackend = doc.data()!.notifications[userId];
-        const updatedNotificationList = notificationListFromBackend.sort(
-          (a: TYPE_NotificationData, b: TYPE_NotificationData) => {
-            if (a.isSeen && !b.isSeen) {
-              return 1;
-            }
-            if (!a.isSeen && b.isSeen) {
-              return -1;
-            }
-            return 0;
-          }
-        );
-        const notificationListWithData: TYPE_ModifiedNotificationData[] =
-          await Promise.all(
-            updatedNotificationList.map(
-              async (notification: TYPE_NotificationData) => {
-                const dataFromDatabase = await get_data_byID(
-                  organizationId,
-                  notification.dataId
-                );
-                const field = dataFromDatabase.field;
-                const schemaFromDatabase: any = await get_schema_data_field(
-                  organizationId,
-                  field
-                );
-                let data = {
-                  ...notification,
-                  field: field,
-                  color: schemaFromDatabase.color,
-                  data: dataFromDatabase,
-                  schema: schemaFromDatabase.list,
-                };
-                return data;
-              }
-            )
-          );
-        console.log(notificationListWithData);
-        
-        setNotificationList(notificationListWithData);
-      }
-    });
-  };
-
-  if (isNotificationFetched === false) {
-    fetchNotificationList();
-    setIsNotificationFetched(true);
-  }
 
   const handleViewSidebar = async (
     notification: TYPE_ModifiedNotificationData
   ) => {
     dispatch(
       setSideBar({
+        fieldId: notification.data.id,
         sidebarType: "editMode",
         createModeCalledByField: "",
-        fieldId: notification.data.id,
+        linkedData: [],
+        id: notification.data.id,
+        displayId: notification.data.displayId,
       })
     );
-    notification.isSeen = true;
-    await update_notification(organizationId, userId, notification);
+    handleNotificationSeen(notification)
+  };
+
+  const handleNotificationSeen = async (
+    notification: TYPE_ModifiedNotificationData
+  ) => {
+    if(!notification.isSeen){
+      let notificationObj = {
+        ...notification,
+        isSeen: true,
+      }
+      console.log(notification, "**old");
+      console.log(notificationObj, "**new");
+      
+      await update_notification(organizationId, userId, notificationObj);
+    }
   };
 
   const handleClearAllNotification = async () => {
     const notificationListSeen = await Promise.all(
-      notificationList.map(async (notification: TYPE_NotificationData) => {
+      notificationList.map(async (notification: TYPE_ModifiedNotificationData) => {
         if (notification.isSeen === false) {
           return {
             ...notification,
@@ -121,7 +81,7 @@ const NotificationMainComponent = (props: TYPE_NotificationProps) => {
       })
     );
 
-    setNotificationList(notificationListSeen);
+    dispatch(setNotificationList(notificationListSeen));
     await mark_notification_seen(organizationId, userId, notificationListSeen);
   };
 
@@ -172,15 +132,18 @@ const NotificationMainComponent = (props: TYPE_NotificationProps) => {
                         notification.dataId.length > 0
                       ) {
                         handleViewSidebar(notification);
+                      }else{
+                        handleNotificationSeen(notification)
                       }
                     }}
                   >
                     <div className="content grow flex gap-5">
                       {notification.dataId !== undefined &&
                         notification.dataId.length > 0 && (
-                          <IdComponent
-                            itemId={notification.dataId}
+                          <DisplayIdComponent
+                            displayId={notification.data.displayId}
                             color={notification.color}
+                            field={notification.field}
                           />
                         )}
                       <span className="text-left font-dm_sans">
