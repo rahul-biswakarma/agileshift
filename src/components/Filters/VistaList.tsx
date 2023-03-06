@@ -42,7 +42,7 @@ const VistaList = () => {
       const user: any = await get_user_by_id(userId);
       let vistaIdList = [];
       let vistaInvitation = [];
-      if (user.vistas[organizationId]) {
+      if (user.vistas && user.vistas[organizationId]) {
         vistaIdList = user.vistas[organizationId];
       }
       let visList = [];
