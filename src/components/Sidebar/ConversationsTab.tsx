@@ -52,19 +52,21 @@ export default function ConversationsTab(props: Props) {
 
   const SingleMessage = (message: any) => {
     return (
-      <div className="flex relative flex-row">
+      <div className="flex justify-start relative p-1">
         {/* avatar */}
-        <img className="w-10 rounded h-10" alt="" src={message.senderImg} />
+        <img className="w-12 rounded h-12 self-start" alt="" src={message.senderImg} />
+
         {/* message */}
-        <span className="flex flex-col flex-1 max-w-[270px] ml-2">
-          <section>{message.name}</section>
-          <p className="text-chat_module_text_1 text-[15px] w-full flex-wrap h-auto">
+        <span className="flex flex-col flex-1 pl-2 mt-[-4px]">
+          <h2 className="font-bold text-lg text-start">{message.name}</h2>
+          <p className="text-chat_module_text_1 text-[10px] w-full flex-wrap h-auto">
             <Markup
               content={message.message}
-              className="w-full h-auto break-words"
+              className="w-full text-[13px] h-auto break-words font-extralight"
             />
           </p>
         </span>
+
         {/* time */}
         <span className="right-0 text-[9px] pt-2">
           {new Date(message.timeStamp).toLocaleTimeString([], {
@@ -108,29 +110,34 @@ export default function ConversationsTab(props: Props) {
         />
         <p className="pl-4">Conversations</p>
 
-        <section
-          ref={chatRef}
-          className="max-h-[95vh] overflow-y-scroll pl-4 pr-4 h-[85vh] flex  items-end "
-        >
-          {chat &&
-            Object.keys(chat).map((day: any, index: number) => {
-              return (
-                <div key={index} className=" w-full">
-                  <section className="flex justify-between items-center gap-2 w-full ">
-                    <span className="border border-[#444444] flex flex-1 h-0 w-full "></span>
-                    <span className="text-sm">
-                      {Object.keys(chat).length - 1 === index - 1
-                        ? day
-                        : "Today"}
-                    </span>
-                  </section>
-                  {chat[day].map((message: any, index: number) => {
-                    return <SingleMessage key={index} {...message} />;
-                  })}
-                </div>
-              );
-            })}
-        </section>
+
+        <div className="flex h-[90vh] items-end">
+          <section
+            ref={chatRef}
+            className="max-h-[90vh] px-4 h-auto overflow-y-auto w-full"
+          >
+            {chat &&
+              Object.keys(chat).map((day: any, index: number) => {
+                return (
+                  <div key={index} className="w-full">
+                    <section className="flex justify-between items-center gap-2 w-full ">
+                      <span className="border border-[#444444] flex flex-1 h-0 w-full "></span>
+                      <span className="text-sm">
+                        {Object.keys(chat).length - 1 === index - 1
+                          ? day
+                          : "Today"}
+                      </span>
+                    </section>
+                    <section className="flex flex-col gap-3">
+                      {chat[day].map((message: any, index: number) => {
+                        return <SingleMessage key={index} {...message} />;
+                      })}
+                    </section>
+                  </div>
+                );
+              })}
+          </section>
+        </div>
         <div className="fixed bottom-0 w-[100%] h-[5vh] p-4 mb-4 ">
           <Editor id={props.sidebar.fieldId!} />
         </div>
