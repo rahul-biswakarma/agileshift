@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setTabName } from "../../redux/reducers/DataTableSlice";
 import { setVistaSchema, setVistaName } from "../../redux/reducers/VistaSlice";
@@ -50,12 +51,19 @@ const VistaList = () => {
       if (user.vistas[organizationId]) {
         vistaIdList = user.vistas[organizationId];
       }
-      const pendingVistaIdList = await get_vista_invitations_list(userId);
       let visList = [];
-      for (let i = 0; i < pendingVistaIdList.length; i++) {
-        const visObj = await get_vista_from_id(pendingVistaIdList[i]);
-        visList.push({ ...visObj, id: pendingVistaIdList[i], pending: true });
-        vistaInvitation.push({ mail: "", error: false, visible: false });
+      const pendingVistas = await get_vista_invitations_list(userId);
+      console.log(pendingVistas, "pendingVistas");
+      if (
+        pendingVistas[organizationId] &&
+        pendingVistas[organizationId].length
+      ) {
+        let pendingVistaIdList = pendingVistas[organizationId];
+        for (let i = 0; i < pendingVistaIdList.length; i++) {
+          const visObj = await get_vista_from_id(pendingVistaIdList[i]);
+          visList.push({ ...visObj, id: pendingVistaIdList[i], invited: true });
+          vistaInvitation.push({ mail: "", error: false, visible: false });
+        }
       }
       for (let i = 0; i < vistaIdList.length; i++) {
         const visObj = await get_vista_from_id(vistaIdList[i]);
@@ -103,24 +111,36 @@ const VistaList = () => {
     tempInvitations[index].error = false;
     setVistaInvitation(tempInvitations);
     sendVistaInvitation(index);
+    tempInvitations[index].mail = "";
+    tempInvitations[index].visible = false;
+    setVistaInvitation(tempInvitations);
   };
+
   const sendVistaInvitation = async (index: number) => {
     const mail = vistaInvitation[index].mail;
     const user = await get_user_by_id(userId);
     console.log(user);
     if (user) {
-      send_vista_invitations(userId, mail, vistaList[index].id);
+      send_vista_invitations(userId, mail, vistaList[index].id, organizationId);
     }
   };
 
   const acceptVista = async (index: number) => {
     const vistaId = vistaList[index].id;
-    accept_vista_invitation(userId, vistaId);
+    accept_vista_invitation(userId, vistaId, organizationId);
+    let tempVistaList = [...vistaList];
+    tempVistaList[index].invited = false;
+    setVistaList(tempVistaList);
+    toast.success(`${vistaList[index].name} has been added to your vistas!`);
   };
 
   const rejectVista = async (index: number) => {
     const vistaId = vistaList[index].id;
-    reject_vista_invitation(userId, vistaId);
+    reject_vista_invitation(userId, vistaId, organizationId);
+    let tempVistaList = [...vistaList];
+    tempVistaList.splice(index, 1);
+    setVistaList(tempVistaList);
+    toast.error(`${vistaList[index].name} has been rejected!`);
   };
 
   return (
@@ -135,10 +155,9 @@ const VistaList = () => {
         <div className="absolute flex flex-col w-max top-[105%] right-0 border border-white/20 z-10 rounded-md p-3 bg-background_color">
           {vistaList.length > 0 ? (
             vistaList.map((data: any, _id: number) => (
-              <div className="flex flex-col mt-2">
+              <div className="flex flex-col mt-2" key={_id}>
                 <div className="w-full flex items-center">
                   <button
-                    key={_id}
                     onClick={() =>
                       handleClick(data.vistaSchema, data.field, data.name)
                     }

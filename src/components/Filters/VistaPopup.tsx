@@ -1,24 +1,25 @@
 import React, { useState } from 'react'
-import { useAppSelector } from '../../redux/hooks';
-import { add_vista } from '../../Utils/Backend';
-import Input from '../common/Input';
+import { toast } from "react-toastify";
+import { useAppSelector } from "../../redux/hooks";
+import { add_vista } from "../../Utils/Backend";
+import Input from "../common/Input";
 
 type TYPE_FilterOption = {
-	filterOptionName: string;
-	active: boolean;
+  filterOptionName: string;
+  active: boolean;
 };
 
 type TYPE_Filters = {
-	columnName: string;
-	active: boolean;
-	data: TYPE_FilterOption[];
+  columnName: string;
+  active: boolean;
+  data: TYPE_FilterOption[];
 };
 
 type TYPE_VistaPopupProps = {
-  filterSchema: TYPE_Filters[]
-}
+  filterSchema: TYPE_Filters[];
+};
 
-const VistaPopup = ({filterSchema}: TYPE_VistaPopupProps) => {
+const VistaPopup = ({ filterSchema }: TYPE_VistaPopupProps) => {
   const [popUpCollapse, setPopUpCollapse] = useState(false);
   const [fieldData, setFieldData] = useState<any>({});
 
@@ -27,9 +28,16 @@ const VistaPopup = ({filterSchema}: TYPE_VistaPopupProps) => {
   const tabName = useAppSelector((state) => state.datatable.tabName);
 
   const handleSave = () => {
-    add_vista(organizationId, userId, filterSchema, tabName, fieldData["Vista Name"]);
+    add_vista(
+      organizationId,
+      userId,
+      filterSchema,
+      tabName,
+      fieldData["Vista Name"]
+    );
     setPopUpCollapse(false);
-  }
+    toast.success("Vista Saved Successfully");
+  };
 
   return (
     <div className="relative">
@@ -59,6 +67,6 @@ const VistaPopup = ({filterSchema}: TYPE_VistaPopupProps) => {
       )}
     </div>
   );
-}
+};
 
 export default VistaPopup;
