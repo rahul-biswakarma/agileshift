@@ -95,7 +95,7 @@ const Header = (props: TYPE_HeaderProps) => {
 				onClick={() => setIsOrgMenuOpen(!isOrgMenuOpen)}
 			>
 				<span className="material-symbols-outlined ">cyclone</span>
-				<p className="uppercase font-fira_code font-[500]">AgileShift</p>
+				<p className="uppercase font-fira_code font-[500]">{organizationName}</p>
 			</button>
 			{isOrgMenuOpen && (
 				<div className="top-[60px] left-8 absolute flex flex-col gap-[0.3rem] w-max bg-Secondary_background_color overflow-auto border border-white/30 rounded-md z-50">
@@ -135,7 +135,7 @@ const Header = (props: TYPE_HeaderProps) => {
 				>
 					<div className="relative flex items-center">
 						<button
-							className="material-symbols-outlined text-white/20 cursor-pointer hover:text-white transition-all"
+							className={`${openOrgList?"text-white":"text-white/20"} material-symbols-outlined cursor-pointer hover:text-white transition-all`}
 							onClick={() => {
 								handleOrgListIconClick();
 							}}
@@ -143,8 +143,9 @@ const Header = (props: TYPE_HeaderProps) => {
 							{openOrgList ? "close" : "list"}
 						</button>
 						{openOrgList && (
-							<div className="absolute min-w-[300px] top-[40px] right-[-10%] rounded-lg font-dm_sans bg-background_color border border-[#444444] shadow-lg p-2 flex items-center justify-center text-primary_font_color z-50">
-								<OrganizationListModal userId={userId} />
+							<div className="absolute min-w-[300px] top-[40px] right-[-10%] rounded-lg font-dm_sans bg-background_color border border-[#444444] 
+								shadow-lg p-2 flex items-center justify-center text-primary_font_color z-50">
+								<OrganizationListModal userId={userId} boxSize="small"/>
 							</div>
 						)}
 					</div>

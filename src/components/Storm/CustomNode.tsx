@@ -7,10 +7,10 @@ import {
 	get_background_color_from_name,
 	get_text_color_from_name,
 } from "../../Utils/Backend";
-import { IdComponent } from "../DataTable/idComponent";
 import TagComponent from "../DataTable/tagComponent";
 import UserComponent from "../DataTable/userComponent";
 import { setSideBar } from "../../redux/reducers/SideBarSlice";
+import { DisplayIdComponent } from "../DataTable/displayIdComponentContainer";
 
 type Type_IdNodeProps = {
 	data: {
@@ -63,8 +63,9 @@ const IdNode = (props: Type_IdNodeProps) => {
 					schemaData={props.data.schemaData}
 				/>
 			) : (
-				<IdComponent
-					itemId={props.data.id}
+				<DisplayIdComponent
+					displayId={props.data.data.displayId}
+					field={props.data.fieldName}
 					color={props.data.color}
 				/>
 			)}
@@ -102,9 +103,10 @@ const FullDataNode = (props: Type_FullDataNodeProps) => {
 					)
 				}
 			>
-				<IdComponent
-					itemId={props.id}
+				<DisplayIdComponent
+					displayId={props.data.displayId}
 					color={props.color}
+					field={props.fieldName}
 				/>
 			</button>
 

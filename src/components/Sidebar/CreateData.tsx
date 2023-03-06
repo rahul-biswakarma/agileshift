@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 import { IdComponent } from "../DataTable/idComponent";
 
 import { setDatas } from "../../redux/reducers/DataTableSlice";
+import { DisplayIdComponent } from "../DataTable/displayIdComponentContainer";
 // import Editor from "./TextEditor";
 // import ChatModule from "../common/ChatModule";
 
@@ -33,6 +34,7 @@ type Props = {
 };
 
 export default function CreateData(props: Props) {
+  console.log("CreateData.tsx: ", props);
   const [selectedField, setSelectedField] = React.useState<string>("");
   const [filedList, setFieldList] = React.useState<any>([]);
   const [formData, setFormData] = React.useState<any>();
@@ -193,11 +195,14 @@ export default function CreateData(props: Props) {
         };
       }
 
-      await update_data_to_database(
+      const newDataId = await update_data_to_database(
         organizationId,
         tempFormData,
         props.sidebar.sidebarType
       );
+
+      // await set_notification(organizationId, [creatorOfData], [`You created a ${selectedField}`], "")
+      console.log(newDataId);
 
       toast.success("Data Updated Successfully");
     } catch (err) {
@@ -324,8 +329,9 @@ export default function CreateData(props: Props) {
             </Select>
           )}
           {props.sidebar.sidebarType === "editMode" && (
-            <IdComponent
-              itemId={props.sidebar.fieldId!}
+            <DisplayIdComponent
+              field={selectedField}
+              displayId={props.sidebar.displayId!}
               color={formSchema ? formSchema.color : ""}
             />
           )}
@@ -399,6 +405,7 @@ export default function CreateData(props: Props) {
 
         <footer className=" right-0 mb-4 flex flex-row justify-between gap-2 items-center">
           <span
+            title="Click to start conversation"
             className="material-symbols-outlined cursor-pointer active:opacity-50"
             onClick={() => handleConversations(props.sidebar.id!)}
           >
