@@ -55,6 +55,7 @@ const DataTable = () => {
 		rowSelection: "single",
 		suppressDragLeaveHidesColumns: true,
 		headerHeight: 40,
+		domLayout: "autoHeight",
 		onRowClicked: function (event) {
 			let rowData = event.data;
 			dispatch(
