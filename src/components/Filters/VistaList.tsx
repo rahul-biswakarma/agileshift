@@ -105,6 +105,7 @@ const VistaList = () => {
     tempInvitations[index].visible = false;
     setVistaInvitation(tempInvitations);
   };
+
   const sendVistaInvitation = async (index: number) => {
     const mail = vistaInvitation[index].mail;
     const user = await get_user_by_id(userId);
