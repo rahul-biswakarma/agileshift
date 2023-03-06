@@ -1,17 +1,26 @@
 import React from "react";
 import JoditEditor from "jodit-react";
 import { send_message_in_fields } from "../../../Utils/Backend";
+import { RootState } from "../../../redux/store";
+import { useSelector } from "react-redux";
 
 interface EditorProps {
   id: string;
 }
 
+const checkEmptyMessage = (message: string) => {
+  let tempMessage = message;
+  return tempMessage.replace(/<[^>]*>?/gm, "");
+};
+
 const Editor: React.FC<EditorProps> = ({ id }) => {
+  const userId: string = useSelector((state: RootState) => state.auth.userId);
+
   var messageValue = "";
 
   function setMessage() {
-    console.log(id, messageValue);
-    send_message_in_fields(id, "Ahy7xiQg8cftHwRpF4CUHdenIy02", messageValue);
+    if (checkEmptyMessage(messageValue) === "") return;
+    send_message_in_fields(id, userId, messageValue);
   }
 
   const handleContentChange = (newContent: string) => {
@@ -35,7 +44,9 @@ const Editor: React.FC<EditorProps> = ({ id }) => {
           setMessage();
         }}
       >
-        <span className="material-symbols-outlined">send</span>
+        <span className="material-symbols-outlined active:text-blue-500">
+          send
+        </span>
       </button>
     </div>
   );

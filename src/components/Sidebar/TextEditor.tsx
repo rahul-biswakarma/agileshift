@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 import { send_message_in_fields } from "../../Utils/Backend";
 
 type Props = {
@@ -17,6 +19,7 @@ const Editor = (props: Props) => {
   };
 
   console.log(props.id);
+  const userId: string = useSelector((state: RootState) => state.auth.userId);
 
   return (
     <>
@@ -31,11 +34,7 @@ const Editor = (props: Props) => {
       <button
         className=" bottom-0 right-0 mr-4 mb-3 absolute"
         onClick={() => {
-          send_message_in_fields(
-            props.id,
-            "Ahy7xiQg8cftHwRpF4CUHdenIy02",
-            value
-          );
+          send_message_in_fields(props.id, userId, value);
           setValue("");
         }}
       >
