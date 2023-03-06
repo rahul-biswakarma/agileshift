@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { setSideBar } from '../../redux/reducers/SideBarSlice';
 import { get_schema_data_field, main_search_function } from '../../Utils/Backend';
 import { useDebounceCallback } from '../../Utils/useDebounce';
-import { IdComponent } from '../DataTable/idComponent';
+import { DisplayIdComponent } from '../DataTable/displayIdComponentContainer';
 
 type Type_SuggestionsState = {
 	field: string;
@@ -74,9 +74,12 @@ const SearchComponent = () => {
 	const handleSuggestionsSelect = (suggestion:Type_SuggestionsState) =>{
 		dispatch(
 			setSideBar({
+				fieldId: suggestion.data.id,
 				sidebarType: "editMode",
 				createModeCalledByField: "",
-				fieldId: suggestion.data.id,
+				linkedData: [],
+				id: suggestion.data.id,
+				displayId: suggestion.data.displayId,
 			})
 		);
 	}
@@ -116,11 +119,11 @@ const SearchComponent = () => {
 				}
 			</div>
 			{ searchTerm.length > 0 && 
-				<div className="w-full z-30 absolute h-auto max-h-[350px] overflow-y-auto top-[110%] rounded-md p-[2px] bg-Secondary_background_color text-primary_font_color border border-white/10">
+				<div className="w-full z-30 absolute h-auto max-h-[350px] overflow-y-auto top-[110%] rounded-md p-[2px] bg-background_color text-primary_font_color border border-white/10">
 					{searchedDataList.length > 0? searchedDataList.map((data,index)=>{
 						return <div key={`search-data-${index}`} className="w-full p-2 rounded-md hover:bg-sidebar_bg hover:text-highlight_font_color flex items-center cursor-pointer border-primary_font_color hover:border-white" onClick={()=>handleSuggestionsSelect(data)}>
-							<IdComponent itemId={data.data.id} color={data.color} />
-							<span className="ml-2 grow text-left">{data.titleData}</span>
+							<DisplayIdComponent displayId={data.data.displayId} color={data.color} field={data.field} />
+							<span className="ml-5 grow text-left">{data.titleData}</span>
 							<button
 								onClick={() => {
 								}}

@@ -483,31 +483,30 @@ export const update_data_to_database = async (
 	data: any,
 	mode: string
 ) => {
-	console.log("data", data);
-	// condition for create data
-	const organizationRef = doc(db, "organizations", organisationId);
-	if (mode === "createMode") {
-		data["created_at"] = get_current_time();
-		data["displayId"] = await get_field_display_id(
-			organisationId,
-			data["field"]
-		);
-		await updateDoc(organizationRef, {
-			data: arrayUnion(data),
-		});
-		return data["displayId"];
-	} else {
-		//  condition for update data
-		let docSnap: any = await getDoc(organizationRef);
-		let updatedData: any = docSnap
-			.data()
-			["data"].filter((item: any) => item.id !== data.id);
-		updatedData.push(data);
-		await updateDoc(organizationRef, {
-			data: updatedData,
-		});
-		return data.id;
-	}
+  console.log("data", data);
+  // condition for create data
+  const organizationRef = doc(db, "organizations", organisationId);
+  if (mode === "createMode") {
+    data["created_at"] = get_current_time();
+    data["displayId"] = await get_field_display_id(
+      organisationId,
+      data["field"]
+    );
+    await updateDoc(organizationRef, {
+      data: arrayUnion(data),
+    });
+  } else {
+    //  condition for update data
+    let docSnap: any = await getDoc(organizationRef);
+    let updatedData: any = docSnap
+      .data()
+      ["data"].filter((item: any) => item.id !== data.id);
+    updatedData.push(data);
+    await updateDoc(organizationRef, {
+      data: updatedData,
+    });
+  }
+  return data.id
 };
 // 27 get data by coloumn name
 
