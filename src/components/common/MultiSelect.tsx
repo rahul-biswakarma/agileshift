@@ -1,6 +1,6 @@
 import { doc, onSnapshot } from "firebase/firestore";
 import React, { useEffect } from "react";
-import { useAppSelector,useAppDispatch } from "../../redux/hooks";
+import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { get_userIds_in_organizations } from "../../Utils/Backend";
 import TagComponent from "../DataTable/tagComponent";
 import UserComponent from "../DataTable/userComponent";
@@ -32,13 +32,13 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 	const handleAddTags = () => {
 		dispatch(
 			setSideBar({
-			  sidebarType: "addOption",
-			  columnName: props.columnName,
-			  columnType: "tag",
-			  fieldName: props.fieldData.fieldName,
+				sidebarType: "addOption",
+				columnName: props.columnName,
+				columnType: "tag",
+				fieldName: props.fieldData.fieldName,
 			})
-		  );
-	}
+		);
+	};
 
 	useEffect(() => {
 		if (props.defaultValue && props.dataType === "tag") {
@@ -203,9 +203,10 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 								</button>
 							);
 					  })}
-				{props.dataType === "tag"  && (
-					<button className="w-full p-[0.5rem_0] flex items-center justify-center text-white/40 border-[1px] border-white/20 rounded-md hover:text-amber-400 hover:border-amber-400"
-					onClick={handleAddTags}
+				{props.dataType === "tag" && (
+					<button
+						className="w-full p-[0.5rem_0] flex items-center justify-center text-white/40 border-[1px] border-white/20 rounded-md hover:text-amber-400 hover:border-amber-400"
+						onClick={handleAddTags}
 					>
 						<span className="material-symbols-outlined">add</span>
 						<p>Add Tags</p>
