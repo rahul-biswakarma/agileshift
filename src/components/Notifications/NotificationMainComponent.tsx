@@ -1,3 +1,4 @@
+import { Tooltip } from "@mui/material";
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setNotificationList } from "../../redux/reducers/NotificationSlice";
@@ -92,6 +93,7 @@ const NotificationMainComponent = (props: TYPE_NotificationProps) => {
           Notifications
         </div>
         <div className="flex gap-3">
+          <Tooltip title="Clear All" placement="top">
           <button
             className="font-dm_sans text-[1rem] flex gap-[0.2rem] text-white/30 cursor-pointer rounded-sm hover:text-white"
             onClick={() => handleClearAllNotification()}
@@ -100,12 +102,15 @@ const NotificationMainComponent = (props: TYPE_NotificationProps) => {
               done_all
             </span>
           </button>
+          </Tooltip>
+          <Tooltip title="Close" placement="top">
           <button
             className="font-dm_sans text-[1rem] text-white/30 cursor-pointer rounded-sm hover:text-white"
             onClick={() => props.setShowNotification(false)}
           >
             <span className="material-symbols-outlined">close</span>
           </button>
+          </Tooltip>  
         </div>
       </div>
       <div className="text-highlight_font_color font-dm_sans grow flex flex-col h-[400px] overflow-y-auto">
