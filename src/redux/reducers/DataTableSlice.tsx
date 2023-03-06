@@ -5,6 +5,7 @@ interface DataTableState {
 	datas: any;
 	dataSchema: TYPE_SCHEMA[];
 	tabName: string;
+	fieldColorMap: any;
 }
 
 const initialState: DataTableState = {
@@ -12,6 +13,7 @@ const initialState: DataTableState = {
 	datas: {},
 	dataSchema: [],
 	tabName: "All",
+	fieldColorMap: [{}],
 };
 
 export const DataTableSlice = createSlice({
@@ -30,10 +32,18 @@ export const DataTableSlice = createSlice({
 		setTabName: (state, action: PayloadAction<string>) => {
 			state.tabName = action.payload;
 		},
+		setFieldColorMap: (state, action: PayloadAction<any>) => {
+			state.fieldColorMap = action.payload;
+		},
 	},
 });
 
-export const { setFieldColor, setDatas, setDataSchema, setTabName } =
-	DataTableSlice.actions;
+export const {
+	setFieldColor,
+	setDatas,
+	setDataSchema,
+	setTabName,
+	setFieldColorMap,
+} = DataTableSlice.actions;
 
 export default DataTableSlice.reducer;

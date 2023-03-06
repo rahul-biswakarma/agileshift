@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { setTabName } from '../../redux/reducers/DataTableSlice';
-import { setVistaSchema, setVistaName } from '../../redux/reducers/VistaSlice';
+import React, { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { setTabName } from "../../redux/reducers/DataTableSlice";
+import { setVistaSchema, setVistaName } from "../../redux/reducers/VistaSlice";
 import {
   accept_vista_invitation,
   get_user_by_id,
@@ -186,4 +186,4 @@ const VistaList = () => {
   );
 };
 
-export default VistaList
+export default VistaList;

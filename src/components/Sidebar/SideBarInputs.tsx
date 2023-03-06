@@ -19,22 +19,34 @@ type type_props = {
 	selectedField: string;
 };
 export default function SideBarInputs(props: type_props) {
-	if (["tag", "dropdown"].includes(props.columnDetails.columnType)) {
-    return (
-      <div>
-        <AutoComplete
-          columnDetails={props.columnDetails}
-          formData={props.formData}
-          setFormData={props.setFormData}
-          defaultValue={props.defaultValue}
-          selectedField={
-            props.selectedField === undefined ? "" : props.selectedField
-          }
-        />
-      </div>
-    );
-  }
-	if (["tag", "user"].includes(props.columnDetails.columnType)) {
+	if (["dropdown"].includes(props.columnDetails.columnType)) {
+		return (
+			<div>
+				<AutoComplete
+					columnDetails={props.columnDetails}
+					formData={props.formData}
+					setFormData={props.setFormData}
+					defaultValue={props.defaultValue}
+					selectedField={
+						props.selectedField === undefined ? "" : props.selectedField
+					}
+				/>
+			</div>
+		);
+	}
+	if (["user"].includes(props.columnDetails.columnType)) {
+		return (
+			<MultiSelect
+				dataType={props.columnDetails.columnType}
+				defaultValue={props.defaultValue}
+				columnName={props.columnDetails.columnName}
+				setFormData={props.setFormData}
+				fieldData={props.formData}
+				selectedTab={props.selectedTab === undefined ? "" : props.selectedTab}
+			/>
+		);
+	}
+	if (["tag"].includes(props.columnDetails.columnType)) {
 		return (
 			<MultiSelect
 				dataType={props.columnDetails.columnType}

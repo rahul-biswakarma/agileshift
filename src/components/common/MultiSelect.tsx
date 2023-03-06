@@ -1,11 +1,12 @@
 import { doc, onSnapshot } from "firebase/firestore";
 import React, { useEffect } from "react";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppSelector,useAppDispatch } from "../../redux/hooks";
 import { get_userIds_in_organizations } from "../../Utils/Backend";
 import TagComponent from "../DataTable/tagComponent";
 import UserComponent from "../DataTable/userComponent";
 
 import { db } from "../../firebaseConfig";
+import { setSideBar } from "../../redux/reducers/SideBarSlice";
 
 type Type_MultiSelectProps = {
 	dataType: string;
@@ -26,6 +27,17 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 
 	function toggleDropdownOption() {
 		setIsDropdownVisible(!isDropdownVisible);
+	}
+	const dispatch = useAppDispatch();
+	const handleAddTags = () => {
+		dispatch(
+			setSideBar({
+			  sidebarType: "addOption",
+			  columnName: props.columnName,
+			  columnType: "tag",
+			  fieldName: props.fieldData.fieldName,
+			})
+		  );
 	}
 
 	useEffect(() => {
@@ -73,7 +85,10 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 				onClick={() => toggleDropdownOption()}
 				className="flex"
 			>
-				<span className="capitalize w-[7em] p-3 text-center rounded-l font-dm_sans text-primary_font_color font-bold truncate" title={props.columnName}>
+				<span
+					className="capitalize w-[7em] p-3 text-center rounded-l font-dm_sans text-primary_font_color font-bold truncate"
+					title={props.columnName}
+				>
 					{props.columnName}
 				</span>
 				<div className="grow flex items-center bg-Secondary_background_color px-4 rounded-r font-dm_sans border-2 border-background_color">
@@ -129,9 +144,7 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 				</div>
 			</div>
 			<div
-				className={`flex-col ${
-					isDropdownVisible ? "flex" : "hidden"
-				}`}
+				className={`flex-col ${isDropdownVisible ? "flex" : "hidden"} p-[5px]`}
 			>
 				{props.dataType === "user"
 					? datas &&
@@ -190,6 +203,14 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 								</button>
 							);
 					  })}
+				{props.dataType === "tag" && selected && selected.length > 0 && (
+					<button className="w-full p-[0.5rem_0] flex items-center justify-center text-white/40 border-[1px] border-white/20 rounded-md hover:text-amber-400 hover:border-amber-400"
+					onClick={handleAddTags}
+					>
+						<span className="material-symbols-outlined">add</span>
+						<p>Add Tags</p>
+					</button>
+				)}
 			</div>
 		</div>
 	);
