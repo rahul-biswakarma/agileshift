@@ -19,10 +19,12 @@ const DisplayIdComponent = (props: Type_DisplayIdComponentProps) => {
 		<div
 			style={{
 				color: textColor,
-				background: props.opacity?`${bgColor}${props.opacity}`:`${bgColor}40`,
+				background: props.opacity
+					? `${bgColor}${props.opacity}`
+					: `${bgColor}40`,
 				borderColor: textColor,
 			}}
-			className="w-max h-[20px] font-fira_code rounded-md text-blue-600 text-center px-[8px] py-[12px] flex justify-center items-center text-[12px] font-[500] border-y uppercase"
+			className="w-max h-[20px] font-fira_code rounded-md text-blue-600 text-center px-[8px] py-[12px] flex justify-center items-center text-[12px] font-[500]  uppercase"
 		>
 			{uniqueAbbreviations(props.field)}-{props.displayId}
 		</div>

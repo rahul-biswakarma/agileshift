@@ -204,9 +204,9 @@ const Storm = (props: Type_StormProps) => {
 					},
 					type: "FieldNameNode",
 				});
-				x += 300;
-				y += 300;
-				fieldNameY += 300;
+				x -= 150;
+				y += 400;
+				fieldNameY += 400;
 				return "";
 			});
 		}
@@ -221,10 +221,10 @@ const Storm = (props: Type_StormProps) => {
 		}));
 	};
 
-	const defaultViewport = { x: 0, y: 0, zoom: 1 };
+	const defaultViewport = { x: 0, y: 0, zoom: 0.2 };
 
 	return (
-		<div className="w-screen h-screen text-white">
+		<div className="w-screen h-screen text-white flex">
 			{nodes && nodes.length > 0 && edges && (
 				<ReactFlow
 					onNodeDrag={handleNodeDrag}
