@@ -19,7 +19,9 @@ const App = () => {
 	const userIdFromSession = getFromSession("userId");
 	const dispatch = useAppDispatch();
 
-	if (userIdFromSession) {
+	const userId = useAppSelector((state) => state.auth.userId);
+
+	if (userIdFromSession && userId !== userIdFromSession) {
 		dispatch(setUserId(userIdFromSession));
 	}
 

@@ -221,7 +221,7 @@ const Storm = (props: Type_StormProps) => {
 		}));
 	};
 
-	const defaultViewport = { x: 0, y: 0, zoom: 1 };
+	const defaultViewport = { x: 0, y: 0, zoom: 0.2 };
 
 	return (
 		<div className="w-screen h-screen text-white">

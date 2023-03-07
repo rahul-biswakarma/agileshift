@@ -14,7 +14,6 @@ import {
 } from "../../Utils/Backend";
 import SideBarInputs from "./SideBarInputs";
 import { setNewSidBar, setSideBar } from "../../redux/reducers/SideBarSlice";
-import { setLinkedData } from "../../Utils/HelperFunctions";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import CustomButton from "../common/Button";
@@ -57,10 +56,6 @@ export default function CreateData(props: Props) {
 		(state: RootState) => state.sidebar.sideBarData
 	);
 
-	const [sideBarList] = React.useState(
-		useSelector((state: RootState) => state.sidebar.sideBarData)
-	);
-
 	const fetchDataCallback = useCallback(() => {
 		const fetchData = async () => {
 			let schemaData: any = await get_schema_data_field(
@@ -93,13 +88,6 @@ export default function CreateData(props: Props) {
 				Object.keys(currentState).forEach((key) => {
 					tempFormData[key] = currentState[key];
 				});
-
-				setLinkedData(
-					sideBarList,
-					dispatch,
-					tempFormData.id,
-					tempFormData.linkedData
-				);
 			}
 
 			setFormData(tempFormData);
@@ -107,13 +95,7 @@ export default function CreateData(props: Props) {
 		};
 
 		fetchData();
-	}, [
-		selectedField,
-		organizationId,
-		props.sidebar.fieldId,
-		dispatch,
-		sideBarList,
-	]);
+	}, [organizationId, props.sidebar.fieldId, selectedField]);
 
 	React.useEffect(() => {
 		fetchDataCallback();
@@ -407,8 +389,7 @@ export default function CreateData(props: Props) {
 							{props.sidebar.linkedData &&
 							props.sidebar.linkedData.length > 0 ? (
 								props.sidebar.linkedData.map(
-                  (linkedDataId: string, index: number) => {
-                    
+									(linkedDataId: string, index: number) => {
 										return (
 											<span
 												key={`linked-${index}`}
