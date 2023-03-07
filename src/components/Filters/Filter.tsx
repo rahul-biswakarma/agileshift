@@ -33,7 +33,6 @@ const Filter = ({ filters, modifyData }: TYPE_FilterProps) => {
 	);
 	const dispatch = useDispatch();
 	const [filterSchema, setFilterSchema] = useState<TYPE_Filters[]>(filters);
-	const [showAllFilters, setShowAllFilters] = useState<boolean>(false);
 	const [activeFiltersDropdown, setActiveFiltersDropdown] =
 		useState<TYPE_ActiveFiltersDropdown>({});
 
@@ -42,7 +41,7 @@ const Filter = ({ filters, modifyData }: TYPE_FilterProps) => {
 	}, [filters]);
 
 	const handleColumnClick = (columnTitle: string) => {
-		const newFilters = { ...activeFiltersDropdown };
+		const newFilters:TYPE_ActiveFiltersDropdown = { ...activeFiltersDropdown, showFilters: false };
 		if (newFilters[columnTitle]) {
 			newFilters[columnTitle] = !newFilters[columnTitle];
 		} else {
@@ -82,6 +81,8 @@ const Filter = ({ filters, modifyData }: TYPE_FilterProps) => {
 		} else if (newArray[index].active === false) {
 			newArray[index].active = true;
 		}
+
+
 		setFilterSchema(newArray);
 		modifyData(newArray);
 	};
@@ -147,7 +148,7 @@ const Filter = ({ filters, modifyData }: TYPE_FilterProps) => {
 										</div>
 									</div>
 									{activeFiltersDropdown[filter.columnName] === true && (
-										<div className="absolute top-[100%] bg-black z-10">
+										<div className="absolute top-[110%] bg-black z-10">
 											<DisplayFilters
 												filterData={filter.data}
 												filterSchema={filterSchema}
@@ -162,12 +163,12 @@ const Filter = ({ filters, modifyData }: TYPE_FilterProps) => {
 
 					<div className="relative flex items-center justify-center gap-4">
 						<button
-							onClick={() => setShowAllFilters(!showAllFilters)}
+							onClick={() => handleColumnClick("showFilters")}
 							className="flex items-center justify-center rounded-md w-6 h-6 text-sm mr-4"
 						>
 							<span className="material-symbols-outlined">add</span>
 						</button>
-						{showAllFilters && (
+						{activeFiltersDropdown["showFilters"] && (
 							<div className="absolute top-[110%] left-0 bg-background_color w-48 rounded-xl p-1 border border-white/20 text-highlight_font_color z-10">
 								<div className="flex flex-wrap gap-1 p-2 border-b border-white/10">
 									{filterSchema
