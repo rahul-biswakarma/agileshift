@@ -62,20 +62,15 @@ const Filter = ({ filters, modifyData }: TYPE_FilterProps) => {
 		filterS: any,
 	) => {
 
-		console.log(filterName,"filterName");
-		console.log(filterOptionIndex,"filterindex");
-		console.log(filterS,"filters");
 
 		const filterSche = [...filterS];
 		const filterObj = filterSche.find((x:any) => x.columnName === filterName)!;
-		console.log(filterObj,"filterobj");
 
 		if (filterObj?.data[filterOptionIndex].active === true) {
 			filterObj.data[filterOptionIndex].active = false;
 		} else {
 			filterObj.data[filterOptionIndex].active = true;
 		}
-		console.log(filterObj,"filterObj after toggle");
 		setFilterSchema(filterSche);
 		modifyData(filterSche);
 	};
