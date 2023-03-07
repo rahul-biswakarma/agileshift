@@ -166,10 +166,10 @@ export const update_issue = () => {};
 export const create_tags = () => {};
 
 // 11
-export const sendEmail = async (emailId: string) => {
+export const sendEmail = async (type:"vista"|"otp"|"organisation",emailId: string,vistaName?:string,orgName?:string,sender_name?:string) => {
 	//   e.preventDefault(); // prevents the page from reloading when you hit “Send”
 
-	let params: {
+	let otpParams: {
 		to_name: string;
 		to_email: string;
 		otp: number;
@@ -179,33 +179,85 @@ export const sendEmail = async (emailId: string) => {
 		otp: Math.floor(Math.random() * 900000) + 100000,
 	};
 
+	let invitationParams:{
+		from_name:string,
+		to_name:string,
+		to_email:string,
+		content:string
+	}={
+		from_name:sender_name?sender_name:"",
+		to_name:"",
+		to_email:emailId,
+		content:""
+	}
+
 	if (!isValidEmail(emailId)) {
 		console.log("invalid mail");
 		return;
 	}
-	const userDetails: TYPE_USER | string | undefined = await get_user_by_email(
+	const user: any | undefined = await get_user_by_email(
 		emailId
 	).then((user) => {
 		return user;
 	});
-
-	if (!userDetails) {
+	let userDetails:TYPE_USER;
+	if (!user) {
 		console.log("user not found");
 		return;
 	}
+		userDetails={
+			avatar:user.avatar,
+			email:user.email,
+			id:user.id,
+			organisation:user.organisation,
+			name:user.name
+		}
 
-	emailjs
-		.send("service_0dpd4z6", "template_weagkql", params, "sb5MCkizR-ZuN4LVw")
-		.then(
-			(res) => {
-				// show the user a success message
-			},
-			(error: string) => {
-				// show the user an error
-				console.error("error in sending otp");
-			}
-		);
-	return params["otp"];
+		otpParams.to_name=userDetails.name;
+		invitationParams.to_name=userDetails.name;
+	
+	if(type==="otp"){
+		emailjs
+			.send("service_gjc539l", "template_6vt5v8y", otpParams, "AJvkEjt5pK4Tr_3jV")
+			.then(
+				(res) => {
+					// show the user a success message
+				},
+				(error: string) => {
+					// show the user an error
+					console.error("error in sending otp");
+				}
+			);
+	}
+	else if(type==="vista"){
+		invitationParams.content=`You have been invited for the vista named ${vistaName}, by ${sender_name}!`
+		emailjs
+			.send("service_gjc539l", "template_sqxrej9", invitationParams, "AJvkEjt5pK4Tr_3jV")
+			.then(
+				(res) => {
+					// show the user a success message
+				},
+				(error: string) => {
+					// show the user an error
+					console.error("error in sending invitation");
+				}
+			);
+	}
+	else if(type==="organisation"){
+		invitationParams.content=`you are invited to the organisation named ${orgName}, by ${sender_name}`;
+		emailjs
+			.send("service_gjc539l", "template_sqxrej9", invitationParams, "AJvkEjt5pK4Tr_3jV")
+			.then(
+				(res) => {
+					// show the user a success message
+				},
+				(error: string) => {
+					// show the user an error
+					console.error("error in sending invitation");
+				}
+			);
+	}
+	return otpParams["otp"];
 };
 
 // 12 fetch all supported types. returns array of stings
@@ -743,10 +795,12 @@ export const send_invite = async (
 		organisationId
 	);
 
-	send_invitation_mail(
+	sendEmail(
+		"organisation",
 		receiverEmail,
+		"",
+		organizationDetails["name"],
 		senderDetails["name"],
-		organizationDetails["name"]
 	);
 };
 // 38 send invitation mail
@@ -1138,13 +1192,15 @@ export const send_vista_invitations = async (
 	}
 	const senderDetails: any = await get_user_by_id(senderId);
 	const vistasDetail: any = await get_vistas_details(vistasId);
-	send_vista_invitation_mail(
+	sendEmail(
+		"vista",
 		receiverEmail,
+		vistasDetail["name"],
+		"",
 		senderDetails["name"],
-		vistasDetail["name"]
 	);
 };
-// 58 send vista invitation on mail
+// 58 send vista invitation on mail -- not needed anymore
 export const send_vista_invitation_mail = async (
 	email: string,
 	sender_name: string,

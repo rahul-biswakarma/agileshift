@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useAppSelector } from "../../redux/hooks";
 import { toast } from "react-toastify";
-import { check_user_in_organizations, get_user_by_email, send_invite, set_notification  } from "../../Utils/Backend";
+import { check_user_in_organizations, get_organizations_details, get_user_by_email, get_user_by_id, send_invite, set_notification  } from "../../Utils/Backend";
 import EmailInput from "../common/EmailInput";
+
 
 type Type_InviteUserComponentProps = {
   setIsInviteUserComponentOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -52,6 +53,13 @@ const InviteUserComponent = (props: Type_InviteUserComponentProps) => {
 
   // }
 
+
+  // get_user_by_id(userId).then((data) => console.log(data));
+  
+  
+  
+  
+
   const sendInivitation = async (email: string) => {
     if (email === "") {
       toast.warning("Enter email first");
@@ -64,7 +72,16 @@ const InviteUserComponent = (props: Type_InviteUserComponentProps) => {
     if (!emailRegex.test(email)) {
       toast.error("Invalid Email");
       return;
-    }
+    }  
+    const organizationData = await get_organizations_details(organizationId);
+    const organizationName = organizationData?.name || organizationId;
+
+    const userDetails = await get_user_by_id(userId);
+    console.log(userDetails);
+    if(userDetails)
+      console.log(userDetails.name);
+    
+    
 
     const userData = await check_user_in_organizations(email, organizationId);
     if (!userData.isUser) {
@@ -73,12 +90,14 @@ const InviteUserComponent = (props: Type_InviteUserComponentProps) => {
       send_invite(userId, email, organizationId);
 
       // Send notification to invited user
-      const notificationData = `You have been invited to join organization ${organizationId}.`;
+      
+      const notificationData = `You were invited to join organization ${organizationName} by ${userDetails && userDetails.name}.`;
       if (userData.userId)
         await set_notification(
           organizationId,
           [userData.userId],
-          [notificationData]
+          [notificationData],
+          ""
         );
     } else {
       toast.error("User already exists!");
