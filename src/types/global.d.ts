@@ -23,11 +23,16 @@ declare global {
 		tagName: string;
 	};
 	type TYPE_NOTIFICATION = {
-		dataId: string;
-		dateOfCreation: Date;
+		dateOfCreation: string;
 		isSeen: boolean;
 		notificationData: string;
 		notificationId: string;
+		data?:{
+			dataId: string;
+			field: string;
+			color: string;
+			displayId:string
+		}
 	};
 	type TYPE_VISTA = {
 		[key: string]: string;

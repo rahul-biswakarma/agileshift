@@ -179,7 +179,8 @@ export default function CreateData(props: Props) {
         notificationMessages.push(`You are assigned as ${item} by ${userValue.name}`)
       }
     })
-    console.log(formData,'at the time of submit',userNotification)   
+    console.log(formData,'at the time of submit',userNotification)
+	
 
     try {
       if (
@@ -213,14 +214,15 @@ export default function CreateData(props: Props) {
         };
       }
 
+
       const newDataId = await update_data_to_database(
         organizationId,
         tempFormData,
         props.sidebar.sidebarType
       );
-
+		
+      console.log(tempFormData,'tempFormData');
       await set_notification(organizationId, userNotification, notificationMessages,newDataId)
-      console.log(newDataId);
 
       toast.success("Data Updated Successfully");
     } catch (err) {

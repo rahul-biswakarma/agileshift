@@ -67,7 +67,8 @@ export default function AddOptions(props: Props) {
   const handleSubmit = async () => {
     try {
       let tempList = list.filter((item: any) => item.filterOptionName !== "");
-      console.log("add options", tempList);
+      console.log("add options", tempList,organizationId,props.sidebar.columnName,props.sidebar.fieldName);
+
       await set_dropdown_options(
         organizationId,
         props.sidebar.columnName!,

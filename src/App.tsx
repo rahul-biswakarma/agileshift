@@ -75,10 +75,6 @@ const App = () => {
 					path="/organization"
 					element={<Navigate to="/organization-lists" />}
 				/>
-				<Route
-					path="/storm"
-					element={<Storm organizationId="oTkstJOfcWoo1sHTOCLo" />}
-				/>
 			</Routes>
 		</BrowserRouter>
 	);

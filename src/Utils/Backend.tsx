@@ -638,24 +638,37 @@ export const set_notification = async (
 	organisationId: string,
 	userId: string[],
 	notificationData: string[],
-	dataId?: string
+	data?:{
+		field:string,
+		color:string,
+		displayId:string,
+		dataId: string,
+	}
 ) => {
 	let orgData: any = await get_organizations_details(organisationId);
-
+	userId && userId.length>0 &&
 	userId.forEach(async (user, index) => {
-		const notification = {
-			dataId: dataId,
+		const notification:TYPE_NOTIFICATION = {
 			notificationData: notificationData[index],
 			notificationId: generateRandomId(),
 			dateOfCreation: get_current_time(),
 			isSeen: false,
 		};
+		if(data){
+			notification["data"] = {
+				field:data.field,
+				color:data.color,
+				displayId:data.displayId,
+				dataId: data.dataId,
+			}
+		}
 		if (orgData["notifications"][user] === undefined) {
 			orgData["notifications"][user] = [];
 		}
 		orgData["notifications"][user].push(notification);
 	});
 	const organizationRef = doc(db, "organizations", organisationId);
+	if(!orgData["notifications"]) orgData["notifications"] = {}
 	await updateDoc(organizationRef, {
 		notifications: orgData["notifications"],
 	});
@@ -665,20 +678,21 @@ export const set_notification = async (
 export const update_notification = async (
 	organisationId: string,
 	userId: string,
-	notification: any
+	notification: TYPE_NOTIFICATION
 ) => {
 	const organizationRef = doc(db, "organizations", organisationId);
 	let docSnap: any = await getDoc(organizationRef);
 	let updatedNotification: any = docSnap.data()["notifications"];
-	let filteredNotification = updatedNotification[userId].filter(
-		(item: any) => item.notificationId !== notification.notificationId
-	);
-
-	filteredNotification.push(notification);
-	updatedNotification[userId] = filteredNotification;
-	await updateDoc(organizationRef, {
-		notifications: updatedNotification,
-	});
+	if(updatedNotification && updatedNotification[userId] && updatedNotification[userId].length>0){
+		let filteredNotification = updatedNotification[userId].filter(
+			(item: any) => item.notificationId !== notification.notificationId
+		);
+		filteredNotification.push(notification);
+		updatedNotification[userId] = filteredNotification;
+		await updateDoc(organizationRef, {
+			notifications: updatedNotification,
+		});
+	}
 };
 
 // 35 mark notification seen
@@ -690,10 +704,12 @@ export const mark_notification_seen = async (
 	const organizationRef = doc(db, "organizations", organisationId);
 	let docSnap: any = await getDoc(organizationRef);
 	let updatedNotification: any = docSnap.data()["notifications"];
-	updatedNotification[userId] = notificationList;
-	await updateDoc(organizationRef, {
-		notifications: updatedNotification,
-	});
+	if(updatedNotification){
+		updatedNotification[userId] = notificationList;
+		await updateDoc(organizationRef, {
+			notifications: updatedNotification,
+		});
+	}
 };
 
 // 36 user active time

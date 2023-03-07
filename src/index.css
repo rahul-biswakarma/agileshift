@@ -76,7 +76,7 @@ code {
 }
 
 .ag-body {
-  height: calc(100vh - 270px) !important;
+  height: calc(100vh - 300px) !important;
 }
 
 .ag-ltr .ag-body,

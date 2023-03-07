@@ -4,8 +4,6 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import {
 	get_user_by_id,
 	get_organization_name_by_id,
-	get_data_byID,
-	get_schema_data_field,
 } from "../../Utils/Backend";
 
 import InviteUserComponent from "./InviteUserComponent";
@@ -18,19 +16,6 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
 import { setNotificationList, setUnreadNotificationCount } from "../../redux/reducers/NotificationSlice";
 
-interface TYPE_NotificationData {
-	dataId: string;
-	dateOfCreation: Date;
-	notificationId: string;
-	notificationData: string;
-	isSeen: boolean;
-}
-interface TYPE_ModifiedNotificationData extends TYPE_NotificationData {
-	field: string;
-	color: string;
-	data: any;
-	schema: any;
-}
 interface TYPE_HeaderProps {
 	showNotification: boolean;
 	setShowNotification: React.Dispatch<React.SetStateAction<boolean>>;
@@ -91,64 +76,34 @@ const Header = (props: TYPE_HeaderProps) => {
     React.useState(false);
 
 	const fetchNotificationList = async () => {
+		let unReadNotificationCount = 0;
 		onSnapshot(doc(db, "organizations", organizationId), async (doc) => {
 			if (doc.data()) {
-				let unReadNotificationCount = 0;
 				const notificationListFromBackend = doc.data()!.notifications[userId];
-				notificationListFromBackend.forEach((notification: TYPE_NotificationData) => {
-				if (notification.isSeen === false) {
-					unReadNotificationCount++;
-				}
-				});
-				const updatedNotificationList = notificationListFromBackend.sort(
-				(notificationA: TYPE_NotificationData, notificationB: TYPE_NotificationData) => {
-					if (notificationA.isSeen && !notificationB.isSeen) {
-					return 1;
-					}
-					if (!notificationA.isSeen && notificationB.isSeen) {
-					return -1;
-					}
-					return 0;
-				}
-				);
-				const notificationListWithData: TYPE_ModifiedNotificationData[] =
-				await Promise.all(
-					updatedNotificationList.map(
-						async (notification: TYPE_NotificationData) => {
-							let data = {}
-							if(notification.dataId.length>0){
-								const dataFromDatabase = await get_data_byID(
-									organizationId,
-									notification.dataId
-								);
-								const field = dataFromDatabase.field;
-								const schemaFromDatabase: any = await get_schema_data_field(
-									organizationId,
-									field
-								);
-								data = {
-									...notification,
-									field: field,
-									color: schemaFromDatabase.color,
-									data: dataFromDatabase,
-									schema: schemaFromDatabase.list,
-								};
-							}else{
-								data = {
-									...notification,
-									field: "",
-									color: "#FFFFFF",
-									data: {},
-									schema: {},
-								}
+				if(notificationListFromBackend &&
+					notificationListFromBackend.length > 0 ){
+						notificationListFromBackend.forEach((notification: TYPE_NOTIFICATION) => {
+							if (notification.isSeen === false) {
+								unReadNotificationCount++;
 							}
-							
-							return data;
-						}
-					)
-				);
-				dispatch(setUnreadNotificationCount(unReadNotificationCount));
-				dispatch(setNotificationList(notificationListWithData));
+						}); 
+						const updatedNotificationList = notificationListFromBackend.sort(
+							(notificationA: TYPE_NOTIFICATION, notificationB: TYPE_NOTIFICATION) => {
+								if (notificationA.isSeen && !notificationB.isSeen) {
+									return 1;
+								}
+								if (!notificationA.isSeen && notificationB.isSeen) {
+									return -1;
+								}
+								return 0;
+							}
+						);
+						dispatch(setUnreadNotificationCount(unReadNotificationCount));
+						dispatch(setNotificationList(updatedNotificationList));
+				}else{
+					dispatch(setUnreadNotificationCount(0));
+					dispatch(setNotificationList([]));
+				}
 			}
 		});
 	};
@@ -220,7 +175,7 @@ const Header = (props: TYPE_HeaderProps) => {
 			{isOrgMenuOpen && (
 				<div className="top-[60px] left-8 absolute flex flex-col gap-[0.3rem] w-max bg-background_color overflow-auto border border-[#444444] rounded-lg z-50">
 					<div className="w-full flex items-center justify-between p-[0.5rem] border-b border-white/30 transition-all ">
-						<p className="text-white/50">{organizationName}</p>
+						<p className= "text-white/50">{organizationName}</p>
 						<button
 							onClick={() => navigate("/edit-organization-details")}
 							className="material-symbols-outlined text-[17px] text-white/50 hover:text-yellow-500 mx-4"
@@ -269,14 +224,14 @@ const Header = (props: TYPE_HeaderProps) => {
 							open={openOrgList}
 							onClose={handleCloseOrgList}
 						>
-						<div>
-						{openOrgList && (
-							<div className="absolute min-w-[300px] top-[40px] right-52 rounded-lg font-dm_sans bg-background_color border border-[#444444] 
-								shadow-lg p-2 flex items-center justify-center text-primary_font_color z-50">
-								<OrganizationListModal userId={userId} boxSize="small"/>
+							<div>
+							{openOrgList && (
+								<div className="absolute min-w-[300px] top-[50px] right-52 rounded-lg font-dm_sans bg-background_color border border-[#444444] 
+									shadow-lg p-2 flex items-center justify-center text-primary_font_color z-50">
+									<OrganizationListModal userId={userId} boxSize="small"/>
+								</div>
+							)}
 							</div>
-						)}
-						</div>
 						</Modal>
 					</div>
 							
@@ -329,30 +284,6 @@ const Header = (props: TYPE_HeaderProps) => {
 							/>
 						)}
 					</div>
-				
-				{/* <div className="relative text-white/20 cursor-pointer  flex flex-col item-center transition-all">
-					<span
-						className="material-symbols-outlined hover:text-white"
-						onClick={() => toggleSettingOptionMenu()}
-					>
-						settings
-					</span>
-					<div
-						className={`mt-[30px] right-0 absolute flex flex-col gap-[0.7rem] w-[200px] min-h-[200px] h-full bg-Secondary_background_color overflow-auto border border-white/30 rounded-xl z-50 ${
-							isSettingOptionMenuOpen ? "flex" : "hidden"
-						}`}
-					>
-						<div className="w-full flex items-center justify-between p-[0.5rem] border-b border-white/30 transition-all ">
-							<p className="text-white/50">Settings</p>
-							<span
-								onClick={() => toggleSettingOptionMenu()}
-								className="material-symbols-outlined text-[17px] hover:text-rose-500"
-							>
-								close
-							</span>
-						</div>
-					</div>
-				</div> */}
 				<div className="relative cursor-pointer  flex flex-col item-center transition-all">
 					<button onClick={handleOpenSettingOption}>
 						<img
@@ -367,26 +298,29 @@ const Header = (props: TYPE_HeaderProps) => {
 					>
 						
 					<div
-						className={`top-[45px] right-0 absolute flex flex-col gap-[0.3rem] w-[200px] bg-background_color overflow-auto border border-[#444444] rounded-lg z-50 ${
+						className={`top-[60px] right-[35px] absolute flex flex-col gap-[0.3rem] w-[170px] font-dm_sans bg-background_color overflow-auto border border-[#444444] rounded-lg z-50 ${
 							isSettingOptionMenuOpen ? "flex" : "hidden"
 						}`}
 					>
 						<div className="w-full flex items-center justify-between p-[0.5rem] border-b border-white/30 transition-all ">
 							<p className="text-white/50">{userData.name}</p>
-							<span
+							<button
 								onClick={() => toggleSettingOptionMenu()}
 								className="material-symbols-outlined text-[17px] text-white/50 hover:text-rose-500"
 							>
 								close
-							</span>
+							</button>
 						</div>
 						<ul className="text-white/80 w-full">
-							<li className="p-2 hover:bg-[#262626]">
+							<li className="hover:bg-[#262626]">
 								<button
-									className="w-full"
+									className="w-full flex gap-2 justify-start items-center p-2 px-3 "
 									onClick={() => handleLogout()}
 								>
-									Log Out
+									<span className="material-symbols-outlined">
+										logout
+									</span>
+									Logout
 								</button>
 							</li>
 						</ul>

@@ -1,22 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface TYPE_NotificationData {
-    dataId: string;
-    dateOfCreation: Date;
-    notificationId: string;
-    notificationData: string;
-    isSeen: boolean;
-}
-
-interface TYPE_ModifiedNotificationData extends TYPE_NotificationData {
-    field: string;
-    color: string;
-    data: any;
-    schema: any;
-}
-
 interface NotificationState {
-    notificationList: TYPE_ModifiedNotificationData[];
+    notificationList: TYPE_NOTIFICATION[];
     unreadNotificationCount: number;
 }
 
@@ -29,7 +14,7 @@ export const NotificationSlice = createSlice({
     name: "notification",
     initialState,
     reducers: {
-        setNotificationList: (state, action: PayloadAction<TYPE_ModifiedNotificationData[]>) => {
+        setNotificationList: (state, action: PayloadAction<TYPE_NOTIFICATION[]>) => {
             state.notificationList = action.payload;
         },
         setUnreadNotificationCount: (state, action: PayloadAction<number>) => {

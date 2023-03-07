@@ -15,7 +15,7 @@ export function sortObjectKeysByArrayLength(obj: any) {
 	return keys;
 }
 
-export const getNoOfDays = (dateOfCreation: Date): number => {
+export const getNoOfDays = (dateOfCreation: string): number => {
 	const creationDate = new Date(dateOfCreation);
 	let today = new Date();
 	let diff = Math.abs(today.getTime() - creationDate.getTime());

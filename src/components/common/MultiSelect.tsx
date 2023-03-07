@@ -30,12 +30,14 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 	}
 	const dispatch = useAppDispatch();
 	const handleAddTags = () => {
+		console.log(props, "add options");
+		
 		dispatch(
 			setSideBar({
 				sidebarType: "addOption",
 				columnName: props.columnName,
 				columnType: "tag",
-				fieldName: props.fieldData.fieldName,
+				fieldName: props.fieldData.field,
 			})
 		);
 	};
@@ -53,13 +55,28 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 			organisationId: string,
 			columnName: string
 		) => {
+			// console.log(organisationId, columnName, "tags");
+			// console.log(props.columnName, "tags");
 			onSnapshot(doc(db, "filterSchema", organisationId), (doc) => {
 				let filterSchemaDetails: any = doc.data();
-				if (filterSchemaDetails[props.selectedTab!] !== undefined) {
-					let selectedColumn = filterSchemaDetails[props.selectedTab!].filter(
-						(item: any) => item.columnName === columnName
-					);
-					setDatas(selectedColumn[0]["data"]);
+				// console.log(filterSchemaDetails['data'][props.fieldData.field],props.fieldData.field,'selectedColumn')
+				if(filterSchemaDetails && filterSchemaDetails['data'] && filterSchemaDetails['data'][props.fieldData.field]){
+					let tagList:TYPE_TAG[] = []
+					filterSchemaDetails['data'][props.fieldData.field].forEach((item: any) => {
+						if(item.columnName === columnName){
+							console.log(item, "tags-item");
+							item && item.data && item.data.forEach((tag: any) => {
+								let tagObj = {
+									color:tag.color,
+									tagName:tag.filterOptionName
+								}
+								// console.log(tagObj, "tags-obj");
+								tagList.push(tagObj)
+							})
+						}
+						
+					})
+					setDatas(tagList);
 				}
 			});
 		};
@@ -69,16 +86,20 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 				setDatas(res.filter((userId: string) => userId !== selected));
 			});
 		} else {
-			get_dropdown_options(organisationId, props.columnName).then((res) => {});
+			console.log(props.columnName, "selectedColumn");
+			get_dropdown_options(organisationId, props.columnName)
 		}
 	}, [
 		organisationId,
 		props.columnName,
+		props.fieldData,
 		props.dataType,
-		props.selectedTab,
 		selected,
 	]);
 
+
+	console.log(props.fieldData,'fieldData');
+	
 	return (
 		<div className="rounded-lg my-[0.3rem] bg-background_color text-sm">
 			<div
@@ -179,7 +200,8 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 							);
 					  })
 					: datas &&
-					  datas.map((data: TYPE_TAG, index: number) => {
+						datas.length > 0 &&
+						datas.map((data: TYPE_TAG, index: number) => {
 							return (
 								<button
 									key={`${index}-multi-select-tag`}
@@ -202,7 +224,7 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 									/>
 								</button>
 							);
-					  })}
+						})}
 				{props.dataType === "tag" && (
 					<button
 						className="w-full p-[0.5rem_0] flex items-center justify-center text-white/40 border-[1px] border-white/20 rounded-md hover:text-amber-400 hover:border-amber-400"

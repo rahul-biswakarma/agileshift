@@ -73,12 +73,14 @@ const InviteUserComponent = (props: Type_InviteUserComponentProps) => {
       send_invite(userId, email, organizationId);
 
       // Send notification to invited user
+      console.log(userData);
+      
       const notificationData = `You have been invited to join organization ${organizationId}.`;
       if (userData.userId)
         await set_notification(
           organizationId,
           [userData.userId],
-          [notificationData]
+          [notificationData],
         );
     } else {
       toast.error("User already exists!");
