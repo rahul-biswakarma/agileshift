@@ -46,27 +46,18 @@ const VistaList = () => {
     useEffect(()=>{
         const takeSnapShot=async()=>{
         if(!snapShotDone){
-            console.log("Taking snapshot");
             const user: any = await get_user_by_id(userId);
-
             onSnapshot(doc(db, "vistaInvitations", user.email!), (doc:any) => {
-                const source = doc.metadata.hasPendingWrites ? "Local" : "Server";
-                console.log(source, " data: ", doc.data());
                 setUpdateInvitation(doc.data()['pendingList'])
             });
     
             onSnapshot(doc(db, "users", user.id!), (doc:any) => {
-                const source = doc.metadata.hasPendingWrites ? "Local" : "Server";
-                console.log(source, " data: ", doc.data());
                 let data:any = doc.data();
-    
                 setUpdateVistas(data['vistas'][organizationId])
             });
-
             setSnapShotDone(true);
         }
         }
-        
         takeSnapShot();
     },[snapShotDone, userId, organizationId])
 
@@ -78,13 +69,8 @@ const VistaList = () => {
       if (user.vistas && user.vistas[organizationId]) {
         vistaIdList = user.vistas[organizationId];
       }
-        
-        
-        console.log(updateInvitation,"updateInvitation");
         let visList = [];
         const pendingVistas = await get_vista_invitations_list(userId);
-
-        console.log(pendingVistas, "pendingVistas");
 
       if (
         pendingVistas[organizationId] &&

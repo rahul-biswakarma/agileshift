@@ -42,7 +42,9 @@ const BuildQuadarntHeader = () => {
 				onMouseOut={() => setHoveredButtonIndex(-1)}
 			>
 				<span className="material-symbols-outlined text-inherit">add</span>
-				<p className="capitalize font-fira_code">{tabName}</p>
+				<p className="capitalize font-fira_code">
+					{tabName.toLowerCase() === "all" ? "Add" : tabName}
+				</p>
 			</button>
 		</div>
 	);
