@@ -1,18 +1,30 @@
-import { useMemo, useEffect, useState } from "react";
-import ReactFlow, { MarkerType, Background, MiniMap } from "reactflow";
-import { v4 as uuidv4 } from "uuid";
+import { useMemo, useEffect, useState, useCallback } from "react";
+import ReactFlow, {
+	addEdge,
+	Background,
+	MiniMap,
+	useEdgesState,
+	useNodesState,
+} from "reactflow";
 
-import { IdNode, FieldNameNode, OrgNameNode } from "./CustomNode";
+import { IdNode, FieldNameNode, OrgNameNode, FullDataNode } from "./CustomNode";
 import { CustomEdge } from "./CustomEdge";
 
 import "reactflow/dist/style.css";
 import {
 	count_data_in_organisation,
-	get_background_color_from_name,
 	get_data_by_column_name,
 	get_organizations_details,
 	get_schema_data,
 } from "../../Utils/Backend";
+import { generateAllNodesWithEdges } from "./utils";
+
+import { Node } from "reactflow";
+
+type CustomNodeProps = Node & {
+	id: string;
+	// other custom properties
+};
 
 type Type_StormProps = {
 	organizationId: string;
@@ -21,9 +33,10 @@ type Type_StormProps = {
 const Storm = (props: Type_StormProps) => {
 	const nodeTypes = useMemo(
 		() => ({
-			idNode: IdNode,
+			IdNode: IdNode,
 			FieldNameNode: FieldNameNode,
 			OrgNameNode: OrgNameNode,
+			FullDataNode: FullDataNode,
 		}),
 		[]
 	);
@@ -35,12 +48,12 @@ const Storm = (props: Type_StormProps) => {
 	// State
 	const [data, setData] = useState<any>(null);
 	const [orgName, setOrgName] = useState<any>(null);
-	const [nodes, setNodes] = useState<any>(null);
-	const [edges, setEdges] = useState<any>(null);
 	const [schemaData, setSchemaData] = useState<any>(null);
+	const [isExpanded, setIsExpanded] = useState<boolean>(false);
 	const [nodePositions, setNodePositions] = useState<{
 		[key: string]: { x: number; y: number };
 	}>({});
+	const [hiddenNodes, setHiddenNodes] = useState<string[]>([]);
 
 	const [fieldNameColorMap, setFieldNameColorMap] = useState<any>(null);
 	const [fieldIconMap, setFieldIconMap] = useState<any>(null);
@@ -48,6 +61,43 @@ const Storm = (props: Type_StormProps) => {
 	count_data_in_organisation(props.organizationId).then((data: any) => {
 		setTotalNodes(data["total"]);
 	});
+
+	// Custom hooks
+	const [nodes, setNodes, onNodesChange] = useNodesState([]);
+	const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+
+	const handleNodeClick = (event: MouseEvent, node: CustomNodeProps) => {
+		event.preventDefault();
+		event.stopPropagation();
+
+		// toggle visibility of child nodes
+		const toggleChildNodesVisibility = (node: Node, hidden: boolean) => {
+			const childEdges = edges.filter(
+				(edge: { source: any }) => edge.source === node.id
+			);
+			childEdges.forEach((edge: { target: any }) => {
+				const childNode = nodes.find(
+					(node: { id: any }) => node.id === edge.target
+				);
+				if (childNode) {
+					setHiddenNodes((prevHiddenNodes) =>
+						hidden
+							? [...prevHiddenNodes, childNode.id]
+							: prevHiddenNodes.filter((id) => id !== childNode.id)
+					);
+					toggleChildNodesVisibility(childNode, hidden);
+				}
+			});
+		};
+
+		const isHidden = hiddenNodes.includes(node.id);
+		setHiddenNodes((prevHiddenNodes) =>
+			isHidden
+				? prevHiddenNodes.filter((id) => id !== node.id)
+				: [...prevHiddenNodes, node.id]
+		);
+		toggleChildNodesVisibility(node, isHidden);
+	};
 
 	// Effects
 	useEffect(() => {
@@ -71,6 +121,7 @@ const Storm = (props: Type_StormProps) => {
 
 			Promise.all(promises)
 				.then((results) => {
+					console.log("results", results);
 					let tempData = results.map((res, index) => {
 						return {
 							name: schemaData[index].name,
@@ -96,123 +147,29 @@ const Storm = (props: Type_StormProps) => {
 	}, [schemaData, props.organizationId]);
 
 	useEffect(() => {
-		let totoalArea = 0;
-		let x = 0,
-			y = 600,
-			fieldNameY = 300;
-		let tempNode: any = [];
-		let tempEdge: any = [];
-
-		if (totalNodes && fieldNameColorMap) {
-			totoalArea =
-				totalNodes * 250 + Object.keys(fieldNameColorMap).length - 1 * 300;
-			x = -1 * Math.floor(totoalArea / Object.keys(fieldNameColorMap).length);
-		}
-
-		// Org Name
-		tempNode.push({
-			id: "orgName",
-			position: { x: 0, y: 0 },
-			data: {
-				name: orgName,
-			},
-			type: "OrgNameNode",
+		let result = generateAllNodesWithEdges({
+			data,
+			fieldNameColorMap,
+			fieldIconMap,
+			orgName,
+			totalNodes,
+			schemaData,
+			isExpanded: isExpanded,
 		});
 
-		if (data && data.length > 0) {
-			data.map((field: any, index: number) => {
-				let count = 0;
-				tempEdge.push({
-					id: `${uuidv4()}-a`,
-					source: "orgName",
-					target: field.name,
-					animated: true,
-					type: "custom",
-					data: { dottedEdge: false },
-					markerEnd: {
-						type: MarkerType.ArrowClosed,
-					},
-					style: {
-						stroke: get_background_color_from_name(
-							fieldNameColorMap[field.name]
-						),
-					},
-				});
-
-				field.data.map((data: any) => {
-					count += 1;
-					tempNode.push({
-						id: data.id,
-						position: { x: x, y: y },
-						data: {
-							id: data.id,
-							color: fieldNameColorMap[field.name] || "#fff",
-							schemaData: schemaData,
-							data: data,
-							fieldName: field.name,
-						},
-						type: "idNode",
-					});
-
-					data.linkedData.map((link: any) => {
-						tempEdge.push({
-							id: `${uuidv4()}-a`,
-							source: data.id,
-							target: link,
-							type: "custom",
-							data: { dottedEdge: true },
-							markerEnd: {
-								type: MarkerType.ArrowClosed,
-							},
-							animated: true,
-							style: {
-								stroke: get_background_color_from_name(
-									fieldNameColorMap[field.name]
-								),
-							},
-						});
-						return "";
-					});
-
-					tempEdge.push({
-						id: `${uuidv4()}-a`,
-						source: field.name,
-						target: data.id,
-						type: "custom",
-						data: { dottedEdge: true },
-						markerEnd: {
-							type: MarkerType.ArrowClosed,
-						},
-						animated: true,
-						style: {
-							stroke: get_background_color_from_name(
-								fieldNameColorMap[field.name]
-							),
-						},
-					});
-					x += 250;
-					return "";
-				});
-
-				tempNode.push({
-					id: field.name,
-					position: { x: x - (count * 250) / 2, y: fieldNameY },
-					data: {
-						name: field.name,
-						icon: fieldIconMap[field.name] || "home",
-						color: fieldNameColorMap[field.name] || "#fff",
-					},
-					type: "FieldNameNode",
-				});
-				x -= 150;
-				y += 400;
-				fieldNameY += 400;
-				return "";
-			});
-		}
-		setNodes(tempNode);
-		setEdges(tempEdge);
-	}, [fieldNameColorMap, data, schemaData, fieldIconMap, orgName, totalNodes]);
+		setNodes(result.nodes);
+		setEdges(result.edges);
+	}, [
+		data,
+		fieldIconMap,
+		fieldNameColorMap,
+		isExpanded,
+		orgName,
+		schemaData,
+		setEdges,
+		setNodes,
+		totalNodes,
+	]);
 
 	const handleNodeDrag = (event: any, node: any) => {
 		setNodePositions((prevNodePositions) => ({
@@ -221,10 +178,31 @@ const Storm = (props: Type_StormProps) => {
 		}));
 	};
 
+	const onConnect = useCallback(
+		(params: any) => setEdges((els) => addEdge(params, els)),
+		[setEdges]
+	);
+
 	const defaultViewport = { x: 0, y: 0, zoom: 0.2 };
 
 	return (
-		<div className="w-screen h-screen text-white flex">
+		<div className="relative w-screen h-screen text-white flex">
+			<button
+				className="absolute top-[1rem] right-[1rem] flex items-center justify-center bg-gray-800 rounded-md p-2 gap-[5px] text-[14px] z-50"
+				onClick={() => setIsExpanded(!isExpanded)}
+			>
+				{isExpanded ? (
+					<>
+						<span className="material-symbols-outlined">unfold_more</span>
+						<p>Expand Nodes</p>
+					</>
+				) : (
+					<>
+						<span className="material-symbols-outlined">unfold_less</span>
+						<p>Collapse Nodes</p>
+					</>
+				)}
+			</button>
 			{nodes && nodes.length > 0 && edges && (
 				<ReactFlow
 					onNodeDrag={handleNodeDrag}
@@ -240,8 +218,13 @@ const Storm = (props: Type_StormProps) => {
 					nodeTypes={nodeTypes}
 					defaultViewport={defaultViewport}
 					fitView={true}
+					onConnect={onConnect}
 				>
-					<MiniMap />
+					<MiniMap
+						nodeStrokeWidth={3}
+						zoomable
+						pannable
+					/>
 					<Background />
 				</ReactFlow>
 			)}
