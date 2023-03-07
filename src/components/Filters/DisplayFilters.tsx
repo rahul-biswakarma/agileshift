@@ -6,18 +6,19 @@ type TYPE_FilterOption = {
 };
 
 type DisplayFiltersProps = {
- type: string;
+  filterName: string;
  filterData: TYPE_FilterOption[];
- setActiveFilters: (filterName: string, filterOptionIndex: number) => void;
+ filterSchema: any;
+ modifyActiveFilterState: (filterName: string, filterOptionIndex: number, filterSchema: any) => void;
 };
 
 const DisplayFilters = ({
  filterData,
- type,
- setActiveFilters,
+ filterName,
+ modifyActiveFilterState,
+ filterSchema,
 }: DisplayFiltersProps) => {
  const [modifiedFilterData, setModifiedFilterData] = useState(filterData);
-
 
   const searchFilters = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newFilterData = filterData.filter((filterData) => filterData.filterOptionName.includes(event.target.value));
@@ -54,7 +55,7 @@ const DisplayFilters = ({
        return (
         <div
          key={index}
-         onClick={() => setActiveFilters(type, index)}
+         onClick={() => modifyActiveFilterState(filterName, index, filterSchema)}
          className="px-2 py-1 text-xs font-semibold bg-Secondary_background_color rounded-lg cursor-pointer border border-white/10"
         >
          {data.filterOptionName}
@@ -64,7 +65,7 @@ const DisplayFilters = ({
        return (
         <div
          key={index}
-         onClick={() => setActiveFilters(type, index)}
+         onClick={() => modifyActiveFilterState(filterName, index, filterSchema)}
          className="px-2 py-1 text-xs font-semibold hover:bg-Secondary_background_color rounded-lg cursor-pointer border border-transparent hover:border-white/10"
         >
          {data.filterOptionName}
