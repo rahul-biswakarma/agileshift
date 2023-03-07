@@ -58,19 +58,26 @@ const Filter = ({ filters, modifyData }: TYPE_FilterProps) => {
 
 	const modifyActiveFilterState = (
 		filterName: string,
-		filterOptionIndex: number
+		filterOptionIndex: number,
+		filterS: any,
 	) => {
-		const newFilterSchema = [...filterSchema];
-		const filterObj = newFilterSchema.find((x) => x.columnName === filterName)!;
+
+		console.log(filterName,"filterName");
+		console.log(filterOptionIndex,"filterindex");
+		console.log(filterS,"filters");
+
+		const filterSche = [...filterS];
+		const filterObj = filterSche.find((x:any) => x.columnName === filterName)!;
+		console.log(filterObj,"filterobj");
 
 		if (filterObj?.data[filterOptionIndex].active === true) {
 			filterObj.data[filterOptionIndex].active = false;
 		} else {
 			filterObj.data[filterOptionIndex].active = true;
 		}
-
-		setFilterSchema(newFilterSchema);
-		modifyData(newFilterSchema);
+		console.log(filterObj,"filterObj after toggle");
+		setFilterSchema(filterSche);
+		modifyData(filterSche);
 	};
 
 	const modifyActiveState = (index: number) => {
@@ -121,22 +128,6 @@ const Filter = ({ filters, modifyData }: TYPE_FilterProps) => {
 		<div className="w-screen h-[60px] bg-[#161616] text-[#808080] flex border-b-[1px] border-white/10">
 			<div className="flex w-screen justify-between mb-4 mx-4 pt-4 items-center">
 				<div className="flex flex-wrap gap-3 mx-3">
-					{/* <div className="flex text-sm">
-						<button className="mr-4">
-							<span className="material-symbols-outlined">
-								alternate_email
-							</span>
-						</button>
-						<button className="mr-4">
-							<span className="material-symbols-outlined">
-								schedule
-							</span>
-						</button>
-						<div className="h-4 bg-[#808080] self-center mr-4">
-							<hr className="border-default w-px h-full"></hr>
-						</div>
-					</div> */}
-
 					<div className="relative flex items-center gap-2">
 						{filterSchema
 							.filter((filter) => filter.active === true)
@@ -164,8 +155,9 @@ const Filter = ({ filters, modifyData }: TYPE_FilterProps) => {
 										<div className="absolute top-[100%] bg-black z-10">
 											<DisplayFilters
 												filterData={filter.data}
-												type={filter.columnName}
-												setActiveFilters={modifyActiveFilterState}
+												filterSchema={filterSchema}
+												filterName={filter.columnName}
+												modifyActiveFilterState={modifyActiveFilterState}
 											/>
 										</div>
 									)}

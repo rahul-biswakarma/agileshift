@@ -56,29 +56,25 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 	};
 
 	const addUsersToSchema =  useCallback( async (filters: TYPE_Filters[]) => {
-		console.log(filters);
 		const users = await get_userIds_in_organizations(organizationId);
 		const filter = [...filters];
 		const listUser:any = [];
-		users.map(async (user: string) => {
-			const userObj:any = await get_user_by_id(user);
-			console.log(userObj.name);
-			listUser.push({
-				filterOptionName: userObj.name,
-				active: false,
-				userId: user
-			})
-			return;
-		})
-
-		filter.map((filterObj) => {
-			if(filterObj.type === "user"){
-				filterObj.data = listUser;
-				return {};
+		const makeOptionList = async(users:string[],listUser:any)=>{
+			for(let user of users){
+				const userObj:any = await get_user_by_id(user);
+				listUser.push({
+					filterOptionName: userObj.name,
+					active: false,
+					userId: user
+				})
 			}
-			return {};
-		})
-
+			filter.forEach((filterObj) => {
+				if(filterObj.type === "user"){
+					filterObj.data = JSON.parse(JSON.stringify(listUser));
+				}
+			})
+		}
+		makeOptionList(users, listUser);
 		return filter;
 	}, [organizationId]);
 
@@ -116,7 +112,15 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 		const filters = [...filterSchema];
 		const filterObject: any = {};
 
+		let nameTypeMap:any = {};
+		filters.forEach((filterObj) => {
+			filterSchema.forEach((filterO) => {
+				nameTypeMap[filterO.columnName] = filterO.type;
+			})
+		})
+
 		filters.forEach((filterData) => {
+
 			let filterValues: any = [];
 			if(filterData.type === "user") {
 				filterData.data.forEach((filterOptionData) => {
@@ -136,11 +140,12 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 
 		if (Object.keys(filterObject).length > 0) {
 			let dataList: any = [];
+
 			newData.forEach((propsData) => {
 				let dataFromFilter: any;
 				Object.keys(propsData).forEach((key) => {
 					if(!dataFromFilter){
-						if(key === "Owner"){
+						if(nameTypeMap[key] === "user"){
 							if (filterObject[key] && filterObject[key].length > 0) {
 								if (propsData[key].length > 0) {
 									if (filterObject[key].includes(propsData[key])) {
@@ -149,7 +154,7 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 								}
 							}
 						}
-						if (key === "Tag") {
+						if (nameTypeMap[key] === "tag") {
 							if (filterObject[key] && filterObject[key].length > 0) {
 								if (propsData[key].length > 0) {
 									propsData[key].forEach((data: any) => {
