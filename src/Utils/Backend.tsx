@@ -547,8 +547,8 @@ export const get_dropdown_options = async (
 
 	if (docSnap.exists()) {
 		dataDetails = docSnap.data();
-		dataDetails = dataDetails["data"];
-		dataDetails = dataDetails[field].filter(
+		dataDetails = dataDetails?.data;
+		dataDetails = dataDetails[field]?.filter(
 			(item: any) => item.columnName === columnName
 		);
 	} else {
@@ -664,8 +664,9 @@ export const set_notification = async (
 		orgData["notifications"][user].push(notification);
 	});
 	const organizationRef = doc(db, "organizations", organisationId);
+	console.log(orgData);
 	await updateDoc(organizationRef, {
-		notifications: orgData["notifications"],
+		notifications: orgData?.notifications,
 	});
 };
 

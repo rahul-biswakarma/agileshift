@@ -157,7 +157,8 @@ export default function CreateData(props: Props) {
 		let userValue: any = await get_user_by_id(userId);
 		Object.keys(formData).forEach((item) => {
 			if (trackUserType.includes(item)) {
-				userNotification.push(formData[item]);
+				console.log("trackUserType", formData[item]);
+				userNotification.push(...formData[item]);
 				notificationMessages.push(
 					`You are assigned as ${item} by ${userValue.name}`
 				);
@@ -203,16 +204,26 @@ export default function CreateData(props: Props) {
 				props.sidebar.sidebarType
 			);
 
-			await set_notification(
-				organizationId,
-				userNotification,
+			console.log(
 				notificationMessages,
-				newDataId
+				userNotification,
+				organizationId,
+				newDataId,
+				"new data id noti"
 			);
-			console.log(newDataId);
+
+			if (userNotification.length > 0)
+				await set_notification(
+					organizationId,
+					userNotification,
+					notificationMessages,
+					newDataId
+				);
+			console.log(newDataId, tempFormData, "new data id");
 
 			toast.success("Data Updated Successfully");
-		} catch (err) {
+		} catch (err: any) {
+			console.log(err, "error in updating data");
 			toast.error("Error in updating data");
 		}
 
