@@ -204,9 +204,9 @@ const Storm = (props: Type_StormProps) => {
 					},
 					type: "FieldNameNode",
 				});
-				x += 300;
-				y += 300;
-				fieldNameY += 300;
+				x -= 150;
+				y += 400;
+				fieldNameY += 400;
 				return "";
 			});
 		}

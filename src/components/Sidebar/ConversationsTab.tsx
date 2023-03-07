@@ -129,9 +129,7 @@ export default function ConversationsTab(props: Props) {
 										<section className="flex justify-between items-center gap-2 w-full ">
 											<span className="border border-[#444444] flex flex-1 h-0 w-full "></span>
 											<span className="text-sm">
-												{Object.keys(chat).length - 1 === index - 1
-													? day
-													: "Today"}
+												{index !== 0 ? "Today" : day}
 											</span>
 										</section>
 										<section className="flex flex-col gap-3">
