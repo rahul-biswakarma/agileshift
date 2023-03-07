@@ -69,11 +69,12 @@ const LoginForm = () => {
 		let emailPattern = new RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$");
 
 		if (emailInput && emailPattern.test(emailInput!)) {
-			const sentOtp = await sendEmail(emailInput);
+			const sentOtp = await sendEmail("otp",emailInput);
 			if (sentOtp) setState({ ...state, onOtp: true, otp: sentOtp });
 			else {
 				emailInputRef.current!.style.borderColor = "red";
-				emailLabelRef.current!.innerText = "Unable to send OTP";
+				emailLabelRef.current!.style.color = "red";
+				emailLabelRef.current!.innerText = "User does not exists. Please Signup";
 			}
 		} else {
 			emailInputRef.current!.style.borderColor = "red";

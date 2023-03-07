@@ -152,10 +152,10 @@ const TabHeader = (props: Type_TabHeaderProps) => {
 					</span>
 					<p className="text-inherit font-dm_sans">Storm</p>
 				</button>
-				<div>
-					<VistaList />
-				</div>
-				<div className="">
+				
+				<VistaList />
+				
+				{/* <div className=""> */}
 					<button
 						onClick={() => openSchemaEditForm()}
 						className={`p-[0.5rem_1rem] font-dm_sans text-[1rem] text-white/30 cursor-pointer rounded-sm hover:bg-Secondary_background_color flex items-center gap-[0.5rem]`}
@@ -165,7 +165,7 @@ const TabHeader = (props: Type_TabHeaderProps) => {
 						</span>
 						<p className="text-inherit font-dm_sans">Schema</p>
 					</button>
-				</div>
+				{/* </div> */}
 			</div>
 		</div>
 	);

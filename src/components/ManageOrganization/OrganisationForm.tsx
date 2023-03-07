@@ -214,12 +214,12 @@ export const OrganisationForm = ({ mode }: OrganisationFormPropTypes) => {
 						{mode === "create" ? "Create new AgileOrg" : "Update AgileOrg"}
 					</button> 
             <div className="absolute right-4 bottom-16">
-              <button
+              {/* <button
                 className="flex justify-center items-center p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm text-dark_gray border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 hover:text-purple-800 transition-all duration-200 ease-in-out
 		"
                 onClick={() => dispatch(setActiveTab(activeTab + 1))}>
                 <span className="material-symbols-outlined">arrow_forward</span>
-              </button>
+              </button> */}
             </div>
 				</div>
 			</div>

@@ -1,5 +1,7 @@
+import { doc, onSnapshot } from "@firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { db } from "../../firebaseConfig";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setTabName } from "../../redux/reducers/DataTableSlice";
 import { setVistaSchema, setVistaName } from "../../redux/reducers/VistaSlice";
@@ -30,13 +32,35 @@ const VistaList = () => {
   const [vistaListCollapse, setVistaListCollapse] = useState<boolean>(false);
   const [vistaList, setVistaList] = useState<any>([]);
   const vistaName = useAppSelector((state) => state.vista.vistaName);
+  const [snapShotDone,setSnapShotDone]=useState<boolean>(false);
   const [vistaInvitation, setVistaInvitation] = useState<TypeVistaInvitation[]>(
     []
   );
+  const [updateInvitation, setUpdateInvitation] = useState({});
+  const [updateVistas, setUpdateVistas] = useState([]);
   const organizationId = useAppSelector((state) => state.auth.organisationId);
   const userId = useAppSelector((state) => state.auth.userId);
   const tabName = useAppSelector((state) => state.datatable.tabName);
   const dispatch = useAppDispatch();
+
+    useEffect(()=>{
+        const takeSnapShot=async()=>{
+        if(!snapShotDone){
+            const user: any = await get_user_by_id(userId);
+            onSnapshot(doc(db, "vistaInvitations", user.email!), (doc:any) => {
+                setUpdateInvitation(doc.data()['pendingList'])
+            });
+    
+            onSnapshot(doc(db, "users", user.id!), (doc:any) => {
+                let data:any = doc.data();
+                setUpdateVistas(data['vistas'][organizationId])
+            });
+            setSnapShotDone(true);
+        }
+        }
+        takeSnapShot();
+    },[snapShotDone, userId, organizationId])
+
   useEffect(() => {
     const getInfo = async () => {
       const user: any = await get_user_by_id(userId);
@@ -45,9 +69,9 @@ const VistaList = () => {
       if (user.vistas && user.vistas[organizationId]) {
         vistaIdList = user.vistas[organizationId];
       }
-      let visList = [];
-      const pendingVistas = await get_vista_invitations_list(userId);
-      console.log(pendingVistas, "pendingVistas");
+        let visList = [];
+        const pendingVistas = await get_vista_invitations_list(userId);
+
       if (
         pendingVistas[organizationId] &&
         pendingVistas[organizationId].length
@@ -66,11 +90,10 @@ const VistaList = () => {
       }
       setVistaList(visList);
       setVistaInvitation(vistaInvitation);
-      const invites = await get_vista_invitations_list(userId);
-      console.log(invites);
     };
     getInfo();
-  }, [organizationId, userId, tabName]);
+  }, [organizationId, userId, tabName,updateVistas,updateInvitation]);
+
   const handleClick = (
     filterSchema: TYPE_Filters[],
     type: string,
@@ -91,6 +114,16 @@ const VistaList = () => {
     tempInvitations[index].visible = !tempInvitations[index].visible;
     setVistaInvitation(tempInvitations);
   };
+
+  const toggleVistaList = () => {
+    let tempInvitations = [...vistaInvitation];
+    for (let i = 0; i < tempInvitations.length; i++) {
+      tempInvitations[i].visible = false;
+    }
+    setVistaInvitation(tempInvitations);
+    setVistaListCollapse(!vistaListCollapse);
+  };
+
   const handleShareVista = (index: number) => {
     let tempInvitations = [...vistaInvitation];
     if (tempInvitations[index].mail === "") {
@@ -112,6 +145,7 @@ const VistaList = () => {
     console.log(user);
     if (user) {
       send_vista_invitations(userId, mail, vistaList[index].id, organizationId);
+      toast.success(`${mail} has been invited to ${vistaList[index].name}!`);
     }
   };
   const acceptVista = async (index: number) => {
@@ -133,17 +167,17 @@ const VistaList = () => {
   return (
     <div className="relative text-white">
       <div
-        onClick={() => setVistaListCollapse(!vistaListCollapse)}
-        className="flex gap-1 items-center px-3 py-2 text-white/30 hover:bg-white/5 rounded-sm cursor-pointer">
+        onClick={toggleVistaList}
+        className="flex w-max gap-1 items-center px-3 py-2 text-white/30 hover:bg-white/5 rounded-sm cursor-pointer">
         <span className="material-symbols-outlined">keyboard_arrow_down</span>
-        {vistaName ? vistaName : "My List"}
+        {vistaName ? vistaName : <p className="w-full">Vista</p>}
       </div>
       {vistaListCollapse && (
         <div className="absolute flex flex-col w-max top-[105%] right-0 border border-white/20 z-10 rounded-md p-3 bg-background_color">
           {vistaList.length > 0 ? (
             vistaList.map((data: any, _id: number) => (
               <div className="flex flex-col mt-2" key={_id}>
-                <div className="w-full flex items-center">
+                <div className="w-full flex items-center justify-between">
                   <button
                     onClick={() =>
                       handleClick(data.vistaSchema, data.field, data.name)

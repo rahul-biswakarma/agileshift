@@ -33,7 +33,6 @@ const Filter = ({ filters, modifyData }: TYPE_FilterProps) => {
 	);
 	const dispatch = useDispatch();
 	const [filterSchema, setFilterSchema] = useState<TYPE_Filters[]>(filters);
-	const [showAllFilters, setShowAllFilters] = useState<boolean>(false);
 	const [activeFiltersDropdown, setActiveFiltersDropdown] =
 		useState<TYPE_ActiveFiltersDropdown>({});
 
@@ -42,7 +41,7 @@ const Filter = ({ filters, modifyData }: TYPE_FilterProps) => {
 	}, [filters]);
 
 	const handleColumnClick = (columnTitle: string) => {
-		const newFilters = { ...activeFiltersDropdown };
+		const newFilters:TYPE_ActiveFiltersDropdown = { ...activeFiltersDropdown, showFilters: false };
 		if (newFilters[columnTitle]) {
 			newFilters[columnTitle] = !newFilters[columnTitle];
 		} else {
@@ -58,19 +57,21 @@ const Filter = ({ filters, modifyData }: TYPE_FilterProps) => {
 
 	const modifyActiveFilterState = (
 		filterName: string,
-		filterOptionIndex: number
+		filterOptionIndex: number,
+		filterS: any,
 	) => {
-		const newFilterSchema = [...filterSchema];
-		const filterObj = newFilterSchema.find((x) => x.columnName === filterName)!;
+
+
+		const filterSche = [...filterS];
+		const filterObj = filterSche.find((x:any) => x.columnName === filterName)!;
 
 		if (filterObj?.data[filterOptionIndex].active === true) {
 			filterObj.data[filterOptionIndex].active = false;
 		} else {
 			filterObj.data[filterOptionIndex].active = true;
 		}
-
-		setFilterSchema(newFilterSchema);
-		modifyData(newFilterSchema);
+		setFilterSchema(filterSche);
+		modifyData(filterSche);
 	};
 
 	const modifyActiveState = (index: number) => {
@@ -80,6 +81,8 @@ const Filter = ({ filters, modifyData }: TYPE_FilterProps) => {
 		} else if (newArray[index].active === false) {
 			newArray[index].active = true;
 		}
+
+
 		setFilterSchema(newArray);
 		modifyData(newArray);
 	};
@@ -121,22 +124,6 @@ const Filter = ({ filters, modifyData }: TYPE_FilterProps) => {
 		<div className="w-screen h-[60px] bg-[#161616] text-[#808080] flex border-b-[1px] border-white/10">
 			<div className="flex w-screen justify-between mb-4 mx-4 pt-4 items-center">
 				<div className="flex flex-wrap gap-3 mx-3">
-					{/* <div className="flex text-sm">
-						<button className="mr-4">
-							<span className="material-symbols-outlined">
-								alternate_email
-							</span>
-						</button>
-						<button className="mr-4">
-							<span className="material-symbols-outlined">
-								schedule
-							</span>
-						</button>
-						<div className="h-4 bg-[#808080] self-center mr-4">
-							<hr className="border-default w-px h-full"></hr>
-						</div>
-					</div> */}
-
 					<div className="relative flex items-center gap-2">
 						{filterSchema
 							.filter((filter) => filter.active === true)
@@ -161,11 +148,12 @@ const Filter = ({ filters, modifyData }: TYPE_FilterProps) => {
 										</div>
 									</div>
 									{activeFiltersDropdown[filter.columnName] === true && (
-										<div className="absolute top-[100%] bg-black z-10">
+										<div className="absolute top-[110%] bg-black z-10">
 											<DisplayFilters
 												filterData={filter.data}
-												type={filter.columnName}
-												setActiveFilters={modifyActiveFilterState}
+												filterSchema={filterSchema}
+												filterName={filter.columnName}
+												modifyActiveFilterState={modifyActiveFilterState}
 											/>
 										</div>
 									)}
@@ -175,12 +163,12 @@ const Filter = ({ filters, modifyData }: TYPE_FilterProps) => {
 
 					<div className="relative flex items-center justify-center gap-4">
 						<button
-							onClick={() => setShowAllFilters(!showAllFilters)}
+							onClick={() => handleColumnClick("showFilters")}
 							className="flex items-center justify-center rounded-md w-6 h-6 text-sm mr-4"
 						>
 							<span className="material-symbols-outlined">add</span>
 						</button>
-						{showAllFilters && (
+						{activeFiltersDropdown["showFilters"] && (
 							<div className="absolute top-[110%] left-0 bg-background_color w-48 rounded-xl p-1 border border-white/20 text-highlight_font_color z-10">
 								<div className="flex flex-wrap gap-1 p-2 border-b border-white/10">
 									{filterSchema

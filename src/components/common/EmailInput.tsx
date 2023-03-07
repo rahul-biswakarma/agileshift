@@ -13,15 +13,22 @@ const EmailInput = ({
   errorState,
   onSubmit,
 }: EmailInputPropTypes) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      onSubmit();
+    }
+  };
+  
   return (
     <div className="p-[2px] relative min-w-[250px] flex justify-between items-center border-[1.5px] border-white/10 rounded-md bg-Secondary_background_color transition-all">
-      <div>
+      <div className="w-full">
         <input
           type="text"
           value={value}
           onChange={onChange}
           placeholder="Enter email"
           className="px-[5px] rounded-md w-full outline-none bg-Secondary_background_color  text-highlight_font_color placeholder:text-white/20 "
+          onKeyDown={handleKeyDown}
         />
         {errorState && (
           <p className="absolute text-red-500 text-xs bg-background_color px-[2px] ml-[3px]">

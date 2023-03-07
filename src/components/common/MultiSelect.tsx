@@ -107,7 +107,7 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 				className="flex"
 			>
 				<span
-					className="capitalize w-[7em] p-3 text-center rounded-l font-dm_sans text-primary_font_color font-bold truncate"
+					className="capitalize w-[7em] p-3 text-center rounded-l font-dm_sans text-primary_font_color font-bold truncate flex items-center justify-center"
 					title={props.columnName}
 				>
 					{props.columnName}

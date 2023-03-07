@@ -82,6 +82,7 @@ const FullDataNode = (props: Type_FullDataNodeProps) => {
 	let schema = props.schemaData.filter((schema: any) => {
 		return schema.name === props.fieldName;
 	});
+
 	const dispatch = useAppDispatch();
 	return (
 		<div

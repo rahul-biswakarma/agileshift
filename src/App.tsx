@@ -9,7 +9,6 @@ import { getFromSession } from "./Utils/Auth";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import { setUserId } from "./redux/reducers/AuthSlice";
 import SideBarScreen from "./components/Sidebar";
-import Storm from "./components/Storm";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -19,7 +18,9 @@ const App = () => {
 	const userIdFromSession = getFromSession("userId");
 	const dispatch = useAppDispatch();
 
-	if (userIdFromSession) {
+	const userId = useAppSelector((state) => state.auth.userId);
+
+	if (userIdFromSession && userId !== userIdFromSession) {
 		dispatch(setUserId(userIdFromSession));
 	}
 
