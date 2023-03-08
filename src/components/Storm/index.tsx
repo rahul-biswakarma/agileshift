@@ -40,7 +40,7 @@ const Storm = (props: Type_StormProps) => {
 	const [data, setData] = useState<any>(null);
 	const [orgName, setOrgName] = useState<any>(null);
 	const [schemaData, setSchemaData] = useState<any>(null);
-	const [isExpanded, setIsExpanded] = useState<boolean>(false);
+	const [isExpanded, setIsExpanded] = useState<boolean>(true);
 	const [nodePositions, setNodePositions] = useState<{
 		[key: string]: { x: number; y: number };
 	}>({});
@@ -151,12 +151,6 @@ const Storm = (props: Type_StormProps) => {
 		event.preventDefault();
 		event.stopPropagation();
 		if (node.type === "FieldNameNode") {
-			// let tempNode = nodes.map((n: any) => {
-			// 	console.log("n", n);
-			// 	if (n.data.fieldName === node.id) n.hidden = !n.hidden;
-			// 	return n;
-			// });
-			// setNodes(tempNode);
 			if (excludedNodes.includes(node.id)) {
 				setExcludedNodes(excludedNodes.filter((n: string) => n !== node.id));
 			} else {
@@ -175,7 +169,7 @@ const Storm = (props: Type_StormProps) => {
 				className="absolute top-[1rem] right-[1rem] flex items-center justify-center bg-gray-800 rounded-md p-2 gap-[5px] text-[14px] z-50"
 				onClick={() => setIsExpanded(!isExpanded)}
 			>
-				{isExpanded ? (
+				{!isExpanded ? (
 					<>
 						<span className="material-symbols-outlined">unfold_more</span>
 						<p>Expand Nodes</p>
