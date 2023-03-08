@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 import { LoginForm } from "./LoginForm";
-import { OnBoardingHeader } from "./Header";
+import { OnBoardingHeader } from "./OnBoardingHeader";
 
 const Login = () => {
 	useEffect(() => {
@@ -25,7 +25,7 @@ const Login = () => {
 					</p>
 				</main>
 			</section>
-			<section className="max-[800px]:hidden w-full h-full relative bg-login_hero_image bg-center bg-cover no-repeat"></section>
+			{/* <section className="max-[800px]:hidden w-full h-full relative bg-login_hero_image bg-center bg-cover no-repeat"></section> */}
 		</div>
 	);
 };
