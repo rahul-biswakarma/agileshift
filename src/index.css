@@ -292,8 +292,6 @@ code {
 	max-height: 150px !important;
 }
 
-*::-webkit-scrollbar {
-}
 
 *::-webkit-scrollbar-track {
 	background: transparent;

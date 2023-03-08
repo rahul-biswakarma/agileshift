@@ -87,6 +87,7 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 		organisationId,
 		props.columnName,
 		props.dataType,
+		props.fieldData.field,
 		props.selectedTab,
 		selected,
 	]);
