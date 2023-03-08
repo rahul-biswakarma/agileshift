@@ -198,7 +198,7 @@ const DataTable = () => {
 				></AgGridReact>
 			) : (
 				<div>
-					<div className="flex border-b-[1px] border-white/10 pb-[0.5rem]">
+					{/* <div className="flex border-b-[1px] border-white/10 pb-[0.5rem]">
 						{dataSchema.map((schema, index) => {
 							return (
 								<p
@@ -209,7 +209,7 @@ const DataTable = () => {
 								</p>
 							);
 						})}
-					</div>
+					</div> */}
 					<p className="text-white text-center py-[3rem]">No Data</p>
 				</div>
 			)}

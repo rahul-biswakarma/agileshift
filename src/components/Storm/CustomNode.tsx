@@ -82,9 +82,10 @@ const FullDataNode = (props: Type_FullDataNodeProps) => {
 				style={{
 					borderColor: get_background_color_from_name(props.data.color),
 				}}
-				className="relative bg-background_color p-[0.5rem] transition-all rounded-md border-2 flex flex-col gap-[0.5rem] min-w-[200px] w-full"
+				className="relative bg-background_color p-[0.5rem] transition-all rounded-md border-2 flex flex-col gap-[0.5rem] min-w-[200px] w-full transition-all ease-in-out"
 			>
 				<button
+					className="transition-all ease-in-out"
 					onClick={() =>
 						dispatch(
 							setSideBar({
@@ -111,7 +112,7 @@ const FullDataNode = (props: Type_FullDataNodeProps) => {
 							return (
 								<div
 									key={cols.columnName}
-									className="flex gap-[0.5rem] items-center text-[14px] w-full"
+									className="flex gap-[0.5rem] items-center text-[14px] w-full transition-all ease-in-out"
 								>
 									<p className="font-fira_code text-white/30 text-[14px]">
 										{cols.columnName}
@@ -123,7 +124,7 @@ const FullDataNode = (props: Type_FullDataNodeProps) => {
 							return (
 								<div
 									key={cols.columnName}
-									className="flex gap-[0.5rem] items-center text-[14px] w-full"
+									className="flex gap-[0.5rem] items-center text-[14px] w-full transition-all ease-in-out"
 								>
 									<p className="font-fira_code text-white/30 text-[14px]">
 										{cols.columnName}
@@ -135,7 +136,7 @@ const FullDataNode = (props: Type_FullDataNodeProps) => {
 							return (
 								<div
 									key={cols.columnName}
-									className="flex gap-[0.5rem] items-center text-[14px] w-full"
+									className="flex gap-[0.5rem] items-center text-[14px] w-full transition-all ease-in-out"
 								>
 									<p className="font-fira_code text-white/30 text-[14px]">
 										{cols.columnName}
