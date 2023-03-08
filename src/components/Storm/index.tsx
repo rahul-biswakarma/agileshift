@@ -19,13 +19,6 @@ import {
 } from "../../Utils/Backend";
 import { generateAllNodesWithEdges } from "./utils";
 
-import { Node } from "reactflow";
-
-type CustomNodeProps = Node & {
-	id: string;
-	// other custom properties
-};
-
 type Type_StormProps = {
 	organizationId: string;
 };
@@ -41,9 +34,7 @@ const Storm = (props: Type_StormProps) => {
 		[]
 	);
 
-	const edgeTypes = {
-		custom: CustomEdge,
-	};
+	const edgeTypes = useMemo(() => ({ custom: CustomEdge }), []);
 
 	// State
 	const [data, setData] = useState<any>(null);
@@ -53,7 +44,7 @@ const Storm = (props: Type_StormProps) => {
 	const [nodePositions, setNodePositions] = useState<{
 		[key: string]: { x: number; y: number };
 	}>({});
-	const [hiddenNodes, setHiddenNodes] = useState<string[]>([]);
+	const [excludedNodes, setExcludedNodes] = useState<string[]>([]);
 
 	const [fieldNameColorMap, setFieldNameColorMap] = useState<any>(null);
 	const [fieldIconMap, setFieldIconMap] = useState<any>(null);
@@ -63,41 +54,8 @@ const Storm = (props: Type_StormProps) => {
 	});
 
 	// Custom hooks
-	const [nodes, setNodes, onNodesChange] = useNodesState([]);
-	const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-
-	const handleNodeClick = (event: MouseEvent, node: CustomNodeProps) => {
-		event.preventDefault();
-		event.stopPropagation();
-
-		// toggle visibility of child nodes
-		const toggleChildNodesVisibility = (node: Node, hidden: boolean) => {
-			const childEdges = edges.filter(
-				(edge: { source: any }) => edge.source === node.id
-			);
-			childEdges.forEach((edge: { target: any }) => {
-				const childNode = nodes.find(
-					(node: { id: any }) => node.id === edge.target
-				);
-				if (childNode) {
-					setHiddenNodes((prevHiddenNodes) =>
-						hidden
-							? [...prevHiddenNodes, childNode.id]
-							: prevHiddenNodes.filter((id) => id !== childNode.id)
-					);
-					toggleChildNodesVisibility(childNode, hidden);
-				}
-			});
-		};
-
-		const isHidden = hiddenNodes.includes(node.id);
-		setHiddenNodes((prevHiddenNodes) =>
-			isHidden
-				? prevHiddenNodes.filter((id) => id !== node.id)
-				: [...prevHiddenNodes, node.id]
-		);
-		toggleChildNodesVisibility(node, isHidden);
-	};
+	const [nodes, setNodes] = useNodesState([]);
+	const [edges, setEdges] = useEdgesState([]);
 
 	// Effects
 	useEffect(() => {
@@ -113,6 +71,7 @@ const Storm = (props: Type_StormProps) => {
 		});
 	}, [props.organizationId]);
 
+	// Effect 2
 	useEffect(() => {
 		if (schemaData && schemaData.length > 0) {
 			let promises = schemaData.map((schema: any) => {
@@ -121,7 +80,6 @@ const Storm = (props: Type_StormProps) => {
 
 			Promise.all(promises)
 				.then((results) => {
-					console.log("results", results);
 					let tempData = results.map((res, index) => {
 						return {
 							name: schemaData[index].name,
@@ -146,6 +104,7 @@ const Storm = (props: Type_StormProps) => {
 		}
 	}, [schemaData, props.organizationId]);
 
+	// Effect 3
 	useEffect(() => {
 		let result = generateAllNodesWithEdges({
 			data,
@@ -155,12 +114,14 @@ const Storm = (props: Type_StormProps) => {
 			totalNodes,
 			schemaData,
 			isExpanded: isExpanded,
+			excludedNodes,
 		});
 
 		setNodes(result.nodes);
 		setEdges(result.edges);
 	}, [
 		data,
+		excludedNodes,
 		fieldIconMap,
 		fieldNameColorMap,
 		isExpanded,
@@ -171,6 +132,7 @@ const Storm = (props: Type_StormProps) => {
 		totalNodes,
 	]);
 
+	// Handle Node Drag
 	const handleNodeDrag = (event: any, node: any) => {
 		setNodePositions((prevNodePositions) => ({
 			...prevNodePositions,
@@ -178,11 +140,33 @@ const Storm = (props: Type_StormProps) => {
 		}));
 	};
 
+	// Handle Node eConnect
 	const onConnect = useCallback(
 		(params: any) => setEdges((els) => addEdge(params, els)),
 		[setEdges]
 	);
 
+	// Handle Node Click
+	const handleNodeClick = (event: any, node: any) => {
+		event.preventDefault();
+		event.stopPropagation();
+		if (node.type === "FieldNameNode") {
+			// let tempNode = nodes.map((n: any) => {
+			// 	console.log("n", n);
+			// 	if (n.data.fieldName === node.id) n.hidden = !n.hidden;
+			// 	return n;
+			// });
+			// setNodes(tempNode);
+			if (excludedNodes.includes(node.id)) {
+				setExcludedNodes(excludedNodes.filter((n: string) => n !== node.id));
+			} else {
+				setExcludedNodes([...excludedNodes, node.id]);
+			}
+			console.log("excludedNodes", excludedNodes);
+		}
+	};
+
+	// Default Viewport
 	const defaultViewport = { x: 0, y: 0, zoom: 0.2 };
 
 	return (
@@ -219,6 +203,7 @@ const Storm = (props: Type_StormProps) => {
 					defaultViewport={defaultViewport}
 					fitView={true}
 					onConnect={onConnect}
+					onNodeClick={handleNodeClick}
 				>
 					<MiniMap
 						nodeStrokeWidth={3}

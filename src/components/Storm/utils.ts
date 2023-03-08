@@ -10,6 +10,7 @@ type generateAllNodesWithEdgesProps = {
 	fieldIconMap: any;
 	fieldNameColorMap: any;
 	isExpanded: boolean;
+	excludedNodes: string[];
 };
 
 export const generateAllNodesWithEdges = (
@@ -84,18 +85,20 @@ export const generateAllNodesWithEdges = (
 				count += 1;
 
 				// Generating Id Node
-				tempNodes.push({
-					id: data.id,
-					position: { x: x, y: y },
-					data: {
+				if (!props.excludedNodes.includes(field.name))
+					tempNodes.push({
 						id: data.id,
-						color: fieldNameColorMap[field.name] || "#fff",
-						schemaData: schemaData,
-						data: data,
-						fieldName: field.name,
-					},
-					type: isExpanded ? "FullDataNode" : "IdNode",
-				});
+						position: { x: x, y: y },
+						data: {
+							id: data.id,
+							color: fieldNameColorMap[field.name] || "#fff",
+							schemaData: schemaData,
+							data: data,
+							fieldName: field.name,
+						},
+						type: isExpanded ? "FullDataNode" : "IdNode",
+						hidden: false,
+					});
 
 				// Generating Edges
 				data.linkedData.map((link: any) => {
