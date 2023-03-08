@@ -34,13 +34,15 @@ const SignUp = () => {
 					<OnBoardingHeader />
 					<div className="flex flex-col gap-[1rem] w-full max-[400px]:mt-[2rem] mt-[4rem]">
 					<SignUpButtons
-						onClick={() => authWithGoogle}
+						onClick={() => {
+							console.log("clicked")
+							authWithGoogle()}}
 						imgSrc={GoogleIcon}
 						altText="Google Icon"
 						spanText="Continue with google" 
 						className="bg-blue_1"/>
 					<SignUpButtons
-						onClick={() => authWithGithub}
+						onClick={() => authWithGithub()}
 						imgSrc={GithubIcon}
 						altText="Github Icon"
 						spanText="Continue with github"
