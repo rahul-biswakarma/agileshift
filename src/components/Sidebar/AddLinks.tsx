@@ -61,6 +61,8 @@ const customStyles = {
 type LinkPropTypes = {
   sidebar: Type_SIDEBARSTATE;
   handleClose: Function;
+  handleSideBarColaps: Function;
+  tabBarColaps: boolean;
 };
 
 export const AddLinks = (props: LinkPropTypes) => {
@@ -92,7 +94,6 @@ export const AddLinks = (props: LinkPropTypes) => {
   const [options, setOptions] = useState<optionsType[]>([]);
   const [selectedOptions, setSelectedOptions] = useState<optionsType[]>([]);
   // stop create button from being clicked multiple times
-
 
   const handleSelectChange = (selected: any) => {
     setSelectedOptions(selected);
@@ -211,70 +212,82 @@ export const AddLinks = (props: LinkPropTypes) => {
     props.handleClose();
     // dispatch(setNewSidBar(sideBarList));
   };
-  return (
-    <div
-      className="flex w-full flex-col justify-between h-full pt-10 
-    "
-    >
-      <Select
-        ref={selectRef}
-        className="text-sm"
-        closeMenuOnSelect={false}
-        hideSelectedOptions={false}
-        controlShouldRenderValue={false}
-        placeholder="Search for item"
-        isMulti
-        options={options}
-        styles={customStyles}
-        getOptionLabel={(option) => option.label}
-        value={selectedOptions}
-        isOptionSelected={(option) =>
-          selectedOptions.some(
-            (selectedOption: optionsType) =>
-              selectedOption.value === option.value
-          )
-        }
-        components={{ Option: ShowItem }}
-        onChange={(value) => {
-          handleSelectChange(value);
-        }}
-      />
-      <section className="grow overflow-y-auto flex flex-col justify-end">
-        <div className="bg-black/60 flex flex-col gap-2 p-4 text-white max-h-[90%] rounded-md mt-4 mb-2">
-          <p className="font-bold text-xl">Linked Items</p>
-          <div className="max-h-1/5 overflow-auto flex flex-col justify-center items-center gap-2">
-            {selectedOptions.length === 0 && (
-              <p className="text-white/50">No items linked</p>
-            )}
-            {selectedOptions.length > 0 &&
-              selectedOptions.map((item: optionsType, id: number) => (
-                <button
-                  type="button"
-                  className="w-full text-white bg-background_color p-3 rounded-md flex items-center gap-2 text-sm"
-                  key={id}
-                  onClick={() => handleIdClick(item.value)}
-                >
-                  <DisplayIdComponent
-                    field={item.fieldName}
-                    displayId={item.displayId}
-                    color={item.color}
-                  />
-                  <p className="grow truncate text-left">{item.title}</p>
-                </button>
-              ))}
-          </div>
-        </div>
-      </section>
 
-      <CustomButton
-        // disabled={isButtonClicked}
-        onClick={handleSubmit}
-        label={"Create New Link"}
-        icon="add_link"
-        className="flex justify-center items-center gap-2 p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm 
+  if (props.tabBarColaps) {
+    return (
+      <div
+        onClick={() => props.handleSideBarColaps()}
+        className=" [writing-mode:vertical-rl] border-r-2 border-brown-600 h-full w-[50px] flex justify-center items-center text-xl  cursor-pointer bg-background_color py-4"
+      >
+        {"Add Links"}
+      </div>
+    );
+  } else {
+    return (
+      <div
+        className="flex w-[400px] p-2 flex-col justify-between h-full pt-10 
+    "
+      >
+        <Select
+          ref={selectRef}
+          className="text-sm"
+          closeMenuOnSelect={false}
+          hideSelectedOptions={false}
+          controlShouldRenderValue={false}
+          placeholder="Search for item"
+          isMulti
+          options={options}
+          styles={customStyles}
+          getOptionLabel={(option) => option.label}
+          value={selectedOptions}
+          isOptionSelected={(option) =>
+            selectedOptions.some(
+              (selectedOption: optionsType) =>
+                selectedOption.value === option.value
+            )
+          }
+          components={{ Option: ShowItem }}
+          onChange={(value) => {
+            handleSelectChange(value);
+          }}
+        />
+        <section className="grow overflow-y-auto flex flex-col justify-end">
+          <div className="bg-black/60 flex flex-col gap-2 p-4 text-white max-h-[90%] rounded-md mt-4 mb-2">
+            <p className="font-bold text-xl">Linked Items</p>
+            <div className="max-h-1/5 overflow-auto flex flex-col justify-center items-center gap-2">
+              {selectedOptions.length === 0 && (
+                <p className="text-white/50">No items linked</p>
+              )}
+              {selectedOptions.length > 0 &&
+                selectedOptions.map((item: optionsType, id: number) => (
+                  <button
+                    type="button"
+                    className="w-full text-white bg-background_color p-3 rounded-md flex items-center gap-2 text-sm"
+                    key={id}
+                    onClick={() => handleIdClick(item.value)}
+                  >
+                    <DisplayIdComponent
+                      field={item.fieldName}
+                      displayId={item.displayId}
+                      color={item.color}
+                    />
+                    <p className="grow truncate text-left">{item.title}</p>
+                  </button>
+                ))}
+            </div>
+          </div>
+        </section>
+
+        <CustomButton
+          // disabled={isButtonClicked}
+          onClick={handleSubmit}
+          label={"Create New Link"}
+          icon="add_link"
+          className="flex justify-center items-center gap-2 p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm 
             text-highlight_font_color border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 
             hover:text-purple-800 transition-all duration-200 ease-in-out"
-      />
-    </div>
-  );
+        />
+      </div>
+    );
+  }
 };

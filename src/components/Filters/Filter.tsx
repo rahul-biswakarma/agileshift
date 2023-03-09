@@ -161,13 +161,19 @@ const Filter = ({ filters, modifyData }: TYPE_FilterProps) => {
 							))}
 					</div>
 
-					<div className="relative flex items-center justify-center gap-4">
+					<div className="relative flex items-center justify-center ">
 						<button
 							onClick={() => handleColumnClick("showFilters")}
 							className="flex items-center justify-center rounded-md w-6 h-6 text-sm mr-4"
 						>
 							<span className="material-symbols-outlined">add</span>
 						</button>
+						<button
+						onClick={() => resetFilters()}
+						className="rounded-sm h-5 flex items-center text-[#808080] text-md font-[500]"
+					>
+						Clear
+					</button>
 						{activeFiltersDropdown["showFilters"] && (
 							<div className="absolute top-[110%] left-0 bg-background_color w-48 rounded-xl p-1 border border-white/20 text-highlight_font_color z-10">
 								<div className="flex flex-wrap gap-1 p-2 border-b border-white/10">
@@ -212,12 +218,7 @@ const Filter = ({ filters, modifyData }: TYPE_FilterProps) => {
 					</div>
 				</div>
 				<div className="flex items-center gap-4">
-					<button
-						onClick={() => resetFilters()}
-						className="rounded-sm h-5 flex items-center text-[#808080] text-md font-[500]"
-					>
-						Clear
-					</button>
+					
 					<div>
 						<VistaPopup filterSchema={filterSchema} />
 					</div>

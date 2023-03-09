@@ -162,18 +162,21 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 				let dataList: any = [];
 
 				newData.forEach((propsData) => {
-					let dataFromFilter: any;
-					Object.keys(propsData).forEach((key) => {
-						if (!dataFromFilter) {
+					let dataFromFilter: any = true;
+					Object.keys(filterObject).forEach((key) => {
+						if(dataFromFilter) {
 							if (nameTypeMap[key] === "user") {
 								if (filterObject[key] && filterObject[key].length > 0) {
 									if (propsData[key].length > 0) {
 										if (filterObject[key].includes(propsData[key])) {
 											dataFromFilter = propsData;
+										}else{
+											dataFromFilter = false;
 										}
 									}
 								}
 							}
+
 							if (nameTypeMap[key] === "tag") {
 								if (filterObject[key] && filterObject[key].length > 0) {
 									if (propsData[key].length > 0) {
@@ -184,15 +187,15 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 										});
 									}
 								}
-							} else {
-								if (filterObject[key] && filterObject[key].length > 0) {
-									if (filterObject[key].includes(propsData[key])) {
-										dataFromFilter = propsData;
-									}
+							}else if (filterObject[key] && filterObject[key].length > 0) {
+								if (filterObject[key].includes(propsData[key])) {
+									dataFromFilter = propsData;
+								}else{
+									dataFromFilter = false;
 								}
 							}
 						}
-					});
+					})
 					if (dataFromFilter) dataList.push(propsData);
 				});
 				dispatch(setDatas(dataList));
