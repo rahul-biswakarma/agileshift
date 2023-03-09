@@ -23,11 +23,16 @@ declare global {
 		tagName: string;
 	};
 	type TYPE_NOTIFICATION = {
-		dataId: string;
-		dateOfCreation: Date;
+		dateOfCreation: string;
 		isSeen: boolean;
 		notificationData: string;
 		notificationId: string;
+		data?:{
+			dataId: string;
+			field: string;
+			color: string;
+			displayId:string
+		}
 	};
 	type TYPE_VISTA = {
 		[key: string]: string;
@@ -81,6 +86,15 @@ declare global {
 		icon: string;
 		linkage: string[];
 	};
+
+	type TYPE_MESSAGE = {
+		email:string,
+		message:string,
+		name:string,
+		senderId:string,
+		senderImg:string,
+		timeStamp:number
+	}
 	type TYPE_LINKED_DATA = {
 		id: string;
 		displayId: string;

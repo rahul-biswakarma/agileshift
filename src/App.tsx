@@ -9,7 +9,6 @@ import { getFromSession } from "./Utils/Auth";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import { setUserId } from "./redux/reducers/AuthSlice";
 import SideBarScreen from "./components/Sidebar";
-import Storm from "./components/Storm";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -76,10 +75,6 @@ const App = () => {
 				<Route
 					path="/organization"
 					element={<Navigate to="/organization-lists" />}
-				/>
-				<Route
-					path="/storm"
-					element={<Storm organizationId="oTkstJOfcWoo1sHTOCLo" />}
 				/>
 			</Routes>
 		</BrowserRouter>

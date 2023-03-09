@@ -196,18 +196,6 @@ const DataTable = () => {
         ></AgGridReact>
       ) : (
         <div>
-          {/* <div className="flex border-b-[1px] border-white/10 pb-[0.5rem]">
-						{dataSchema.map((schema, index) => {
-							return (
-								<p
-									key={`schema-column-data-${index}`}
-									className="text-white w-full min-w-[200px] border-r-[1px] border-white/10 p-[0.2rem_1rem] font-dm_sans"
-								>
-									{schema.columnName}
-								</p>
-							);
-						})}
-					</div> */}
           <p className="text-white text-center py-[3rem]">No Data</p>
         </div>
       )}

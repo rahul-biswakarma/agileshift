@@ -32,16 +32,18 @@ const Editor: React.FC<EditorProps> = ({ id }) => {
         e.preventDefault();
         setMessage();
       }}
-      className=" h-full flex items-center justify-between gap-2"
+      className=" h-full w-full flex items-center justify-between gap-2 
+        bg-Secondary_background_color border-2 border-background_color rounded-lg"
     >
       <input
         required
-        className="w-full h-8 rounded-md p-2 border bg-black text-sm"
+        className="w-full h-full rounded-md p-2 bg-Secondary_background_color text-sm"
         value={messageValue}
         placeholder="Type your message here..."
         onChange={(e) => {
           setMessgaeValue(e.target.value);
         }}
+        autoFocus 
       />
       {/* <JoditEditor
         value={""}
@@ -55,11 +57,11 @@ const Editor: React.FC<EditorProps> = ({ id }) => {
       <button
         type="submit"
         title="send message"
-        className={`bg-black flex items-center w-12 h-8 justify-center rounded border ${
+        className={`bg-background_color flex items-center w-12 h-8 mx-1 justify-center rounded ${
           messageValue === "" && " cursor-not-allowed"
         }}`}
       >
-        <span className="material-symbols-outlined active:text-blue-500 ">
+        <span className="material-symbols-outlined text-white/60 active:text-blue-500 ">
           send
         </span>
       </button>

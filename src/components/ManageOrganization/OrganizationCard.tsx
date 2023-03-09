@@ -54,7 +54,7 @@ export const OrganizationCard = ({
 					onClick={() => {
 						dispatch(setOrganisationId(orgId));
 						navigate(`/organization/${orgId}`);
-						window.location.reload();
+						// window.location.reload();
 					}}
 					className="p-[0.5rem_1rem] flex items-center bg-Secondary_background_color border border-inherit text-center text-lg rounded-lg"
 				>

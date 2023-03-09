@@ -62,6 +62,7 @@ const FieldInfo: React.FC<SidebarProps> = ({
     id: sidebar.id!,
     selectedField,
   };
+  
   let footerProps = {
     id: sidebar.id!,
     type: sidebar.type,

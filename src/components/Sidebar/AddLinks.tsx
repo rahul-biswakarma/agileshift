@@ -225,7 +225,7 @@ export const AddLinks = (props: LinkPropTypes) => {
   } else {
     return (
       <div
-        className="flex w-full flex-col justify-between h-full pt-10 
+        className="flex w-[400px] p-2 flex-col justify-between h-full pt-10 
     "
       >
         <Select

@@ -5,7 +5,7 @@ import { setNewSidBar } from "../../redux/reducers/SideBarSlice";
 import { RootState } from "../../redux/store";
 import CustomButton from "../common/Button";
 import AddOptions from "./AddOptions";
-import ConversationsTab from "./ConversationsTab";
+import ConversationsTab from "./Conversations/ConversationsTab";
 import FieldInfo from "./FieldInfo";
 import { AddLinks } from "./AddLinks";
 
