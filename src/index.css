@@ -86,12 +86,6 @@ code {
 	left: 0 !important;
 }
 
-main {
-	overflow-y: scroll !important;
-	min-height: calc(100vh - 300px) !important;
-	max-height: calc(100vh - 300px) !important;
-}
-
 /* .ag-ltr .ag-body,
 .ag-ltr .ag-floating-top,
 .ag-ltr .ag-floating-bottom,
@@ -226,6 +220,12 @@ main {
 	background-color: #282828;
 	outline: none;
 	border-radius: 999px;
+}
+
+*::-webkit-scrollbar-corner,
+*::-webkit-scrollbar-track-piece,
+*::-webkit-resizer {
+	background: transparent;
 }
 
 .Toastify__close-button {
