@@ -1,5 +1,5 @@
-import { IdComponent } from "../DataTable/idComponent";
 import { OptionProps } from "react-select";
+import { DisplayIdComponent } from "../DataTable/displayIdComponentContainer";
 
 type ShowItemPropType = {
   value: string;
@@ -7,6 +7,8 @@ type ShowItemPropType = {
   id: string;
   color: string;
   title: string;
+  displayId: string;
+  fieldName: string;
 };
 
 export const ShowItem = (props: OptionProps<ShowItemPropType>) => {
@@ -19,12 +21,24 @@ export const ShowItem = (props: OptionProps<ShowItemPropType>) => {
     <div
       ref={innerRef}
       {...innerProps}
-      className="w-full flex items-center gap-4 p-4 hover:bg-Secondary_background_color text-sm">
-      <input className="accent-highlight_icon_color" type="checkbox" checked={isSelected} onChange={() => null} />
+      className="w-full flex items-center gap-4 p-4 hover:bg-Secondary_background_color text-sm"
+    >
+      <input
+        className="accent-highlight_icon_color"
+        type="checkbox"
+        checked={isSelected}
+        onChange={() => null}
+      />
       <div className="flex items-center gap-2">
-        <IdComponent itemId={data.id} color={data.color} />
+        <DisplayIdComponent
+          field={data.fieldName}
+          displayId={data.displayId}
+          color={data.color}
+        />
         {data.title && (
-          <span className="text-highlight_font_color grow truncate">{data.title}</span>
+          <span className="text-highlight_font_color grow truncate">
+            {data.title}
+          </span>
         )}
       </div>
     </div>
