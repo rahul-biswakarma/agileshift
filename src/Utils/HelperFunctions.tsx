@@ -16,10 +16,10 @@ export function sortObjectKeysByArrayLength(obj: any) {
   return keys;
 }
 
-export const getNoOfDays = (dateOfCreation: Date): number => {
-  const creationDate = new Date(dateOfCreation);
-  let today = new Date();
-  let diff = Math.abs(today.getTime() - creationDate.getTime());
+export const getNoOfDays = (dateOfCreation: string): number => {
+	const creationDate = new Date(dateOfCreation);
+	let today = new Date();
+	let diff = Math.abs(today.getTime() - creationDate.getTime());
 
   let diffDays = Math.floor(diff / (1000 * 3600 * 24));
 

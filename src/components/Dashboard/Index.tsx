@@ -12,7 +12,7 @@ import { setActiveTab, setIsEdit } from "../../redux/reducers/SchemaSlice";
 import Header from "./Header";
 import TabHeader from "./TabHeader";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
-import { NotificationMainComponent } from "../Notifications/NotificationMainComponent";
+import { NotificationMainComponent } from "../Notifications/MainNotificationComponent";
 
 import {
 	setDataSchema,
@@ -97,7 +97,6 @@ export default function Dashboard() {
 			/>
 			{showNotification ? (
 				<NotificationMainComponent
-					showNotification={showNotification}
 					setShowNotification={setShowNotification}
 				/>
 			) : (

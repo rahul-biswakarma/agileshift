@@ -5,7 +5,7 @@ import { setNewSidBar } from "../../redux/reducers/SideBarSlice";
 import { RootState } from "../../redux/store";
 import CustomButton from "../common/Button";
 import AddOptions from "./AddOptions";
-import ConversationsTab from "./ConversationsTab";
+import ConversationsTab from "./Conversations/ConversationsTab";
 import FieldInfo from "./FieldInfo";
 import { AddLinks } from "./AddLinks";
 
@@ -14,6 +14,17 @@ export default function SideBarScreen() {
   const sideBarList: Type_SIDEBARSTATE[] = useSelector(
     (state: RootState) => state.sidebar.sideBarData
   );
+  const [colapsTabBar, setColapsTabBar] = React.useState<number>(
+    sideBarList.length - 1
+  );
+  React.useEffect(() => {
+    setColapsTabBar(sideBarList.length - 1);
+  }, [sideBarList]);
+  const handleSideBarColaps = (setColapsTabBar: Function, index: number) => {
+    return () => {
+      setColapsTabBar(index);
+    };
+  };
 
   const handleClose = (
     sideBarList: Type_SIDEBARSTATE[],
@@ -35,15 +46,23 @@ export default function SideBarScreen() {
   return (
     <div
       id="Tab Container"
-      className="min-h-screen w-max  flex flex-row-reverse  z-20 font-dm_sans  text-white "
+      className="min-h-screen w-max   flex flex-row-reverse  z-20 font-dm_sans  text-white "
     >
       {sideBarList.map((sidebar: Type_SIDEBARSTATE, index: number) => {
         console.log(sidebar, "editMode");
+
+        let tabBarColaps =
+          sideBarList.length <= 2
+            ? false
+            : index === colapsTabBar
+            ? false
+            : true;
+
         return (
           <section
             key={index}
             id="Tab"
-            className="w-[400px] p-4 flex flex-col justify-start h-screen bg-sidebar_bg backdrop-filter backdrop-blur-md bg-opacity-10 shadow-lg border-l border-[#444444]"
+            className="flex flex-col justify-start h-screen bg-sidebar_bg backdrop-filter backdrop-blur-md bg-opacity-10 shadow-lg border-l border-[#444444]"
           >
             <header>
               <CustomButton
@@ -58,28 +77,55 @@ export default function SideBarScreen() {
                 <FieldInfo
                   sidebar={sidebar}
                   handleClose={handleClose(sideBarList, index)}
+                  tabBarColaps={tabBarColaps}
+                  handleSideBarColaps={handleSideBarColaps(
+                    setColapsTabBar,
+                    index
+                  )}
                 />
               )}
               {sidebar.type === "editMode" && (
                 <FieldInfo
                   sidebar={sidebar}
                   handleClose={handleClose(sideBarList, index)}
+                  tabBarColaps={tabBarColaps}
+                  handleSideBarColaps={handleSideBarColaps(
+                    setColapsTabBar,
+                    index
+                  )}
                 />
               )}
               {sidebar.type === "addOption" && (
                 <AddOptions
                   sidebar={sidebar}
                   handleClose={handleClose(sideBarList, index)}
+                  tabBarColaps={tabBarColaps}
+                  handleSideBarColaps={handleSideBarColaps(
+                    setColapsTabBar,
+                    index
+                  )}
                 />
               )}
               {sidebar.type === "AddLinks" && (
                 <AddLinks
                   sidebar={sidebar}
                   handleClose={handleClose(sideBarList, index)}
+                  tabBarColaps={tabBarColaps}
+                  handleSideBarColaps={handleSideBarColaps(
+                    setColapsTabBar,
+                    index
+                  )}
                 />
               )}
               {sidebar.type === "conversations" && (
-                <ConversationsTab sidebar={sidebar} />
+                <ConversationsTab
+                  sidebar={sidebar}
+                  tabBarColaps={tabBarColaps}
+                  handleSideBarColaps={handleSideBarColaps(
+                    setColapsTabBar,
+                    index
+                  )}
+                />
               )}
             </main>
           </section>
