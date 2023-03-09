@@ -14,8 +14,6 @@ const MessageWrapperComponent =({index, day, chat}:TYPE_MessageWrapperComponentP
     const getDaysCount = async (day:string) => {
         const noOfDays = await getNoOfDays(day)
         setDaysCount(noOfDays)
-        console.log(noOfDays);
-        
     }
 
     useEffect(() => {

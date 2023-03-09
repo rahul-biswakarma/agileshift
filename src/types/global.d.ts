@@ -4,10 +4,10 @@ declare global {
 	type TYPE_SCHEMA = {
 		[key: string]: string;
 	};
-	type Type_SidebarState = {
+	type Type_SIDEBARSTATE = {
 		displayId: string;
 		fieldId?: string;
-		sidebarType: string;
+		type: string;
 		createModeCalledByField?: string; // this is the field that called the create mode
 		linkedCalledByID?: string; // this is the id of the field that called the link
 		fieldName?: string;
@@ -94,5 +94,10 @@ declare global {
 		senderId:string,
 		senderImg:string,
 		timeStamp:number
+	}
+	type TYPE_LINKED_DATA = {
+		id: string;
+		displayId: string;
+		color: string;
 	}
 }

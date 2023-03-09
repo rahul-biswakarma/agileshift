@@ -79,11 +79,18 @@ const OrganizationList: React.FunctionComponent = () => {
 		}
 	}, [navigate, userId]);
 
+	const navigateToLogin = () => {
+		navigate("/login");
+	}
+
 	return (
 		<div className="bg-background_color h-screen w-screen flex items-center justify-center font-dm_sans">
 			<div className="w-[40vw] max-w-[600px] min-w-[400px] flex flex-col gap-5">
 				<div className="text-highlight_font_color">
-					<h3 className="text-[1.5rem] mb-2 font-[600]">
+					<h3 className="text-[1.5rem] mb-4 font-[600] flex items-center gap-3">
+						<span onClick={() => navigateToLogin()} className="material-symbols-outlined text-[20px] border border-white rounded-full p-1 cursor-pointer">
+							arrow_back
+						</span>
 						Create or Join a AgileShift Org
 					</h3>
 					{/* Change this to dynamic username */}

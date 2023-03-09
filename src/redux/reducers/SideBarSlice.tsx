@@ -1,14 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-type Type_SidebarState = {
-  fieldId?: string;
-  sidebarType: string;
-  createModeCalledByField?: string; // this is the field that called the create mode
-  linkedCalledByID?: string; // this is the id of the field that called the link
-};
+
 interface SidebarState {
   visible: boolean;
-  sideBarData: Type_SidebarState[];
+  sideBarData: Type_SIDEBARSTATE[];
 }
 
 const initialState: SidebarState = {
