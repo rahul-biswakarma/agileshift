@@ -20,7 +20,9 @@ const DisplayIdComponent = (props: Type_DisplayIdComponentProps) => {
 			style={{
 				color: textColor,
 				background: props.opacity
-					? `${bgColor}${props.opacity}`
+					? props.opacity === 100
+						? `${bgColor}`
+						: `${bgColor}${props.opacity}`
 					: `${bgColor}40`,
 				borderColor: textColor,
 			}}

@@ -4,10 +4,8 @@ import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { get_userIds_in_organizations } from "../../Utils/Backend";
 import TagComponent from "../DataTable/tagComponent";
 import UserComponent from "../DataTable/userComponent";
-
 import { db } from "../../firebaseConfig";
 import { setSideBar } from "../../redux/reducers/SideBarSlice";
-
 type Type_MultiSelectProps = {
 	dataType: string;
 	columnName: string;
@@ -16,15 +14,12 @@ type Type_MultiSelectProps = {
 	selectedTab?: string;
 	defaultValue?: any;
 };
-
 const MultiSelect = (props: Type_MultiSelectProps) => {
 	const [datas, setDatas] = React.useState<any>([]);
 	const [selected, setSelected] = React.useState<any>([]);
 	const [isDropdownVisible, setIsDropdownVisible] =
 		React.useState<boolean>(false);
-
 	const organisationId = useAppSelector((state) => state.auth.organisationId);
-
 	function toggleDropdownOption() {
 		setIsDropdownVisible(!isDropdownVisible);
 	}
@@ -35,11 +30,10 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 				sidebarType: "addOption",
 				columnName: props.columnName,
 				columnType: "tag",
-				fieldName: props.fieldData.fieldName,
+				fieldName: props.fieldData.field,
 			})
 		);
 	};
-
 	useEffect(() => {
 		if (props.defaultValue && props.dataType === "tag") {
 			setSelected(props.defaultValue);
@@ -47,7 +41,6 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 			setSelected(props.defaultValue);
 		}
 	}, [props.defaultValue, props.dataType]);
-
 	useEffect(() => {
 		const get_dropdown_options = async (
 			organisationId: string,
@@ -55,15 +48,34 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 		) => {
 			onSnapshot(doc(db, "filterSchema", organisationId), (doc) => {
 				let filterSchemaDetails: any = doc.data();
-				if (filterSchemaDetails[props.selectedTab!] !== undefined) {
-					let selectedColumn = filterSchemaDetails[props.selectedTab!].filter(
-						(item: any) => item.columnName === columnName
+				// console.log(filterSchemaDetails['data'][props.fieldData.field],props.fieldData.field,'selectedColumn')
+				if (
+					filterSchemaDetails &&
+					filterSchemaDetails["data"] &&
+					filterSchemaDetails["data"][props.fieldData.field]
+				) {
+					let tagList: TYPE_TAG[] = [];
+					filterSchemaDetails["data"][props.fieldData.field].forEach(
+						(item: any) => {
+							if (item.columnName === columnName) {
+								console.log(item, "tags-item");
+								item &&
+									item.data &&
+									item.data.forEach((tag: any) => {
+										let tagObj = {
+											color: tag.color,
+											tagName: tag.filterOptionName,
+										};
+										// console.log(tagObj, "tags-obj");
+										tagList.push(tagObj);
+									});
+							}
+						}
 					);
-					setDatas(selectedColumn[0]["data"]);
+					setDatas(tagList);
 				}
 			});
 		};
-
 		if (props.dataType === "user") {
 			get_userIds_in_organizations(organisationId).then((res) => {
 				setDatas(res.filter((userId: string) => userId !== selected));
@@ -75,10 +87,10 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 		organisationId,
 		props.columnName,
 		props.dataType,
+		props.fieldData.field,
 		props.selectedTab,
 		selected,
 	]);
-
 	return (
 		<div className="rounded-lg my-[0.3rem] bg-background_color text-sm">
 			<div
@@ -157,12 +169,10 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 										onClick={() => {
 											let currSelectedUser = selected;
 											setSelected(datas[index]);
-
 											props.setFormData({
 												...props.fieldData,
 												[props.columnName]: datas[index],
 											});
-
 											let tempDatas = datas;
 											tempDatas.splice(index, 1);
 											setDatas([...tempDatas, currSelectedUser]);
@@ -189,7 +199,6 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 											...props.fieldData,
 											[props.columnName]: selected,
 										});
-
 										let tempDatas = datas;
 										tempDatas.splice(index, 1);
 										setDatas(tempDatas);
@@ -216,5 +225,4 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
 		</div>
 	);
 };
-
 export default MultiSelect;

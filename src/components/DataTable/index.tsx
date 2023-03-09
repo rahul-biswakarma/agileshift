@@ -184,7 +184,7 @@ const DataTable = () => {
 
 	return (
 		<div className="ag-theme-alpine">
-			{rowData && rowData.length > 0 && (
+			{rowData && rowData.length > 0 ? (
 				<AgGridReact
 					ref={gridRef}
 					rowData={rowData}
@@ -197,8 +197,11 @@ const DataTable = () => {
 					suppressHorizontalScroll={false}
 					gridOptions={gridOptions}
 				></AgGridReact>
-			)
-			}
+			) : (
+				<div>
+					<p className="text-white text-center py-[3rem]">No Data</p>
+				</div>
+			)}
 		</div>
 	);
 };

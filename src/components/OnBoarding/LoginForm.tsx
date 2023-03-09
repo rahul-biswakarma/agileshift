@@ -31,9 +31,9 @@ const LoginForm = () => {
 	const emailLabelRef = useRef<HTMLLabelElement>(null);
 	const passwordInputRef = useRef<HTMLInputElement>(null);
 
-	async function handleLoginFormSubmit(
+	const handleLoginFormSubmit = async (
 		e: SyntheticEvent<HTMLButtonElement, MouseEvent>
-	) {
+	) => {
 		e.preventDefault();
 		if (passwordInputRef.current) {
 			const passwordInput: number = parseInt(passwordInputRef.current.value);

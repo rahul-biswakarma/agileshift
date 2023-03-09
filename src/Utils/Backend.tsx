@@ -716,7 +716,7 @@ export const set_notification = async (
 		orgData["notifications"][user].push(notification);
 	});
 	const organizationRef = doc(db, "organizations", organisationId);
-	console.log(orgData);
+	// console.log(orgData["notifications"][user]);
 	await updateDoc(organizationRef, {
 		notifications: orgData?.notifications,
 	});

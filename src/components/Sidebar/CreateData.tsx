@@ -224,7 +224,7 @@ export default function CreateData(props: Props) {
 			toast.success("Data Updated Successfully");
 		} catch (err: any) {
 			console.log(err, "error in updating data");
-			toast.error("Error in updating data");
+			// toast.error("Error in updating data");
 		}
 
 		// add the new created data to the parent data
