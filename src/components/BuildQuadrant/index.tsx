@@ -12,6 +12,9 @@ import {
 	get_user_by_id,
 } from "../../Utils/Backend";
 import { setVistaName } from "../../redux/reducers/VistaSlice";
+import { toast } from "react-toastify";
+import Button from "../common/Button";
+import { useNavigate } from "react-router-dom";
 
 type Type_BuildQuadarntProps = {};
 
@@ -33,6 +36,7 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 	const organizationId = useAppSelector((state) => state.auth.organisationId);
 	const tabName = useAppSelector((state) => state.datatable.tabName);
 	const [filterSchema, setFilterSchema] = useState<TYPE_Filters[]>([]);
+	const navigate = useNavigate();
 
 	const removeDuplicates = (filters: TYPE_Filters[]) => {
 		let uniqueValues = new Map();
@@ -107,6 +111,14 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 		getFilterSchema();
 		dispatch(setVistaName(""));
 	}, [dispatch, getFilterSchema]);
+
+	const isActive = useAppSelector((state) => state.schema.isEdit);
+
+	useEffect(() => {
+		if(isActive) {
+			toast.error("Organization Schema not created")
+		}
+	}, [isActive])
 
 	const modifyData = useCallback(
 		async (filterSchema: TYPE_Filters[]) => {
@@ -192,16 +204,36 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 	);
 
 	return (
-		<div>
-			<BuildQuadarntHeader />
-			<Filter
-				filters={filterSchema}
-				modifyData={modifyData}
-			/>
-			<main className="">
-				<DataTable />
-			</main>
-		</div>
+		<>
+		{
+			isActive ? (
+					<div className="flex justify-center items-center w-full h-full">
+						<div className="flex gap-5">
+							<Button className="px-3 py-2 text-white/20 text-center bg-white/5 rounded-sm text-[15px] hover:text-purple-400 flex items-center gap-1" onClick={() => {
+								navigate("/edit-organization-schema");
+							}} icon="add" label="Schema"/>
+							<Button className="px-3 py-2 text-white/20 text-center bg-white/5 rounded-sm text-lg hover:text-purple-400 flex items-center gap-1"  onClick={() => {
+
+							}} icon="delete" label="Org"/>
+							<Button className="px-3 py-2 text-white/20 text-center bg-white/5 rounded-sm text-lg hover:text-purple-400 flex items-center gap-1" onClick={() => {
+								navigate("/organization-lists");
+							}} icon="chevron_left" label="Organization List"/>
+						</div>
+					</div>
+			) : (
+				<div>
+					<BuildQuadarntHeader />
+					<Filter
+						filters={filterSchema}
+						modifyData={modifyData}
+					/>
+					<main className="">
+						<DataTable />
+					</main>
+				</div>
+			)
+		}
+		</>
 	);
 };
 

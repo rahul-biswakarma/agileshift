@@ -242,7 +242,7 @@ export const GeneratorFormsContainer = ({
 
   return (
     <div className="flex flex-col max-h-screen">
-      <SchemaGeneratorFormHeader />
+      <SchemaGeneratorFormHeader mode={mode} />
       <div className="relative w-screen h-[calc(100vh-40px)] flex">
         {
           organisationId && (
