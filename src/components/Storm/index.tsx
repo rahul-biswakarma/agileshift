@@ -171,7 +171,7 @@ const Storm = (props: Type_StormProps) => {
 	return (
 		<div className="relative w-screen h-screen text-white flex">
 			<button
-				className="absolute top-[1rem] right-[1rem] flex items-center justify-center bg-gray-800 rounded-md p-2 gap-[5px] text-[14px] z-50"
+				className="absolute top-[1rem] right-[1rem] flex items-center justify-center bg-gray-800 rounded-md p-2 gap-[5px] text-[14px] z-40"
 				onClick={() => setIsExpanded(!isExpanded)}
 			>
 				{!isExpanded ? (

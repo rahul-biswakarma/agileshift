@@ -133,7 +133,7 @@ export const generateAllNodesWithEdges = (
 					tempEdges.push({
 						id: `${uuidv4()}-a`,
 						source: data.id,
-						target: link,
+						target: link.id,
 						type: "custom",
 						data: { dottedEdge: true },
 						markerEnd: {
