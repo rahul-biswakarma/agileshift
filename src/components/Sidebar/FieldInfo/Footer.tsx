@@ -15,6 +15,8 @@ type TypeFooterProps = {
   formData: any;
   selectedField: string;
   handleClose: Function;
+  trackUserColumn: string[];
+  color: string;
 };
 const Footer: React.FC<TypeFooterProps> = ({
   type,
@@ -22,6 +24,8 @@ const Footer: React.FC<TypeFooterProps> = ({
   formData,
   handleClose,
   selectedField,
+  trackUserColumn,
+  color,
 }) => {
   const dispatch = useAppDispatch();
   const organizationId = useAppSelector((state) => state.auth.organisationId);
@@ -32,7 +36,6 @@ const Footer: React.FC<TypeFooterProps> = ({
   );
   const [isButtonClicked, setIsButtonClicked] = React.useState<boolean>(false);
   const tabName = useAppSelector((state) => state.datatable.tabName);
-
   React.useEffect(() => {
     let flag: boolean = false;
     sidebarList.forEach((item: any) => {
@@ -64,6 +67,9 @@ const Footer: React.FC<TypeFooterProps> = ({
     }
   };
 
+  const fetchedLinks = useAppSelector((state) => state.sidebar.fetchedLinks);
+
+  console.log(formData, "***form");
   const handleCreate = async () => {
     await handleSubmit(
       organizationId,
@@ -71,7 +77,7 @@ const Footer: React.FC<TypeFooterProps> = ({
       selectedField,
       type,
       userId,
-      [],
+      fetchedLinks[id],
       id
     );
     updateTable();

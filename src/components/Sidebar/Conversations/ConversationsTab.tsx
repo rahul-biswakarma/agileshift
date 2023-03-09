@@ -44,32 +44,43 @@ export default function ConversationsTab(props: TYPE_ConversationTabProps) {
     }
   }, [chat]);
 
-  return (
-    <div className="flex flex-col h-full max-h-full w-[400px] p-2">
-      <p className="pl-4 py-3">Conversations</p>
-
-      <div className="flex flex-1 items-end">
-        <section
-          ref={chatRef}
-          className="max-h-[calc(100vh-50px-4rem)] h-auto overflow-y-auto w-full"
-        >
-          {chat &&
-            Object.keys(chat).map((day: any, index: number) => {
-              return (
-                <MessageWrapperComponent
-                  key={index}
-                  index={index}
-                  chat={chat[day]}
-                  day={day}
-                />
-              );
-            })}
-        </section>
+  if (props.tabBarColaps) {
+    return (
+      <div
+        onClick={() => props.handleSideBarColaps()}
+        className="z-[100] relative border-white/10 border-r border-brown-600 h-full flex justify-center items-center text-md cursor-pointer bg-background_color w-[50px] font-fira_code"
+      >
+        <p className="[writing-mode:vertical-rl] ">{`Discussion`}</p>
       </div>
+    );
+  } else {
+    return (
+      <div className="flex flex-col h-full max-h-full w-[400px] p-2">
+        <p className="pl-4 py-3">Discussion</p>
 
-      <div className="sticky bottom-0 h-10 w-[100%] mb-4 flex items-center justify-center">
-        <Editor id={props.sidebar.fieldId!} />
+        <div className="flex flex-1 items-end">
+          <section
+            ref={chatRef}
+            className="max-h-[calc(100vh-50px-4rem)] h-auto overflow-y-auto w-full"
+          >
+            {chat &&
+              Object.keys(chat).map((day: any, index: number) => {
+                return (
+                  <MessageWrapperComponent
+                    key={index}
+                    index={index}
+                    chat={chat[day]}
+                    day={day}
+                  />
+                );
+              })}
+          </section>
+        </div>
+
+        <div className="sticky bottom-0 h-10 w-[100%] mb-4 flex items-center justify-center">
+          <Editor id={props.sidebar.fieldId!} />
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }

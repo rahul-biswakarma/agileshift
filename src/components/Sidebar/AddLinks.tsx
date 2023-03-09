@@ -13,11 +13,10 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import {
   formatDataToTypeField,
   formatSchemaDataToTypeField,
-  getLinkedData,
 } from "../../Utils/HelperFunctions";
 import CustomButton from "../common/Button";
 import { DisplayIdComponent } from "../DataTable/displayIdComponentContainer";
-import { setSideBar } from "../../redux/reducers/SideBarSlice";
+import { setFetchedLinks, setSideBar } from "../../redux/reducers/SideBarSlice";
 const customStyles = {
   control: (provided: any) => ({
     ...provided,
@@ -71,9 +70,11 @@ export const AddLinks = (props: LinkPropTypes) => {
   const organisationId = useAppSelector(
     (state: RootState) => state.auth.organisationId
   );
+  console.log(props.sidebar, "props.sidebar");
 
   const getIdArray = (fetchedLinks: TYPE_LINKED_DATA[]) => {
     let Ids: string[] = [];
+    console.log(fetchedLinks, "fetchedLinks");
     for (let link of fetchedLinks) {
       Ids.push(link.id);
     }
@@ -93,6 +94,7 @@ export const AddLinks = (props: LinkPropTypes) => {
 
   const [options, setOptions] = useState<optionsType[]>([]);
   const [selectedOptions, setSelectedOptions] = useState<optionsType[]>([]);
+  const fetchedLinks = useAppSelector((state) => state.sidebar.fetchedLinks);
   // stop create button from being clicked multiple times
 
   const handleSelectChange = (selected: any) => {
@@ -154,12 +156,14 @@ export const AddLinks = (props: LinkPropTypes) => {
 
   useEffect(() => {
     const getAllData = async () => {
-      let linkedData = await getLinkedData(organisationId, linkedCalledByID);
+      let linkedData = fetchedLinks[linkedCalledByID];
+      console.log(linkedData, "linkedData inside Addlinks");
       let field = formatDataToTypeField(
         await get_schema_data_field(organisationId, props.sidebar.fieldName!)
       );
 
       let allData = await get_data_by_column_name(organisationId, "all");
+      console.log(allData, "allData");
 
       let fetchedIds = getIdArray(linkedData);
 
@@ -185,6 +189,7 @@ export const AddLinks = (props: LinkPropTypes) => {
     linkedCalledByID,
     props.sidebar.fieldName,
     formatOptions,
+    fetchedLinks,
   ]);
 
   const handleIdClick = (id: string) => {
@@ -208,16 +213,20 @@ export const AddLinks = (props: LinkPropTypes) => {
   }, []);
 
   const handleSubmit = () => {
-    add_links_to_fields(organisationId, linkedCalledByID, selectedOptions);
+    if (props.sidebar.modeOfCall === "editMode") {
+      add_links_to_fields(organisationId, linkedCalledByID, selectedOptions);
+    }
+    let tempLinks = { ...fetchedLinks };
+    tempLinks[linkedCalledByID] = selectedOptions;
+    dispatch(setFetchedLinks(tempLinks));
     props.handleClose();
-    // dispatch(setNewSidBar(sideBarList));
   };
 
   if (props.tabBarColaps) {
     return (
       <div
         onClick={() => props.handleSideBarColaps()}
-        className=" [writing-mode:vertical-rl] border-r-2 border-brown-600 h-full w-[50px] flex justify-center items-center text-xl  cursor-pointer bg-background_color py-4"
+        className="z-[100] relative [writing-mode:vertical-rl] border-r border-white/10 h-full w-[50px] flex justify-center items-center text-md  cursor-pointer bg-background_color py-4 font-fira_code"
       >
         {"Add Links"}
       </div>
@@ -281,7 +290,7 @@ export const AddLinks = (props: LinkPropTypes) => {
         <CustomButton
           // disabled={isButtonClicked}
           onClick={handleSubmit}
-          label={"Create New Link"}
+          label={"Save Links"}
           icon="add_link"
           className="flex justify-center items-center gap-2 p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm 
             text-highlight_font_color border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 

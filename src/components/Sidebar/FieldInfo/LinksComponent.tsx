@@ -1,26 +1,30 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setSideBar } from "../../../redux/reducers/SideBarSlice";
 import { RootState } from "../../../redux/store";
 import CustomButton from "../../common/Button";
 import { DisplayIdComponent } from "../../DataTable/displayIdComponentContainer";
 
 type TypeLinksProps = {
-  links: string[];
   id: string;
   selectedField: string;
+  modeOfCall: string;
 };
 
 const LinksComponent: React.FC<TypeLinksProps> = ({
-  links,
   id,
   selectedField,
+  modeOfCall,
 }) => {
   const dispatch = useAppDispatch();
   const sidebarList: Type_SIDEBARSTATE[] = useSelector(
     (state: RootState) => state.sidebar.sideBarData
   );
+  const fetchedLinks = useAppSelector((state) => state.sidebar.fetchedLinks);
+  console.log(fetchedLinks, "###");
+  console.log(id, selectedField, "id,selectedField");
+
   const [isButtonClicked, setIsButtonClicked] = React.useState<boolean>(false);
 
   React.useEffect(() => {
@@ -42,13 +46,14 @@ const LinksComponent: React.FC<TypeLinksProps> = ({
     }
   }, [sidebarList, selectedField, id]);
 
-  const handleAddLink = () => {
+  const handleAddLink = async () => {
     dispatch(
       setSideBar({
         type: "AddLinks",
         fieldName: selectedField,
         linkedCalledByID: id,
-        links: links,
+        links: fetchedLinks[id],
+        modeOfCall: modeOfCall,
       })
     );
   };
@@ -78,8 +83,8 @@ const LinksComponent: React.FC<TypeLinksProps> = ({
         />
       </div>
       <section className="flex flex-wrap gap-2 justify-center cursor-pointer mt-4 mb-4 p-2 py-4 border-y rounded-lg bg-black/60 border-black">
-        {links?.length > 0 ? (
-          links.map((linkedData: any, index: number) => {
+        {fetchedLinks[id]?.length > 0 ? (
+          fetchedLinks[id].map((linkedData: any, index: number) => {
             return (
               <span
                 key={`linked-${index}`}

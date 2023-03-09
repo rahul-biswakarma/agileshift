@@ -92,7 +92,7 @@ export default function Dashboard() {
 	}, [getDataByFeildName]);
 
 	return (
-		<div className="bg-background_color h-[100vh] flex flex-col font-dm_sans">
+		<div className="bg-background_color h-[100vh] flex flex-col font-dm_sans" data-testid = "dashboard">
 			<Header
 				showNotification={showNotification}
 				setShowNotification={setShowNotification}

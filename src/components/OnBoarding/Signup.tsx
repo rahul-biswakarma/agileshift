@@ -13,41 +13,43 @@ import GithubIcon from "../../assets/icons/github-icon.svg";
 import GoogleIcon from "../../assets/icons/google-icon.svg";
 
 const SignUp = () => {
-	const userId = useAppSelector((state: RootState) => state.auth.userId);
-	let navigate = useNavigate();
+  const userId = useAppSelector((state: RootState) => state.auth.userId);
+  let navigate = useNavigate();
 
-	useEffect(() => {
-		document.title = "Sign into AgileShift";
-	}, []);
+  useEffect(() => {
+    document.title = "Sign into AgileShift";
+  }, []);
 
-	useEffect(() => {
-		if (userId.length > 0) navigate("/organization-lists");
-	}, [userId, navigate]);
+  useEffect(() => {
+    if (userId.length > 0) navigate("/organization-lists");
+  }, [userId, navigate]);
 
 	return (
 		<div
 			data-testid="landing-component"
-			className="w-full h-[100vh] flex justify-center overflow-hidden grid max-[1100px]:grid-cols-[100%]  grid-cols-[700px_auto] font-dm_sans"
+			className="w-full h-[100vh]  justify-center overflow-hidden grid max-[1100px]:grid-cols-[100%]  grid-cols-[700px_auto] font-dm_sans"
 		>
 			<section className="flex flex-col items-center justify-center bg-background_color  w-full h-full p-24 max-[600px]:p-12">
-				<main className="max-w-[500px] gap-[1rem]">
+				<main className="w-full gap-[1rem]">
 					<OnBoardingHeader />
 					<div className="flex flex-col gap-[1rem] w-full max-[400px]:mt-[2rem] mt-[4rem]">
-					<SignUpButtons
-						onClick={() => {
-							console.log("clicked")
-							authWithGoogle()}}
-						imgSrc={GoogleIcon}
-						altText="Google Icon"
-						spanText="Continue with google" 
-						className="bg-blue_1"/>
-					<SignUpButtons
-						onClick={() => authWithGithub()}
-						imgSrc={GithubIcon}
-						altText="Github Icon"
-						spanText="Continue with github"
-						className="bg-dark_gray" />
-				</div>
+						<SignUpButtons
+							onClick={() => {
+								authWithGoogle();
+							}}
+							imgSrc={GoogleIcon}
+							altText="Google Icon"
+							spanText="Continue with google"
+							className="bg-blue_1"
+						/>
+						<SignUpButtons
+							onClick={() => authWithGithub()}
+							imgSrc={GithubIcon}
+							altText="Github Icon"
+							spanText="Continue with github"
+							className="bg-dark_gray"
+						/>
+					</div>
 					<div className="flex items-center gap-[10px] mt-[1rem]">
 						<img
 							src={InfoIcon}
