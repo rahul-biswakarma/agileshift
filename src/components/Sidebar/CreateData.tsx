@@ -299,12 +299,18 @@ export default function CreateData(props: Props) {
 	if (props.tabColaps) {
 		return (
 			<div
-				className="[writing-mode:vertical-rl] border-r-2 border-brown-500 h-full w-[50px] flex justify-center items-center text-xl  cursor-pointer bg-background_color py-4"
+				className=" border-r-2 border-white/20 h-full w-[50px] flex justify-center items-center text-xl  cursor-pointer bg-background_color py-4"
 				onClick={() => {
 					props.setColapsTabBar(props.index);
 				}}
 			>
-				{selectedField}
+				<div className="rotate-90">
+				<DisplayIdComponent
+							field={selectedField}
+							displayId={props.sidebar.displayId!}
+							color={formSchema ? formSchema.color : ""}
+						/>
+				</div>
 			</div>
 		);
 	} else {

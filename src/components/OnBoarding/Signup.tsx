@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { OnBoardingHeader } from "./OnBoardingHeader";
+import { OnBoardingHeader } from "./Header";
 import { SignUpButtons } from "./SignUpButtons";
 import InfoIcon from "../../assets/icons/info-icon.svg";
 
