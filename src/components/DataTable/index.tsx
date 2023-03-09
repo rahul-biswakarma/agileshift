@@ -179,28 +179,28 @@ const DataTable = () => {
     setDataForAgGrid();
   }, [setDataForAgGrid]);
 
-	return (
-		<div className="ag-theme-alpine">
-			{rowData && rowData.length > 0 ? (
+  return (
+    <div className="ag-theme-alpine">
+      {rowData && rowData.length > 0 ? (
         <AgGridReact
-					ref={gridRef}
-					rowData={rowData}
-					rowHeight={55}
-					animateRows={true}
-					columnDefs={columnDefs}
-					defaultColDef={defaultColDef}
-					onGridSizeChanged={onGridReady}
-					domLayout={"autoHeight"}
-					suppressHorizontalScroll={false}
-					gridOptions={gridOptions}
-				></AgGridReact>
-			) : (
-				<div>
-					<p className="text-white text-center py-[3rem]">No Data</p>
-				</div>
-			)}
-		</div>
-	);
+          ref={gridRef}
+          rowData={rowData}
+          rowHeight={55}
+          animateRows={true}
+          columnDefs={columnDefs}
+          defaultColDef={defaultColDef}
+          onGridSizeChanged={onGridReady}
+          domLayout={"autoHeight"}
+          suppressHorizontalScroll={false}
+          gridOptions={gridOptions}
+        ></AgGridReact>
+      ) : (
+        <div>
+          <p className="text-white text-center py-[3rem]">No Data</p>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default DataTable;

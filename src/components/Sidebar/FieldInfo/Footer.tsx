@@ -1,5 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setDatas } from "../../../redux/reducers/DataTableSlice";
 import { setSideBar } from "../../../redux/reducers/SideBarSlice";
@@ -74,6 +75,8 @@ const Footer: React.FC<TypeFooterProps> = ({
       id
     );
     updateTable();
+    const dataAction = type === "createMode" ? "created" : "updated";
+    toast.success(`Data ${dataAction} successfully}`);
   };
 
   return (
