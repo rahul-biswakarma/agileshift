@@ -6,6 +6,7 @@ import {
 	add_organisation_to_user,
 	create_organization,
 	get_organization_name_by_id,
+	update_organizations_name,
 } from "../../Utils/Backend";
 import { setActiveTab, setIsEdit } from "../../redux/reducers/SchemaSlice";
 import { toast } from "react-toastify";
@@ -46,10 +47,13 @@ export const OrganisationForm = ({ mode }: OrganisationFormPropTypes) => {
 	// doc title
 
 	useEffect(() => {
+		console.log("fetching org name");
 		get_organization_name_by_id(organisationId).then((data) => {
 			document.title = `Schema Form | ${data}`;
+			if(mode==="edit")
+				setOrgNameState(data);
 		});
-	});
+	},[organisationId,mode]);
 
 	// useEffect(() => {
 	// 	setIsSubmitDisabled(!orgNameState || !orgUrlState);
@@ -93,13 +97,17 @@ export const OrganisationForm = ({ mode }: OrganisationFormPropTypes) => {
 			return;
 		}
 
-		if (!isOrgCreated) {
+		if (mode==="create" && !isOrgCreated) {
 			create_organization(userId, orgNameState).then((id) => {
 				add_organisation_to_user(userId, id, "", "");
 				dispatch(setOrganisationId(id));
 			});
 			setIsOrgCreated(true);
 			dispatch(setActiveTab(activeTab + 1));
+		}
+		else if(mode==="edit"){
+			update_organizations_name(organisationId, orgNameState);
+			toast.success("Organisation name updated successfully");
 		}
 	};
 

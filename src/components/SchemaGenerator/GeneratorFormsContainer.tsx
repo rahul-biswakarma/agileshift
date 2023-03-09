@@ -145,6 +145,7 @@ export const GeneratorFormsContainer = ({
   );
 
   const submitSchema = () => {
+    console.log(fields, "fields");
     create_schema(organisationId, fields, isEdit);
     toast("Creating Schema");
     setTimeout(() => {

@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
-import { useAppSelector } from "../../../redux/hooks";
-
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import Footer from "./Footer";
 import Header from "./Header";
 import SideBarInputs from "../SideBarInputs";
 import { fetchData } from "../utils";
 import LinksComponent from "./LinksComponent";
 import { DisplayIdComponent } from "../../DataTable/displayIdComponentContainer";
+import { setFetchedLinks } from "../../../redux/reducers/SideBarSlice";
 
 interface SidebarProps {
   sidebar: Type_SIDEBARSTATE;
@@ -21,9 +21,12 @@ const FieldInfo: React.FC<SidebarProps> = ({
   tabBarColaps,
   handleSideBarColaps,
 }) => {
-  const [formData, setFormData] = React.useState<any>();
+  const dispatch = useAppDispatch();
+  const [formData, setFormData] = React.useState<any>({ linkedData: [] });
   const [filedList, setFieldList] = React.useState<string[]>([]);
   const organizationId = useAppSelector((state) => state.auth.organisationId);
+  const fetchedLinks = useAppSelector((state) => state.sidebar.fetchedLinks);
+  console.log(fetchedLinks, "fetchedLinks###");
   const [selectedField, setSelectedField] = React.useState<string>(
     sidebar.createModeCalledByField!
   );
@@ -44,9 +47,13 @@ const FieldInfo: React.FC<SidebarProps> = ({
       organizationId,
       selectedField,
       sidebar.type,
-      sidebar.id!
+      sidebar.id!,
+      dispatch,
+      setFetchedLinks
     );
-  }, [selectedField, sidebar.type, organizationId, sidebar.id]);
+  }, [selectedField, sidebar.type, organizationId, sidebar.id, dispatch]);
+
+  console.log("formData**", formData);
 
   let headerProps = {
     selectedField,
@@ -58,11 +65,11 @@ const FieldInfo: React.FC<SidebarProps> = ({
   };
 
   let linksProps = {
-    links: formData ? formData?.linkedData : [],
     id: sidebar.id!,
     selectedField,
+    modeOfCall: sidebar.type,
   };
-  
+
   let footerProps = {
     id: sidebar.id!,
     type: sidebar.type,
@@ -74,7 +81,7 @@ const FieldInfo: React.FC<SidebarProps> = ({
     return (
       <div
         onClick={() => handleSideBarColaps()}
-        className="border-r border-white/10 h-full w-[50px] flex h-max-content justify-center items-center text-xl  cursor-pointer bg-background_color py-4"
+        className="z-[100] relative border-r border-white/10 h-full w-[50px] flex h-max-content justify-center items-center text-xl  cursor-pointer bg-background_color py-4"
       >
         {sidebar.type === "editMode" ? (
           <div className="rotate-90">

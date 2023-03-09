@@ -66,9 +66,9 @@ export default function AddOptions(props: Props) {
     return (
       <div
         onClick={() => props.handleSideBarColaps()}
-        className="border-white/10 border-r-2 border-brown-600 h-full flex justify-center items-center text-xl cursor-pointer bg-background_color"
+        className="z-[100] relative border-white/10 border-r border-brown-600 h-full flex justify-center items-center text-md cursor-pointer bg-background_color w-[50px] font-fira_code"
       >
-        <p className="rotate-90 row bg-red-600">{`Add Options:${props.sidebar.columnName}`}</p>
+        <p className="[writing-mode:vertical-rl] ">{`Add Options : ${props.sidebar.columnName}`}</p>
       </div>
     );
   } else {
