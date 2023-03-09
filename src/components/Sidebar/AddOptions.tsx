@@ -9,6 +9,8 @@ import { toast } from "react-toastify";
 type Props = {
   sidebar: Type_SIDEBARSTATE;
   handleClose: Function;
+  handleSideBarColaps: Function;
+  tabBarColaps: boolean;
 };
 export default function AddOptions(props: Props) {
   const organizationId = useAppSelector((state) => state.auth.organisationId);
@@ -60,71 +62,82 @@ export default function AddOptions(props: Props) {
     props.handleClose();
   };
 
-  return (
-    <form
-      onSubmit={(e) => addItem(e)}
-      className="flex flex-col justify-start items-center w-full h-full"
-    >
-      <header className="flex justify-between items-center w-full mt-6 mb-3 px-2">
-        <p className="grow text-xl flex items-center justify-start mb-4 text-white">
-          {props.sidebar.columnName}
-        </p>
-        <button
-          type="submit"
-          className="flex gap-2 w-max justify-center items-center p-[0.5rem_1rem] rounded-md shadow-md text-sm text-highlight_font_color  hover:bg-dark_gray hover:text-white transition-all duration-200 ease-in-out"
-        >
-          <span className="material-symbols-outlined text-base">
-            voting_chip
-          </span>
-          <p>Add {props.sidebar.columnName}</p>
-        </button>
-      </header>
-      <div className="w-full grow  max-h-[90%] flex flex-col items-center gap-2 overflow-y-auto rounded-lg bg-black/60 p-3 text-sm">
-        {list.map((item: any, id: number) => (
-          <div
-            key={id}
-            className="w-full flex items-center justify-center bg-Secondary_background_color rounded-md"
+  if (props.tabBarColaps) {
+    return (
+      <div
+        onClick={() => props.handleSideBarColaps()}
+        className="border-white/10 border-r-2 border-brown-600 h-full flex justify-center items-center text-xl cursor-pointer bg-background_color"
+      >
+        <p className="rotate-90 row bg-red-600">{`Add Options:${props.sidebar.columnName}`}</p>
+      </div>
+    );
+  } else {
+    return (
+      <form
+        onSubmit={(e) => addItem(e)}
+        className="w-[400px] p-4 flex flex-col justify-start items-center  h-full"
+      >
+        <header className="flex justify-between items-center w-full mt-6 mb-3 px-2">
+          <p className="grow text-xl flex items-center justify-start mb-4 text-white">
+            {props.sidebar.columnName}
+          </p>
+          <button
+            type="submit"
+            className="flex gap-2 w-max justify-center items-center p-[0.5rem_1rem] rounded-md shadow-md text-sm text-highlight_font_color  hover:bg-dark_gray hover:text-white transition-all duration-200 ease-in-out"
           >
-            {props.sidebar.columnType === "tag" && (
-              <label className="inline-block relative w-4 h-4 ml-4">
-                <input
-                  type="color"
-                  className="absolute w-full h-full rounded-full opacity-0 cursor-pointer"
-                  value={item.color}
-                  onChange={(e) => changeDisplayColor(id, e.target.value)}
-                />
-                <span
-                  className="inline-block w-full h-full rounded-full border-2 border-gray-300"
-                  style={{ backgroundColor: item.color }}
-                ></span>
-              </label>
-            )}
-            <input
-              required
-              className="grow p-5 py-3 rounded-md bg-Secondary_background_color text-white"
-              id={`dropdown-${item}-input`}
-              value={item.filterOptionName!}
-              onChange={(e) => changeList(id, e.target.value)}
-            />
-            <button
-              onClick={(e) => removeItem(id)}
-              className="material-symbols-outlined text-white px-3 text-base hover:text-red-400"
+            <span className="material-symbols-outlined text-base">
+              voting_chip
+            </span>
+            <p>Add {props.sidebar.columnName}</p>
+          </button>
+        </header>
+        <div className="w-full grow  max-h-[90%] flex flex-col items-center gap-2 overflow-y-auto rounded-lg bg-black/60 p-3 text-sm">
+          {list.map((item: any, id: number) => (
+            <div
+              key={id}
+              className="w-full flex items-center justify-center bg-Secondary_background_color rounded-md"
             >
-              delete
-            </button>
-          </div>
-        ))}
-      </div>
-      <div className="w-full flex justify-end pb-5">
-        <button
-          type="button"
-          onClick={() => handleSubmit()}
-          className="flex w-32 justify-center items-center p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm text-highlight_font_color border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 hover:text-purple-800 transition-all duration-200 ease-in-out
+              {props.sidebar.columnType === "tag" && (
+                <label className="inline-block relative w-4 h-4 ml-4">
+                  <input
+                    type="color"
+                    className="absolute w-full h-full rounded-full opacity-0 cursor-pointer"
+                    value={item.color}
+                    onChange={(e) => changeDisplayColor(id, e.target.value)}
+                  />
+                  <span
+                    className="inline-block w-full h-full rounded-full border-2 border-gray-300"
+                    style={{ backgroundColor: item.color }}
+                  ></span>
+                </label>
+              )}
+              <input
+                required
+                className="grow p-5 py-3 rounded-md bg-Secondary_background_color text-white"
+                id={`dropdown-${item}-input`}
+                value={item.filterOptionName!}
+                onChange={(e) => changeList(id, e.target.value)}
+              />
+              <button
+                onClick={(e) => removeItem(id)}
+                className="material-symbols-outlined text-white px-3 text-base hover:text-red-400"
+              >
+                delete
+              </button>
+            </div>
+          ))}
+        </div>
+        <div className="w-full flex justify-end pb-5">
+          <button
+            type="button"
+            onClick={() => handleSubmit()}
+            className="flex w-32 justify-center items-center p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm text-highlight_font_color border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 hover:text-purple-800 transition-all duration-200 ease-in-out
           mt-4"
-        >
-          Save {props.sidebar.columnName}
-        </button>
-      </div>
-    </form>
-  );
+          >
+            Save {props.sidebar.columnName}
+          </button>
+        </div>
+      </form>
+    );
+  }
 }

@@ -7,6 +7,8 @@ import Editor from "../common/editor";
 
 type Props = {
   sidebar: Type_SIDEBARSTATE;
+  tabBarColaps: boolean;
+  handleSideBarColaps: Function;
 };
 
 export default function ConversationsTab(props: Props) {
@@ -70,38 +72,49 @@ export default function ConversationsTab(props: Props) {
     }
   }, [chat]);
 
-  return (
-    <div className="h-screen ">
-      <p className="pl-4 py-3">Conversations</p>
-      <div className="flex flex-1 items-end ">
-        <section
-          ref={chatRef}
-          className="max-h-[calc(100vh-50px-36px)] min-h-[calc(100vh-50px-36px)] px-4 h-auto overflow-y-auto w-full"
-        >
-          {chat &&
-            Object.keys(chat).map((day: any, index: number) => {
-              return (
-                <div key={index} className="w-full">
-                  <section className="flex justify-between items-center gap-2 w-full ">
-                    <span className="border border-[#444444] flex flex-1 h-0 w-full "></span>
-                    <span className="text-sm">
-                      {index !== 0 ? "Today" : day}
-                    </span>
-                  </section>
-                  <section className="flex flex-col gap-3">
-                    {chat[day].map((message: any, index: number) => {
-                      return <SingleMessage key={index} {...message} />;
-                    })}
-                  </section>
-                </div>
-              );
-            })}
-        </section>
+  if (props.tabBarColaps) {
+    return (
+      <div
+        onClick={() => props.handleSideBarColaps()}
+        className=" [writing-mode:vertical-rl] border-r-2 border-brown-600 h-full w-[50px] flex justify-center items-center text-xl  cursor-pointer bg-background_color py-4"
+      >
+        {"Conversations"}
       </div>
+    );
+  } else {
+    return (
+      <div className="w-[400px] p-4 h-screen ">
+        <p className="pl-4 py-3">Conversations</p>
+        <div className="flex flex-1 items-end ">
+          <section
+            ref={chatRef}
+            className="max-h-[calc(100vh-50px-36px)] min-h-[calc(100vh-50px-36px)] px-4 h-auto overflow-y-auto w-full"
+          >
+            {chat &&
+              Object.keys(chat).map((day: any, index: number) => {
+                return (
+                  <div key={index} className="w-full">
+                    <section className="flex justify-between items-center gap-2 w-full ">
+                      <span className="border border-[#444444] flex flex-1 h-0 w-full "></span>
+                      <span className="text-sm">
+                        {index !== 0 ? "Today" : day}
+                      </span>
+                    </section>
+                    <section className="flex flex-col gap-3">
+                      {chat[day].map((message: any, index: number) => {
+                        return <SingleMessage key={index} {...message} />;
+                      })}
+                    </section>
+                  </div>
+                );
+              })}
+          </section>
+        </div>
 
-      <div className="sticky bottom-0 h-30 w-[100%]  p-4 mb-4 ">
-        <Editor id={props.sidebar.fieldId!} />
+        <div className="sticky bottom-0 h-30 w-[100%]  p-4 mb-4 ">
+          <Editor id={props.sidebar.fieldId!} />
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
