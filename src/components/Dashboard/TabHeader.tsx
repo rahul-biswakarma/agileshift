@@ -130,6 +130,7 @@ const TabHeader = (props: Type_TabHeaderProps) => {
 							style={buttonStyle}
 							onMouseOver={() => setHoveredButtonIndex(index)}
 							onMouseOut={() => setHoveredButtonIndex(-1)}
+							data-testid={field.name}
 						>
 							<span className="material-symbols-outlined text-inherit">
 								{field.icon}
@@ -159,6 +160,7 @@ const TabHeader = (props: Type_TabHeaderProps) => {
 					<button
 						onClick={() => openSchemaEditForm()}
 						className={`p-[0.5rem_1rem] font-dm_sans text-[1rem] text-white/30 cursor-pointer rounded-sm hover:bg-Secondary_background_color flex items-center gap-[0.5rem]`}
+						data-testid="edit-schema"
 					>
 						<span className="material-symbols-outlined text-inherit">
 							edit_note

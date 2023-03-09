@@ -302,7 +302,8 @@ export const create_schema = async (
           item.columnType !== "string" &&
           item.columnType !== "title" &&
           item.columnType !== "id" &&
-          item.columnType !== "currency"
+          item.columnType !== "currency" &&
+          item.columnType !== "date"
         ) {
           filterData[schema.name].push({
             active: true,
@@ -331,7 +332,8 @@ export const create_schema = async (
           item.columnType !== "string" &&
           item.columnType !== "title" &&
           item.columnType !== "id" &&
-          item.columnType !== "currency"
+          item.columnType !== "currency" &&
+          item.columnType !== "date"
         ) {
           filterData[schema.name].push({
             active: true,

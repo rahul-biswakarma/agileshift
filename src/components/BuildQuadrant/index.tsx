@@ -112,14 +112,6 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 		dispatch(setVistaName(""));
 	}, [dispatch, getFilterSchema]);
 
-	const isActive = useAppSelector((state) => state.schema.isEdit);
-
-	useEffect(() => {
-		if(isActive) {
-			toast.error("Organization Schema not created")
-		}
-	}, [isActive])
-
 	const modifyData = useCallback(
 		async (filterSchema: TYPE_Filters[]) => {
 			let rowData;
@@ -162,9 +154,9 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 				let dataList: any = [];
 
 				newData.forEach((propsData) => {
-					let dataFromFilter: any = true;
+					let dataFromFilter:any;
 					Object.keys(filterObject).forEach((key) => {
-						if(dataFromFilter) {
+						if(!dataFromFilter) {
 							if (nameTypeMap[key] === "user") {
 								if (filterObject[key] && filterObject[key].length > 0) {
 									if (propsData[key].length > 0) {
@@ -176,7 +168,6 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 									}
 								}
 							}
-
 							if (nameTypeMap[key] === "tag") {
 								if (filterObject[key] && filterObject[key].length > 0) {
 									if (propsData[key].length > 0) {
@@ -190,8 +181,6 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 							}else if (filterObject[key] && filterObject[key].length > 0) {
 								if (filterObject[key].includes(propsData[key])) {
 									dataFromFilter = propsData;
-								}else{
-									dataFromFilter = false;
 								}
 							}
 						}
@@ -206,10 +195,18 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 		[dispatch, tabName, organizationId]
 	);
 
+	const schemaState = useAppSelector((state) => state.schema.schemaState);
+	useEffect(() => {
+		if(schemaState){
+			toast.warning("Schema for Organization not created");
+		}
+	},[schemaState]);
+
+	console.log(schemaState);
 	return (
 		<>
 		{
-			isActive ? (
+			schemaState ? (
 					<div className="flex justify-center items-center w-full h-full">
 						<div className="flex gap-5">
 							<Button className="px-3 py-2 text-white/20 text-center bg-white/5 rounded-sm text-[15px] hover:text-purple-400 flex items-center gap-1" onClick={() => {
@@ -223,7 +220,8 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 							}} icon="chevron_left" label="Organization List"/>
 						</div>
 					</div>
-			) : (
+			) : 
+			(
 				<div>
 					<BuildQuadarntHeader />
 					<Filter

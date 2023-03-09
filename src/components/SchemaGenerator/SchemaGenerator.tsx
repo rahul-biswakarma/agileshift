@@ -137,6 +137,7 @@ export const SchemaGenerator = ({
             value={name}
             onChange={dummyFunction}
             placeholder="Case Name"
+            testId="case-name-input"
           />
           <div className="absolute right-[1rem] flex gap-[1rem]">
             <Tooltip title="Duplicate schema" placement="top">
@@ -146,7 +147,7 @@ export const SchemaGenerator = ({
                 content_copy
               </button>
             </Tooltip>
-            <Tooltip title="Delete Schema" placement="top">
+            <Tooltip title="Delete Schema" data-testid="delete-schema-btn" placement="top">
               <button
                 className="material-symbols-outlined text-white/30 hover:text-rose-400 cursor-pointer"
                 onClick={handleDeleteClick}>
@@ -172,6 +173,7 @@ export const SchemaGenerator = ({
                     Cancel
                   </button>
                   <button
+                    data-testid="handle-delete-confirm"
                     className="bg-rose-400 text-rose-800 px-[15px] py-[5px] flex items-center font-bold rounded-md border-0 border-transparent hover:bg-rose-800 hover:text-rose-400 "
                     onClick={handleDeleteConfirm}>
                     Delete
@@ -256,6 +258,7 @@ export const SchemaGenerator = ({
         <div className="absolute bottom-[4rem] right-[1rem] flex items-center justify-end bg-background_color z-10">
           {getAllFieldsName().length - 1 === id && (
             <button
+              data-testid="edit-linkables"
               className="flex justify-center items-center p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm text-highlight_font_color border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 hover:text-purple-800 transition-all duration-200 ease-in-out
           "
               onClick={() => dispatch(setActiveTab(100))}>
@@ -267,6 +270,7 @@ export const SchemaGenerator = ({
               <button
                 className="flex justify-center items-center p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm text-dark_gray border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 hover:text-purple-800 transition-all duration-200 ease-in-out
 		"
+                data-testid="move-forward"
                 onClick={() => dispatch(setActiveTab(id + 1))}>
                 <span className="material-symbols-outlined">arrow_forward</span>
               </button>

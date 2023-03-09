@@ -7,7 +7,7 @@ import {
 	get_all_columns_name,
 } from "../../Utils/Backend";
 import { useNavigate } from "react-router-dom";
-import { setActiveTab, setIsEdit } from "../../redux/reducers/SchemaSlice";
+import { setActiveTab, setIsEdit, setSchemaState } from "../../redux/reducers/SchemaSlice";
 
 import Header from "./Header";
 import TabHeader from "./TabHeader";
@@ -44,9 +44,11 @@ export default function Dashboard() {
 		get_schema_data(organizationId).then((data) => {
 			if (data) {
 				setFieldsData(data.schemaData);
+				dispatch(setSchemaState(false));
 			} else {
 				dispatch(setActiveTab(0));
 				dispatch(setIsEdit(true));
+				dispatch(setSchemaState(true));
 				// navigate("/edit-organization-schema");
 			}
 		});

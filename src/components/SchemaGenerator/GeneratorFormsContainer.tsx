@@ -6,7 +6,7 @@ import { OrganisationForm } from "../ManageOrganization/OrganisationForm";
 import { SchemaGenerator } from "./SchemaGenerator";
 
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
-import { setActiveTab } from "../../redux/reducers/SchemaSlice";
+import { setActiveTab, setSchemaState } from "../../redux/reducers/SchemaSlice";
 import SchemaGeneratorFormHeader from "./Header";
 import { toast } from "react-toastify";
 import TabsContainer from "./TabsContainer";
@@ -145,6 +145,7 @@ export const GeneratorFormsContainer = ({
   );
 
   const submitSchema = () => {
+    dispatch(setSchemaState(false));
     create_schema(organisationId, fields, isEdit);
     toast("Creating Schema");
     setTimeout(() => {
