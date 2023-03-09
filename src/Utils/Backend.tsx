@@ -571,7 +571,7 @@ export const update_data_to_database = async (
     await updateDoc(organizationRef, {
       data: orgDataList,
     });
-    return data.id;
+    return data.displayId;
   }
 };
 // 27 get data by coloumn name
