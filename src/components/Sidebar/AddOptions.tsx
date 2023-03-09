@@ -83,6 +83,7 @@ export default function AddOptions(props: Props) {
           </p>
           <button
             type="submit"
+            data-testid={`add-option-${props.sidebar.columnName}`}
             className="flex gap-2 w-max justify-center items-center p-[0.5rem_1rem] rounded-md shadow-md text-sm text-highlight_font_color  hover:bg-dark_gray hover:text-white transition-all duration-200 ease-in-out"
           >
             <span className="material-symbols-outlined text-base">

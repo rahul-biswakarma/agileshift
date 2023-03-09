@@ -91,7 +91,7 @@ const FieldInfo: React.FC<SidebarProps> = ({
     );
   } else {
     return (
-      <div className="w-[400px] p-4">
+      <div className="w-[400px] p-4 h-full">
         <Header {...headerProps} />
         <div className="grow overflow-y-auto my-2">
           <div className="flex flex-col gap-[0.5rem] h-auto w-full rounded-lg my-4">
