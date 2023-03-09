@@ -182,7 +182,7 @@ const DataTable = () => {
 	return (
 		<div className="ag-theme-alpine">
 			{rowData && rowData.length > 0 ? (
-				<AgGridReact
+        <AgGridReact
 					ref={gridRef}
 					rowData={rowData}
 					rowHeight={55}

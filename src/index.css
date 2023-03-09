@@ -74,20 +74,32 @@ code {
 .react-flow__panel {
 	display: none !important;
 }
-
+/* 
 .ag-body {
+	min-height: calc(100vh - 300px) !important;
+	max-height: calc(100vh - 300px) !important;
+} */
+
+.ag-header-viewport {
+	position: sticky !important;
+	top: 0 !important;
+	left: 0 !important;
+}
+
+main {
+	overflow-y: scroll !important;
 	min-height: calc(100vh - 300px) !important;
 	max-height: calc(100vh - 300px) !important;
 }
 
-.ag-ltr .ag-body,
+/* .ag-ltr .ag-body,
 .ag-ltr .ag-floating-top,
 .ag-ltr .ag-floating-bottom,
 .ag-ltr .ag-header,
 .ag-ltr .ag-body-viewport,
 .ag-ltr .ag-body-horizontal-scroll {
 	overflow-y: scroll !important;
-}
+} */
 
 #header .MuiFormHelperText-root {
 	position: absolute;
@@ -203,6 +215,7 @@ code {
 *::-webkit-scrollbar {
 	width: 4px;
 	height: 5px;
+	background: transparent;
 }
 
 *::-webkit-scrollbar-track {
@@ -290,16 +303,6 @@ code {
 	min-height: 150px !important;
 	height: 150px !important;
 	max-height: 150px !important;
-}
-
-
-*::-webkit-scrollbar-track {
-	background: transparent;
-}
-
-*::-webkit-scrollbar-thumb {
-	background-color: #35373b;
-	border-radius: 50px;
 }
 
 #messages-container-chat * {
