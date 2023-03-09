@@ -39,6 +39,7 @@ export const OrganizationCard = ({
 	return (
 		<div
 			ref={cardRef}
+			data-testid={name}
 			className={`${fontSize} w-full gap-[1rem] flex justify-between items-center text-highlight_font_color border border-background_color hover:border-white/5 hover:bg-white/5 rounded-lg p-[8px]`}
 		>
 			<div className="flex gap-[1rem] items-center">
@@ -57,6 +58,7 @@ export const OrganizationCard = ({
 						// window.location.reload();
 					}}
 					className="p-[0.5rem_1rem] flex items-center bg-Secondary_background_color border border-inherit text-center text-lg rounded-lg"
+					data-testid={`${name}-open`}
 				>
 					<span className={`${fontSize} material-symbols-outlined`}>
 						arrow_forward

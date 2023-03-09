@@ -14,7 +14,9 @@ export const fetchData = async (
   organizationId: string,
   selectedField: string,
   type: string,
-  fieldId: string
+  fieldId: string,
+  setTrackUserColumn:Function,
+  setColor:Function
 ) => {
   let schemaData: any = { list: [] };
   let currentState: any;
@@ -55,7 +57,7 @@ export const fetchData = async (
       }
     });
   tempFormData["field"] = selectedField;
-
+  setColor(schemaData?.color)
   // only works when the sidebar is in edit mode, not in create mode
   if (fieldId !== "" && fieldId !== undefined && type === "editMode") {
     Object.keys(currentState).forEach((key) => {
@@ -63,6 +65,11 @@ export const fetchData = async (
     });
   }
 
+  let tempTrackUserColumn:string[] = []
+  schemaData?.list.forEach((column:any)=>{
+      if(column.columnType === "user") tempTrackUserColumn.push(column.columnName)
+  })
+  setTrackUserColumn(tempTrackUserColumn)
   setFormSchema(schemaData);
   setFormData(tempFormData);
 };

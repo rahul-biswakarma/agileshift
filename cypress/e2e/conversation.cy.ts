@@ -5,9 +5,16 @@ describe("Schema Creation Component Tests", () => {
         cy.getToOrg("test")
     });
     
-    it("check", () => {
-        // cy.getByData("organization-card").should("exist").eq(0).getByData("create-new-org").click();
-        // cy.getByData("org-name-input").type("Test Org");
+    it("check dashboard", () => {
+        cy.getByData("dashboard").should("exist")
+    });
+
+    it("check build-quandrant is present", () => {
+        cy.getByData("build-quadrant").should("exist")
+    });
+    it("check whether data is present", () => {
+        cy.wait(3000);
+        cy.getByData("ag-grid").should("exist")
     });
 });
 

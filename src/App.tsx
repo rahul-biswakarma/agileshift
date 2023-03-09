@@ -27,7 +27,7 @@ const App = () => {
 	const sideBarList = useAppSelector((state) => state.sidebar.sideBarData);
 	return (
 		<BrowserRouter>
-			<ToastContainer position="bottom-right" />
+			<ToastContainer position="bottom-left" autoClose={5000}/>
 			{sideBarList.length !== 0 && (
 				<section className="fixed right-0 z-50 shadow-[0_35px_40px_5px_rgba(0,0,0,0.3)] shadow-black">
 					<SideBarScreen />

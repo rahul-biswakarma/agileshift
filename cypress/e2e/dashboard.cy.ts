@@ -1,9 +1,10 @@
 describe("Dashboard Component Tests", () => {
-    beforeEach(() => {
+	beforeEach(() => {
         cy.login("hUZlg44iRyNh6MdmzfwyWmvp4i03")
         cy.getToOrg("test")
-    });
-    it("check", () => {
-        // cy.getToOrg("Cypress Test 4");
-    });
+	});
+    
+	it("check", () => {
+		// cy.getToOrg("Cypress Test 4");
+	});
 });
