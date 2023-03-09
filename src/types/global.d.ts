@@ -4,10 +4,10 @@ declare global {
 	type TYPE_SCHEMA = {
 		[key: string]: string;
 	};
-	type Type_SidebarState = {
+	type Type_SIDEBARSTATE = {
 		displayId: string;
 		fieldId?: string;
-		sidebarType: string;
+		type: string;
 		createModeCalledByField?: string; // this is the field that called the create mode
 		linkedCalledByID?: string; // this is the id of the field that called the link
 		fieldName?: string;
@@ -23,11 +23,16 @@ declare global {
 		tagName: string;
 	};
 	type TYPE_NOTIFICATION = {
-		dataId: string;
-		dateOfCreation: Date;
+		dateOfCreation: string;
 		isSeen: boolean;
 		notificationData: string;
 		notificationId: string;
+		data?:{
+			dataId: string;
+			field: string;
+			color: string;
+			displayId:string
+		}
 	};
 	type TYPE_VISTA = {
 		[key: string]: string;
@@ -81,4 +86,18 @@ declare global {
 		icon: string;
 		linkage: string[];
 	};
+
+	type TYPE_MESSAGE = {
+		email:string,
+		message:string,
+		name:string,
+		senderId:string,
+		senderImg:string,
+		timeStamp:number
+	}
+	type TYPE_LINKED_DATA = {
+		id: string;
+		displayId: string;
+		color: string;
+	}
 }

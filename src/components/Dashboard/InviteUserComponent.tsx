@@ -97,7 +97,6 @@ const InviteUserComponent = (props: Type_InviteUserComponentProps) => {
           organizationId,
           [userData.userId],
           [notificationData],
-          ""
         );
     } else {
       toast.error("User already exists!");

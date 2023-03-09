@@ -107,12 +107,23 @@ export const OrganisationForm = ({ mode }: OrganisationFormPropTypes) => {
 		dispatch(setActiveTab(-1));
 	}
 
+	const navigateToOrgsList = () => {
+		navigate("/organization-lists");
+	}
+
 	if (activeTab === -1)
 		return (
 			<div className="relative bg-background_color h-screen w-screen flex items-center justify-center font-dm_sans">
-				{mode === "edit" && (
+				{mode === "edit" ? (
 					<button
 						onClick={() => navigateToDashboard()}
+						className="material-symbols-outlined hover:text-rose-400 cursor-pointer text-3xl font-bold absolute top-10 right-10 text-white/50"
+					>
+						close
+					</button>
+				):(
+					<button
+						onClick={() => navigateToOrgsList()}
 						className="material-symbols-outlined hover:text-rose-400 cursor-pointer text-3xl font-bold absolute top-10 right-10 text-white/50"
 					>
 						close

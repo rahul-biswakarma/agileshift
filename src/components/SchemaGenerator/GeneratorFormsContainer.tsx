@@ -23,6 +23,8 @@ export const GeneratorFormsContainer = ({
   const navigate = useNavigate();
   const dispatch: any = useAppDispatch();
   const userId = useAppSelector((state: RootState) => state.auth.userId);
+  const orgId = useAppSelector((state) => state.auth.organisationId);
+
 
   useEffect(() => {
     if (!userId) {
@@ -30,7 +32,6 @@ export const GeneratorFormsContainer = ({
     }
   }, [navigate, userId]);
 
-  const orgId = useAppSelector((state) => state.auth.organisationId);
 
   useEffect(() => {
     if (orgId && mode === "edit") {
@@ -241,9 +242,13 @@ export const GeneratorFormsContainer = ({
 
   return (
     <div className="flex flex-col max-h-screen">
-      <SchemaGeneratorFormHeader />
+      <SchemaGeneratorFormHeader mode={mode} />
       <div className="relative w-screen h-[calc(100vh-40px)] flex">
-        <TabsContainer fields={fields} addSchema={addSchema} mode={mode} />
+        {
+          organisationId && (
+            <TabsContainer fields={fields} addSchema={addSchema} mode={mode} />
+          )
+        }
         {mode === "create" && <OrganisationForm mode={mode} />}
         {fields.map((field: TYPE_FIELD, id: number) => (
           <SchemaGenerator

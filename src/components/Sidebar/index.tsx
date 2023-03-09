@@ -1,116 +1,89 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../redux/hooks";
+import { setNewSidBar } from "../../redux/reducers/SideBarSlice";
 import { RootState } from "../../redux/store";
+import CustomButton from "../common/Button";
 import AddOptions from "./AddOptions";
-import ConversationsTab from "./ConversationsTab";
-import CreateData from "./CreateData";
-import { LinkageSidebar } from "./LinkageSidebar";
+import ConversationsTab from "./Conversations/ConversationsTab";
+import FieldInfo from "./FieldInfo";
+import { AddLinks } from "./AddLinks";
 
 export default function SideBarScreen() {
-  const sideBarList: Type_SidebarState[] = useSelector(
+  const dispatch = useAppDispatch();
+  const sideBarList: Type_SIDEBARSTATE[] = useSelector(
     (state: RootState) => state.sidebar.sideBarData
   );
 
-  const [colapsTabBar, setColapsTabBar] = React.useState<number>(
-    sideBarList.length - 1
-  );
-  React.useEffect(() => {
-    setColapsTabBar(sideBarList.length - 1);
-  }, [sideBarList]);
+  const handleClose = (
+    sideBarList: Type_SIDEBARSTATE[],
+    currentTabIndex: number
+  ) => {
+    return () => {
+      dispatch(
+        setNewSidBar(
+          sideBarList.filter(
+            (sideBar: Type_SIDEBARSTATE, index: number) =>
+              index !== currentTabIndex
+          )
+        )
+      );
+    };
+  };
 
+  console.log("index::: ", sideBarList);
   return (
-    <div className="min-h-screen w-max  flex flex-row-reverse  z-20 font-dm_sans  text-white ">
-      {sideBarList.map((sidebar: Type_SidebarState, index: number) => {
-        if (sidebar.sidebarType === "conversationTab") {
-          return (
-            <div key={index}>
-              <ConversationsTab
-                tabColaps={
-                  sideBarList.length <= 3
-                    ? false
-                    : index === colapsTabBar
-                    ? false
-                    : true
-                }
-                setColapsTabBar={setColapsTabBar}
-                sidebar={sidebar}
-                index={index}
+    <div
+      id="Tab Container"
+      className="min-h-screen w-max  flex flex-row-reverse  z-20 font-dm_sans  text-white "
+    >
+      {sideBarList.map((sidebar: Type_SIDEBARSTATE, index: number) => {
+        console.log(sidebar, "editMode");
+        return (
+          <section
+            key={index}
+            id="Tab"
+            className="w-[400px] p-4 flex flex-col justify-start h-screen bg-sidebar_bg backdrop-filter backdrop-blur-md bg-opacity-10 shadow-lg border-l border-[#444444]"
+          >
+            <header>
+              <CustomButton
+                icon={"close"}
+                onClick={() => handleClose(sideBarList, index)()}
+                className="absolute right-3 top-3 flex items-center justify-center p-1 text-white hover:text-red-400"
               />
-            </div>
-          );
-        } else if (sidebar.sidebarType === "addOption") {
-          return (
-            <div key={index}>
-              <AddOptions
-                tabColaps={
-                  sideBarList.length <= 3
-                    ? false
-                    : index === colapsTabBar
-                    ? false
-                    : true
-                }
-                setColapsTabBar={setColapsTabBar}
-                sidebar={sidebar}
-                index={index}
-              />
-            </div>
-          );
-        } else if (
-          sidebar.sidebarType === "editMode" ||
-          sidebar.sidebarType === "createMode"
-        ) {
-          return (
-            <div key={index}>
-              <CreateData
-                tabColaps={
-                  sideBarList.length <= 3
-                    ? false
-                    : index === colapsTabBar
-                    ? false
-                    : true
-                }
-                setColapsTabBar={setColapsTabBar}
-                sidebar={sidebar}
-                index={index}
-              />
-            </div>
-          );
-        } else if (sidebar.sidebarType === "linkMode") {
-          return (
-            <div key={index}>
-              <LinkageSidebar
-                tabColaps={
-                  sideBarList.length <= 3
-                    ? false
-                    : index === colapsTabBar
-                    ? false
-                    : true
-                }
-                setColapsTabBar={setColapsTabBar}
-                sidebar={sidebar}
-                index={index}
-              />
-            </div>
-          );
-        } else if (sidebar.sidebarType === "createNewsLink") {
-          return (
-            <div key={index}>
-              <CreateData
-                tabColaps={
-                  sideBarList.length <= 3
-                    ? false
-                    : index === colapsTabBar
-                    ? false
-                    : true
-                }
-                setColapsTabBar={setColapsTabBar}
-                sidebar={sidebar}
-                index={index}
-              />
-            </div>
-          );
-        }
-        return <div></div>;
+            </header>
+
+            <main className="h-full">
+              {sidebar.type === "createMode" && (
+                <FieldInfo
+                  sidebar={sidebar}
+                  handleClose={handleClose(sideBarList, index)}
+                />
+              )}
+              {sidebar.type === "editMode" && (
+                <FieldInfo
+                  sidebar={sidebar}
+                  handleClose={handleClose(sideBarList, index)}
+                />
+              )}
+              {sidebar.type === "addOption" && (
+                <AddOptions
+                  sidebar={sidebar}
+                  handleClose={handleClose(sideBarList, index)}
+                />
+              )}
+              {sidebar.type === "AddLinks" && (
+                <AddLinks
+                  sidebar={sidebar}
+                  handleClose={handleClose(sideBarList, index)}
+                />
+              )}
+              {sidebar.type === "conversations" && (
+                <ConversationsTab sidebar={sidebar} />
+              )}
+            </main>
+          </section>
+        );
       })}
     </div>
   );
