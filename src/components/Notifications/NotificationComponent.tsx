@@ -6,7 +6,6 @@ import { DisplayIdComponent } from '../DataTable/displayIdComponentContainer';
 import { DateComponent } from './DateNotificationComponent';
 
 type TYPE_NotificationComponentProps = {
-    index: number;
     notification: TYPE_NOTIFICATION;
 }
 
@@ -59,12 +58,10 @@ const NotificationComponent = (props:TYPE_NotificationComponentProps) => {
 
     return (
         <div
-            key={"Notification - " + props.index}
             className="flex hover:bg-Secondary_background_color"
         >
             <button
                 type="button"
-                key={props.index}
                 className={`w-full flex justify-between items-center border-b border-white/10 hover:bg-Secondary_background_color 
                     py-3 px-[2%] text-sm font-fira_code
                     ${

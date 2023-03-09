@@ -87,6 +87,7 @@ const Header = (props: TYPE_HeaderProps) => {
 								unReadNotificationCount++;
 							}
 						}); 
+						notificationListFromBackend.reverse();
 						const updatedNotificationList = notificationListFromBackend.sort(
 							(notificationA: TYPE_NOTIFICATION, notificationB: TYPE_NOTIFICATION) => {
 								if (notificationA.isSeen && !notificationB.isSeen) {

@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import AddOptions from "./AddOptions";
-import ConversationsTab from "./ConversationsTab";
+import ConversationsTab from "./Conversations/ConversationsTab";
 import CreateData from "./CreateData";
 import { LinkageSidebar } from "./LinkageSidebar";
 

@@ -1,34 +1,12 @@
 import { Tooltip } from '@mui/material';
-import React from 'react'
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { setNotificationList } from '../../redux/reducers/NotificationSlice';
-import { mark_notification_seen } from '../../Utils/Backend';
+import React from 'react';
 
 type TYPE_NotificationHeaderPropsType ={
     setShowNotification: React.Dispatch<React.SetStateAction<boolean>>;
-    notificationList: TYPE_NOTIFICATION[];
+    handleClearAllNotification: () => Promise<void>
 }
 
 const HeaderNotificationComponent = (props:TYPE_NotificationHeaderPropsType) => {
-    const userId = useAppSelector((state) => state.auth.userId);
-    const organizationId = useAppSelector((state) => state.auth.organisationId);
-    const dispatch = useAppDispatch();
-    
-    const handleClearAllNotification = async () => {
-        const notificationListSeen = 
-            props.notificationList.map((notification: TYPE_NOTIFICATION) => {
-                if (notification.isSeen === false) {
-                    return {
-                        ...notification,
-                        isSeen: true,
-                    };
-                }
-                return notification;
-            })
-
-        dispatch(setNotificationList(notificationListSeen));
-        await mark_notification_seen(organizationId, userId, notificationListSeen);
-    };
 
     return (
         <div className="relative bg-Secondary_background_color flex items-center justify-between p-[0.8rem_2rem]">
@@ -42,7 +20,7 @@ const HeaderNotificationComponent = (props:TYPE_NotificationHeaderPropsType) => 
 				>
                     <button
                         className="font-dm_sans text-[1rem] flex gap-[0.2rem] text-white/30 cursor-pointer rounded-sm hover:text-white"
-                        onClick={() => handleClearAllNotification()}
+                        onClick={() => props.handleClearAllNotification()}
                     >
                         <span className="material-symbols-outlined text-inherit">
                             done_all

@@ -24,7 +24,7 @@ const DisplayIdComponent = (props: Type_DisplayIdComponentProps) => {
 					: `${bgColor}40`,
 				borderColor: textColor,
 			}}
-			className="w-max h-[20px] font-fira_code rounded-md text-blue-600 text-center px-[8px] py-[12px] flex justify-center items-center text-[12px] font-[500]  uppercase"
+			className="w-max h-[20px] min-h-fit font-fira_code rounded-md text-blue-600 text-center px-[8px] py-[12px] flex justify-center items-center text-[12px] font-[500]  uppercase"
 		>
 			{uniqueAbbreviations(props.field)}-{props.displayId}
 		</div>

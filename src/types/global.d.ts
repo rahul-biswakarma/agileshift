@@ -86,4 +86,13 @@ declare global {
 		icon: string;
 		linkage: string[];
 	};
+
+	type TYPE_MESSAGE = {
+		email:string,
+		message:string,
+		name:string,
+		senderId:string,
+		senderImg:string,
+		timeStamp:number
+	}
 }
