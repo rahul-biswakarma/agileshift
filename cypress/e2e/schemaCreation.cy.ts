@@ -1,4 +1,4 @@
-import {slowCypressDown} from "cypress-slow-down"
+import { slowCypressDown } from "cypress-slow-down";
 describe("Schema Creation Component Tests", () => {
     beforeEach(() => {
         cy.window().then(() => {
