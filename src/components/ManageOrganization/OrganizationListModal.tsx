@@ -76,11 +76,12 @@ const OrganizationListModal = (props: TYPE_TEST) => {
 	}, [user]);
 
 	return (
-		<div className="flex flex-col w-full gap-[1rem] max-h-[40vh] overflow-auto px-[0.3rem]">
+		<div className="flex flex-col w-full gap-[1rem] max-h-[40vh] overflow-auto px-[0.3rem]" data-testid="organization-list">
 			{pendingInvitationsOrgData.map((orgData: any, index: number) => {
 				return (
 					<OrganizationCard
 						key={`oraganization-${index}`}
+						data-testid={orgData?.name}
 						name={orgData?.name}
 						orgId={orgData?.id}
 						user={user}
