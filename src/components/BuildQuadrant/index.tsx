@@ -115,10 +115,10 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 	const isActive = useAppSelector((state) => state.schema.isEdit);
 
 	useEffect(() => {
-		if(isActive) {
-			toast.error("Organization Schema not created")
+		if (isActive) {
+			toast.error("Organization Schema not created");
 		}
-	}, [isActive])
+	}, [isActive]);
 
 	const modifyData = useCallback(
 		async (filterSchema: TYPE_Filters[]) => {
@@ -164,13 +164,13 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 				newData.forEach((propsData) => {
 					let dataFromFilter: any = true;
 					Object.keys(filterObject).forEach((key) => {
-						if(dataFromFilter) {
+						if (dataFromFilter) {
 							if (nameTypeMap[key] === "user") {
 								if (filterObject[key] && filterObject[key].length > 0) {
 									if (propsData[key].length > 0) {
 										if (filterObject[key].includes(propsData[key])) {
 											dataFromFilter = propsData;
-										}else{
+										} else {
 											dataFromFilter = false;
 										}
 									}
@@ -187,15 +187,15 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 										});
 									}
 								}
-							}else if (filterObject[key] && filterObject[key].length > 0) {
+							} else if (filterObject[key] && filterObject[key].length > 0) {
 								if (filterObject[key].includes(propsData[key])) {
 									dataFromFilter = propsData;
-								}else{
+								} else {
 									dataFromFilter = false;
 								}
 							}
 						}
-					})
+					});
 					if (dataFromFilter) dataList.push(propsData);
 				});
 				dispatch(setDatas(dataList));
@@ -208,21 +208,33 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 
 	return (
 		<>
-		{
-			isActive ? (
-					<div className="flex justify-center items-center w-full h-full">
-						<div className="flex gap-5">
-							<Button className="px-3 py-2 text-white/20 text-center bg-white/5 rounded-sm text-[15px] hover:text-purple-400 flex items-center gap-1" onClick={() => {
+			{isActive ? (
+				<div className="flex justify-center items-center w-full h-full">
+					<div className="flex gap-5">
+						<Button
+							className="px-3 py-2 text-white/20 text-center bg-white/5 rounded-sm text-[15px] hover:text-purple-400 flex items-center gap-1"
+							onClick={() => {
 								navigate("/edit-organization-schema");
-							}} icon="add" label="Schema"/>
-							<Button className="px-3 py-2 text-white/20 text-center bg-white/5 rounded-sm text-lg hover:text-purple-400 flex items-center gap-1"  onClick={() => {
-
-							}} icon="delete" label="Org"/>
-							<Button className="px-3 py-2 text-white/20 text-center bg-white/5 rounded-sm text-lg hover:text-purple-400 flex items-center gap-1" onClick={() => {
+							}}
+							icon="add"
+							label="Schema"
+						/>
+						<Button
+							className="px-3 py-2 text-white/20 text-center bg-white/5 rounded-sm text-lg hover:text-purple-400 flex items-center gap-1"
+							onClick={() => {}}
+							icon="delete"
+							label="Org"
+						/>
+						<Button
+							className="px-3 py-2 text-white/20 text-center bg-white/5 rounded-sm text-lg hover:text-purple-400 flex items-center gap-1"
+							onClick={() => {
 								navigate("/organization-lists");
-							}} icon="chevron_left" label="Organization List"/>
-						</div>
+							}}
+							icon="chevron_left"
+							label="Organization List"
+						/>
 					</div>
+				</div>
 			) : (
 				<div>
 					<BuildQuadarntHeader />
@@ -230,12 +242,11 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
 						filters={filterSchema}
 						modifyData={modifyData}
 					/>
-					<main className="">
+					<main className="overflow-y-auto h-[100vh-300px]">
 						<DataTable />
 					</main>
 				</div>
-			)
-		}
+			)}
 		</>
 	);
 };

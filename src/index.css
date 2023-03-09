@@ -74,11 +74,11 @@ code {
 .react-flow__panel {
 	display: none !important;
 }
-/* 
+
 .ag-body {
-	min-height: calc(100vh - 300px) !important;
-	max-height: calc(100vh - 300px) !important;
-} */
+	min-height: calc(100vh - 290px) !important;
+	max-height: calc(100vh - 290px) !important;
+}
 
 .ag-header-viewport {
 	position: sticky !important;
@@ -86,14 +86,14 @@ code {
 	left: 0 !important;
 }
 
-/* .ag-ltr .ag-body,
+.ag-ltr .ag-body,
 .ag-ltr .ag-floating-top,
 .ag-ltr .ag-floating-bottom,
 .ag-ltr .ag-header,
 .ag-ltr .ag-body-viewport,
 .ag-ltr .ag-body-horizontal-scroll {
 	overflow-y: scroll !important;
-} */
+}
 
 #header .MuiFormHelperText-root {
 	position: absolute;
