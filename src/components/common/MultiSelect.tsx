@@ -4,10 +4,8 @@ import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { get_userIds_in_organizations } from "../../Utils/Backend";
 import TagComponent from "../DataTable/tagComponent";
 import UserComponent from "../DataTable/userComponent";
-
 import { db } from "../../firebaseConfig";
 import { setSideBar } from "../../redux/reducers/SideBarSlice";
-
 type Type_MultiSelectProps = {
   dataType: string;
   columnName: string;
@@ -16,15 +14,12 @@ type Type_MultiSelectProps = {
   selectedTab?: string;
   defaultValue?: any;
 };
-
 const MultiSelect = (props: Type_MultiSelectProps) => {
   const [datas, setDatas] = React.useState<any>([]);
   const [selected, setSelected] = React.useState<any>([]);
   const [isDropdownVisible, setIsDropdownVisible] =
     React.useState<boolean>(false);
-
   const organisationId = useAppSelector((state) => state.auth.organisationId);
-
   function toggleDropdownOption() {
     setIsDropdownVisible(!isDropdownVisible);
   }
@@ -39,7 +34,6 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
       })
     );
   };
-
   useEffect(() => {
     if (props.defaultValue && props.dataType === "tag") {
       setSelected(props.defaultValue);
@@ -47,7 +41,6 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
       setSelected(props.defaultValue);
     }
   }, [props.defaultValue, props.dataType]);
-
   useEffect(() => {
     const get_dropdown_options = async (
       organisationId: string,
@@ -83,7 +76,6 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
         }
       });
     };
-
     if (props.dataType === "user") {
       get_userIds_in_organizations(organisationId).then((res) => {
         setDatas(res.filter((userId: string) => userId !== selected));
@@ -99,7 +91,6 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
     props.selectedTab,
     selected,
   ]);
-
   return (
     <div className="rounded-lg my-[0.3rem] bg-background_color text-sm">
       <div onClick={() => toggleDropdownOption()} className="flex">
@@ -168,16 +159,15 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
               return (
                 userId !== null && (
                   <button
+                    type="button"
                     key={`${index}-multi-select-user`}
                     onClick={() => {
                       let currSelectedUser = selected;
                       setSelected(datas[index]);
-
                       props.setFormData({
                         ...props.fieldData,
                         [props.columnName]: datas[index],
                       });
-
                       let tempDatas = datas;
                       tempDatas.splice(index, 1);
                       setDatas([...tempDatas, currSelectedUser]);
@@ -197,6 +187,7 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
             datas.map((data: TYPE_TAG, index: number) => {
               return (
                 <button
+                  type="button"
                   key={`${index}-multi-select-tag`}
                   onClick={() => {
                     setSelected([...selected, datas[index]]);
@@ -204,7 +195,6 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
                       ...props.fieldData,
                       [props.columnName]: selected,
                     });
-
                     let tempDatas = datas;
                     tempDatas.splice(index, 1);
                     setDatas(tempDatas);
@@ -232,5 +222,4 @@ const MultiSelect = (props: Type_MultiSelectProps) => {
     </div>
   );
 };
-
 export default MultiSelect;

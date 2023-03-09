@@ -179,40 +179,40 @@ const DataTable = () => {
     setDataForAgGrid();
   }, [setDataForAgGrid]);
 
-  return (
-    <div className="ag-theme-alpine">
-      {rowData && rowData.length > 0 ? (
-        <AgGridReact
-          ref={gridRef}
-          rowData={rowData}
-          rowHeight={55}
-          animateRows={true}
-          columnDefs={columnDefs}
-          defaultColDef={defaultColDef}
-          onGridSizeChanged={onGridReady}
-          domLayout={"autoHeight"}
-          suppressHorizontalScroll={false}
-          gridOptions={gridOptions}
-        ></AgGridReact>
-      ) : (
-        <div>
-          <div className="flex border-b-[1px] border-white/10 pb-[0.5rem]">
-            {dataSchema.map((schema, index) => {
-              return (
-                <p
-                  key={`schema-column-data-${index}`}
-                  className="text-white w-full min-w-[200px] border-r-[1px] border-white/10 p-[0.2rem_1rem] font-dm_sans"
-                >
-                  {schema.columnName}
-                </p>
-              );
-            })}
-          </div>
-          <p className="text-white text-center py-[3rem]">No Data</p>
-        </div>
-      )}
-    </div>
-  );
+	return (
+		<div className="ag-theme-alpine">
+			{rowData && rowData.length > 0 ? (
+				<AgGridReact
+					ref={gridRef}
+					rowData={rowData}
+					rowHeight={55}
+					animateRows={true}
+					columnDefs={columnDefs}
+					defaultColDef={defaultColDef}
+					onGridSizeChanged={onGridReady}
+					domLayout={"autoHeight"}
+					suppressHorizontalScroll={false}
+					gridOptions={gridOptions}
+				></AgGridReact>
+			) : (
+				<div>
+					{/* <div className="flex border-b-[1px] border-white/10 pb-[0.5rem]">
+						{dataSchema.map((schema, index) => {
+							return (
+								<p
+									key={`schema-column-data-${index}`}
+									className="text-white w-full min-w-[200px] border-r-[1px] border-white/10 p-[0.2rem_1rem] font-dm_sans"
+								>
+									{schema.columnName}
+								</p>
+							);
+						})}
+					</div> */}
+					<p className="text-white text-center py-[3rem]">No Data</p>
+				</div>
+			)}
+		</div>
+	);
 };
 
 export default DataTable;

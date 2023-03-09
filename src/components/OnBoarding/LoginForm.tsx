@@ -31,9 +31,9 @@ const LoginForm = () => {
 	const emailLabelRef = useRef<HTMLLabelElement>(null);
 	const passwordInputRef = useRef<HTMLInputElement>(null);
 
-	async function handleLoginFormSubmit(
+	const handleLoginFormSubmit = async (
 		e: SyntheticEvent<HTMLButtonElement, MouseEvent>
-	) {
+	) => {
 		e.preventDefault();
 		if (passwordInputRef.current) {
 			const passwordInput: number = parseInt(passwordInputRef.current.value);
@@ -69,7 +69,7 @@ const LoginForm = () => {
 		let emailPattern = new RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$");
 
 		if (emailInput && emailPattern.test(emailInput!)) {
-			const sentOtp = await sendEmail(emailInput);
+			const sentOtp = await sendEmail("otp",emailInput);
 			if (sentOtp) setState({ ...state, onOtp: true, otp: sentOtp });
 			else {
 				emailInputRef.current!.style.borderColor = "red";

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useAppDispatch } from "../../redux/hooks";
 
 import { Handle, Position } from "reactflow";
@@ -36,39 +35,28 @@ type Type_FieldNameNode = {
 	};
 };
 type Type_FullDataNodeProps = {
-	id: any;
-	color: string;
-	schemaData: any;
-	data: any;
-	fieldName: string;
+	data: {
+		id: any;
+		color: string;
+		schemaData: any;
+		data: any;
+		fieldName: string;
+	};
 };
 
 const IdNode = (props: Type_IdNodeProps) => {
-	const [showFullData, setShowFullData] = useState(true);
 	return (
-		<div
-			className="transition-all"
-			onClick={() => setShowFullData(!showFullData)}
-		>
+		<div className="transition-all">
 			<Handle
 				type="target"
 				position={Position.Top}
 			/>
-			{showFullData ? (
-				<FullDataNode
-					data={props.data.data}
-					id={props.data.id}
-					color={props.data.color}
-					fieldName={props.data.fieldName}
-					schemaData={props.data.schemaData}
-				/>
-			) : (
-				<DisplayIdComponent
-					displayId={props.data.data.displayId}
-					field={props.data.fieldName}
-					color={props.data.color}
-				/>
-			)}
+			<DisplayIdComponent
+				displayId={props.data.data.displayId}
+				field={props.data.fieldName}
+				color={props.data.color}
+				opacity={100}
+			/>
 			<Handle
 				type="source"
 				position={Position.Bottom}
@@ -79,80 +67,92 @@ const IdNode = (props: Type_IdNodeProps) => {
 };
 
 const FullDataNode = (props: Type_FullDataNodeProps) => {
-	let schema = props.schemaData.filter((schema: any) => {
-		return schema.name === props.fieldName;
+	let schema = props.data.schemaData.filter((schema: any) => {
+		return schema.name === props.data.fieldName;
 	});
 
 	const dispatch = useAppDispatch();
 	return (
-		<div
-			style={{
-				borderColor: get_background_color_from_name(props.color),
-			}}
-			className="relative bg-background_color p-[0.5rem] transition-all rounded-md border-2 flex flex-col gap-[0.5rem] min-w-[200px] w-full"
-		>
-			<button
-				onClick={() =>
-					dispatch(
-						setSideBar({
-							sidebarType: "editMode",
-							createModeCalledByField: "",
-							fieldId: props.data.id,
-							linkedData: [],
-							id: props.data.id,
-						})
-					)
-				}
+		<>
+			<Handle
+				type="target"
+				position={Position.Top}
+			/>
+			<div
+				style={{
+					borderColor: get_background_color_from_name(props.data.color),
+				}}
+				className="relative bg-background_color p-[0.5rem] transition-all rounded-md border-2 flex flex-col gap-[0.5rem] min-w-[200px] w-full transition-all ease-in-out"
 			>
-				<DisplayIdComponent
-					displayId={props.data.displayId}
-					color={props.color}
-					field={props.fieldName}
-				/>
-			</button>
-
-			{schema[0].list &&
-				schema[0].list.length > 0 &&
-				schema[0].list.map((cols: any) => {
-					if (cols.columnType === "user") {
-						return (
-							<div
-								key={cols.columnName}
-								className="flex gap-[0.5rem] items-center text-[14px] w-full"
-							>
-								<p className="font-fira_code text-white/30 text-[14px]">
-									{cols.columnName}
-								</p>
-								<UserComponent value={props.data[cols.columnName]} />
-							</div>
-						);
-					} else if (cols.columnType === "tag") {
-						return (
-							<div
-								key={cols.columnName}
-								className="flex gap-[0.5rem] items-center text-[14px] w-full"
-							>
-								<p className="font-fira_code text-white/30 text-[14px]">
-									{cols.columnName}
-								</p>
-								<TagComponent value={props.data[cols.columnName]} />
-							</div>
-						);
-					} else {
-						return (
-							<div
-								key={cols.columnName}
-								className="flex gap-[0.5rem] items-center text-[14px] w-full"
-							>
-								<p className="font-fira_code text-white/30 text-[14px]">
-									{cols.columnName}
-								</p>
-								{props.data[cols.columnName]}
-							</div>
-						);
+				<button
+					className="transition-all ease-in-out"
+					onClick={() =>
+						dispatch(
+							setSideBar({
+								sidebarType: "editMode",
+								createModeCalledByField: "",
+								fieldId: props.data.id,
+								linkedData: [],
+								id: props.data.id,
+							})
+						)
 					}
-				})}
-		</div>
+				>
+					<DisplayIdComponent
+						displayId={props.data.data.displayId}
+						color={props.data.color}
+						field={props.data.fieldName}
+					/>
+				</button>
+
+				{schema[0].list &&
+					schema[0].list.length > 0 &&
+					schema[0].list.map((cols: any) => {
+						if (cols.columnType === "user") {
+							return (
+								<div
+									key={cols.columnName}
+									className="flex gap-[0.5rem] items-center text-[14px] w-full transition-all ease-in-out"
+								>
+									<p className="font-fira_code text-white/30 text-[14px]">
+										{cols.columnName}
+									</p>
+									<UserComponent value={props.data.data[cols.columnName]} />
+								</div>
+							);
+						} else if (cols.columnType === "tag") {
+							return (
+								<div
+									key={cols.columnName}
+									className="flex gap-[0.5rem] items-center text-[14px] w-full transition-all ease-in-out"
+								>
+									<p className="font-fira_code text-white/30 text-[14px]">
+										{cols.columnName}
+									</p>
+									<TagComponent value={props.data.data[cols.columnName]} />
+								</div>
+							);
+						} else {
+							return (
+								<div
+									key={cols.columnName}
+									className="flex gap-[0.5rem] items-center text-[14px] w-full transition-all ease-in-out"
+								>
+									<p className="font-fira_code text-white/30 text-[14px]">
+										{cols.columnName}
+									</p>
+									{props.data.data[cols.columnName]}
+								</div>
+							);
+						}
+					})}
+			</div>
+			<Handle
+				type="source"
+				position={Position.Bottom}
+				id="a"
+			/>
+		</>
 	);
 };
 
