@@ -16,7 +16,14 @@ type Type_IdNodeProps = {
 		id: any;
 		color: string;
 		schemaData: any;
-		data: any;
+		data: {
+			displayId: string;
+			id: string;
+			color: string;
+			schemaData: TYPE_SCHEMA[];
+			data: any;
+			fieldName: string;
+		};
 		fieldName: string;
 	};
 };
@@ -32,6 +39,7 @@ type Type_FieldNameNode = {
 		name: string;
 		color: string;
 		icon: string;
+		excludedNodes: string[];
 	};
 };
 type Type_FullDataNodeProps = {
@@ -73,7 +81,7 @@ const FullDataNode = (props: Type_FullDataNodeProps) => {
 
 	const dispatch = useAppDispatch();
 	return (
-		<>
+		<div className="transistion-all ease-in-out overflow-hidden">
 			<Handle
 				type="target"
 				position={Position.Top}
@@ -82,14 +90,14 @@ const FullDataNode = (props: Type_FullDataNodeProps) => {
 				style={{
 					borderColor: get_background_color_from_name(props.data.color),
 				}}
-				className="relative bg-background_color p-[0.5rem] transition-all rounded-md border-2 flex flex-col gap-[0.5rem] min-w-[200px] w-full transition-all ease-in-out"
+				className="relative bg-background_color p-[0.5rem] transition-all rounded-md border-2 flex flex-col gap-[0.5rem] min-w-[200px] max-w-[200px] w-full transition-all ease-in-out overflow-hidden"
 			>
 				<button
 					className="transition-all ease-in-out"
 					onClick={() =>
 						dispatch(
 							setSideBar({
-								sidebarType: "editMode",
+								type: "editMode",
 								createModeCalledByField: "",
 								fieldId: props.data.id,
 								linkedData: [],
@@ -152,7 +160,7 @@ const FullDataNode = (props: Type_FullDataNodeProps) => {
 				position={Position.Bottom}
 				id="a"
 			/>
-		</>
+		</div>
 	);
 };
 
@@ -172,7 +180,12 @@ const FieldNameNode = (props: Type_FieldNameNode) => {
 				className="flex items-center gap-[0.5rem] border-2 p-[0.5rem_1rem] rounded-md font-fira_code text-[1rem]"
 			>
 				<span className="material-symbols-outlined">{props.data.icon}</span>
-				{props.data.name}
+				<p className="font-fira_code uppercase">{props.data.name}</p>
+				<span className="material-symbols-outlined">
+					{props.data.excludedNodes.includes(props.data.name)
+						? "expand_more"
+						: "expand_less"}
+				</span>
 			</div>
 			<Handle
 				type="source"
