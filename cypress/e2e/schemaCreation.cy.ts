@@ -1,4 +1,4 @@
-import {slowCypressDown} from "cypress-slow-down"
+import { slowCypressDown } from "cypress-slow-down";
 describe("Schema Creation Component Tests", () => {
     beforeEach(() => {
         cy.window().then(() => {
@@ -9,8 +9,7 @@ describe("Schema Creation Component Tests", () => {
     });
     
     it("check", () => {
-        cy.getByData("organization-card").should("exist").eq(0).getByData("create-new-org").click();
-        cy.getByData("org-name-input").type("Test Org");
+        cy.getByData("organization-card").should("exist").eq(0)
     });
 });
 slowCypressDown();

@@ -25,11 +25,12 @@ const FieldInfo: React.FC<SidebarProps> = ({
   const [formData, setFormData] = React.useState<any>({ linkedData: [] });
   const [filedList, setFieldList] = React.useState<string[]>([]);
   const organizationId = useAppSelector((state) => state.auth.organisationId);
-  const fetchedLinks = useAppSelector((state) => state.sidebar.fetchedLinks);
-  console.log(fetchedLinks, "fetchedLinks###");
+  const [color, setColor] = React.useState<string>("");
   const [selectedField, setSelectedField] = React.useState<string>(
     sidebar.createModeCalledByField!
   );
+  const [trackUserColumn, setTrackUserColumn] = React.useState<string[]>([]);
+  console.log(setColor, setTrackUserColumn);
   const [formSchema, setFormSchema] = React.useState<TYPE_FIELD>({
     color: "",
     icon: "",
@@ -73,8 +74,10 @@ const FieldInfo: React.FC<SidebarProps> = ({
   let footerProps = {
     id: sidebar.id!,
     type: sidebar.type,
+    color,
     formData,
     selectedField,
+    trackUserColumn,
   };
 
   if (tabBarColaps) {

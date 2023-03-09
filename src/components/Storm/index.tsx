@@ -3,6 +3,7 @@ import ReactFlow, {
 	addEdge,
 	Background,
 	MiniMap,
+	ReactFlowProvider,
 	useEdgesState,
 	useNodesState,
 } from "reactflow";
@@ -37,9 +38,11 @@ const Storm = (props: Type_StormProps) => {
 	const edgeTypes = useMemo(() => ({ custom: CustomEdge }), []);
 
 	// State
+	const [orgNodeX, setOrgNodeX] = useState<number>(0);
+	const [defaultViewport, setDefaultViewport] = useState<any>(null);
 	const [data, setData] = useState<any>(null);
 	const [orgName, setOrgName] = useState<any>(null);
-	const [schemaData, setSchemaData] = useState<any>(null);
+	const [schemaData, setSchemaData] = useState<TYPE_SCHEMA[]>();
 	const [isExpanded, setIsExpanded] = useState<boolean>(true);
 	const [nodePositions, setNodePositions] = useState<{
 		[key: string]: { x: number; y: number };
@@ -48,10 +51,7 @@ const Storm = (props: Type_StormProps) => {
 
 	const [fieldNameColorMap, setFieldNameColorMap] = useState<any>(null);
 	const [fieldIconMap, setFieldIconMap] = useState<any>(null);
-	const [totalNodes, setTotalNodes] = useState<any>(null);
-	count_data_in_organisation(props.organizationId).then((data: any) => {
-		setTotalNodes(data["total"]);
-	});
+	const [nodeCountByFieldName, setNodeCountByFieldName] = useState<any>(null);
 
 	// Custom hooks
 	const [nodes, setNodes] = useNodesState([]);
@@ -68,6 +68,9 @@ const Storm = (props: Type_StormProps) => {
 			if (res) {
 				setOrgName(res.name);
 			}
+		});
+		count_data_in_organisation(props.organizationId).then((data: any) => {
+			setNodeCountByFieldName(data);
 		});
 	}, [props.organizationId]);
 
@@ -111,25 +114,26 @@ const Storm = (props: Type_StormProps) => {
 			fieldNameColorMap,
 			fieldIconMap,
 			orgName,
-			totalNodes,
 			schemaData,
-			isExpanded: isExpanded,
+			isExpanded,
 			excludedNodes,
+			nodeCountByFieldName,
 		});
 
 		setNodes(result.nodes);
 		setEdges(result.edges);
+		setOrgNodeX(Math.floor(result.totalArea / 2));
 	}, [
 		data,
 		excludedNodes,
 		fieldIconMap,
 		fieldNameColorMap,
 		isExpanded,
+		nodeCountByFieldName,
 		orgName,
 		schemaData,
 		setEdges,
 		setNodes,
-		totalNodes,
 	]);
 
 	// Handle Node Drag
@@ -156,17 +160,18 @@ const Storm = (props: Type_StormProps) => {
 			} else {
 				setExcludedNodes([...excludedNodes, node.id]);
 			}
-			console.log("excludedNodes", excludedNodes);
 		}
 	};
 
 	// Default Viewport
-	const defaultViewport = { x: 0, y: 0, zoom: 0.2 };
+	useEffect(() => {
+		setDefaultViewport({ x: orgNodeX, y: 0, zoom: 0.5 });
+	}, [orgNodeX]);
 
 	return (
 		<div className="relative w-screen h-screen text-white flex">
 			<button
-				className="absolute top-[1rem] right-[1rem] flex items-center justify-center bg-gray-800 rounded-md p-2 gap-[5px] text-[14px] z-50"
+				className="absolute top-[1rem] right-[1rem] flex items-center justify-center bg-gray-800 rounded-md p-2 gap-[5px] text-[14px] z-40"
 				onClick={() => setIsExpanded(!isExpanded)}
 			>
 				{!isExpanded ? (
@@ -182,30 +187,34 @@ const Storm = (props: Type_StormProps) => {
 				)}
 			</button>
 			{nodes && nodes.length > 0 && edges && (
-				<ReactFlow
-					onNodeDrag={handleNodeDrag}
-					draggable={true}
-					nodesDraggable={true}
-					snapToGrid={true}
-					edgeTypes={edgeTypes}
-					nodes={nodes.map((node: any) => ({
-						...node,
-						position: nodePositions[node.id] || node.position,
-					}))}
-					edges={edges}
-					nodeTypes={nodeTypes}
-					defaultViewport={defaultViewport}
-					fitView={true}
-					onConnect={onConnect}
-					onNodeClick={handleNodeClick}
-				>
-					<MiniMap
-						nodeStrokeWidth={3}
-						zoomable
-						pannable
-					/>
-					<Background />
-				</ReactFlow>
+				<ReactFlowProvider>
+					<ReactFlow
+						onNodeDrag={handleNodeDrag}
+						draggable={true}
+						nodesDraggable={true}
+						snapToGrid={true}
+						edgeTypes={edgeTypes}
+						nodes={nodes.map((node: any) => ({
+							...node,
+							position: nodePositions[node.id] || node.position,
+						}))}
+						edges={edges}
+						nodeTypes={nodeTypes}
+						defaultViewport={defaultViewport}
+						fitView={true}
+						onConnect={onConnect}
+						onNodeClick={handleNodeClick}
+						minZoom={0.1}
+						maxZoom={1.5}
+					>
+						<MiniMap
+							nodeStrokeWidth={3}
+							zoomable
+							pannable
+						/>
+						<Background />
+					</ReactFlow>
+				</ReactFlowProvider>
 			)}
 		</div>
 	);

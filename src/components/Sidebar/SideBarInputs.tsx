@@ -4,7 +4,8 @@ import AutoComplete from "../common/AutoComplete";
 // import AutoComplete from "../common/AutoComplete";
 import DatePicker from "../common/DatePicker";
 import Input from "../common/Input";
-import MultiSelect from "../common/MultiSelect";
+import TagSelect from "../common/TagSelect";
+import UserSelect from "../common/UserSelect";
 // import MultiSelect from "../common/MultiSelect";
 
 type type_props = {
@@ -36,7 +37,7 @@ export default function SideBarInputs(props: type_props) {
 	}
 	if (["user"].includes(props.columnDetails.columnType)) {
 		return (
-			<MultiSelect
+			<UserSelect
 				dataType={props.columnDetails.columnType}
 				defaultValue={props.defaultValue}
 				columnName={props.columnDetails.columnName}
@@ -48,7 +49,7 @@ export default function SideBarInputs(props: type_props) {
 	}
 	if (["tag"].includes(props.columnDetails.columnType)) {
 		return (
-			<MultiSelect
+			<TagSelect
 				dataType={props.columnDetails.columnType}
 				defaultValue={props.defaultValue}
 				columnName={props.columnDetails.columnName}

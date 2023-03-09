@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 import { LoginForm } from "./LoginForm";
-import { OnBoardingHeader } from "./OnBoardingHeader";
+import { OnBoardingHeader } from "./Header";
 
 const Login = () => {
 	useEffect(() => {

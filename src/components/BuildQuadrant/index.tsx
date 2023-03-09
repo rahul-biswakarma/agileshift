@@ -13,7 +13,6 @@ import {
 } from "../../Utils/Backend";
 import { setVistaName } from "../../redux/reducers/VistaSlice";
 
-
 type Type_BuildQuadarntProps = {};
 
 type TYPE_FilterOption = {
