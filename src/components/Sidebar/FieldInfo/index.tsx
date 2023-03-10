@@ -38,20 +38,20 @@ const FieldInfo: React.FC<SidebarProps> = ({
 		name: "",
 	});
 
-  useEffect(() => {
-    fetchData(
-      setFormSchema,
-      setFieldList,
-      setSelectedField,
-      setFormData,
-      organizationId,
-      selectedField,
-      sidebar.type,
-      sidebar.id!,
-      dispatch,
-      setAppendFetchedLink
-    );
-  }, [selectedField, sidebar.type, organizationId, sidebar.id, dispatch]);
+	useEffect(() => {
+		fetchData(
+			setFormSchema,
+			setFieldList,
+			setSelectedField,
+			setFormData,
+			organizationId,
+			selectedField,
+			sidebar.type,
+			sidebar.id!,
+			dispatch,
+			setAppendFetchedLink
+		);
+	}, [selectedField, sidebar.type, organizationId, sidebar.id, dispatch]);
 
 	let headerProps = {
 		selectedField,
@@ -81,7 +81,7 @@ const FieldInfo: React.FC<SidebarProps> = ({
 		return (
 			<div
 				onClick={() => handleSideBarColaps()}
-				className="z-[100] relative border-r border-white/10 h-full w-[50px] flex h-max-content justify-center items-center text-xl  cursor-pointer bg-background_color py-4"
+				className=" border-r border-white/10 h-full w-[50px] flex h-max-content justify-center items-center text-xl  cursor-pointer bg-background_color py-4"
 			>
 				{sidebar.type === "editMode" ? (
 					<div className="rotate-90">
