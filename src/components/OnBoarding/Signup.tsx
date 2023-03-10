@@ -13,21 +13,21 @@ import GithubIcon from "../../assets/icons/github-icon.svg";
 import GoogleIcon from "../../assets/icons/google-icon.svg";
 
 const SignUp = () => {
-	const userId = useAppSelector((state: RootState) => state.auth.userId);
-	let navigate = useNavigate();
+  const userId = useAppSelector((state: RootState) => state.auth.userId);
+  let navigate = useNavigate();
 
-	useEffect(() => {
-		document.title = "Sign into AgileShift";
-	}, []);
+  useEffect(() => {
+    document.title = "Sign into AgileShift";
+  }, []);
 
-	useEffect(() => {
-		if (userId.length > 0) navigate("/organization-lists");
-	}, [userId, navigate]);
+  useEffect(() => {
+    if (userId.length > 0) navigate("/organization-lists");
+  }, [userId, navigate]);
 
 	return (
 		<div
 			data-testid="landing-component"
-			className="w-full h-[100vh] flex justify-center overflow-hidden grid max-[1100px]:grid-cols-[100%]  grid-cols-[700px_auto] font-dm_sans"
+			className="w-full h-[100vh]  justify-center overflow-hidden grid max-[1100px]:grid-cols-[100%]  grid-cols-[700px_auto] font-dm_sans"
 		>
 			<section className="flex flex-col items-center justify-center bg-background_color  w-full h-full p-24 max-[600px]:p-12">
 				<main className="w-full gap-[1rem]">

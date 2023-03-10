@@ -46,7 +46,6 @@ const UserSelect = (props: Type_UserSelectProps) => {
 	}, [organisationId]);
 
 	useEffect(() => {
-		console.log("dataSnapshot", dataSnapshot);
 		setDatas(dataSnapshot.filter((userId: string) => userId !== selected));
 	}, [
 		dataSnapshot,

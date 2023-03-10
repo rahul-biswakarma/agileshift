@@ -25,8 +25,6 @@ export const generateAllNodesWithEdges = (
 	let tempEdges: any = [];
 	let fieldNameNodeX: Type_fieldNameNodeX = {};
 
-	console.log("props", props);
-
 	let {
 		data,
 		schemaData,
@@ -128,11 +126,12 @@ export const generateAllNodesWithEdges = (
 					});
 
 				// Generating Edges
+				console.log("data.linkedData", data.linkedData);
 				data.linkedData.map((link: any) => {
 					tempEdges.push({
 						id: `${uuidv4()}-a`,
 						source: data.id,
-						target: link,
+						target: link.id,
 						type: "custom",
 						data: { dottedEdge: true },
 						markerEnd: {

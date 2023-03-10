@@ -166,98 +166,117 @@ export const update_issue = () => {};
 export const create_tags = () => {};
 
 // 11
-export const sendEmail = async (type:"vista"|"otp"|"organisation",emailId: string,vistaName?:string,orgName?:string,sender_name?:string) => {
-	//   e.preventDefault(); // prevents the page from reloading when you hit “Send”
+export const sendEmail = async (
+  type: "vista" | "otp" | "organisation",
+  emailId: string,
+  vistaName?: string,
+  orgName?: string,
+  sender_name?: string
+) => {
+  //   e.preventDefault(); // prevents the page from reloading when you hit “Send”
 
-	let otpParams: {
-		to_name: string;
-		to_email: string;
-		otp: number;
-	} = {
-		to_name: "",
-		to_email: emailId,
-		otp: Math.floor(Math.random() * 900000) + 100000,
-	};
+  let otpParams: {
+    to_name: string;
+    to_email: string;
+    otp: number;
+  } = {
+    to_name: "",
+    to_email: emailId,
+    otp: Math.floor(Math.random() * 900000) + 100000,
+  };
 
-	let invitationParams:{
-		from_name:string,
-		to_name:string,
-		to_email:string,
-		content:string
-	}={
-		from_name:sender_name?sender_name:"",
-		to_name:"",
-		to_email:emailId,
-		content:""
-	}
+  let invitationParams: {
+    from_name: string;
+    to_name: string;
+    to_email: string;
+    content: string;
+  } = {
+    from_name: sender_name ? sender_name : "",
+    to_name: "",
+    to_email: emailId,
+    content: "",
+  };
 
-	if (!isValidEmail(emailId)) {
-		console.log("invalid mail");
-		return;
-	}
-	const user: any | undefined = await get_user_by_email(
-		emailId
-	).then((user) => {
-		return user;
-	});
-	let userDetails:TYPE_USER;
-	if (!user) {
-		console.log("user not found");
-		return;
-	}
-		userDetails={
-			avatar:user.avatar,
-			email:user.email,
-			id:user.id,
-			organisation:user.organisation,
-			name:user.name
-		}
+  if (!isValidEmail(emailId)) {
+    console.log("invalid mail");
+    return;
+  }
+  const user: any | undefined = await get_user_by_email(emailId).then(
+    (user) => {
+      return user;
+    }
+  );
+  let userDetails: TYPE_USER;
+  if (!user) {
+    console.log("user not found");
+    return;
+  }
+  userDetails = {
+    avatar: user.avatar,
+    email: user.email,
+    id: user.id,
+    organisation: user.organisation,
+    name: user.name,
+  };
 
-		otpParams.to_name=userDetails.name;
-		invitationParams.to_name=userDetails.name;
-	
-	if(type==="otp"){
-		emailjs
-			.send("service_gjc539l", "template_6vt5v8y", otpParams, "AJvkEjt5pK4Tr_3jV")
-			.then(
-				(res) => {
-					// show the user a success message
-				},
-				(error: string) => {
-					// show the user an error
-					console.error("error in sending otp");
-				}
-			);
-	}
-	else if(type==="vista"){
-		invitationParams.content=`You have been invited for the vista named ${vistaName}, by ${sender_name}!`
-		emailjs
-			.send("service_gjc539l", "template_sqxrej9", invitationParams, "AJvkEjt5pK4Tr_3jV")
-			.then(
-				(res) => {
-					// show the user a success message
-				},
-				(error: string) => {
-					// show the user an error
-					console.error("error in sending invitation");
-				}
-			);
-	}
-	else if(type==="organisation"){
-		invitationParams.content=`you are invited to the organisation named ${orgName}, by ${sender_name}`;
-		emailjs
-			.send("service_gjc539l", "template_sqxrej9", invitationParams, "AJvkEjt5pK4Tr_3jV")
-			.then(
-				(res) => {
-					// show the user a success message
-				},
-				(error: string) => {
-					// show the user an error
-					console.error("error in sending invitation");
-				}
-			);
-	}
-	return otpParams["otp"];
+  otpParams.to_name = userDetails.name;
+  invitationParams.to_name = userDetails.name;
+
+  if (type === "otp") {
+    emailjs
+      .send(
+        "service_gjc539l",
+        "template_6vt5v8y",
+        otpParams,
+        "AJvkEjt5pK4Tr_3jV"
+      )
+      .then(
+        (res) => {
+          // show the user a success message
+        },
+        (error: string) => {
+          // show the user an error
+          console.error("error in sending otp");
+        }
+      );
+  } else if (type === "vista") {
+    invitationParams.content = `You have been invited for the vista named ${vistaName}, by ${sender_name}!`;
+    emailjs
+      .send(
+        "service_gjc539l",
+        "template_sqxrej9",
+        invitationParams,
+        "AJvkEjt5pK4Tr_3jV"
+      )
+      .then(
+        (res) => {
+          // show the user a success message
+        },
+        (error: string) => {
+          // show the user an error
+          console.error("error in sending invitation");
+        }
+      );
+  } else if (type === "organisation") {
+    invitationParams.content = `you are invited to the organisation named ${orgName}, by ${sender_name}`;
+    emailjs
+      .send(
+        "service_gjc539l",
+        "template_sqxrej9",
+        invitationParams,
+        "AJvkEjt5pK4Tr_3jV"
+      )
+      .then(
+        (res) => {
+          // show the user a success message
+        },
+        (error: string) => {
+          // show the user an error
+          console.error("error in sending invitation");
+        }
+      );
+  }
+  return otpParams["otp"];
 };
 
 // 12 fetch all supported types. returns array of stings
@@ -302,7 +321,8 @@ export const create_schema = async (
           item.columnType !== "string" &&
           item.columnType !== "title" &&
           item.columnType !== "id" &&
-          item.columnType !== "currency"
+          item.columnType !== "currency" &&
+          item.columnType !== "date"
         ) {
           filterData[schema.name].push({
             active: true,
@@ -331,7 +351,8 @@ export const create_schema = async (
           item.columnType !== "string" &&
           item.columnType !== "title" &&
           item.columnType !== "id" &&
-          item.columnType !== "currency"
+          item.columnType !== "currency" &&
+          item.columnType !== "date"
         ) {
           filterData[schema.name].push({
             active: true,
@@ -611,18 +632,18 @@ export const get_dropdown_options = async (
 
   let dataDetails: any = [];
 
-	if (docSnap.exists()) {
-		dataDetails = docSnap.data();
-		dataDetails = dataDetails?.data;
-		dataDetails = dataDetails[field]?.filter(
-			(item: any) => item.columnName === columnName
-		);
-	} else {
-		// doc.data() will be undefined in this case
-		console.log("No such document!");
-		return [];
-	}
-	return dataDetails.length > 0 ? dataDetails[0]["data"] : [];
+  if (docSnap.exists()) {
+    dataDetails = docSnap.data();
+    dataDetails = dataDetails?.data;
+    dataDetails = dataDetails[field]?.filter(
+      (item: any) => item.columnName === columnName
+    );
+  } else {
+    // doc.data() will be undefined in this case
+    console.log("No such document!");
+    return [];
+  }
+  return dataDetails.length > 0 ? dataDetails[0]["data"] : [];
 };
 
 // 29 set dropdown options
@@ -709,15 +730,15 @@ export const get_user_suggestions = async (organisationId: string) => {
 
 //33 set notification
 export const set_notification = async (
-	organisationId: string,
-	userId: string[],
-	notificationData: string[],
-	data?:{
-		field:string,
-		color:string,
-		displayId:string,
-		dataId: string,
-	}
+  organisationId: string,
+  userId: string[],
+  notificationData: string[],
+  data?: {
+    field: string;
+    color: string;
+    displayId: string;
+    dataId: string;
+  }
 ) => {
   console.log("set_notification", userId, notificationData, data);
   
@@ -762,9 +783,9 @@ export const set_notification = async (
 
 // 34 update notification
 export const update_notification = async (
-	organisationId: string,
-	userId: string,
-	notification: TYPE_NOTIFICATION
+  organisationId: string,
+  userId: string,
+  notification: TYPE_NOTIFICATION
 ) => {
 	const organizationRef = doc(db, "organizations", organisationId);
 	let docSnap: any = await getDoc(organizationRef);
@@ -789,15 +810,15 @@ export const mark_notification_seen = async (
   userId: string,
   notificationList: TYPE_NOTIFICATION[]
 ) => {
-	const organizationRef = doc(db, "organizations", organisationId);
-	let docSnap: any = await getDoc(organizationRef);
-	let updatedNotification: any = docSnap.data()["notifications"];
-	if(updatedNotification){
-		updatedNotification[userId] = notificationList;
-		await updateDoc(organizationRef, {
-			notifications: updatedNotification,
-		});
-	}
+  const organizationRef = doc(db, "organizations", organisationId);
+  let docSnap: any = await getDoc(organizationRef);
+  let updatedNotification: any = docSnap.data()["notifications"];
+  if (updatedNotification) {
+    updatedNotification[userId] = notificationList;
+    await updateDoc(organizationRef, {
+      notifications: updatedNotification,
+    });
+  }
 };
 
 // 36 user active time
@@ -839,13 +860,13 @@ export const send_invite = async (
     organisationId
   );
 
-	sendEmail(
-		"organisation",
-		receiverEmail,
-		"",
-		organizationDetails["name"],
-		senderDetails["name"],
-	);
+  sendEmail(
+    "organisation",
+    receiverEmail,
+    "",
+    organizationDetails["name"],
+    senderDetails["name"]
+  );
 };
 // 38 send invitation mail
 export const send_invitation_mail = async (
@@ -1214,35 +1235,35 @@ export const send_vista_invitations = async (
   vistasId: string,
   orgId: string
 ) => {
-	const invitatonRef = doc(db, "vistaInvitations", receiverEmail);
-	const docSnap = await getDoc(invitatonRef);
-	if (docSnap.exists()) {
-		const data = docSnap.data();
-		if (data.pendingList[orgId] && data.pendingList[orgId].includes(vistasId)) {
-			return;
-		} else {
-			await updateDoc(invitatonRef, {
-				pendingList: {
-					[orgId]: arrayUnion(vistasId),
-				},
-			});
-		}
-	} else {
-		await setDoc(invitatonRef, {
-			pendingList: {
-				[orgId]: [vistasId],
-			},
-		});
-	}
-	const senderDetails: any = await get_user_by_id(senderId);
-	const vistasDetail: any = await get_vistas_details(vistasId);
-	sendEmail(
-		"vista",
-		receiverEmail,
-		vistasDetail["name"],
-		"",
-		senderDetails["name"],
-	);
+  const invitatonRef = doc(db, "vistaInvitations", receiverEmail);
+  const docSnap = await getDoc(invitatonRef);
+  if (docSnap.exists()) {
+    const data = docSnap.data();
+    if (data.pendingList[orgId] && data.pendingList[orgId].includes(vistasId)) {
+      return;
+    } else {
+      await updateDoc(invitatonRef, {
+        pendingList: {
+          [orgId]: arrayUnion(vistasId),
+        },
+      });
+    }
+  } else {
+    await setDoc(invitatonRef, {
+      pendingList: {
+        [orgId]: [vistasId],
+      },
+    });
+  }
+  const senderDetails: any = await get_user_by_id(senderId);
+  const vistasDetail: any = await get_vistas_details(vistasId);
+  sendEmail(
+    "vista",
+    receiverEmail,
+    vistasDetail["name"],
+    "",
+    senderDetails["name"]
+  );
 };
 // 58 send vista invitation on mail -- not needed anymore
 export const send_vista_invitation_mail = async (
@@ -1402,5 +1423,16 @@ export const add_links_to_fields = async (
   }
   await updateDoc(organizationRef, {
     data: orgDataList,
+  });
+};
+
+// 65 update organizations name
+export const update_organizations_name = async (
+  organizationId: string,
+  updatedName: string
+) => {
+  const organizationRef = doc(db, "organizations", organizationId);
+  await updateDoc(organizationRef, {
+    name: updatedName,
   });
 };

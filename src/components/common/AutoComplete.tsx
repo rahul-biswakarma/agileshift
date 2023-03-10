@@ -100,7 +100,6 @@ const AutoComplete = (props: type_props) => {
         item.columnName === props.columnDetails.columnName
       ) {
         setIsButtonClicked(true);
-        console.log("item**,true");
         flag = true;
       }
     });

@@ -5,8 +5,9 @@ type TabButtonPropTypes = {
   id?: number;
   onClick: Function;
   text: string;
+  testId: string;
 };
-export const TabButton = ({ id, onClick, text }: TabButtonPropTypes) => {
+export const TabButton = ({ id, onClick, text, testId}: TabButtonPropTypes) => {
   const activeTab = useAppSelector(
     (state: RootState) => state.schema.activeTab
   );
@@ -19,7 +20,7 @@ export const TabButton = ({ id, onClick, text }: TabButtonPropTypes) => {
         : "Secondary_background_color"
     }
     `}>
-      <button className="h-full w-full" onClick={() => onClick()}>
+      <button className="h-full w-full" onClick={() => onClick()} data-testid={testId}>
         <span className="text-sm uppercase font-[600] font-fira_code">
           {text}
         </span>

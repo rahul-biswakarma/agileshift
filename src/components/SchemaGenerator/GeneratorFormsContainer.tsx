@@ -37,7 +37,6 @@ export const GeneratorFormsContainer = ({
     if (orgId && mode === "edit") {
       get_schema_data(orgId).then((data) => {
         if (data) {
-          console.log(data.schemaData);
           setFields(data.schemaData);
         }
       });
@@ -122,10 +121,8 @@ export const GeneratorFormsContainer = ({
   // }
 
   function changeLinkage(this: any, link: string[]) {
-    console.log("link", link);
     let tempFields = [...fields];
     tempFields[this.id].linkage = link;
-    console.log("tempFields", tempFields);
     setFields(tempFields);
   }
 
@@ -215,7 +212,6 @@ export const GeneratorFormsContainer = ({
   }
   const checkSchema = () => {
     const fieldName = getAllFieldsName();
-    console.log(fieldName);
 
     for (let i = 0; i < fieldName.length; i++) {
       if (fieldName[i].length === 0) {

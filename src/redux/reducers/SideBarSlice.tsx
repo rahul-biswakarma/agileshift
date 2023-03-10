@@ -1,9 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+type fetchedLinkType = {
+  [key: string]: TYPE_LINKED_DATA[];
+};
 
 interface SidebarState {
   visible: boolean;
   sideBarData: Type_SIDEBARSTATE[];
+  fetchedLinks: fetchedLinkType;
 }
 
 const initialState: SidebarState = {
@@ -24,6 +28,7 @@ const initialState: SidebarState = {
     //   createModeCalledByField: "Tickets",
     // },
   ],
+  fetchedLinks: {},
 };
 
 export const SideBarSlice = createSlice({
@@ -39,10 +44,29 @@ export const SideBarSlice = createSlice({
     setNewSidBar: (state, action: PayloadAction<any>) => {
       state.sideBarData = action.payload;
     },
+    setFetchedLinks: (state, action: PayloadAction<any>) => {
+      state.fetchedLinks = action.payload;
+    },
+    setRemoveFetchedLink: (state, action: PayloadAction<any>) => {
+      let tempLists = { ...state.fetchedLinks };
+      delete tempLists[action.payload];
+      state.fetchedLinks = tempLists;
+    },
+    setAppendFetchedLink: (state, action: PayloadAction<any>) => {
+      let tempLists = { ...state.fetchedLinks };
+      tempLists[action.payload.fieldId] = action.payload.linkedData;
+      state.fetchedLinks = tempLists;
+    },
   },
 });
 
-export const { setSideBarVisibity, setSideBar, setNewSidBar } =
-  SideBarSlice.actions;
+export const {
+  setSideBarVisibity,
+  setSideBar,
+  setNewSidBar,
+  setFetchedLinks,
+  setRemoveFetchedLink,
+  setAppendFetchedLink,
+} = SideBarSlice.actions;
 
 export default SideBarSlice.reducer;

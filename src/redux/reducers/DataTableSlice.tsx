@@ -17,7 +17,7 @@ const initialState: DataTableState = {
 };
 
 export const DataTableSlice = createSlice({
-	name: "auth",
+	name: "dataTable",
 	initialState,
 	reducers: {
 		setFieldColor: (state, action: PayloadAction<string>) => {

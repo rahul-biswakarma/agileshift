@@ -36,7 +36,6 @@ const Footer: React.FC<TypeFooterProps> = ({
   );
   const [isButtonClicked, setIsButtonClicked] = React.useState<boolean>(false);
   const tabName = useAppSelector((state) => state.datatable.tabName);
-
   React.useEffect(() => {
     let flag: boolean = false;
     sidebarList.forEach((item: any) => {
@@ -68,6 +67,8 @@ const Footer: React.FC<TypeFooterProps> = ({
     }
   };
 
+  const fetchedLinks = useAppSelector((state) => state.sidebar.fetchedLinks);
+
   const handleCreate = async () => {
     const dataDetails = await handleSubmit(
       organizationId,
@@ -75,7 +76,7 @@ const Footer: React.FC<TypeFooterProps> = ({
       selectedField,
       type,
       userId,
-      [],
+      fetchedLinks[id],
       id
     );
     updateTable();
@@ -111,7 +112,7 @@ const Footer: React.FC<TypeFooterProps> = ({
     console.log(userList,userMessages);
     
     const dataAction = type === "createMode" ? "created" : "updated";
-    toast.success(`Data ${dataAction} successfully}`);
+    toast.success(`Data ${dataAction} successfully`);
   };
 
   return (

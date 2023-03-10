@@ -5,6 +5,7 @@ interface SchemaState {
 	issuesSchema: TYPE_SCHEMA[];
 	isEdit: boolean;
 	activeTab: number;
+	schemaState: boolean;
 }
 
 const initialState: SchemaState = {
@@ -12,6 +13,7 @@ const initialState: SchemaState = {
 	issuesSchema: [],
 	isEdit: false,
 	activeTab: -1,
+	schemaState: false,
 };
 
 export const SchemaSlice = createSlice({
@@ -30,10 +32,13 @@ export const SchemaSlice = createSlice({
 		setActiveTab: (state, action: PayloadAction<number>) => {
 			state.activeTab = action.payload;
 		},
+		setSchemaState: (state, action: PayloadAction<boolean>) => {
+			state.schemaState = action.payload;
+		},
 	},
 });
 
-export const { setTicketSchema, setIssueSchema, setActiveTab, setIsEdit } =
+export const { setTicketSchema, setIssueSchema, setActiveTab, setIsEdit, setSchemaState } =
 	SchemaSlice.actions;
 
 export default SchemaSlice.reducer;
