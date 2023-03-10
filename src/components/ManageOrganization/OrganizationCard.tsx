@@ -22,9 +22,6 @@ export const OrganizationCard = ({
 	user,
 	boxSize,
 }: organizationCardProps) => {
-	console.log(pendingInvitation);
-	console.log(user);
-	console.log(orgId)
 	
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();

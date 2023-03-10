@@ -69,7 +69,6 @@ const Footer: React.FC<TypeFooterProps> = ({
 
   const fetchedLinks = useAppSelector((state) => state.sidebar.fetchedLinks);
 
-  console.log(formData, "***form");
   const handleCreate = async () => {
     await handleSubmit(
       organizationId,

@@ -142,7 +142,6 @@ const VistaList = () => {
   const sendVistaInvitation = async (index: number) => {
     const mail = vistaInvitation[index].mail;
     const user = await get_user_by_id(userId);
-    console.log(user);
     if (user) {
       send_vista_invitations(userId, mail, vistaList[index].id, organizationId);
       toast.success(`${mail} has been invited to ${vistaList[index].name}!`);

@@ -22,8 +22,6 @@ const LinksComponent: React.FC<TypeLinksProps> = ({
     (state: RootState) => state.sidebar.sideBarData
   );
   const fetchedLinks = useAppSelector((state) => state.sidebar.fetchedLinks);
-  console.log(fetchedLinks, "###");
-  console.log(id, selectedField, "id,selectedField");
 
   const [isButtonClicked, setIsButtonClicked] = React.useState<boolean>(false);
 

@@ -24,7 +24,6 @@ const Header: React.FC<TypeHeaderProps> = ({
     setSelectedField,
     color: color,
   };
-  console.log("type::: ", displayId);
   return (
     <header className="flex justify-between items-center">
       {type === "createMode" && <DropDown {...dropDownProps} />}
