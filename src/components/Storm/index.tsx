@@ -39,7 +39,6 @@ const Storm = (props: Type_StormProps) => {
 
 	// State
 	const [orgNodeX, setOrgNodeX] = useState<number>(0);
-	const [defaultViewport, setDefaultViewport] = useState<any>(null);
 	const [data, setData] = useState<any>(null);
 	const [orgName, setOrgName] = useState<any>(null);
 	const [schemaData, setSchemaData] = useState<TYPE_SCHEMA[]>();
@@ -136,6 +135,8 @@ const Storm = (props: Type_StormProps) => {
 		setNodes,
 	]);
 
+	console.log(orgNodeX);
+
 	// Handle Node Drag
 	const handleNodeDrag = (event: any, node: any) => {
 		setNodePositions((prevNodePositions) => ({
@@ -163,15 +164,16 @@ const Storm = (props: Type_StormProps) => {
 		}
 	};
 
-	// Default Viewport
-	useEffect(() => {
-		setDefaultViewport({ x: orgNodeX, y: 0, zoom: 0.5 });
-	}, [orgNodeX]);
+	// // Default Viewport
+	// useEffect(() => {
+	// 	setDefaultViewport({ x: orgNodeX, y: 0, zoom: 0.5 });
+	// 	setDefaultPosition({ x: orgNodeX, y: 0 });
+	// }, [orgNodeX]);
 
 	return (
-		<div className="relative w-screen h-screen text-white flex">
+		<div className="relative w-screen h-screen text-white flex overflow-y-auto max-h-[calc(100vh-180px)]">
 			<button
-				className="absolute top-[1rem] right-[1rem] flex items-center justify-center bg-gray-800 rounded-md p-2 gap-[5px] text-[14px] z-40"
+				className="absolute top-[1rem] right-[1rem] flex items-center justify-center bg-Secondary_background_color rounded-md py-[10px] px-[20px]  gap-[5px] text-[14px] z-40"
 				onClick={() => setIsExpanded(!isExpanded)}
 			>
 				{!isExpanded ? (
@@ -200,7 +202,6 @@ const Storm = (props: Type_StormProps) => {
 						}))}
 						edges={edges}
 						nodeTypes={nodeTypes}
-						defaultViewport={defaultViewport}
 						fitView={true}
 						onConnect={onConnect}
 						onNodeClick={handleNodeClick}
@@ -208,9 +209,22 @@ const Storm = (props: Type_StormProps) => {
 						maxZoom={1.5}
 					>
 						<MiniMap
+							nodeColor={(node: any) => {
+								if (node.type === "OrgNameNode") {
+									return "#fff";
+								} else {
+									return node.data.color;
+								}
+							}}
+							nodeBorderRadius={2}
+							style={{
+								backgroundColor: "#000",
+							}}
+							maskColor="rgb(255, 255, 255, 0.1)"
 							nodeStrokeWidth={3}
 							zoomable
 							pannable
+							position="bottom-right"
 						/>
 						<Background />
 					</ReactFlow>
