@@ -12,6 +12,9 @@ import {
   get_user_by_id,
 } from "../../Utils/Backend";
 import { setVistaName } from "../../redux/reducers/VistaSlice";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import Button from "../common/Button";
 
 type Type_BuildQuadarntProps = {};
 
@@ -192,32 +195,41 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
     },
     [dispatch, tabName, organizationId]
   );
+  const navigate = useNavigate();
+
+  const schemaState = useAppSelector((state) => state.schema.schemaState);
+	useEffect(() => {
+		if(schemaState){
+			toast.warning("Schema for Organization not created");
+		}
+	},[schemaState]);
 
   return (
     <>
       {
-        // isActive ? (
-        // 		<div className="flex justify-center items-center w-full h-full">
-        // 			<div className="flex gap-5">
-        // 				<Button className="px-3 py-2 text-white/20 text-center bg-white/5 rounded-sm text-[15px] hover:text-purple-400 flex items-center gap-1" onClick={() => {
-        // 					navigate("/edit-organization-schema");
-        // 				}} icon="add" label="Schema"/>
-        // 				<Button className="px-3 py-2 text-white/20 text-center bg-white/5 rounded-sm text-lg hover:text-purple-400 flex items-center gap-1"  onClick={() => {
+        schemaState ? (
+			<div className="flex justify-center items-center w-full h-full">
+				<div className="flex gap-5">
+					<Button className="px-3 py-2 text-white/20 text-center bg-white/5 rounded-sm text-[15px] hover:text-purple-400 flex items-center gap-1" onClick={() => {
+						navigate("/edit-organization-schema");
+					}} icon="add" label="Schema"/>
+					<Button className="px-3 py-2 text-white/20 text-center bg-white/5 rounded-sm text-lg hover:text-purple-400 flex items-center gap-1"  onClick={() => {
 
-        // 				}} icon="delete" label="Org"/>
-        // 				<Button className="px-3 py-2 text-white/20 text-center bg-white/5 rounded-sm text-lg hover:text-purple-400 flex items-center gap-1" onClick={() => {
-        // 					navigate("/organization-lists");
-        // 				}} icon="chevron_left" label="Organization List"/>
-        // 			</div>
-        // 		</div>
-        // ) :
-        <div>
-          <BuildQuadarntHeader />
-          <Filter filters={filterSchema} modifyData={modifyData} />
-          <main className="">
-            <DataTable />
-          </main>
-        </div>
+					}} icon="delete" label="Org"/>
+					<Button className="px-3 py-2 text-white/20 text-center bg-white/5 rounded-sm text-lg hover:text-purple-400 flex items-center gap-1" onClick={() => {
+						navigate("/organization-lists");
+					}} icon="chevron_left" label="Organization List"/>
+				</div>
+			</div>
+		) : (
+			<div>
+			<BuildQuadarntHeader />
+			<Filter filters={filterSchema} modifyData={modifyData} />
+			<main className="">
+				<DataTable />
+			</main>
+			</div>
+		)
       }
     </>
   );

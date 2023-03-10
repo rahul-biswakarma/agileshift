@@ -222,7 +222,7 @@ export const AddLinks = (props: LinkPropTypes) => {
 		return (
 			<div
 				onClick={() => props.handleSideBarColaps()}
-				className="z-[100] relative [writing-mode:vertical-rl] border-r border-white/10 h-full w-[50px] flex justify-center items-center text-md  cursor-pointer bg-background_color py-4 font-fira_code"
+				className=" [writing-mode:vertical-rl] border-r border-white/10 h-full w-[50px] flex justify-center items-center text-md  cursor-pointer bg-background_color py-4 font-fira_code"
 			>
 				{"Add Links"}
 			</div>

@@ -50,7 +50,7 @@ export default function SideBarScreen() {
       {sideBarList.map((sidebar: Type_SIDEBARSTATE, index: number) => {
 
         let tabBarColaps =
-          sideBarList.length <= 2
+          sideBarList.length <= 3
             ? false
             : index === colapsTabBar
             ? false

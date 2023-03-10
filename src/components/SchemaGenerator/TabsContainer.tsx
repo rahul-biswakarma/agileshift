@@ -28,11 +28,12 @@ export const TabsContainer = ({
       </div>
 
       <div className="w-[95%] flex flex-col">
-        <TabButton onClick={addSchema} text={"+ Add New Schema"} />
+        <TabButton onClick={addSchema} testId="add-new-schema" text={"+ Add New Schema"} />
         <TabButton
           onClick={() => dispatch(setActiveTab(100))}
           text={"Edit Linkables"}
           id={100}
+          testId=""
         />
       </div>
     </nav>

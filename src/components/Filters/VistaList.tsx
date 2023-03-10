@@ -109,6 +109,7 @@ const VistaList = () => {
     tempInvitations[index].mail = e.target.value;
     setVistaInvitation(tempInvitations);
   };
+
   const toggleVistaInvitation = (index: number) => {
     let tempInvitations = [...vistaInvitation];
     tempInvitations[index].visible = !tempInvitations[index].visible;
@@ -147,6 +148,7 @@ const VistaList = () => {
       toast.success(`${mail} has been invited to ${vistaList[index].name}!`);
     }
   };
+
   const acceptVista = async (index: number) => {
     const vistaId = vistaList[index].id;
     accept_vista_invitation(userId, vistaId, organizationId);
@@ -155,6 +157,7 @@ const VistaList = () => {
     setVistaList(tempVistaList);
     toast.success(`${vistaList[index].name} has been added to your vistas!`);
   };
+
   const rejectVista = async (index: number) => {
     const vistaId = vistaList[index].id;
     reject_vista_invitation(userId, vistaId, organizationId);
@@ -163,6 +166,7 @@ const VistaList = () => {
     setVistaList(tempVistaList);
     toast.error(`${vistaList[index].name} has been rejected!`);
   };
+  
   return (
     <div className="relative text-white">
       <div

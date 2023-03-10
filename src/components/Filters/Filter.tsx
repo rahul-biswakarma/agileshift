@@ -41,7 +41,8 @@ const Filter = ({ filters, modifyData }: TYPE_FilterProps) => {
 	}, [filters]);
 
 	const handleColumnClick = (columnTitle: string) => {
-		const newFilters:TYPE_ActiveFiltersDropdown = { ...activeFiltersDropdown, showFilters: false };
+		const newFilters:TYPE_ActiveFiltersDropdown = { ...activeFiltersDropdown, "showFilters": activeFiltersDropdown["showFilters"] ? true : false };
+		
 		if (newFilters[columnTitle]) {
 			newFilters[columnTitle] = !newFilters[columnTitle];
 		} else {
@@ -52,23 +53,23 @@ const Filter = ({ filters, modifyData }: TYPE_FilterProps) => {
 			}
 			newFilters[columnTitle] = true;
 		}
+
 		setActiveFiltersDropdown(newFilters);
 	};
 
 	const modifyActiveFilterState = (
 		filterName: string,
-		filterOptionIndex: number,
+		filterOptionName: string,
 		filterS: any,
 	) => {
-
-
 		const filterSche = [...filterS];
 		const filterObj = filterSche.find((x:any) => x.columnName === filterName)!;
 
-		if (filterObj?.data[filterOptionIndex].active === true) {
-			filterObj.data[filterOptionIndex].active = false;
+		const filterObjOption = filterObj.data.find((x:any) => x.filterOptionName ===  filterOptionName)
+		if (filterObjOption.active === true) {
+			filterObjOption.active = false;
 		} else {
-			filterObj.data[filterOptionIndex].active = true;
+			filterObjOption.active = true;
 		}
 		setFilterSchema(filterSche);
 		modifyData(filterSche);
@@ -81,8 +82,6 @@ const Filter = ({ filters, modifyData }: TYPE_FilterProps) => {
 		} else if (newArray[index].active === false) {
 			newArray[index].active = true;
 		}
-
-
 		setFilterSchema(newArray);
 		modifyData(newArray);
 	};
@@ -168,13 +167,8 @@ const Filter = ({ filters, modifyData }: TYPE_FilterProps) => {
 						>
 							<span className="material-symbols-outlined">add</span>
 						</button>
-						<button
-						onClick={() => resetFilters()}
-						className="rounded-sm h-5 flex items-center text-[#808080] text-md font-[500]"
-					>
-						Clear
-					</button>
-						{activeFiltersDropdown["showFilters"] && (
+
+						{activeFiltersDropdown["showFilters"] === true && (
 							<div className="absolute top-[110%] left-0 bg-background_color w-48 rounded-xl p-1 border border-white/20 text-highlight_font_color z-10">
 								<div className="flex flex-wrap gap-1 p-2 border-b border-white/10">
 									{filterSchema
@@ -215,6 +209,13 @@ const Filter = ({ filters, modifyData }: TYPE_FilterProps) => {
 								</div>
 							</div>
 						)}
+						<button
+						onClick={() => resetFilters()}
+						className="rounded-sm h-5 flex items-center text-[#808080] text-md font-[500]"
+					>
+						Clear
+					</button>
+						
 					</div>
 				</div>
 				<div className="flex items-center gap-4">

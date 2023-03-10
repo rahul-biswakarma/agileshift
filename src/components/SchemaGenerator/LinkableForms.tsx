@@ -45,6 +45,7 @@ export const LinkableForms = ({
               placeholder={""}
               readOnly={true}
               key={id}
+              testId=""
             />
             <FormControl
               sx={{
@@ -83,7 +84,9 @@ export const LinkableForms = ({
         <button
           className="absolute bottom-16 right-10 flex justify-center items-center p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm text-highlight_font_color border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 hover:text-purple-800 transition-all duration-200 ease-in-out
           "
-          onClick={checkSchema}>
+          onClick={checkSchema}
+          data-testid="submit-schema"
+          >
           Submit Schema
         </button>
       </section>
