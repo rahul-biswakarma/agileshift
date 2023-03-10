@@ -92,7 +92,9 @@ const BuildQuadarnt = (props: Type_BuildQuadarntProps) => {
   const getFilterSchema = useCallback(async () => {
     const filters = await get_filter_schema(organizationId);
     if (tabName !== "All") {
-      setFilterSchema(filters!.data[tabName]);
+      let filter: any = [];
+      filter = await addUsersToSchema(filter);
+      setFilterSchema(filter!.data[tabName]);
     } else {
       let filter: TYPE_Filters[] = [];
       for (const tabName in filters!.data) {

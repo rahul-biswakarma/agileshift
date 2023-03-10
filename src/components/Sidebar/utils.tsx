@@ -15,6 +15,7 @@ export const fetchData = async (
   selectedField: string,
   type: string,
   fieldId: string,
+  setColors: React.Dispatch<React.SetStateAction<string>>,
   dispatch: any,
   setAppendFetchedLink: Function
 ) => {
@@ -65,6 +66,7 @@ export const fetchData = async (
       tempFormData[key] = currentState[key];
     });
   }
+  setColors(schemaData.color)
 
   dispatch(
     setAppendFetchedLink({
@@ -118,7 +120,8 @@ export const handleSubmit = async (
     };
   }
 
-  await update_data_to_database(organizationId, tempFormData, type);
+  const responseData = await update_data_to_database(organizationId, tempFormData, type);
+  return responseData;
 };
 
 // const fetchDataCallback = useCallback(() => {

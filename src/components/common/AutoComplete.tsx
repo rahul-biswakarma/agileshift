@@ -159,6 +159,7 @@ const AutoComplete = (props: type_props) => {
         </span>
         <button
           onClick={() => handleIdClick()}
+          data-testid={`dropdown-${props.columnDetails.columnName}`}
           type="button"
           disabled={isButtonClicked}
           className="text-2xl px-2 flex justify-center items-center text-primary_font_color active:text-blue-900 hover:text-highlight_icon_color cursor-pointer"

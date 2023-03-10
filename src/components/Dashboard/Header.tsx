@@ -78,6 +78,7 @@ const Header = (props: TYPE_HeaderProps) => {
 	const fetchNotificationList = async () => {
 		let unReadNotificationCount = 0;
 		onSnapshot(doc(db, "organizations", organizationId), async (doc) => {
+			unReadNotificationCount = 0
 			if (doc.data()) {
 				const notificationListFromBackend = doc.data()!.notifications[userId];
 				if (

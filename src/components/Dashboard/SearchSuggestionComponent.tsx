@@ -18,16 +18,16 @@ type Type_SuggestionsProps = {
 const SearchSuggestionComponent = ({ data }: Type_SuggestionsProps) => {
   const dispatch = useAppDispatch();
 
-  const handleSuggestionsSelect = (suggestion: Type_SuggestionsState) => {
-    dispatch(
-      setSideBar({
-        type: "editMode",
-        linkedData: [],
-        id: suggestion.data.id,
-        displayId: suggestion.data.displayId,
-      })
-    );
-  };
+    const handleSuggestionsSelect = (suggestion:Type_SuggestionsState) =>{
+		dispatch(
+			setSideBar({
+                type: "editMode",
+				linkedData: [],
+				id: suggestion.data.id,
+				displayId: suggestion.data.displayId,
+			})
+		);
+	}
 
   return (
     <div

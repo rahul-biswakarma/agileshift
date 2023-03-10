@@ -9,23 +9,24 @@ import { DisplayIdComponent } from "../../DataTable/displayIdComponentContainer"
 import { setAppendFetchedLink } from "../../../redux/reducers/SideBarSlice";
 
 interface SidebarProps {
-	sidebar: Type_SIDEBARSTATE;
-	handleClose: Function;
-	handleSideBarColaps: Function;
-	tabBarColaps: boolean;
+  sidebar: Type_SIDEBARSTATE;
+  handleClose: Function;
+  handleSideBarColaps: Function;
+  tabBarColaps: boolean;
 }
 
 const FieldInfo: React.FC<SidebarProps> = ({
-	sidebar,
-	handleClose,
-	tabBarColaps,
-	handleSideBarColaps,
+  sidebar,
+  handleClose,
+  tabBarColaps,
+  handleSideBarColaps,
 }) => {
 	const dispatch = useAppDispatch();
 	const [formData, setFormData] = React.useState<any>({ linkedData: [] });
 	const [filedList, setFieldList] = React.useState<string[]>([]);
 	const organizationId = useAppSelector((state) => state.auth.organisationId);
-	const [color] = React.useState<string>("");
+  let userColumns:string[] = []
+	const [color,setColors] = React.useState<string>("");
 	const [selectedField, setSelectedField] = React.useState<string>(
 		sidebar.createModeCalledByField!
 	);
@@ -38,35 +39,36 @@ const FieldInfo: React.FC<SidebarProps> = ({
 		name: "",
 	});
 
-  useEffect(() => {
-    fetchData(
-      setFormSchema,
-      setFieldList,
-      setSelectedField,
-      setFormData,
-      organizationId,
-      selectedField,
-      sidebar.type,
-      sidebar.id!,
-      dispatch,
-      setAppendFetchedLink
-    );
-  }, [selectedField, sidebar.type, organizationId, sidebar.id, dispatch]);
+	useEffect(() => {
+		fetchData(
+			setFormSchema,
+			setFieldList,
+			setSelectedField,
+			setFormData,
+			organizationId,
+			selectedField,
+			sidebar.type,
+			sidebar.id!,
+      setColors,
+			dispatch,
+			setAppendFetchedLink
+		);
+	}, [selectedField, sidebar.type, organizationId, sidebar.id, dispatch]);
 
-	let headerProps = {
-		selectedField,
-		filedList,
-		setSelectedField,
-		color: formSchema?.color,
-		displayId: formData?.displayId,
-		type: sidebar.type,
-	};
+  let headerProps = {
+    selectedField,
+    filedList,
+    setSelectedField,
+    color: formSchema?.color,
+    displayId: formData?.displayId,
+    type: sidebar.type,
+  };
 
-	let linksProps = {
-		id: sidebar.id!,
-		selectedField,
-		modeOfCall: sidebar.type,
-	};
+  let linksProps = {
+    id: sidebar.id!,
+    selectedField,
+    modeOfCall: sidebar.type,
+  };
 
 	let footerProps = {
 		id: sidebar.id!,
@@ -75,13 +77,14 @@ const FieldInfo: React.FC<SidebarProps> = ({
 		formData,
 		selectedField,
 		trackUserColumn,
+    userColumns
 	};
 
 	if (tabBarColaps) {
 		return (
 			<div
 				onClick={() => handleSideBarColaps()}
-				className="z-[100] relative border-r border-white/10 h-full w-[50px] flex h-max-content justify-center items-center text-xl  cursor-pointer bg-background_color py-4"
+				className=" border-r border-white/10 h-full w-[50px] flex h-max-content justify-center items-center text-xl  cursor-pointer bg-background_color py-4"
 			>
 				{sidebar.type === "editMode" ? (
 					<div className="rotate-90">
@@ -105,6 +108,7 @@ const FieldInfo: React.FC<SidebarProps> = ({
 						{formSchema && formSchema.list && (
 							<form>
 								{formSchema.list.map((item: any, index: number) => {
+                  if(item.columnType === "user") userColumns.push(item.columnName)
 									return (
 										<SideBarInputs
 											key={index}
