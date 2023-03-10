@@ -9,17 +9,17 @@ import { DisplayIdComponent } from "../../DataTable/displayIdComponentContainer"
 import { setAppendFetchedLink } from "../../../redux/reducers/SideBarSlice";
 
 interface SidebarProps {
-	sidebar: Type_SIDEBARSTATE;
-	handleClose: Function;
-	handleSideBarColaps: Function;
-	tabBarColaps: boolean;
+  sidebar: Type_SIDEBARSTATE;
+  handleClose: Function;
+  handleSideBarColaps: Function;
+  tabBarColaps: boolean;
 }
 
 const FieldInfo: React.FC<SidebarProps> = ({
-	sidebar,
-	handleClose,
-	tabBarColaps,
-	handleSideBarColaps,
+  sidebar,
+  handleClose,
+  tabBarColaps,
+  handleSideBarColaps,
 }) => {
 	const dispatch = useAppDispatch();
 	const [formData, setFormData] = React.useState<any>({ linkedData: [] });
@@ -55,20 +55,20 @@ const FieldInfo: React.FC<SidebarProps> = ({
 		);
 	}, [selectedField, sidebar.type, organizationId, sidebar.id, dispatch]);
 
-	let headerProps = {
-		selectedField,
-		filedList,
-		setSelectedField,
-		color: formSchema?.color,
-		displayId: formData?.displayId,
-		type: sidebar.type,
-	};
+  let headerProps = {
+    selectedField,
+    filedList,
+    setSelectedField,
+    color: formSchema?.color,
+    displayId: formData?.displayId,
+    type: sidebar.type,
+  };
 
-	let linksProps = {
-		id: sidebar.id!,
-		selectedField,
-		modeOfCall: sidebar.type,
-	};
+  let linksProps = {
+    id: sidebar.id!,
+    selectedField,
+    modeOfCall: sidebar.type,
+  };
 
 	let footerProps = {
 		id: sidebar.id!,
