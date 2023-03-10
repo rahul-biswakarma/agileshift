@@ -23,6 +23,8 @@ const FieldInfo: React.FC<SidebarProps> = ({
 }) => {
   const [formData, setFormData] = React.useState<any>();
   const [filedList, setFieldList] = React.useState<string[]>([]);
+  let userColumns:string[] = []
+  const [color,setColors] = React.useState<string>("");
   const organizationId = useAppSelector((state) => state.auth.organisationId);
   const [selectedField, setSelectedField] = React.useState<string>(
     sidebar.createModeCalledByField!
@@ -44,7 +46,8 @@ const FieldInfo: React.FC<SidebarProps> = ({
       organizationId,
       selectedField,
       sidebar.type,
-      sidebar.id!
+      sidebar.id!,
+      setColors
     );
   }, [selectedField, sidebar.type, organizationId, sidebar.id]);
 
@@ -68,7 +71,11 @@ const FieldInfo: React.FC<SidebarProps> = ({
     type: sidebar.type,
     formData,
     selectedField,
+    userColumns,
+    color
   };
+  console.log(formData, "formData");
+  
 
   if (tabBarColaps) {
     return (
@@ -96,8 +103,10 @@ const FieldInfo: React.FC<SidebarProps> = ({
         <div className="grow overflow-y-auto my-2">
           <div className="flex flex-col gap-[0.5rem] h-auto w-full rounded-lg my-4">
             {formSchema && formSchema.list && (
+              
               <form>
                 {formSchema.list.map((item: any, index: number) => {
+                  if(item.columnType === "user") userColumns.push(item.columnName)
                   return (
                     <SideBarInputs
                       key={index}

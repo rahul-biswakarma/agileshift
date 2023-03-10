@@ -47,7 +47,7 @@ export default function Dashboard() {
 			} else {
 				dispatch(setActiveTab(0));
 				dispatch(setIsEdit(true));
-				// navigate("/edit-organization-schema");
+				navigate("/edit-organization-schema");
 			}
 		});
 		get_all_columns_name(organizationId).then((data) => {

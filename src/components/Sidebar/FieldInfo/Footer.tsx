@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setDatas } from "../../../redux/reducers/DataTableSlice";
 import { setSideBar } from "../../../redux/reducers/SideBarSlice";
 import { RootState } from "../../../redux/store";
-import { get_data_by_column_name } from "../../../Utils/Backend";
+import { get_data_by_column_name, get_user_by_id, set_notification } from "../../../Utils/Backend";
 import CustomButton from "../../common/Button";
 import { handleConversations, handleSubmit } from "../utils";
 
@@ -15,6 +15,8 @@ type TypeFooterProps = {
   formData: any;
   selectedField: string;
   handleClose: Function;
+  color:string,
+  userColumns:string[]
 };
 const Footer: React.FC<TypeFooterProps> = ({
   type,
@@ -22,6 +24,8 @@ const Footer: React.FC<TypeFooterProps> = ({
   formData,
   handleClose,
   selectedField,
+  userColumns,
+  color
 }) => {
   const dispatch = useAppDispatch();
   const organizationId = useAppSelector((state) => state.auth.organisationId);
@@ -65,7 +69,7 @@ const Footer: React.FC<TypeFooterProps> = ({
   };
 
   const handleCreate = async () => {
-    await handleSubmit(
+    const dataDetails = await handleSubmit(
       organizationId,
       formData,
       selectedField,
@@ -75,6 +79,37 @@ const Footer: React.FC<TypeFooterProps> = ({
       id
     );
     updateTable();
+    let userList:string[] = [];
+    let userMessages:string[] = [];
+    console.log(userColumns);
+    
+    const userDetails:any = await get_user_by_id(userId)
+    userColumns && userColumns.length > 0 && 
+    userColumns.forEach((item) => {
+      if(item && item.length>0){
+        if(formData[item] && formData[item].length>0){
+          userList.push(formData[item])
+          userMessages.push(`You have been assigned as ${item} by ${userDetails.name}`)
+        }
+      }
+    })
+    if(userList.length>0){
+      console.log(formData);
+      
+      await set_notification(
+        organizationId,
+        userList,
+        userMessages,
+        {
+          field:selectedField,
+          color:color,
+          displayId:dataDetails.displayId,
+          dataId:dataDetails.id
+        }
+      )
+    }
+    console.log(userList,userMessages);
+    
     const dataAction = type === "createMode" ? "created" : "updated";
     toast.success(`Data ${dataAction} successfully}`);
   };

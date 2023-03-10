@@ -21,9 +21,7 @@ const SearchSuggestionComponent = ({data}:Type_SuggestionsProps) => {
     const handleSuggestionsSelect = (suggestion:Type_SuggestionsState) =>{
 		dispatch(
 			setSideBar({
-				fieldId: suggestion.data.id,
-				sidebarType: "editMode",
-				createModeCalledByField: "",
+                type: "editMode",
 				linkedData: [],
 				id: suggestion.data.id,
 				displayId: suggestion.data.displayId,

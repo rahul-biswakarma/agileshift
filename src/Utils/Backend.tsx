@@ -550,10 +550,15 @@ export const update_data_to_database = async (
       organisationId,
       data["field"]
     );
+    console.log("data", data);
+    
     await updateDoc(organizationRef, {
       data: arrayUnion(data),
     });
-    return data["displayId"];
+    return {
+      displayId:data["displayId"],
+      id:data["id"]
+    }
   } else {
     //  condition for update data
     let docSnap: any = await getDoc(organizationRef);
@@ -571,7 +576,10 @@ export const update_data_to_database = async (
     await updateDoc(organizationRef, {
       data: orgDataList,
     });
-    return data.id;
+    return {
+      displayId:data["displayId"],
+      id:data["id"]
+    }
   }
 };
 // 27 get data by coloumn name
@@ -711,6 +719,8 @@ export const set_notification = async (
 		dataId: string,
 	}
 ) => {
+  console.log("set_notification", userId, notificationData, data);
+  
 	let orgData: any = await get_organizations_details(organisationId);
 	userId && userId.length>0 &&
 	userId.forEach(async (user, index) => {
@@ -728,6 +738,8 @@ export const set_notification = async (
 				dataId: data.dataId,
 			}
 		}
+    console.log("notification", notification);
+    
 		if (orgData["notifications"][user] === undefined) {
 			orgData["notifications"][user] = [];
 		}
@@ -735,9 +747,17 @@ export const set_notification = async (
 	});
 	const organizationRef = doc(db, "organizations", organisationId);
 	if(!orgData["notifications"]) orgData["notifications"] = {}
-	await updateDoc(organizationRef, {
-		notifications: orgData?.notifications,
-	});
+  console.log("orgData", orgData);
+  try{
+    await updateDoc(organizationRef, {
+      notifications: orgData.notifications,
+    });
+    console.log("notification set");
+    
+  }catch(e){
+    console.log("error", e);
+    
+  }
 };
 
 // 34 update notification
@@ -749,12 +769,14 @@ export const update_notification = async (
 	const organizationRef = doc(db, "organizations", organisationId);
 	let docSnap: any = await getDoc(organizationRef);
 	let updatedNotification: any = docSnap.data()["notifications"];
-	if(updatedNotification && updatedNotification[userId] && updatedNotification[userId].length>0){
+	if(updatedNotification && updatedNotification[userId]){
 		let filteredNotification = updatedNotification[userId].filter(
 			(item: any) => item.notificationId !== notification.notificationId
 		);
 		filteredNotification.push(notification);
 		updatedNotification[userId] = filteredNotification;
+    console.log("updatedNotification", updatedNotification);
+    
 		await updateDoc(organizationRef, {
 			notifications: updatedNotification,
 		});

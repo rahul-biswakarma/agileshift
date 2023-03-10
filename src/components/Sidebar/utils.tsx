@@ -14,7 +14,8 @@ export const fetchData = async (
   organizationId: string,
   selectedField: string,
   type: string,
-  fieldId: string
+  fieldId: string,
+  setColors: React.Dispatch<React.SetStateAction<string>>
 ) => {
   let schemaData: any = { list: [] };
   let currentState: any;
@@ -62,7 +63,7 @@ export const fetchData = async (
       tempFormData[key] = currentState[key];
     });
   }
-
+  setColors(schemaData.color)
   setFormSchema(schemaData);
   setFormData(tempFormData);
 };
@@ -108,7 +109,8 @@ export const handleSubmit = async (
     };
   }
 
-  await update_data_to_database(organizationId, tempFormData, type);
+  const responseData = await update_data_to_database(organizationId, tempFormData, type);
+  return responseData;
 };
 
 // const fetchDataCallback = useCallback(() => {

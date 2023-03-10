@@ -17,29 +17,29 @@ const NotificationComponent = (props:TYPE_NotificationComponentProps) => {
     const handleViewSidebar = async (
         notification: TYPE_NOTIFICATION
     ) => {
+        handleNotificationSeen(notification)
         if(notification.data){
             dispatch(
                 setSideBar({
-                    fieldId: notification.data.dataId,
-                    sidebarType: "editMode",
-                    createModeCalledByField: "",
+                    type: "editMode",
                     linkedData: [],
                     id: notification.data.dataId,
                     displayId: notification.data.displayId,
                 })
             );
         }
-        handleNotificationSeen(notification)
     };
 
     const handleNotificationSeen = async (
         notification: TYPE_NOTIFICATION
     ) => {
+        console.log(notification);
         if(!notification.isSeen){
             let notificationObj = {
                 ...notification,
                 isSeen: true,
             }
+            
             await update_notification(organizationId, userId, notificationObj);
         }
     };

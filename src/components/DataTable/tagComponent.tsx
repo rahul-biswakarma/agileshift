@@ -12,7 +12,7 @@ const TagComponent = (props: Type_TagComponentProps) => {
 						return (
 							<div
 								key={`tag-component-id-${index}`}
-								className="flex gap-[5px] rounded-full p-[0_10px] bg-Secondary_background_color justify-center items-center text-[12px] font-fira_code min-w-[60px] h-[25px]"
+								className="flex gap-[5px] rounded-full p-[0_10px] bg-Secondary_background_color justify-center items-center text-[12px] font-fira_code min-w-max h-[25px]"
 							>
 								<span
 									style={{ backgroundColor: `${tag.color}` }}
