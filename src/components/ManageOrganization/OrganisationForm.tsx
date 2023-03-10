@@ -47,7 +47,6 @@ export const OrganisationForm = ({ mode }: OrganisationFormPropTypes) => {
 	// doc title
 
 	useEffect(() => {
-		console.log("fetching org name");
 		get_organization_name_by_id(organisationId).then((data) => {
 			document.title = `Schema Form | ${data}`;
 			if(mode==="edit")

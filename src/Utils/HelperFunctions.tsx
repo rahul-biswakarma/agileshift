@@ -72,7 +72,6 @@ export const formatDataToTypeField = (data: any) => {
 
 //wrap this in useCallback
 export const getLinkedData = async (orgId: string, dataId: string) => {
-  console.log("dataId::: ", dataId);
   let linkedData: TYPE_LINKED_DATA[] = [];
   let data = await get_data_byID(orgId, dataId);
   linkedData = data["linkedData"];
@@ -108,7 +107,6 @@ export const get_current_time = () => {
 };
 
 export const uniqueAbbreviations = (name: string) => {
-  console.log("name::: ", name);
   if (!name) return "";
 
   let currString = name.trim();
