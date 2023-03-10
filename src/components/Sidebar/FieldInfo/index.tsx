@@ -38,6 +38,7 @@ const FieldInfo: React.FC<SidebarProps> = ({
 		name: "",
 	});
 
+<<<<<<< HEAD
   useEffect(() => {
     fetchData(
       setFormSchema,
@@ -52,6 +53,22 @@ const FieldInfo: React.FC<SidebarProps> = ({
       setAppendFetchedLink
     );
   }, [selectedField, sidebar.type, organizationId, sidebar.id, dispatch]);
+=======
+	useEffect(() => {
+		fetchData(
+			setFormSchema,
+			setFieldList,
+			setSelectedField,
+			setFormData,
+			organizationId,
+			selectedField,
+			sidebar.type,
+			sidebar.id!,
+			dispatch,
+			setFetchedLinks
+		);
+	}, [selectedField, sidebar.type, organizationId, sidebar.id, dispatch]);
+>>>>>>> 7530bba6730194c4ce1d611b9b2fa48ad5bc8a25
 
 	let headerProps = {
 		selectedField,
