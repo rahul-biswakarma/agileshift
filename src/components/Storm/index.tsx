@@ -3,9 +3,9 @@ import ReactFlow, {
 	addEdge,
 	Background,
 	MiniMap,
-	ReactFlowProvider,
 	useEdgesState,
 	useNodesState,
+	useReactFlow,
 } from "reactflow";
 
 import { IdNode, FieldNameNode, OrgNameNode, FullDataNode } from "./CustomNode";
@@ -135,7 +135,10 @@ const Storm = (props: Type_StormProps) => {
 		setNodes,
 	]);
 
-	console.log(orgNodeX);
+	const { setCenter } = useReactFlow();
+	useEffect(() => {
+		setCenter(orgNodeX, 0);
+	}, [orgNodeX, setCenter]);
 
 	// Handle Node Drag
 	const handleNodeDrag = (event: any, node: any) => {
@@ -189,46 +192,44 @@ const Storm = (props: Type_StormProps) => {
 				)}
 			</button>
 			{nodes && nodes.length > 0 && edges && (
-				<ReactFlowProvider>
-					<ReactFlow
-						onNodeDrag={handleNodeDrag}
-						draggable={true}
-						nodesDraggable={true}
-						snapToGrid={true}
-						edgeTypes={edgeTypes}
-						nodes={nodes.map((node: any) => ({
-							...node,
-							position: nodePositions[node.id] || node.position,
-						}))}
-						edges={edges}
-						nodeTypes={nodeTypes}
-						fitView={true}
-						onConnect={onConnect}
-						onNodeClick={handleNodeClick}
-						minZoom={0.1}
-						maxZoom={1.5}
-					>
-						<MiniMap
-							nodeColor={(node: any) => {
-								if (node.type === "OrgNameNode") {
-									return "#fff";
-								} else {
-									return node.data.color;
-								}
-							}}
-							nodeBorderRadius={2}
-							style={{
-								backgroundColor: "#000",
-							}}
-							maskColor="rgb(255, 255, 255, 0.1)"
-							nodeStrokeWidth={3}
-							zoomable
-							pannable
-							position="bottom-right"
-						/>
-						<Background />
-					</ReactFlow>
-				</ReactFlowProvider>
+				<ReactFlow
+					onNodeDrag={handleNodeDrag}
+					draggable={true}
+					nodesDraggable={true}
+					snapToGrid={true}
+					edgeTypes={edgeTypes}
+					nodes={nodes.map((node: any) => ({
+						...node,
+						position: nodePositions[node.id] || node.position,
+					}))}
+					edges={edges}
+					nodeTypes={nodeTypes}
+					fitView={true}
+					onConnect={onConnect}
+					onNodeClick={handleNodeClick}
+					minZoom={0.1}
+					maxZoom={1.5}
+				>
+					<MiniMap
+						nodeColor={(node: any) => {
+							if (node.type === "OrgNameNode") {
+								return "#fff";
+							} else {
+								return node.data.color;
+							}
+						}}
+						nodeBorderRadius={2}
+						style={{
+							backgroundColor: "#000",
+						}}
+						maskColor="rgb(255, 255, 255, 0.1)"
+						nodeStrokeWidth={3}
+						zoomable
+						pannable
+						position="bottom-right"
+					/>
+					<Background />
+				</ReactFlow>
 			)}
 		</div>
 	);
