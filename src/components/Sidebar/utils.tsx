@@ -16,7 +16,7 @@ export const fetchData = async (
   type: string,
   fieldId: string,
   dispatch: any,
-  setFetchedLinks: Function
+  setAppendFetchedLink: Function
 ) => {
   let schemaData: any = { list: [] };
   let currentState: any;
@@ -66,7 +66,12 @@ export const fetchData = async (
     });
   }
 
-  dispatch(setFetchedLinks({ [fieldId]: tempFormData["linkedData"] }));
+  dispatch(
+    setAppendFetchedLink({
+      fieldId: fieldId,
+      linkedData: tempFormData["linkedData"],
+    })
+  );
 
   setFormSchema(schemaData);
   setFormData(tempFormData);

@@ -20,6 +20,7 @@ import {
 	setFieldColorMap,
 } from "../../redux/reducers/DataTableSlice";
 import Storm from "../Storm";
+import { ReactFlowProvider } from "reactflow";
 
 export default function Dashboard() {
 	const organizationId = useAppSelector((state) => state.auth.organisationId);
@@ -92,15 +93,16 @@ export default function Dashboard() {
 	}, [getDataByFeildName]);
 
 	return (
-		<div className="bg-background_color h-[100vh] flex flex-col font-dm_sans" data-testid = "dashboard">
+		<div
+			className="bg-background_color h-[100vh] flex flex-col font-dm_sans"
+			data-testid="dashboard"
+		>
 			<Header
 				showNotification={showNotification}
 				setShowNotification={setShowNotification}
 			/>
 			{showNotification ? (
-				<NotificationMainComponent
-					setShowNotification={setShowNotification}
-				/>
+				<NotificationMainComponent setShowNotification={setShowNotification} />
 			) : (
 				<React.Fragment>
 					{fieldsData && (
@@ -119,7 +121,9 @@ export default function Dashboard() {
 								<span className="text-white/50">STORM / </span>&nbsp;Visualize
 								linkage
 							</div>
-							<Storm organizationId={organizationId} />
+							<ReactFlowProvider>
+								<Storm organizationId={organizationId} />
+							</ReactFlowProvider>
 						</div>
 					) : (
 						dataSchema && datas && <BuildQuadarnt />

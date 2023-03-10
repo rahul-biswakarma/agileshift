@@ -71,7 +71,11 @@ code {
 	position: relative !important;
 }
 
-.react-flow__panel {
+/* .react-flow__panel {
+	display: none !important;
+} */
+
+.react-flow__attribution {
 	display: none !important;
 }
 

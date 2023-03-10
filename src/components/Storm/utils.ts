@@ -25,8 +25,6 @@ export const generateAllNodesWithEdges = (
 	let tempEdges: any = [];
 	let fieldNameNodeX: Type_fieldNameNodeX = {};
 
-	console.log("props", props);
-
 	let {
 		data,
 		schemaData,

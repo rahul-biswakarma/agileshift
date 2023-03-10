@@ -42,14 +42,12 @@ export default function SideBarScreen() {
     };
   };
 
-  console.log("index::: ", sideBarList);
   return (
     <div
       id="Tab Container"
       className="min-h-screen w-max   flex flex-row-reverse  z-20 font-dm_sans  text-white "
     >
       {sideBarList.map((sidebar: Type_SIDEBARSTATE, index: number) => {
-        console.log(sidebar, "editMode");
 
         let tabBarColaps =
           sideBarList.length <= 2
