@@ -71,6 +71,10 @@ code {
 	position: relative !important;
 }
 
+.ag-row {
+	cursor: pointer;
+}
+
 /* .react-flow__panel {
 	display: none !important;
 } */
