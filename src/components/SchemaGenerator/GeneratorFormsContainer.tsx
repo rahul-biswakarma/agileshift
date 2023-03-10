@@ -37,7 +37,6 @@ export const GeneratorFormsContainer = ({
     if (orgId && mode === "edit") {
       get_schema_data(orgId).then((data) => {
         if (data) {
-          console.log(data.schemaData);
           setFields(data.schemaData);
         }
       });
@@ -128,17 +127,6 @@ export const GeneratorFormsContainer = ({
     console.log("tempFields", tempFields);
     setFields(tempFields);
   }
-
-  // function removeLinkage(this: any, link: string) {
-  // 	let tempFields = [...fields];
-  // 	let tempLinkage = tempFields[this.id].linkage;
-  // 	const index = tempLinkage.indexOf(link);
-  // 	if (index > -1) {
-  // 		tempLinkage.splice(index, 1);
-  // 	}
-  // 	tempFields[this.id].linkage = tempLinkage;
-  // 	setFields(tempFields);
-  // }
 
   const isEdit: boolean = useSelector(
     (state: RootState) => state.schema.isEdit

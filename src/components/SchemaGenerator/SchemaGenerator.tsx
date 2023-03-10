@@ -137,6 +137,7 @@ export const SchemaGenerator = ({
             value={name}
             onChange={dummyFunction}
             placeholder="Case Name"
+            dataTestid={`case-name-input-${name}`}
           />
           <div className="absolute right-[1rem] flex gap-[1rem]">
             <Tooltip title="Duplicate schema" placement="top">
@@ -258,6 +259,7 @@ export const SchemaGenerator = ({
             <button
               className="flex justify-center items-center p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm text-highlight_font_color border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 hover:text-purple-800 transition-all duration-200 ease-in-out
           "
+              data-testid="edit-linkables-btn"
               onClick={() => dispatch(setActiveTab(100))}>
               Edit Linkables
             </button>
@@ -266,7 +268,8 @@ export const SchemaGenerator = ({
             <div>
               <button
                 className="flex justify-center items-center p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm text-dark_gray border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 hover:text-purple-800 transition-all duration-200 ease-in-out
-		"
+		          "
+                data-testid="next-schema-btn"
                 onClick={() => dispatch(setActiveTab(id + 1))}>
                 <span className="material-symbols-outlined">arrow_forward</span>
               </button>

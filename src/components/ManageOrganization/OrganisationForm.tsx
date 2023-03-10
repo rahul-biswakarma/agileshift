@@ -113,65 +113,60 @@ export const OrganisationForm = ({ mode }: OrganisationFormPropTypes) => {
 
 	if (activeTab === -1)
 		return (
-			<div className="relative bg-background_color h-screen w-screen flex items-center justify-center font-dm_sans">
-				{mode === "edit" ? (
-					<button
-						onClick={() => navigateToDashboard()}
-						className="material-symbols-outlined hover:text-rose-400 cursor-pointer text-3xl font-bold absolute top-10 right-10 text-white/50"
-					>
-						close
-					</button>
-				):(
-					<button
-						onClick={() => navigateToOrgsList()}
-						className="material-symbols-outlined hover:text-rose-400 cursor-pointer text-3xl font-bold absolute top-10 right-10 text-white/50"
-					>
-						close
-					</button>
-				)}
-				<div className="h-3/5 max-w-[550px] w-full flex flex-col gap-5 p-[0_2rem]">
-					<div className="text-highlight_font_color mb-5">
-						<h3 className="flex gap-4 text-[20px] mb-4 items-center">
-							<span className="material-symbols-outlined text-white text-[15px]">
-								arrow_back
-							</span>
-							{mode === "create"
-								? "Create a new AgileShift Organisation"
-								: "Edit your AgileShift Organisation"}
-						</h3>
-						{/* Change this to dynamic username */}
-						<p className="text-primary_font_color text-lg">
-							An organization is a workspace that helps your team collaborate
-						</p>
-					</div>
-					<div className="text-highlight_font_color flex flex-col gap-5 mb-8">
-						<div className="flex flex-col gap-1">
-							<label
-								htmlFor=""
-								className="font-lg text-dark_gray font-[500]"
-							>
-								Name
-							</label>
-							<input
-								data-testId="org-name-input"
-								ref={orgName}
-								onChange={(e) => {
-									handleChange(e);
-									setOrgNameState(e.target.value);
-								}}
-								name="org-name"
-								type="text"
-								value={orgNameState}
-								placeholder="Enter Org. Name"
-								className="font-lg font-fira_code rounded-lg px-4 bg-Secondary_background_color h-10 outline-none border-dark_gray placeholder:text-white/20"
-							/>
-							{orgNameErrorMessage.length > 0 && (
-								<p className="text-red-400 text-sm ml-1 mt-1">
-									{orgNameErrorMessage}
-								</p>
-							)}
-						</div>
-						{/* <div className="relative flex flex-col gap-1">
+      <div className="relative bg-background_color h-screen w-screen flex items-center justify-center font-dm_sans">
+        {mode === "edit" ? (
+          <button
+            onClick={() => navigateToDashboard()}
+            className="material-symbols-outlined hover:text-rose-400 cursor-pointer text-3xl font-bold absolute top-10 right-10 text-white/50">
+            close
+          </button>
+        ) : (
+          <button
+            onClick={() => navigateToOrgsList()}
+            className="material-symbols-outlined hover:text-rose-400 cursor-pointer text-3xl font-bold absolute top-10 right-10 text-white/50">
+            close
+          </button>
+        )}
+        <div className="h-3/5 max-w-[550px] w-full flex flex-col gap-5 p-[0_2rem]">
+          <div className="text-highlight_font_color mb-5">
+            <h3 className="flex gap-4 text-[20px] mb-4 items-center">
+              <span className="material-symbols-outlined text-white text-[15px]">
+                arrow_back
+              </span>
+              {mode === "create"
+                ? "Create a new AgileShift Organisation"
+                : "Edit your AgileShift Organisation"}
+            </h3>
+            {/* Change this to dynamic username */}
+            <p className="text-primary_font_color text-lg">
+              An organization is a workspace that helps your team collaborate
+            </p>
+          </div>
+          <div className="text-highlight_font_color flex flex-col gap-5 mb-8">
+            <div className="flex flex-col gap-1">
+              <label htmlFor="" className="font-lg text-dark_gray font-[500]">
+                Name
+              </label>
+              <input
+                data-testId="org-name-input"
+                ref={orgName}
+                onChange={(e) => {
+                  handleChange(e);
+                  setOrgNameState(e.target.value);
+                }}
+                name="org-name"
+                type="text"
+                value={orgNameState}
+                placeholder="Enter Org. Name"
+                className="font-lg font-fira_code rounded-lg px-4 bg-Secondary_background_color h-10 outline-none border-dark_gray placeholder:text-white/20"
+              />
+              {orgNameErrorMessage.length > 0 && (
+                <p className="text-red-400 text-sm ml-1 mt-1">
+                  {orgNameErrorMessage}
+                </p>
+              )}
+            </div>
+            {/* <div className="relative flex flex-col gap-1">
 							<label
 								htmlFor=""
 								className="font-lg text-dark_gray font-[500]"
@@ -211,30 +206,31 @@ export const OrganisationForm = ({ mode }: OrganisationFormPropTypes) => {
 								</div>
 							)}
 						</div> */}
-					</div>
-					<button
-						className={`flex gap-4 items-center justify-center py-2 rounded-lg border-[2px] border-Secondary_background_color text-white/40 stroke-white/40 ${
-							isOrgCreated === false
-								? "hover:bg-amber-400 hover:text-amber-800 hover:border-amber-400 hover:stroke-amber-800"
-								: "cursor-not-allowed"
-						} transition-all`}
-						onClick={addOrganisation}
-						// disabled={isSubmitDisabled}
-					>
-						<span className="material-symbols-outlined">add</span>
-						{mode === "create" ? "Create new AgileOrg" : "Update AgileOrg"}
-					</button> 
-            <div className="absolute right-4 bottom-16">
-              {/* <button
+          </div>
+          <button
+            className={`flex gap-4 items-center justify-center py-2 rounded-lg border-[2px] border-Secondary_background_color text-white/40 stroke-white/40 ${
+              isOrgCreated === false
+                ? "hover:bg-amber-400 hover:text-amber-800 hover:border-amber-400 hover:stroke-amber-800"
+                : "cursor-not-allowed"
+            } transition-all`}
+            onClick={addOrganisation}
+            data-testid="create-org-btn"
+            // disabled={isSubmitDisabled}
+          >
+            <span className="material-symbols-outlined">add</span>
+            {mode === "create" ? "Create new AgileOrg" : "Update AgileOrg"}
+          </button>
+          <div className="absolute right-4 bottom-16">
+            {/* <button
                 className="flex justify-center items-center p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm text-dark_gray border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 hover:text-purple-800 transition-all duration-200 ease-in-out
 		"
                 onClick={() => dispatch(setActiveTab(activeTab + 1))}>
                 <span className="material-symbols-outlined">arrow_forward</span>
               </button> */}
-            </div>
-				</div>
-			</div>
-		);
+          </div>
+        </div>
+      </div>
+    );
 	else
 	return(
 		<div></div>
