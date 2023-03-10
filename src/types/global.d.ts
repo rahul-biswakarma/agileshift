@@ -17,6 +17,7 @@ declare global {
 		columnType?: string;
 		parentId?: string;
 		displayId?: string;
+		modeOfCall?: string;
 	};
 	type TYPE_TAG = {
 		color: string; //hash code of color
@@ -99,5 +100,6 @@ declare global {
 		id: string;
 		displayId: string;
 		color: string;
+		fieldName:string
 	}
 }

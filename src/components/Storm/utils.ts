@@ -6,28 +6,33 @@ type generateAllNodesWithEdgesProps = {
 	data: any;
 	schemaData: any;
 	orgName: string;
-	totalNodes: number;
 	fieldIconMap: any;
 	fieldNameColorMap: any;
 	isExpanded: boolean;
 	excludedNodes: string[];
+	nodeCountByFieldName: any;
+};
+
+type Type_fieldNameNodeX = {
+	[key: string]: number;
 };
 
 export const generateAllNodesWithEdges = (
 	props: generateAllNodesWithEdgesProps
 ) => {
-	let totoalArea = 0;
+	let totalArea = 0;
 	let tempNodes: any = [];
 	let tempEdges: any = [];
+	let fieldNameNodeX: Type_fieldNameNodeX = {};
 
 	let {
 		data,
 		schemaData,
 		fieldNameColorMap,
 		orgName,
-		totalNodes,
 		fieldIconMap,
 		isExpanded,
+		nodeCountByFieldName,
 	} = props;
 
 	let x = 0,
@@ -43,16 +48,24 @@ export const generateAllNodesWithEdges = (
 	let fieldNameY = isExpanded ? 300 : 150;
 
 	// Calculating X position of the nodes
-	if (totalNodes && fieldNameColorMap) {
-		totoalArea =
-			totalNodes * nodeSize + Object.keys(fieldNameColorMap).length - 1 * 300;
-		x = -1 * Math.floor(totoalArea / Object.keys(fieldNameColorMap).length);
+	if (data && data.length > 0) {
+		let area = 0;
+		data.map((field: any, index: number) => {
+			let count = nodeCountByFieldName[field.name] || 0;
+			let fieldArea = 0;
+			if (count > 0) fieldArea = count * nodeSize;
+			else fieldArea = 200;
+			fieldNameNodeX[field.name] = x + fieldArea / 2 + area;
+			area += fieldArea + 150;
+			return "";
+		});
+		totalArea = area;
 	}
 
 	// Generating OrgName Node
 	tempNodes.push({
 		id: "orgName",
-		position: { x: 0, y: 0 },
+		position: { x: Math.floor(totalArea / 2), y: 0 },
 		data: {
 			name: orgName,
 		},
@@ -62,7 +75,21 @@ export const generateAllNodesWithEdges = (
 	// Generating Nodes and Edges
 	if (data && data.length > 0) {
 		data.map((field: any, index: number) => {
-			let count = 0;
+			// Generating FieldName Node
+			tempNodes.push({
+				id: field.name,
+				position: {
+					x: fieldNameNodeX[field.name],
+					y: fieldNameY,
+				},
+				data: {
+					name: field.name,
+					icon: fieldIconMap[field.name] || "home",
+					color: fieldNameColorMap[field.name] || "#fff",
+					excludedNodes: props.excludedNodes,
+				},
+				type: "FieldNameNode",
+			});
 
 			// Generating Edge from OrgName Node to FieldName Node
 			tempEdges.push({
@@ -82,8 +109,6 @@ export const generateAllNodesWithEdges = (
 
 			// Generating Id Nodes and Edges
 			field.data.map((data: any) => {
-				count += 1;
-
 				// Generating Id Node
 				if (!props.excludedNodes.includes(field.name))
 					tempNodes.push({
@@ -101,11 +126,12 @@ export const generateAllNodesWithEdges = (
 					});
 
 				// Generating Edges
+				console.log("data.linkedData", data.linkedData);
 				data.linkedData.map((link: any) => {
 					tempEdges.push({
 						id: `${uuidv4()}-a`,
 						source: data.id,
-						target: link,
+						target: link.id,
 						type: "custom",
 						data: { dottedEdge: true },
 						markerEnd: {
@@ -141,24 +167,12 @@ export const generateAllNodesWithEdges = (
 				x += nodeSize;
 				return "";
 			});
-
-			// Generating FieldName Node
-			tempNodes.push({
-				id: field.name,
-				position: { x: x - (count * nodeSize) / 2, y: fieldNameY },
-				data: {
-					name: field.name,
-					icon: fieldIconMap[field.name] || "home",
-					color: fieldNameColorMap[field.name] || "#fff",
-				},
-				type: "FieldNameNode",
-			});
-			x -= 150;
+			x += 150;
 			y += yIncrement;
 			fieldNameY += yIncrement;
 			return "";
 		});
 	}
 
-	return { nodes: tempNodes, edges: tempEdges };
+	return { nodes: tempNodes, edges: tempEdges, totalArea: totalArea };
 };

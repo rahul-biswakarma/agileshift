@@ -21,6 +21,7 @@ export const FieldGroup = ({
   id,
   changeColumn,
   deleteColumn,
+  // testId: string,
 }: FieldGroupPropTypes) => {
 
   const [types] = useState([

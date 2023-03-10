@@ -147,7 +147,10 @@ export const SchemaGenerator = ({
                 content_copy
               </button>
             </Tooltip>
-            <Tooltip title="Delete Schema" placement="top">
+            <Tooltip
+              title="Delete Schema"
+              data-testid="delete-schema-btn"
+              placement="top">
               <button
                 className="material-symbols-outlined text-white/30 hover:text-rose-400 cursor-pointer"
                 onClick={handleDeleteClick}>
@@ -173,6 +176,7 @@ export const SchemaGenerator = ({
                     Cancel
                   </button>
                   <button
+                    data-testid="handle-delete-confirm"
                     className="bg-rose-400 text-rose-800 px-[15px] py-[5px] flex items-center font-bold rounded-md border-0 border-transparent hover:bg-rose-800 hover:text-rose-400 "
                     onClick={handleDeleteConfirm}>
                     Delete

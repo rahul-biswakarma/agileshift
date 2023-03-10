@@ -14,7 +14,9 @@ export const fetchData = async (
   organizationId: string,
   selectedField: string,
   type: string,
-  fieldId: string
+  fieldId: string,
+  dispatch: any,
+  setAppendFetchedLink: Function
 ) => {
   let schemaData: any = { list: [] };
   let currentState: any;
@@ -42,6 +44,7 @@ export const fetchData = async (
   }
 
   let tempFormData: any = {};
+  tempFormData["linkedData"] = [];
   schemaData.list &&
     schemaData.list.forEach((item: any) => {
       if (
@@ -62,6 +65,13 @@ export const fetchData = async (
       tempFormData[key] = currentState[key];
     });
   }
+
+  dispatch(
+    setAppendFetchedLink({
+      fieldId: fieldId,
+      linkedData: tempFormData["linkedData"],
+    })
+  );
 
   setFormSchema(schemaData);
   setFormData(tempFormData);
@@ -86,7 +96,7 @@ export const handleSubmit = async (
   selectedField: string,
   type: string,
   creatorOfData: string,
-  linkedData: string[],
+  linkedData: any,
   id: string
 ) => {
   let tempFormData: any = {};

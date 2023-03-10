@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 type SpecialInputPropTypes = {
   value: string;
@@ -36,4 +36,4 @@ const SpecialInput = ({
   );
 };
 
-export default SpecialInput
+export default SpecialInput;

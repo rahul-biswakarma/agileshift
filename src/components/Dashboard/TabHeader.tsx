@@ -41,9 +41,9 @@ const TabHeader = (props: Type_TabHeaderProps) => {
 	const handleViewStorm = () => {
 		let viewStorm = props.showStorm;
 		props.setShowStorm(!viewStorm);
-		if(viewStorm) {
+		if (viewStorm) {
 			dispatch(setTabName("All"));
-		}else{
+		} else {
 			setHoveredButtonIndex(-1);
 			dispatch(setTabName(""));
 		}
@@ -53,7 +53,7 @@ const TabHeader = (props: Type_TabHeaderProps) => {
 
 	return (
 		<div className="relative flex h-[60px] px-[1rem] items-center border-b-[1px] justify-between border-Secondary_background_color">
-			<div className="flex items-center overflow-x-auto flex-nowrap w-3/4 gap-[1rem]">
+			<div className="flex items-center overflow-x-auto flex-nowrap w-3/4 gap-[2px]">
 				<button
 					style={{
 						color:
@@ -130,6 +130,7 @@ const TabHeader = (props: Type_TabHeaderProps) => {
 							style={buttonStyle}
 							onMouseOver={() => setHoveredButtonIndex(index)}
 							onMouseOut={() => setHoveredButtonIndex(-1)}
+							data-testid={field.name}
 						>
 							<span className="material-symbols-outlined text-inherit">
 								{field.icon}
@@ -152,13 +153,14 @@ const TabHeader = (props: Type_TabHeaderProps) => {
 					</span>
 					<p className="text-inherit font-dm_sans">Storm</p>
 				</button>
-				
+
 				<VistaList />
-				
+
 				{/* <div className=""> */}
 					<button
 						onClick={() => openSchemaEditForm()}
 						className={`p-[0.5rem_1rem] font-dm_sans text-[1rem] text-white/30 cursor-pointer rounded-sm hover:bg-Secondary_background_color flex items-center gap-[0.5rem]`}
+						data-testid="edit-schema"
 					>
 						<span className="material-symbols-outlined text-inherit">
 							edit_note

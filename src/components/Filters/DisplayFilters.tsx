@@ -9,7 +9,7 @@ type DisplayFiltersProps = {
   filterName: string;
  filterData: TYPE_FilterOption[];
  filterSchema: any;
- modifyActiveFilterState: (filterName: string, filterOptionIndex: number, filterSchema: any) => void;
+ modifyActiveFilterState: (filterName: string, filterOptionName: string, filterSchema: any) => void;
 };
 
 const DisplayFilters = ({
@@ -21,7 +21,7 @@ const DisplayFilters = ({
  const [modifiedFilterData, setModifiedFilterData] = useState(filterData);
 
   const searchFilters = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newFilterData = filterData.filter((filterData) => filterData.filterOptionName.includes(event.target.value));
+    const newFilterData = filterData.filter((filterData) => filterData.filterOptionName.toLowerCase().includes(event.target.value.toLowerCase()));
     setModifiedFilterData(newFilterData);
   }
 
@@ -30,7 +30,7 @@ const DisplayFilters = ({
   <div>
    <div className="absolute top-[110%] left-0 bg-background_color w-48 rounded-xl p-1 border border-white/20 text-highlight_font_color">
     <div className="flex flex-wrap gap-1 p-2 border-b border-white/10">
-     {modifiedFilterData
+     {filterData
       .filter((column) => column.active === true)
       .map((column, index) => (
        <button
@@ -55,7 +55,7 @@ const DisplayFilters = ({
        return (
         <div
          key={index}
-         onClick={() => modifyActiveFilterState(filterName, index, filterSchema)}
+         onClick={() => modifyActiveFilterState(filterName, data.filterOptionName, filterSchema)}
          className="px-2 py-1 text-xs font-semibold bg-Secondary_background_color rounded-lg cursor-pointer border border-white/10"
         >
          {data.filterOptionName}
@@ -65,7 +65,7 @@ const DisplayFilters = ({
        return (
         <div
          key={index}
-         onClick={() => modifyActiveFilterState(filterName, index, filterSchema)}
+         onClick={() => modifyActiveFilterState(filterName, data.filterOptionName, filterSchema)}
          className="px-2 py-1 text-xs font-semibold hover:bg-Secondary_background_color rounded-lg cursor-pointer border border-transparent hover:border-white/10"
         >
          {data.filterOptionName}

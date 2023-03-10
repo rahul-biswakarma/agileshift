@@ -7,7 +7,7 @@ import {
 	get_all_columns_name,
 } from "../../Utils/Backend";
 import { useNavigate } from "react-router-dom";
-import { setActiveTab, setIsEdit } from "../../redux/reducers/SchemaSlice";
+import { setActiveTab, setIsEdit, setSchemaState } from "../../redux/reducers/SchemaSlice";
 
 import Header from "./Header";
 import TabHeader from "./TabHeader";
@@ -20,6 +20,7 @@ import {
 	setFieldColorMap,
 } from "../../redux/reducers/DataTableSlice";
 import Storm from "../Storm";
+import { ReactFlowProvider } from "reactflow";
 
 export default function Dashboard() {
 	const organizationId = useAppSelector((state) => state.auth.organisationId);
@@ -44,9 +45,11 @@ export default function Dashboard() {
 		get_schema_data(organizationId).then((data) => {
 			if (data) {
 				setFieldsData(data.schemaData);
+				dispatch(setSchemaState(false));
 			} else {
 				dispatch(setActiveTab(0));
 				dispatch(setIsEdit(true));
+				dispatch(setSchemaState(true));
 				// navigate("/edit-organization-schema");
 			}
 		});
@@ -90,15 +93,16 @@ export default function Dashboard() {
 	}, [getDataByFeildName]);
 
 	return (
-		<div className="bg-background_color h-[100vh] flex flex-col font-dm_sans">
+		<div
+			className="bg-background_color h-[100vh] flex flex-col font-dm_sans"
+			data-testid="dashboard"
+		>
 			<Header
 				showNotification={showNotification}
 				setShowNotification={setShowNotification}
 			/>
 			{showNotification ? (
-				<NotificationMainComponent
-					setShowNotification={setShowNotification}
-				/>
+				<NotificationMainComponent setShowNotification={setShowNotification} />
 			) : (
 				<React.Fragment>
 					{fieldsData && (
@@ -117,7 +121,9 @@ export default function Dashboard() {
 								<span className="text-white/50">STORM / </span>&nbsp;Visualize
 								linkage
 							</div>
-							<Storm organizationId={organizationId} />
+							<ReactFlowProvider>
+								<Storm organizationId={organizationId} />
+							</ReactFlowProvider>
 						</div>
 					) : (
 						dataSchema && datas && <BuildQuadarnt />

@@ -71,6 +71,7 @@ export const SchemaGeneratorForm = ({
 														deleteColumn={deleteColumn}
 														changeColumn={changeColumn}
 														key={id}
+														// testId={"col-"+id}
 													/>
 												</div>
 											)}
@@ -86,6 +87,7 @@ export const SchemaGeneratorForm = ({
 					<button
 						className="mt-[2rem] flex justify-center gap-3 items-center w-max h-[45px] rounded-md p-[5px_30px] text-sm font-dm_sans border-[2px] bg-Secondary_background_color border-dark_gray hover:bg-dark_gray hover:text-white"
 						onClick={addColumn}
+						data-testid="add-column"
 					>
 						<span className="material-symbols-outlined">add</span>{" "}
 						<p className="text-sm font-dm_sans leading-normal">Add Column</p>

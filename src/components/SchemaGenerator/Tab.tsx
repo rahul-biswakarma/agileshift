@@ -26,7 +26,9 @@ const Tab = ({field,organisation,id}:TabPropTypes) => {
       }`}
       onClick={() => {
         dispatch(setActiveTab(id));
-      }}>
+      }}
+      data-testid={field && `schema-tab-${field.name}`}
+      >
       {organisation && "Organisation Form"}
       {field && (
         <div className="w-full flex items-center justify-between">
