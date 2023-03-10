@@ -52,6 +52,11 @@ export const SideBarSlice = createSlice({
       delete tempLists[action.payload];
       state.fetchedLinks = tempLists;
     },
+    setAppendFetchedLink: (state, action: PayloadAction<any>) => {
+      let tempLists = { ...state.fetchedLinks };
+      tempLists[action.payload.fieldId] = action.payload.linkedData;
+      state.fetchedLinks = tempLists;
+    },
   },
 });
 
@@ -61,6 +66,7 @@ export const {
   setNewSidBar,
   setFetchedLinks,
   setRemoveFetchedLink,
+  setAppendFetchedLink,
 } = SideBarSlice.actions;
 
 export default SideBarSlice.reducer;

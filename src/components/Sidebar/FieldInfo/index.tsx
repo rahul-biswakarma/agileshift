@@ -6,7 +6,7 @@ import SideBarInputs from "../SideBarInputs";
 import { fetchData } from "../utils";
 import LinksComponent from "./LinksComponent";
 import { DisplayIdComponent } from "../../DataTable/displayIdComponentContainer";
-import { setFetchedLinks } from "../../../redux/reducers/SideBarSlice";
+import { setAppendFetchedLink } from "../../../redux/reducers/SideBarSlice";
 
 interface SidebarProps {
   sidebar: Type_SIDEBARSTATE;
@@ -50,7 +50,7 @@ const FieldInfo: React.FC<SidebarProps> = ({
       sidebar.type,
       sidebar.id!,
       dispatch,
-      setFetchedLinks
+      setAppendFetchedLink
     );
   }, [selectedField, sidebar.type, organizationId, sidebar.id, dispatch]);
 
