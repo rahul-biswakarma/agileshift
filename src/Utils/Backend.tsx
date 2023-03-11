@@ -72,7 +72,7 @@ import {
 49 link data to parent data
 50 get dark background color from name
 51 check if user is present in organizations
-52  get user Ids in organizations
+52 get user Ids in organizations
 53 get previous filter data
 54 start conversations
 55 get field display id
