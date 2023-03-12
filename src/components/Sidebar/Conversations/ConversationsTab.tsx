@@ -20,7 +20,8 @@ export default function ConversationsTab(props: TYPE_ConversationTabProps) {
 	const fetchChatDataCallback = React.useCallback(() => {
 		const fetchChatData = async () => {
 			onSnapshot(doc(db, "conversations", props.sidebar.fieldId!), (doc) => {
-				setChat(doc.data() as TYPE_Chat);
+				let tempChatDetails = doc.data() as TYPE_Chat
+				setChat(tempChatDetails);
 			});
 		};
 		fetchChatData();
@@ -37,6 +38,12 @@ export default function ConversationsTab(props: TYPE_ConversationTabProps) {
 
 	const chatRef = useRef<HTMLDivElement>(null);
 
+	const sortDateInDecendingOrder = (dateList:string[])=>{
+		dateList.sort((a:string,b:string)=>{
+			return Date.parse(a) - Date.parse(b)
+		})
+		return dateList
+	}
 	React.useEffect(() => {
 		// Scroll to bottom of chat section whenever chat data is updated
 		if (chatRef.current) {
@@ -64,7 +71,7 @@ export default function ConversationsTab(props: TYPE_ConversationTabProps) {
 						className="max-h-[calc(100vh-50px-4rem)] h-auto overflow-y-auto w-full"
 					>
 						{chat &&
-							Object.keys(chat).map((day: any, index: number) => {
+							sortDateInDecendingOrder(Object.keys(chat)).map((day: any, index: number) => {
 								return (
 									<MessageWrapperComponent
 										key={index}
