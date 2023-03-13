@@ -85,7 +85,7 @@ const DataTable = () => {
 	const setDataForAgGrid = useCallback(() => {
 		let tempColumnDefs: Type_AgGridColsDefs = [];
 
-		const updateDataSchema = [
+		const updateDataSchema = [ 
 			{ columnType: "id", columnName: "displayId" },
 			...dataSchema,
 		];
