@@ -81,6 +81,7 @@ const DataTable = () => {
 		const { api } = params;
 		api.sizeColumnsToFit();
 	};
+	/st/
 
 	const setDataForAgGrid = useCallback(() => {
 		let tempColumnDefs: Type_AgGridColsDefs = [];

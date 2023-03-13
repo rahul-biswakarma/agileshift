@@ -39,14 +39,14 @@ const SignUp = () => {
 							}}
 							imgSrc={GoogleIcon}
 							altText="Google Icon"
-							spanText="Continue with google"
+							spanText="Continue with Google"
 							className="bg-blue_1"
 						/>
 						<SignUpButtons
 							onClick={() => authWithGithub()}
 							imgSrc={GithubIcon}
 							altText="Github Icon"
-							spanText="Continue with github"
+							spanText="Continue with Github"
 							className="bg-dark_gray"
 						/>
 					</div>

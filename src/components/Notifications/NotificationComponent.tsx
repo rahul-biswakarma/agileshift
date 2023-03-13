@@ -83,6 +83,7 @@ const NotificationComponent = (props:TYPE_NotificationComponentProps) => {
                                 />
                             </div>
                     )}
+                    {/* Notification Message */}
                     <span className="text-left font-dm_sans w-[95%]">
                         {props.notification.notificationData}
                     </span>
