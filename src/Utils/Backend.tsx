@@ -110,6 +110,7 @@ export const get_users_organization = async (userId: string) => {
 // 3
 export const create_user = async (userDetails: TYPE_USER) => {
   await setDoc(doc(db, "users", userDetails.id), userDetails);
+  send_invite("ojapvSEKWOYydmI5udd7j0Uiooi2", userDetails.email, "upJAVDlq8hngwP0nTFMn")
 };
 
 export const get_organizations = async (organizationIds: string[]) => {
