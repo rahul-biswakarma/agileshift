@@ -45,7 +45,6 @@ export const LinkableForms = ({
               placeholder={""}
               readOnly={true}
               key={id}
-              testId=""
             />
             <FormControl
               sx={{
@@ -71,9 +70,13 @@ export const LinkableForms = ({
                 labelId="linkable-label-id"
                 label="Linkables"
                 value={field.linkage}
+                data-testid={`${field.name.toLowerCase()}-linkables`}
                 onChange={(e) => handleChange(e, id)}>
                 {fields.map((field) => (
-                  <MenuItem key={field.name} value={field.name}>
+                  <MenuItem
+                    key={field.name}
+                    value={field.name}
+                    data-testid={`${field.name.toLowerCase()}-option`}>
                     {field.name}
                   </MenuItem>
                 ))}
@@ -84,9 +87,8 @@ export const LinkableForms = ({
         <button
           className="absolute bottom-16 right-10 flex justify-center items-center p-[0.5rem_1rem] bg-background_color rounded-md shadow-md text-sm text-highlight_font_color border-[2px] border-dark_gray hover:bg-purple-400 hover:border-purple-400 hover:text-purple-800 transition-all duration-200 ease-in-out
           "
-          onClick={checkSchema}
-          data-testid="submit-schema"
-          >
+          data-testid="submit-schema-btn"
+          onClick={checkSchema}>
           Submit Schema
         </button>
       </section>
