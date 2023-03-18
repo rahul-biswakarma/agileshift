@@ -13,16 +13,16 @@ import GithubIcon from "../../assets/icons/github-icon.svg";
 import GoogleIcon from "../../assets/icons/google-icon.svg";
 
 const SignUp = () => {
-  const userId = useAppSelector((state: RootState) => state.auth.userId);
-  let navigate = useNavigate();
+	const userId = useAppSelector((state: RootState) => state.auth.userId);
+	let navigate = useNavigate();
 
-  useEffect(() => {
-    document.title = "Sign into AgileShift";
-  }, []);
+	useEffect(() => {
+		document.title = "Sign into AgileShift";
+	}, []);
 
-  useEffect(() => {
-    if (userId.length > 0) navigate("/organization-lists");
-  }, [userId, navigate]);
+	useEffect(() => {
+		if (userId.length > 0) navigate("/organization-lists");
+	}, [userId, navigate]);
 
 	return (
 		<div
@@ -74,7 +74,7 @@ const SignUp = () => {
 					</p>
 					<p className="text-sm text-highlight_font_color">
 						Already have an account?{" "}
-						<span className="text-primary_font_color font-semibold cursor-pointer">
+						<span className="text-primary_font_color font-semibold font-fira_code cursor-pointer hover:text-purple-400 hover:underline">
 							<a href="/login">Login</a>
 						</span>
 					</p>

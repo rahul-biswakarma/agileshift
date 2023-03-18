@@ -51,14 +51,14 @@ const LoginForm = () => {
 					navigate("/organization-lists");
 				}
 			} else {
-				emailInputRef.current!.style.borderColor = "red";
+				emailInputRef.current!.style.borderColor = "#f54966";
 				emailLabelRef.current!.innerText = "Please enter valid otp";
 			}
 		}
 
 		emailInputRef.current!.value = "";
 		passwordInputRef.current!.value = "";
-	}
+	};
 
 	const handleNext = async (
 		e: SyntheticEvent<HTMLButtonElement, MouseEvent>
@@ -69,15 +69,16 @@ const LoginForm = () => {
 		let emailPattern = new RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$");
 
 		if (emailInput && emailPattern.test(emailInput!)) {
-			const sentOtp = await sendEmail("otp",emailInput);
+			const sentOtp = await sendEmail("otp", emailInput);
 			if (sentOtp) setState({ ...state, onOtp: true, otp: sentOtp });
 			else {
-				emailInputRef.current!.style.borderColor = "red";
-				emailLabelRef.current!.style.color = "red";
-				emailLabelRef.current!.innerText = "User does not exists. Please Signup";
+				emailInputRef.current!.style.borderColor = "#f54966";
+				emailLabelRef.current!.style.color = "#f54966";
+				emailLabelRef.current!.innerText =
+					"User does not exists. Please Signup";
 			}
 		} else {
-			emailInputRef.current!.style.borderColor = "red";
+			emailInputRef.current!.style.borderColor = "#f54966";
 			emailLabelRef.current!.innerText = "Please enter valid email address";
 		}
 	};
@@ -93,17 +94,15 @@ const LoginForm = () => {
 					Email
 				</label>
 				<div className="flex mt-[0.3rem]">
-					<span className="w-[3rem] h-[2.5rem] flex justify-center items-center bg-input_bg rounded-l font-dm_sans">
-						<img
-							src={EmailIcon}
-							alt="id card icon"
-							className="w-5 h-auto"
-						/>
+					<span className="w-[3rem] h-[2.5rem] flex justify-center items-center bg-dark_gray rounded-l font-dm_sans">
+						<span className="material-symbols-outlined text-white/50">
+							alternate_email
+						</span>
 					</span>
 					<input
 						data-testid="email-input"
 						ref={emailInputRef}
-						className="w-full h-[2.5rem] border border-input_bg rounded-r px-4 code-font focus:border-input_bg font-dm_sans"
+						className="w-full h-[2.5rem] caret-white/70 bg-Secondary_background_color border border-dark_gray rounded-r px-4 code-font text-white/80"
 						type="email"
 						placeholder="name@work.com"
 						readOnly={state.onOtp}
@@ -115,25 +114,23 @@ const LoginForm = () => {
 				<React.Fragment>
 					<div>
 						<label
-							className=" text-black/60 text-sm font-dm_sans"
+							className=" text-white/60 text-sm font-dm_sans"
 							htmlFor="email"
 						>
 							OTP
 						</label>
 						<div className="flex mt-[0.3rem]">
-							<span className="w-[3rem] h-[2.5rem] flex justify-center items-center bg-input_bg rounded-l">
-								<img
-									src={LockIcon}
-									alt="id card icon"
-									className="w-5 h-auto"
-								/>
+							<span className="w-[3rem] h-[2.5rem] flex justify-center items-center bg-dark_gray rounded-l">
+								<span className="material-symbols-outlined text-white/50">
+									lock
+								</span>
 							</span>
 							<input
 								data-testid="password-input"
 								ref={passwordInputRef}
-								className="w-full h-[2.5rem] border border-input_bg rounded-r px-4 code-font font-dm_sans"
+								className="w-full h-[2.5rem] caret-white/70 bg-Secondary_background_color border border-dark_gray rounded-r px-4 code-font text-white/80"
 								type="number"
-								placeholder="otp"
+								placeholder="Otp"
 								required
 							/>
 						</div>
@@ -160,11 +157,9 @@ const LoginForm = () => {
 					<span className="code-font text-sm text-white font-dm_sans">
 						Next
 					</span>
-					<img
-						className="w-5 h-auto ml-[1rem]"
-						src={ArrowIcon}
-						alt="arrow icon"
-					/>
+					<span className="material-symbols-outlined text-white">
+						navigate_next
+					</span>
 				</button>
 			)}
 		</form>
