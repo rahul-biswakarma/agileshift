@@ -1,6 +1,6 @@
-import { useAppDispatch } from "../../redux/hooks";
-
 import { Handle, Position } from "reactflow";
+import { useAppDispatch } from "../../redux/hooks";
+import { addDraggableReactflowNode } from "../../redux/reducers/StormSlice";
 
 import {
 	get_background_color_from_name,
@@ -53,18 +53,26 @@ type Type_FullDataNodeProps = {
 };
 
 const IdNode = (props: Type_IdNodeProps) => {
+	const dispatch = useAppDispatch();
 	return (
 		<div className="transition-all">
 			<Handle
 				type="target"
 				position={Position.Top}
 			/>
-			<DisplayIdComponent
-				displayId={props.data.data.displayId}
-				field={props.data.fieldName}
-				color={props.data.color}
-				opacity={100}
-			/>
+			<div
+				onClick={() => {
+					dispatch(addDraggableReactflowNode(props.data));
+				}}
+			>
+				<DisplayIdComponent
+					displayId={props.data.data.displayId}
+					field={props.data.fieldName}
+					color={props.data.color}
+					opacity={100}
+				/>
+			</div>
+
 			<Handle
 				type="source"
 				position={Position.Bottom}
@@ -80,6 +88,7 @@ const FullDataNode = (props: Type_FullDataNodeProps) => {
 	});
 
 	const dispatch = useAppDispatch();
+
 	return (
 		<div className="transistion-all ease-in-out overflow-hidden">
 			<Handle
@@ -87,10 +96,13 @@ const FullDataNode = (props: Type_FullDataNodeProps) => {
 				position={Position.Top}
 			/>
 			<div
+				onClick={() => {
+					dispatch(addDraggableReactflowNode(props.data));
+				}}
 				style={{
 					borderColor: get_background_color_from_name(props.data.color),
 				}}
-				className="relative bg-background_color p-[0.5rem] transition-all rounded-md border-2 flex flex-col gap-[0.5rem] min-w-[200px] max-w-[200px] w-full transition-all ease-in-out overflow-hidden"
+				className="relative bg-background_color p-[0.5rem] transition-all rounded-md border-2 flex flex-col gap-[0.5rem] min-w-[200px] max-w-[200px] w-full ease-in-out overflow-hidden"
 			>
 				<button
 					className="transition-all ease-in-out"
