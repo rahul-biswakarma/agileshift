@@ -1,8 +1,5 @@
 import React, { useRef, SyntheticEvent, useState } from "react";
 
-import LockIcon from "../../assets/icons/lock-icon.svg";
-import EmailIcon from "../../assets/icons/email-icon.svg";
-import ArrowIcon from "../../assets/icons/arrow-icon.svg";
 import {
 	get_users_organization,
 	get_user_by_email,
@@ -142,11 +139,9 @@ const LoginForm = () => {
 						<span className="code-font text-sm text-white font-dm_sans">
 							Login
 						</span>
-						<img
-							className="w-5 h-auto ml-[1rem]"
-							src={ArrowIcon}
-							alt="arrow icon"
-						/>
+						<span className="material-symbols-outlined text-white">
+							navigate_next
+						</span>
 					</button>
 				</React.Fragment>
 			) : (
